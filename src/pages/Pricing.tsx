@@ -40,36 +40,80 @@ export const Pricing: React.FC = () => {
           </p>
         </div>
 
-        <div className="max-w-lg mx-auto">
-          <div className="bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-indigo-500">
-            <div className="bg-indigo-600 px-6 py-8 text-center">
-              <h3 className="text-2xl font-bold text-white">Pro Plan</h3>
+        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          {/* Basic Plan */}
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-all duration-300">
+            <div className="bg-gray-50 px-6 py-8 text-center border-b border-gray-200">
+              <h3 className="text-2xl font-bold text-navy">Basic</h3>
               <div className="mt-4 flex items-baseline justify-center">
-                <span className="text-5xl font-bold text-white">$49</span>
-                <span className="text-xl text-indigo-200 ml-1">/month</span>
+                <span className="text-5xl font-bold text-navy">$29</span>
+                <span className="text-xl text-gray-500 ml-1">/month</span>
               </div>
-              <p className="mt-2 text-indigo-200">Everything you need to manage testimonials</p>
+              <p className="mt-2 text-gray-600">Perfect for small teams getting started</p>
             </div>
             
             <div className="px-6 py-8">
-              <ul className="space-y-4">
+              <ul className="space-y-4 mb-8">
                 {[
-                  'Unlimited testimonial collection',
-                  'Legal rights tracking & consent management',
-                  'Ad-ready export formats',
-                  'Custom collection forms',
-                  'Analytics & reporting',
-                  'Priority email support',
-                  'API access',
+                  'Up to 100 testimonials/month',
+                  'Basic collection forms',
+                  'Standard export formats',
+                  'Email support',
+                  'Basic analytics',
                 ].map((feature, index) => (
                   <li key={index} className="flex items-center">
-                    <Check className="h-5 w-5 text-green-500 mr-3 flex-shrink-0" />
+                    <Check className="h-5 w-5 text-teal mr-3 flex-shrink-0" />
                     <span className="text-gray-700">{feature}</span>
                   </li>
                 ))}
               </ul>
               
-              <div className="mt-8">
+              <button
+                onClick={() => !user ? navigate('/signup') : createCheckoutSession('price_basic')}
+                disabled={loading}
+                className="w-full bg-gray-100 text-navy py-3 px-6 rounded-lg font-semibold hover:bg-gray-200 transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed border border-gray-300"
+              >
+                {user ? 'Choose Basic' : 'Get Started'}
+              </button>
+            </div>
+          </div>
+
+          {/* Pro Plan */}
+          <div className="bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-teal relative">
+            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+              <span className="bg-purple text-white px-4 py-1 rounded-full text-sm font-semibold">
+                Most Popular
+              </span>
+            </div>
+            <div className="bg-gradient-to-r from-navy to-teal px-6 py-8 text-center">
+              <h3 className="text-2xl font-bold text-white">Pro</h3>
+              <div className="mt-4 flex items-baseline justify-center">
+                <span className="text-5xl font-bold text-white">$49</span>
+                <span className="text-xl text-teal-200 ml-1">/month</span>
+              </div>
+              <p className="mt-2 text-teal-200">Everything you need to scale</p>
+            </div>
+            
+            <div className="px-6 py-8">
+              <ul className="space-y-4 mb-8">
+                {[
+                  'Unlimited testimonial collection',
+                  'Legal rights tracking & consent management',
+                  'Ad-ready export formats',
+                  'Custom collection forms',
+                  'Advanced analytics & reporting',
+                  'Priority email support',
+                  'API access',
+                  'White-label options',
+                ].map((feature, index) => (
+                  <li key={index} className="flex items-center">
+                    <Check className="h-5 w-5 text-teal mr-3 flex-shrink-0" />
+                    <span className="text-gray-700">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+              
+              <div>
                 {error && (
                   <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
                     <p className="text-red-800 text-sm">{error}</p>
@@ -78,7 +122,7 @@ export const Pricing: React.FC = () => {
                 <button
                   onClick={handleSubscribe}
                   disabled={loading}
-                  className="w-full bg-indigo-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-indigo-700 transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-navy text-white py-3 px-6 rounded-lg font-semibold hover:bg-navy/90 transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
                 >
                   {loading ? (
                     <div className="flex items-center">
@@ -86,9 +130,9 @@ export const Pricing: React.FC = () => {
                       Processing...
                     </div>
                   ) : user ? (
-                    'Subscribe Now'
+                    'Choose Pro'
                   ) : (
-                    'Sign Up & Subscribe'
+                    'Start Free Trial'
                   )}
                 </button>
                 <p className="text-sm text-gray-500 text-center mt-2">
