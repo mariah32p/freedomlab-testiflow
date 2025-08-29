@@ -16,6 +16,22 @@ export const Signup: React.FC = () => {
   const { signUp } = useAuth();
   const navigate = useNavigate();
 
+  const getPasswordStrength = (password: string) => {
+    const requirements = {
+      length: password.length >= 8,
+      uppercase: /[A-Z]/.test(password),
+      lowercase: /[a-z]/.test(password),
+      number: /\d/.test(password),
+      special: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+    };
+
+    const score = Object.values(requirements).filter(Boolean).length;
+    return { requirements, score };
+  };
+
+  const passwordStrength = getPasswordStrength(password);
+  const isPasswordStrong = passwordStrength.score >= 4;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -27,8 +43,8 @@ export const Signup: React.FC = () => {
       return;
     }
 
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters long');
+    if (!isPasswordStrong) {
+      setError('Please create a stronger password that meets the requirements below');
       setLoading(false);
       return;
     }
@@ -134,6 +150,34 @@ export const Signup: React.FC = () => {
                 </button>
               </div>
             </div>
+            
+            {password && (
+              <div className="mt-2">
+                <div className="text-xs text-gray-600 mb-2">Password strength:</div>
+                <div className="space-y-1">
+                  <div className={`text-xs flex items-center ${passwordStrength.requirements.length ? 'text-green-600' : 'text-gray-400'}`}>
+                    <div className={`w-2 h-2 rounded-full mr-2 ${passwordStrength.requirements.length ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+                    At least 8 characters
+                  </div>
+                  <div className={`text-xs flex items-center ${passwordStrength.requirements.uppercase ? 'text-green-600' : 'text-gray-400'}`}>
+                    <div className={`w-2 h-2 rounded-full mr-2 ${passwordStrength.requirements.uppercase ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+                    One uppercase letter
+                  </div>
+                  <div className={`text-xs flex items-center ${passwordStrength.requirements.lowercase ? 'text-green-600' : 'text-gray-400'}`}>
+                    <div className={`w-2 h-2 rounded-full mr-2 ${passwordStrength.requirements.lowercase ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+                    One lowercase letter
+                  </div>
+                  <div className={`text-xs flex items-center ${passwordStrength.requirements.number ? 'text-green-600' : 'text-gray-400'}`}>
+                    <div className={`w-2 h-2 rounded-full mr-2 ${passwordStrength.requirements.number ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+                    One number
+                  </div>
+                  <div className={`text-xs flex items-center ${passwordStrength.requirements.special ? 'text-green-600' : 'text-gray-400'}`}>
+                    <div className={`w-2 h-2 rounded-full mr-2 ${passwordStrength.requirements.special ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+                    One special character
+                  </div>
+                </div>
+              </div>
+            )}
 
             <div>
               <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
