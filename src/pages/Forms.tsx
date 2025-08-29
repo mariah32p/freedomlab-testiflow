@@ -370,7 +370,7 @@ export const Forms: React.FC = () => {
                           <span>Copy Link</span>
                         </button>
                         <a
-                          href={`/form/${form.id}`}
+                          href={`/submit/${form.id}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
