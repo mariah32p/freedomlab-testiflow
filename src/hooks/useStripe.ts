@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { products } from '../stripe-config.js';
+import { APP_CONFIG } from '../config/app';
 
 export const useStripe = () => {
   const [loading, setLoading] = useState(false);
@@ -11,6 +12,14 @@ export const useStripe = () => {
     setError(null);
 
     try {
+      if (!APP_CONFIG.ENABLE_REAL_AUTH) {
+        // Mock checkout - simulate redirect to success page
+        setTimeout(() => {
+          window.location.href = `${window.location.origin}/success`;
+        }, 1000);
+        return;
+      }
+
       const { data: { session } } = await supabase.auth.getSession();
       
       if (!session) {
