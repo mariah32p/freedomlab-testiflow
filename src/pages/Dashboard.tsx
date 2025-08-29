@@ -68,11 +68,6 @@ export const Dashboard: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white shadow rounded-lg">
           <div className="px-4 py-5 sm:p-6">
-            <div className="flex items-center mb-6">
-              <TestiFlowIcon className="h-8 w-8 text-indigo-600 mr-3" />
-              <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-            </div>
-            
             {/* Subscription Status Banners */}
             {subscription?.status === 'trialing' && (
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
@@ -142,7 +137,7 @@ export const Dashboard: React.FC = () => {
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
                 >
-                  Dashboard
+                  Overview
                 </button>
                 <button
                   onClick={() => setActiveTab('forms')}
@@ -152,7 +147,7 @@ export const Dashboard: React.FC = () => {
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
                 >
-                  Collection Forms
+                  Forms
                 </button>
                 <button
                   onClick={() => setActiveTab('submissions')}
@@ -162,7 +157,7 @@ export const Dashboard: React.FC = () => {
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
                 >
-                  Submissions
+                  Testimonials
                 </button>
                 <button
                   onClick={() => setActiveTab('settings')}
@@ -177,44 +172,50 @@ export const Dashboard: React.FC = () => {
               </nav>
             </div>
 
-            {/* Dashboard Tab */}
+            {/* Overview Tab */}
             {activeTab === 'dashboard' && (
               <div>
+                <div className="mb-8">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome back!</h2>
+                  <p className="text-gray-600">Here's what's happening with your testimonials</p>
+                </div>
+                
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                   <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-100">
                     <div className="flex items-center justify-between mb-4">
-                      <h3 className="font-semibold text-gray-900">Total Testimonials</h3>
+                      <h3 className="font-semibold text-gray-900">Total</h3>
                       <MessageSquare className="h-5 w-5 text-primary-950" />
                     </div>
                     <div className="text-3xl font-bold text-primary-950">0</div>
-                    <div className="text-sm text-gray-600 mt-1">Get started by creating your first form</div>
+                    <div className="text-sm text-gray-600 mt-1">testimonials collected</div>
                   </div>
                   <div className="bg-gradient-to-br from-secondary-50 to-secondary-100 p-6 rounded-xl border border-secondary-200">
                     <div className="flex items-center justify-between mb-4">
-                      <h3 className="font-semibold text-gray-900">Approved</h3>
+                      <h3 className="font-semibold text-gray-900">Published</h3>
                       <CheckCircle className="h-5 w-5 text-secondary-500" />
                     </div>
                     <div className="text-3xl font-bold text-secondary-500">0</div>
-                    <div className="text-sm text-gray-600 mt-1">Ready for review</div>
+                    <div className="text-sm text-gray-600 mt-1">ready to use</div>
                   </div>
                   <div className="bg-gradient-to-br from-accent-50 to-accent-100 p-6 rounded-xl border border-accent-200">
                     <div className="flex items-center justify-between mb-4">
-                      <h3 className="font-semibold text-gray-900">Exported</h3>
+                      <h3 className="font-semibold text-gray-900">This Month</h3>
                       <Download className="h-5 w-5 text-accent-600" />
                     </div>
                     <div className="text-3xl font-bold text-accent-600">0</div>
-                    <div className="text-sm text-gray-600 mt-1">Export approved testimonials</div>
+                    <div className="text-sm text-gray-600 mt-1">new testimonials</div>
                   </div>
                 </div>
 
-                <div className="bg-white rounded-lg border border-gray-200 p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
-                  <div className="text-center py-8">
+                <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-200 p-8">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-6 text-center">Get Started</h3>
+                  <div className="text-center">
                     <MessageSquare className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                    <p className="text-gray-500 mb-4">No testimonials yet</p>
+                    <h4 className="text-lg font-medium text-gray-900 mb-2">Create your first collection form</h4>
+                    <p className="text-gray-500 mb-6 max-w-md mx-auto">Start gathering customer testimonials by creating a customized form that you can share with your customers.</p>
                     <button
                       onClick={() => setActiveTab('forms')}
-                      className="bg-primary-950 text-white px-4 py-2 rounded-lg hover:bg-primary-900 transition-colors"
+                      className="bg-primary-950 text-white px-6 py-3 rounded-lg hover:bg-primary-900 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                     >
                       Create Your First Form
                     </button>
@@ -227,7 +228,10 @@ export const Dashboard: React.FC = () => {
             {activeTab === 'forms' && (
               <div>
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900">Collection Forms</h2>
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900">Forms</h2>
+                    <p className="text-gray-600 mt-1">Create and manage testimonial collection forms</p>
+                  </div>
                   <button className="bg-primary-950 text-white px-4 py-2 rounded-lg hover:bg-primary-900 transition-colors flex items-center space-x-2">
                     <Plus className="h-4 w-4" />
                     <span>New Form</span>
@@ -236,9 +240,9 @@ export const Dashboard: React.FC = () => {
                 
                 <div className="text-center py-12">
                   <FileText className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">No forms yet</h3>
-                  <p className="text-gray-500 mb-6">Create your first testimonial collection form to start gathering customer feedback.</p>
-                  <button className="bg-primary-950 text-white px-6 py-3 rounded-lg hover:bg-primary-900 transition-colors flex items-center space-x-2 mx-auto">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">No forms yet</h3>
+                  <p className="text-gray-500 mb-8 max-w-md mx-auto">Create your first testimonial collection form to start gathering customer feedback and build social proof.</p>
+                  <button className="bg-primary-950 text-white px-6 py-3 rounded-lg hover:bg-primary-900 transition-all duration-200 flex items-center space-x-2 mx-auto font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
                     <Plus className="h-5 w-5" />
                     <span>Create Your First Form</span>
                   </button>
@@ -246,11 +250,14 @@ export const Dashboard: React.FC = () => {
               </div>
             )}
 
-            {/* Submissions Tab */}
+            {/* Testimonials Tab */}
             {activeTab === 'submissions' && (
               <div>
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900">Testimonial Submissions</h2>
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900">Testimonials</h2>
+                    <p className="text-gray-600 mt-1">Review, approve, and manage customer testimonials</p>
+                  </div>
                   <div className="flex space-x-2">
                     <button className="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors">
                       Filter
@@ -263,11 +270,11 @@ export const Dashboard: React.FC = () => {
                 
                 <div className="text-center py-12">
                   <MessageSquare className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">No submissions yet</h3>
-                  <p className="text-gray-500 mb-6">Once you create and share forms, customer testimonials will appear here for review and approval.</p>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">No testimonials yet</h3>
+                  <p className="text-gray-500 mb-8 max-w-md mx-auto">Once you create and share forms, customer testimonials will appear here for review and approval.</p>
                   <button 
                     onClick={() => setActiveTab('forms')}
-                    className="bg-primary-950 text-white px-6 py-3 rounded-lg hover:bg-primary-900 transition-colors"
+                    className="bg-primary-950 text-white px-6 py-3 rounded-lg hover:bg-primary-900 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                   >
                     Create a Form First
                   </button>
@@ -278,7 +285,10 @@ export const Dashboard: React.FC = () => {
             {/* Settings Tab */}
             {activeTab === 'settings' && (
               <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">Settings</h2>
+                <div className="mb-8">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-2">Settings</h2>
+                  <p className="text-gray-600">Manage your account and subscription</p>
+                </div>
                 
                 <div className="space-y-6">
                   {/* Account Information */}
@@ -302,7 +312,7 @@ export const Dashboard: React.FC = () => {
                   </div>
 
                   {/* Subscription Management */}
-                  <div className="bg-white border border-gray-200 rounded-lg p-6">
+                  <div className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-lg p-6">
                     <h3 className="text-lg font-medium text-gray-900 mb-4">Subscription</h3>
                     {subscription ? (
                       <div className="space-y-3">
@@ -328,7 +338,7 @@ export const Dashboard: React.FC = () => {
                           </div>
                         )}
                         <div className="pt-4 border-t border-gray-200">
-                          <button className="bg-primary-950 text-white px-4 py-2 rounded-lg hover:bg-primary-900 transition-colors">
+                          <button className="bg-primary-950 text-white px-4 py-2 rounded-lg hover:bg-primary-900 transition-all duration-200 font-medium shadow-md hover:shadow-lg">
                             Manage Subscription
                           </button>
                         </div>
