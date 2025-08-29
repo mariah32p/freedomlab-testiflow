@@ -10,11 +10,20 @@ interface TestimonialForm {
   description: string;
   thank_you_message: string;
   is_active: boolean;
+  user_id: string;
+}
+
+interface FormBranding {
+  logo_url: string | null;
+  primary_color: string;
+  secondary_color: string;
+  font_family: string;
 }
 
 export const SubmitTestimonial: React.FC = () => {
   const { formId } = useParams<{ formId: string }>();
   const [form, setForm] = useState<TestimonialForm | null>(null);
+  const [branding, setBranding] = useState<FormBranding | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -39,7 +48,7 @@ export const SubmitTestimonial: React.FC = () => {
       try {
         const { data, error } = await supabase
           .from('testimonial_forms')
-          .select('*')
+          .select('*, user_id')
           .maybeSingle();
 
         if (error) {
@@ -54,6 +63,17 @@ export const SubmitTestimonial: React.FC = () => {
         } else {
          console.log('Form loaded successfully:', data);
           setForm(data);
+          
+          // Fetch branding for this form's owner
+          const { data: brandingData } = await supabase
+            .from('form_branding')
+            .select('*')
+            .eq('user_id', data.user_id)
+            .maybeSingle();
+          
+          if (brandingData) {
+            setBranding(brandingData);
+          }
         }
       } catch (error) {
         console.error('Error fetching form:', error);
@@ -146,17 +166,41 @@ export const SubmitTestimonial: React.FC = () => {
     );
   }
 
+  // Get branding values with fallbacks
+  const primaryColor = branding?.primary_color || '#01004d';
+  const secondaryColor = branding?.secondary_color || '#01b79e';
+  const fontFamily = branding?.font_family || 'Montserrat';
+  const logoUrl = branding?.logo_url;
+
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-gray-50 py-12" style={{ fontFamily }}>
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           {/* Header */}
-          <div className="bg-primary-950 px-6 py-8 text-center">
+          <div 
+            className="px-6 py-8 text-center text-white"
+            style={{ backgroundColor: primaryColor }}
+          >
             <div className="flex justify-center mb-4">
-              <TestiFlowIcon className="h-8 w-8 text-white" />
+              {logoUrl ? (
+                <img 
+                  src={logoUrl} 
+                  alt="Logo" 
+                  className="h-8 max-w-32 object-contain"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                    // Show fallback icon
+                    const fallback = document.createElement('div');
+                    fallback.innerHTML = '<svg class="h-8 w-8 text-white" viewBox="0 0 32 32" fill="currentColor"><circle cx="16" cy="16" r="14" fill="currentColor"/></svg>';
+                    e.currentTarget.parentNode?.appendChild(fallback);
+                  }}
+                />
+              ) : (
+                <TestiFlowIcon className="h-8 w-8 text-white" />
+              )}
             </div>
-            <h1 className="text-2xl font-bold text-white mb-2">{form.title}</h1>
-            <p className="text-primary-100">{form.description}</p>
+            <h1 className="text-2xl font-bold mb-2">{form.title}</h1>
+            <p className="text-white/90">{form.description}</p>
           </div>
 
           {/* Form */}
@@ -253,7 +297,11 @@ export const SubmitTestimonial: React.FC = () => {
                   rows={4}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
+                  style={{ 
+                    '--tw-ring-color': secondaryColor,
+                    fontFamily 
+                  } as React.CSSProperties}
                   placeholder="Tell us about your experience..."
                 />
               </div>
@@ -263,7 +311,19 @@ export const SubmitTestimonial: React.FC = () => {
                 <button
                   type="submit"
                   disabled={submitting || rating === 0}
-                  className="w-full bg-primary-950 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-900 transition-colors flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full text-white py-3 px-6 rounded-lg font-semibold transition-colors flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{ 
+                    backgroundColor: secondaryColor,
+                    fontFamily 
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!submitting && rating > 0) {
+                      e.currentTarget.style.opacity = '0.9';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.opacity = '1';
+                  }}
                 >
                   {submitting ? (
                     <>

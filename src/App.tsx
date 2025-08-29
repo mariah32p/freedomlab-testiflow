@@ -16,6 +16,7 @@ import { ResetPassword } from './pages/ResetPassword';
 import { Forms } from './pages/Forms';
 import { Testimonials } from './pages/Testimonials';
 import { SubmitTestimonial } from './pages/SubmitTestimonial';
+import { Branding } from './pages/Branding';
 
 const AppContent: React.FC = () => {
   useRouteGuard();
@@ -43,6 +44,14 @@ const AppContent: React.FC = () => {
               element={
                 <ProtectedRoute>
                   <Forms />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/branding"
+              element={
+                <ProtectedRoute>
+                  <Branding />
                 </ProtectedRoute>
               }
             />
