@@ -13,6 +13,7 @@ import { Settings } from './pages/Settings';
 import { GetStarted } from './pages/GetStarted';
 import { ForgotPassword } from './pages/ForgotPassword';
 import { ResetPassword } from './pages/ResetPassword';
+import { Forms } from './pages/Forms';
 
 const AppContent: React.FC = () => {
   useRouteGuard();
@@ -29,6 +30,14 @@ const AppContent: React.FC = () => {
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/get-started" element={<GetStarted />} />
         <Route path="/success" element={<Success />} />
+        <Route
+          path="/forms"
+          element={
+            <ProtectedRoute>
+              <Forms />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/settings"
           element={

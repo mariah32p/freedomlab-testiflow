@@ -35,6 +35,12 @@ export const Navbar: React.FC = () => {
                   <span>Dashboard</span>
                 </Link>
                 <Link
+                  to="/forms"
+                  className="flex items-center space-x-1 text-gray-700 hover:text-primary-950 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  <span>Forms</span>
+                </Link>
+                <Link
                   to="/settings"
                   className="flex items-center space-x-1 text-gray-700 hover:text-primary-950 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >

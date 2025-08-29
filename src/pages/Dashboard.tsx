@@ -220,20 +220,26 @@ export const Dashboard: React.FC = () => {
                     <h2 className="text-2xl font-bold text-gray-900">Forms</h2>
                     <p className="text-gray-600 mt-1">Create and manage testimonial collection forms</p>
                   </div>
-                  <button className="bg-primary-950 text-white px-4 py-2 rounded-lg hover:bg-primary-900 transition-colors flex items-center space-x-2">
+                  <Link
+                    to="/forms"
+                    className="bg-primary-950 text-white px-4 py-2 rounded-lg hover:bg-primary-900 transition-colors flex items-center space-x-2"
+                  >
                     <Plus className="h-4 w-4" />
                     <span>New Form</span>
-                  </button>
+                  </Link>
                 </div>
                 
                 <div className="text-center py-12">
                   <FileText className="h-16 w-16 text-gray-300 mx-auto mb-4" />
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">No forms yet</h3>
                   <p className="text-gray-500 mb-8 max-w-md mx-auto">Create your first testimonial collection form to start gathering customer feedback and build social proof.</p>
-                  <button className="bg-primary-950 text-white px-6 py-3 rounded-lg hover:bg-primary-900 transition-all duration-200 flex items-center space-x-2 mx-auto font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                  <Link
+                    to="/forms"
+                    className="bg-primary-950 text-white px-6 py-3 rounded-lg hover:bg-primary-900 transition-all duration-200 flex items-center space-x-2 mx-auto font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                  >
                     <Plus className="h-5 w-5" />
                     <span>Create Your First Form</span>
-                  </button>
+                  </Link>
                 </div>
               </div>
             )}
