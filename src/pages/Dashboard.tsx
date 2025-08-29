@@ -317,6 +317,13 @@ export const Dashboard: React.FC = () => {
                     {subscription ? (
                       <div className="space-y-3">
                         <div className="flex items-center justify-between">
+                          <span className="text-gray-600">Plan:</span>
+                          <span className="px-3 py-1 rounded-full text-sm font-medium bg-primary-100 text-primary-950">
+                            {subscription.price_id === 'price_1Rznb5Dn6VTzl81bjqFfCagv' ? 'Basic' : 
+                             subscription.price_id === 'price_1Rznb5Dn6VTzl81b8Hx5UQt6' ? 'Pro' : 'Unknown'}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between">
                           <span className="text-gray-600">Status:</span>
                           <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                             subscription.status === 'active' ? 'bg-green-100 text-green-800' :
