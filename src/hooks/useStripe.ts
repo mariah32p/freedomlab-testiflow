@@ -12,20 +12,17 @@ export const useStripe = () => {
     setError(null);
 
     try {
-      // If in mock mode, simulate successful checkout
-      if (!APP_CONFIG.ENABLE_REAL_AUTH) {
-        // Simulate loading time
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        // Open success page in new tab
-        window.open(`${window.location.origin}/success`, '_blank');
-        return;
-      }
-
-      const { data: { session } } = await supabase.auth.getSession();
+      // Get user email - either from real session or mock user
+      let userEmail: string;
       
-      if (!session) {
-        throw new Error('You must be logged in to make a purchase');
+      if (APP_CONFIG.ENABLE_REAL_AUTH) {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user?.email) {
+          throw new Error('You must be logged in to make a purchase');
+        }
+        userEmail = session.user.email;
+      } else {
+        userEmail = APP_CONFIG.MOCK_USER.email;
       }
 
       const product = products.find(p => p.priceId === priceId);
@@ -37,7 +34,7 @@ export const useStripe = () => {
         body: {
           price_id: priceId,
           mode: product.mode,
-          customer_email: session?.user?.email,
+          customer_email: userEmail,
           success_url: `${window.location.origin}/success`,
           cancel_url: `${window.location.origin}/get-started`,
         },
