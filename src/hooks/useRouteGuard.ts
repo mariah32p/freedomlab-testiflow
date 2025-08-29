@@ -75,9 +75,26 @@ export const useRouteGuard = () => {
         if (error || !subscriptionData) {
           // No subscription found
           subscription = { status: 'not_started' };
+        } else {
+          subscription = {
+            status: subscriptionData.subscription_status,
+            payment_issue_since: subscriptionData.payment_issue_since
+          };
+        }
+
+        // Handle routing based on subscription status
+        switch (subscription.status) {
+          case 'trialing':
+          case 'active':
+            // Active subscription → allow dashboard
+            if (location.pathname === '/get-started') {
+              navigate('/dashboard');
+            }
+            break;
+
           case 'past_due':
             // Check if in 30-day grace period
-            if (isInGracePeriod(payment_issue_since)) {
+            if (isInGracePeriod(subscription.payment_issue_since)) {
               // Allow dashboard but will show payment issue banner
               if (location.pathname === '/get-started') {
                 navigate('/dashboard');
@@ -89,7 +106,7 @@ export const useRouteGuard = () => {
               }
             }
             break;
-            if (location.pathname === '/get-started') {
+
           case 'canceled':
           case 'not_started':
           default:
@@ -110,15 +127,6 @@ export const useRouteGuard = () => {
 
     checkSubscriptionStatus();
 
-      case 'canceled':
-      case 'not_started':
-      default:
-        // No active subscription → send to get-started
-        if (location.pathname !== '/get-started' && !isPublicPage) {
-          navigate('/get-started');
-        }
-        break;
-    }
   }, [user, loading, location.pathname, navigate]);
 
   return { user, loading };
