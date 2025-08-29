@@ -12,6 +12,16 @@ export const useStripe = () => {
     setError(null);
 
     try {
+      // If in mock mode, simulate successful checkout
+      if (!APP_CONFIG.ENABLE_REAL_AUTH) {
+        // Simulate loading time
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Open success page in new tab
+        window.open(`${window.location.origin}/success`, '_blank');
+        return;
+      }
+
       const { data: { session } } = await supabase.auth.getSession();
       
       if (!session) {
