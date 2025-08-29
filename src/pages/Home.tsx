@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { TestTube, Star, Shield, Zap, ArrowRight } from 'lucide-react';
+import { TestTube, Star, Shield, Zap, ArrowRight, MessageSquare, Download, BarChart3, Users, CheckCircle, Clock, Globe } from 'lucide-react';
 
 export const Home: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+    <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <div className="relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
+      <div className="relative overflow-hidden bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32">
           <div className="text-center">
             <div className="flex justify-center mb-8">
               <div className="flex items-center space-x-2 bg-indigo-100 px-4 py-2 rounded-full">
@@ -16,43 +16,468 @@ export const Home: React.FC = () => {
               </div>
             </div>
             
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+            <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight">
               Transform Customer
               <span className="text-indigo-600"> Testimonials</span>
               <br />
               Into Marketing Gold
             </h1>
             
-            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
               Complete testimonial collection and management platform with legal rights tracking 
               and automatic ad-ready export formats for marketing teams.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
               <Link
                 to="/signup"
-                className="bg-indigo-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-indigo-700 transition-colors flex items-center justify-center space-x-2"
+                className="bg-indigo-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-indigo-700 transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
               >
                 <span>Start Free Trial</span>
                 <ArrowRight className="h-5 w-5" />
               </Link>
               <Link
                 to="/pricing"
-                className="border border-gray-300 text-gray-700 px-8 py-4 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
+                className="border border-gray-300 text-gray-700 px-8 py-4 rounded-lg font-semibold hover:bg-gray-50 transition-all duration-200 hover:shadow-md"
               >
                 View Pricing
               </Link>
+            </div>
+
+            {/* Hero Mockup */}
+            <div className="relative max-w-5xl mx-auto">
+              <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
+                <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 flex items-center space-x-3">
+                  <div className="flex space-x-2">
+                    <div className="w-3 h-3 bg-red-400 rounded-full"></div>
+                    <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                    <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+                  </div>
+                  <div className="text-sm text-gray-500">TestiFlow Dashboard</div>
+                </div>
+                <div className="p-8">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-100">
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="font-semibold text-gray-900">Total Testimonials</h3>
+                        <MessageSquare className="h-5 w-5 text-blue-600" />
+                      </div>
+                      <div className="text-3xl font-bold text-blue-600">247</div>
+                      <div className="text-sm text-gray-600 mt-1">+23 this month</div>
+                    </div>
+                    <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-6 rounded-xl border border-green-100">
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="font-semibold text-gray-900">Approved</h3>
+                        <CheckCircle className="h-5 w-5 text-green-600" />
+                      </div>
+                      <div className="text-3xl font-bold text-green-600">189</div>
+                      <div className="text-sm text-gray-600 mt-1">76% approval rate</div>
+                    </div>
+                    <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-xl border border-purple-100">
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="font-semibold text-gray-900">Exported</h3>
+                        <Download className="h-5 w-5 text-purple-600" />
+                      </div>
+                      <div className="text-3xl font-bold text-purple-600">156</div>
+                      <div className="text-sm text-gray-600 mt-1">Ready for ads</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Features Section */}
-      <div className="py-20 bg-white">
+      {/* Collection Mockup Section */}
+      <div className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div>
+              <h2 className="text-4xl font-bold text-gray-900 mb-6">
+                Smart Testimonial Collection
+              </h2>
+              <p className="text-xl text-gray-600 mb-8">
+                Automated collection forms with customizable questions, follow-up sequences, and built-in consent management.
+              </p>
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
+                    <CheckCircle className="h-4 w-4 text-indigo-600" />
+                  </div>
+                  <span className="text-gray-700">Customizable collection forms</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
+                    <CheckCircle className="h-4 w-4 text-indigo-600" />
+                  </div>
+                  <span className="text-gray-700">Automated follow-up sequences</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
+                    <CheckCircle className="h-4 w-4 text-indigo-600" />
+                  </div>
+                  <span className="text-gray-700">Built-in legal consent tracking</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="relative">
+              <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
+                <div className="bg-indigo-600 px-6 py-4">
+                  <h3 className="text-white font-semibold">Customer Feedback Form</h3>
+                </div>
+                <div className="p-6 space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">How was your experience?</label>
+                    <div className="flex space-x-2">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star key={star} className="h-6 w-6 text-yellow-400 fill-current" />
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Tell us more about your experience</label>
+                    <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                      <p className="text-gray-600 text-sm">
+                        "TestiFlow has completely transformed how we collect and manage customer feedback. The automated workflows save us hours every week!"
+                      </p>
+                    </div>
+                  </div>
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <div className="flex items-center space-x-2">
+                      <CheckCircle className="h-4 w-4 text-green-600" />
+                      <span className="text-sm text-green-800">I consent to use this testimonial for marketing purposes</span>
+                    </div>
+                  </div>
+                  <button className="w-full bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
+                    Submit Testimonial
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Management Dashboard Mockup */}
+      <div className="py-24 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div className="order-2 lg:order-1">
+              <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
+                <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
+                  <h3 className="font-semibold text-gray-900">Testimonial Management</h3>
+                </div>
+                <div className="p-6">
+                  <div className="space-y-4">
+                    {[
+                      { name: 'Sarah Johnson', company: 'TechCorp', status: 'approved', rating: 5, consent: true },
+                      { name: 'Mike Chen', company: 'StartupXYZ', status: 'pending', rating: 4, consent: true },
+                      { name: 'Emily Davis', company: 'GrowthCo', status: 'approved', rating: 5, consent: false },
+                    ].map((testimonial, index) => (
+                      <div key={index} className="border border-gray-200 rounded-lg p-4">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                              <User className="h-4 w-4 text-gray-600" />
+                            </div>
+                            <div>
+                              <div className="font-medium text-gray-900">{testimonial.name}</div>
+                              <div className="text-sm text-gray-500">{testimonial.company}</div>
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <div className="flex">
+                              {[...Array(testimonial.rating)].map((_, i) => (
+                                <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
+                              ))}
+                            </div>
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                              testimonial.status === 'approved' 
+                                ? 'bg-green-100 text-green-800' 
+                                : 'bg-yellow-100 text-yellow-800'
+                            }`}>
+                              {testimonial.status}
+                            </span>
+                          </div>
+                        </div>
+                        <p className="text-sm text-gray-600 mb-3">
+                          "Amazing product! Has saved us countless hours and improved our workflow significantly."
+                        </p>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-2">
+                            <Shield className={`h-4 w-4 ${testimonial.consent ? 'text-green-500' : 'text-gray-400'}`} />
+                            <span className="text-xs text-gray-500">
+                              {testimonial.consent ? 'Marketing consent given' : 'No marketing consent'}
+                            </span>
+                          </div>
+                          <div className="flex space-x-2">
+                            <button className="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full transition-colors">
+                              Edit
+                            </button>
+                            <button className="text-xs bg-indigo-100 hover:bg-indigo-200 text-indigo-700 px-3 py-1 rounded-full transition-colors">
+                              Export
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="order-1 lg:order-2">
+              <h2 className="text-4xl font-bold text-gray-900 mb-6">
+                Powerful Management Dashboard
+              </h2>
+              <p className="text-xl text-gray-600 mb-8">
+                Review, approve, and organize testimonials with our intuitive dashboard. Track consent status and manage usage rights effortlessly.
+              </p>
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                    <CheckCircle className="h-4 w-4 text-green-600" />
+                  </div>
+                  <span className="text-gray-700">Bulk approval and rejection</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                    <CheckCircle className="h-4 w-4 text-green-600" />
+                  </div>
+                  <span className="text-gray-700">Legal consent tracking</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                    <CheckCircle className="h-4 w-4 text-green-600" />
+                  </div>
+                  <span className="text-gray-700">Smart filtering and search</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Export Formats Mockup */}
+      <div className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Everything You Need to Manage Testimonials
+            <h2 className="text-4xl font-bold text-gray-900 mb-6">
+              Export to Any Marketing Channel
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              One-click export to marketing-ready formats. From social media posts to website widgets, we've got you covered.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Social Media Export */}
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+              <div className="bg-gradient-to-r from-pink-500 to-purple-600 px-6 py-4">
+                <h3 className="text-white font-semibold flex items-center">
+                  <Globe className="h-5 w-5 mr-2" />
+                  Social Media Post
+                </h3>
+              </div>
+              <div className="p-6">
+                <div className="bg-gradient-to-br from-pink-50 to-purple-50 rounded-lg p-4 border border-pink-100">
+                  <div className="flex items-center space-x-3 mb-3">
+                    <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
+                    <div>
+                      <div className="font-medium text-gray-900">Sarah Johnson</div>
+                      <div className="text-sm text-gray-500">@sarahj_tech</div>
+                    </div>
+                  </div>
+                  <p className="text-gray-700 text-sm mb-3">
+                    "TestiFlow has completely transformed how we collect customer feedback! 🚀 The automated workflows are a game-changer. #CustomerSuccess #TestiFlow"
+                  </p>
+                  <div className="flex items-center space-x-4 text-xs text-gray-500">
+                    <span>2:34 PM</span>
+                    <span>•</span>
+                    <span>Dec 15, 2024</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Website Widget */}
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+              <div className="bg-gradient-to-r from-blue-500 to-indigo-600 px-6 py-4">
+                <h3 className="text-white font-semibold flex items-center">
+                  <Globe className="h-5 w-5 mr-2" />
+                  Website Widget
+                </h3>
+              </div>
+              <div className="p-6">
+                <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                  <div className="text-center mb-4">
+                    <h4 className="font-semibold text-gray-900 mb-2">What Our Customers Say</h4>
+                  </div>
+                  <div className="space-y-4">
+                    <div className="bg-white rounded-lg p-3 shadow-sm">
+                      <div className="flex mb-2">
+                        {[...Array(5)].map((_, i) => (
+                          <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
+                        ))}
+                      </div>
+                      <p className="text-sm text-gray-700 mb-2">
+                        "Incredible tool for managing testimonials!"
+                      </p>
+                      <div className="text-xs text-gray-500">- Mike Chen, StartupXYZ</div>
+                    </div>
+                    <div className="bg-white rounded-lg p-3 shadow-sm">
+                      <div className="flex mb-2">
+                        {[...Array(5)].map((_, i) => (
+                          <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
+                        ))}
+                      </div>
+                      <p className="text-sm text-gray-700 mb-2">
+                        "Saves us hours every week!"
+                      </p>
+                      <div className="text-xs text-gray-500">- Emily Davis, GrowthCo</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Analytics Export */}
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+              <div className="bg-gradient-to-r from-green-500 to-emerald-600 px-6 py-4">
+                <h3 className="text-white font-semibold flex items-center">
+                  <BarChart3 className="h-5 w-5 mr-2" />
+                  Analytics Report
+                </h3>
+              </div>
+              <div className="p-6">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-600">Collection Rate</span>
+                    <span className="font-semibold text-gray-900">87%</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className="bg-green-500 h-2 rounded-full" style={{ width: '87%' }}></div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-600">Avg. Rating</span>
+                    <div className="flex items-center space-x-1">
+                      <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                      <span className="font-semibold text-gray-900">4.8</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-600">Response Time</span>
+                    <span className="font-semibold text-gray-900">2.3 days</span>
+                  </div>
+                  <div className="pt-4 border-t border-gray-200">
+                    <button className="w-full bg-green-100 hover:bg-green-200 text-green-800 py-2 rounded-lg text-sm font-medium transition-colors">
+                      Download Full Report
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Legal Compliance Mockup */}
+      <div className="py-24 bg-gradient-to-br from-gray-50 to-blue-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div>
+              <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
+                <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
+                  <h3 className="font-semibold text-gray-900 flex items-center">
+                    <Shield className="h-5 w-5 mr-2 text-green-600" />
+                    Legal Compliance Dashboard
+                  </h3>
+                </div>
+                <div className="p-6">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200">
+                      <div className="flex items-center space-x-3">
+                        <CheckCircle className="h-5 w-5 text-green-600" />
+                        <div>
+                          <div className="font-medium text-gray-900">Marketing Consent</div>
+                          <div className="text-sm text-gray-500">189 testimonials approved</div>
+                        </div>
+                      </div>
+                      <span className="text-green-600 font-semibold">76%</span>
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                      <div className="flex items-center space-x-3">
+                        <Clock className="h-5 w-5 text-yellow-600" />
+                        <div>
+                          <div className="font-medium text-gray-900">Pending Review</div>
+                          <div className="text-sm text-gray-500">12 testimonials waiting</div>
+                        </div>
+                      </div>
+                      <span className="text-yellow-600 font-semibold">5%</span>
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
+                      <div className="flex items-center space-x-3">
+                        <Users className="h-5 w-5 text-gray-600" />
+                        <div>
+                          <div className="font-medium text-gray-900">No Consent</div>
+                          <div className="text-sm text-gray-500">46 testimonials restricted</div>
+                        </div>
+                      </div>
+                      <span className="text-gray-600 font-semibold">19%</span>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-6 pt-6 border-t border-gray-200">
+                    <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg text-sm font-medium transition-colors">
+                      Generate Compliance Report
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <h2 className="text-4xl font-bold text-gray-900 mb-6">
+                Built-in Legal Compliance
+              </h2>
+              <p className="text-xl text-gray-600 mb-8">
+                Never worry about legal issues again. Track consent, manage usage rights, and generate compliance reports automatically.
+              </p>
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                    <Shield className="h-4 w-4 text-green-600" />
+                  </div>
+                  <span className="text-gray-700">GDPR & CCPA compliant</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                    <Shield className="h-4 w-4 text-green-600" />
+                  </div>
+                  <span className="text-gray-700">Automatic consent tracking</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                    <Shield className="h-4 w-4 text-green-600" />
+                  </div>
+                  <span className="text-gray-700">Usage rights management</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Features Grid */}
+      <div className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Everything You Need in One Platform
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               From collection to conversion, TestiFlow handles every aspect of your testimonial workflow.
@@ -60,17 +485,17 @@ export const Home: React.FC = () => {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center p-8 rounded-xl bg-gradient-to-br from-indigo-50 to-purple-50">
+            <div className="text-center p-8 rounded-2xl bg-gradient-to-br from-indigo-50 to-purple-50 border border-indigo-100 hover:shadow-lg transition-all duration-300">
               <div className="bg-indigo-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Star className="h-8 w-8 text-indigo-600" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-4">Smart Collection</h3>
               <p className="text-gray-600">
-                Automated testimonial collection with customizable forms and follow-up sequences.
+                Automated testimonial collection with customizable forms and follow-up sequences that increase response rates.
               </p>
             </div>
 
-            <div className="text-center p-8 rounded-xl bg-gradient-to-br from-green-50 to-emerald-50">
+            <div className="text-center p-8 rounded-2xl bg-gradient-to-br from-green-50 to-emerald-50 border border-green-100 hover:shadow-lg transition-all duration-300">
               <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Shield className="h-8 w-8 text-green-600" />
               </div>
@@ -80,7 +505,7 @@ export const Home: React.FC = () => {
               </p>
             </div>
 
-            <div className="text-center p-8 rounded-xl bg-gradient-to-br from-purple-50 to-pink-50">
+            <div className="text-center p-8 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-100 hover:shadow-lg transition-all duration-300">
               <div className="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Zap className="h-8 w-8 text-purple-600" />
               </div>
@@ -93,22 +518,116 @@ export const Home: React.FC = () => {
         </div>
       </div>
 
+      {/* Analytics Mockup */}
+      <div className="py-24 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div>
+              <h2 className="text-4xl font-bold text-gray-900 mb-6">
+                Powerful Analytics & Insights
+              </h2>
+              <p className="text-xl text-gray-600 mb-8">
+                Track performance, measure impact, and optimize your testimonial strategy with detailed analytics and reporting.
+              </p>
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                    <BarChart3 className="h-4 w-4 text-blue-600" />
+                  </div>
+                  <span className="text-gray-700">Real-time performance metrics</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                    <BarChart3 className="h-4 w-4 text-blue-600" />
+                  </div>
+                  <span className="text-gray-700">Conversion tracking</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                    <BarChart3 className="h-4 w-4 text-blue-600" />
+                  </div>
+                  <span className="text-gray-700">Custom reporting dashboards</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="relative">
+              <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
+                <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
+                  <h3 className="font-semibold text-gray-900">Performance Analytics</h3>
+                </div>
+                <div className="p-6">
+                  <div className="grid grid-cols-2 gap-4 mb-6">
+                    <div className="text-center p-4 bg-blue-50 rounded-lg">
+                      <div className="text-2xl font-bold text-blue-600">87%</div>
+                      <div className="text-sm text-gray-600">Response Rate</div>
+                    </div>
+                    <div className="text-center p-4 bg-green-50 rounded-lg">
+                      <div className="text-2xl font-bold text-green-600">4.8</div>
+                      <div className="text-sm text-gray-600">Avg Rating</div>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Email Campaigns</span>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-20 bg-gray-200 rounded-full h-2">
+                          <div className="bg-blue-500 h-2 rounded-full" style={{ width: '75%' }}></div>
+                        </div>
+                        <span className="text-sm font-medium">75%</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Social Media</span>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-20 bg-gray-200 rounded-full h-2">
+                          <div className="bg-purple-500 h-2 rounded-full" style={{ width: '92%' }}></div>
+                        </div>
+                        <span className="text-sm font-medium">92%</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Website Forms</span>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-20 bg-gray-200 rounded-full h-2">
+                          <div className="bg-green-500 h-2 rounded-full" style={{ width: '68%' }}></div>
+                        </div>
+                        <span className="text-sm font-medium">68%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* CTA Section */}
-      <div className="py-20 bg-indigo-600">
+      <div className="py-24 bg-indigo-600">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-white mb-4">
+          <h2 className="text-4xl font-bold text-white mb-6">
             Ready to Transform Your Testimonials?
           </h2>
-          <p className="text-xl text-indigo-100 mb-8">
+          <p className="text-xl text-indigo-100 mb-12">
             Join thousands of marketing teams who trust TestiFlow to manage their customer testimonials.
           </p>
-          <Link
-            to="/signup"
-            className="bg-white text-indigo-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-50 transition-colors inline-flex items-center space-x-2"
-          >
-            <span>Get Started Today</span>
-            <ArrowRight className="h-5 w-5" />
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              to="/signup"
+              className="bg-white text-indigo-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-50 transition-all duration-200 inline-flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+            >
+              <span>Start Free Trial</span>
+              <ArrowRight className="h-5 w-5" />
+            </Link>
+            <Link
+              to="/pricing"
+              className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-indigo-600 transition-all duration-200"
+            >
+              View Pricing
+            </Link>
+          </div>
         </div>
       </div>
     </div>
