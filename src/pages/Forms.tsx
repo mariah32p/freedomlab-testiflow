@@ -165,8 +165,26 @@ export const Forms: React.FC = () => {
   };
 
   const copyFormUrl = (formId: string) => {
-    navigator.clipboard.writeText(getFormUrl(formId));
-    // You could add a toast notification here
+    navigator.clipboard.writeText(getFormUrl(formId)).then(() => {
+      // Simple feedback - you could enhance this with a toast later
+      const button = document.querySelector(`[data-copy-id="${formId}"]`);
+      if (button) {
+        const originalText = button.innerHTML;
+        button.innerHTML = '<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>';
+        setTimeout(() => {
+          button.innerHTML = originalText;
+        }, 2000);
+      }
+    }).catch(err => {
+      console.error('Failed to copy URL:', err);
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = getFormUrl(formId);
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+    });
   };
 
   const startEdit = (form: TestimonialForm) => {
@@ -344,6 +362,7 @@ export const Forms: React.FC = () => {
                         </button>
                         <button
                           onClick={() => copyFormUrl(form.id)}
+                          data-copy-id={form.id}
                           className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
                           title="Copy form URL"
                         >
