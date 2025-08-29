@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
-import { MessageSquare, Star, User, CheckCircle, Clock, X, Filter, Download } from 'lucide-react';
+import { MessageSquare, Star, User, CheckCircle, Clock, X, Filter, Download, Trash2, MoreVertical } from 'lucide-react';
 import { Alert } from '../components/Alert';
 
 interface Testimonial {
@@ -28,6 +28,8 @@ export const Testimonials: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('all');
+  const [deletingTestimonial, setDeletingTestimonial] = useState<Testimonial | null>(null);
+  const [showActionsFor, setShowActionsFor] = useState<string | null>(null);
 
   useEffect(() => {
     fetchData();
@@ -85,12 +87,30 @@ export const Testimonials: React.FC = () => {
       setTestimonials(testimonials.map(t => 
         t.id === testimonialId ? { ...t, status: newStatus } : t
       ));
+      setShowActionsFor(null);
     } catch (error) {
       console.error('Error updating testimonial status:', error);
       setError('Failed to update testimonial status');
     }
   };
 
+  const handleDeleteTestimonial = async (testimonialId: string) => {
+    try {
+      const { error } = await supabase
+        .from('testimonials')
+        .delete()
+        .eq('id', testimonialId);
+
+      if (error) throw error;
+
+      setTestimonials(testimonials.filter(t => t.id !== testimonialId));
+      setDeletingTestimonial(null);
+      setShowActionsFor(null);
+    } catch (error) {
+      console.error('Error deleting testimonial:', error);
+      setError('Failed to delete testimonial');
+    }
+  };
   const getFormTitle = (formId: string) => {
     const form = forms.find(f => f.id === formId);
     return form?.title || 'Unknown Form';
@@ -147,6 +167,33 @@ export const Testimonials: React.FC = () => {
               </div>
             )}
 
+            {/* Delete Confirmation Modal */}
+            {deletingTestimonial && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+                  <h2 className="text-xl font-bold text-gray-900 mb-4">Delete Testimonial</h2>
+                  <p className="text-gray-600 mb-6">
+                    Are you sure you want to delete the testimonial from <strong>{deletingTestimonial.name}</strong>? 
+                    This action cannot be undone.
+                  </p>
+                  
+                  <div className="flex space-x-3">
+                    <button
+                      onClick={() => handleDeleteTestimonial(deletingTestimonial.id)}
+                      className="flex-1 bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition-colors font-medium"
+                    >
+                      Delete Testimonial
+                    </button>
+                    <button
+                      onClick={() => setDeletingTestimonial(null)}
+                      className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 transition-colors font-medium"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
             {/* Testimonials List */}
             {filteredTestimonials.length === 0 ? (
               <div className="text-center py-12">
@@ -172,7 +219,7 @@ export const Testimonials: React.FC = () => {
             ) : (
               <div className="space-y-4">
                 {filteredTestimonials.map((testimonial) => (
-                  <div key={testimonial.id} className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                  <div key={testimonial.id} className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow relative">
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center space-x-3">
                         <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
@@ -201,6 +248,59 @@ export const Testimonials: React.FC = () => {
                         }`}>
                           {testimonial.status}
                         </span>
+                        <div className="relative">
+                          <button
+                            onClick={() => setShowActionsFor(showActionsFor === testimonial.id ? null : testimonial.id)}
+                            className="p-1 text-gray-400 hover:text-gray-600 transition-colors"
+                          >
+                            <MoreVertical className="h-4 w-4" />
+                          </button>
+                          
+                          {showActionsFor === testimonial.id && (
+                            <div className="absolute right-0 top-8 bg-white border border-gray-200 rounded-lg shadow-lg z-10 min-w-48">
+                              <div className="py-1">
+                                {testimonial.status !== 'approved' && (
+                                  <button
+                                    onClick={() => handleStatusChange(testimonial.id, 'approved')}
+                                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-secondary-50 hover:text-secondary-700 flex items-center space-x-2"
+                                  >
+                                    <CheckCircle className="h-4 w-4" />
+                                    <span>Approve</span>
+                                  </button>
+                                )}
+                                {testimonial.status !== 'rejected' && (
+                                  <button
+                                    onClick={() => handleStatusChange(testimonial.id, 'rejected')}
+                                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 flex items-center space-x-2"
+                                  >
+                                    <X className="h-4 w-4" />
+                                    <span>Reject</span>
+                                  </button>
+                                )}
+                                {testimonial.status !== 'pending' && (
+                                  <button
+                                    onClick={() => handleStatusChange(testimonial.id, 'pending')}
+                                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-yellow-50 hover:text-yellow-700 flex items-center space-x-2"
+                                  >
+                                    <Clock className="h-4 w-4" />
+                                    <span>Mark as Pending</span>
+                                  </button>
+                                )}
+                                <hr className="my-1" />
+                                <button
+                                  onClick={() => {
+                                    setDeletingTestimonial(testimonial);
+                                    setShowActionsFor(null);
+                                  }}
+                                  className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center space-x-2"
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                  <span>Delete</span>
+                                </button>
+                              </div>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
 
@@ -213,28 +313,49 @@ export const Testimonials: React.FC = () => {
                         <div>From: {getFormTitle(testimonial.form_id)}</div>
                         <div>Submitted: {new Date(testimonial.submitted_at).toLocaleDateString()}</div>
                       </div>
-                      
-                      {testimonial.status === 'pending' && (
-                        <div className="flex space-x-2">
-                          <button
-                            onClick={() => handleStatusChange(testimonial.id, 'rejected')}
-                            className="px-3 py-1 bg-red-100 text-red-700 hover:bg-red-200 rounded-md text-sm font-medium transition-colors flex items-center space-x-1"
-                          >
-                            <X className="h-3 w-3" />
-                            <span>Reject</span>
-                          </button>
-                          <button
-                            onClick={() => handleStatusChange(testimonial.id, 'approved')}
-                            className="px-3 py-1 bg-secondary-100 text-secondary-700 hover:bg-secondary-200 rounded-md text-sm font-medium transition-colors flex items-center space-x-1"
-                          >
-                            <CheckCircle className="h-3 w-3" />
-                            <span>Approve</span>
-                          </button>
-                        </div>
-                      )}
                     </div>
                   </div>
                 ))}
+              </div>
+            )}
+
+            {/* Delete Confirmation Modal */}
+            {deletingTestimonial && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+                  <h2 className="text-xl font-bold text-gray-900 mb-4">Delete Testimonial</h2>
+                  <p className="text-gray-600 mb-6">
+                    Are you sure you want to delete the testimonial from <strong>{deletingTestimonial.name}</strong>? 
+                    This action cannot be undone.
+                  </p>
+                  
+                  <div className="bg-gray-50 rounded-lg p-4 mb-4">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <div className="flex">
+                        {[...Array(deletingTestimonial.rating)].map((_, i) => (
+                          <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
+                        ))}
+                      </div>
+                      <span className="text-sm text-gray-500">by {deletingTestimonial.name}</span>
+                    </div>
+                    <p className="text-sm text-gray-700 italic">"{deletingTestimonial.message}"</p>
+                  </div>
+                  
+                  <div className="flex space-x-3">
+                    <button
+                      onClick={() => handleDeleteTestimonial(deletingTestimonial.id)}
+                      className="flex-1 bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition-colors font-medium"
+                    >
+                      Delete Testimonial
+                    </button>
+                    <button
+                      onClick={() => setDeletingTestimonial(null)}
+                      className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 transition-colors font-medium"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
               </div>
             )}
           </div>
