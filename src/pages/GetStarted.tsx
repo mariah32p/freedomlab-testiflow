@@ -80,8 +80,6 @@ export const GetStarted: React.FC = () => {
                 <span className="text-xl text-gray-500 ml-1">/mo</span>
               </div>
               <p className="mt-2 text-gray-600">Perfect for small teams getting started</p>
-              <p className="mt-2 text-gray-600">Perfect for small businesses and consultants</p>
-              <p className="mt-2 text-gray-600">Perfect for small businesses and consultants</p>
             </div>
             
             <div className="px-6 py-8">
@@ -134,7 +132,6 @@ export const GetStarted: React.FC = () => {
                 <span className="text-xl text-white/80 ml-1">/mo</span>
               </div>
               <p className="mt-2 text-white/90">Everything you need to scale</p>
-              <p className="mt-2 text-white/90">Perfect for agencies and growing businesses</p>
               <p className="mt-2 text-white/90">Perfect for agencies and growing businesses</p>
             </div>
             
