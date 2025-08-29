@@ -65,7 +65,7 @@ export const useRouteGuard = () => {
           .from('stripe_customers')
           .select('customer_id')
           .eq('user_id', user.id)
-          .single();
+          .maybeSingle();
 
         if (!customerData) {
           // No customer record = no subscription
