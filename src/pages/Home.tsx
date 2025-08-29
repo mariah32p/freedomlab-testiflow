@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { TestTube, Star, Shield, Zap, ArrowRight, MessageSquare, Download, BarChart3, Users, CheckCircle, Clock, Globe, User } from 'lucide-react';
+import { Star, Shield, Zap, ArrowRight, MessageSquare, Download, BarChart3, Users, CheckCircle, Clock, Globe, User, TrendingUp, Award, Target, Sparkles } from 'lucide-react';
+import { TestiFlowIcon } from '../components/TestiFlowIcon';
 
 export const Home: React.FC = () => {
   return (
@@ -11,7 +12,7 @@ export const Home: React.FC = () => {
           <div className="text-center">
             <div className="flex justify-center mb-8">
               <div className="flex items-center space-x-2 bg-primary-100 px-4 py-2 rounded-full">
-                <TestTube className="h-6 w-6 text-primary-950" />
+                <TestiFlowIcon className="h-6 w-6 text-teal" />
                 <span className="text-primary-950 font-semibold">TestiFlow</span>
               </div>
             </div>

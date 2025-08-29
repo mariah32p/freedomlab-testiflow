@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Check, TestTube } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useStripe } from '../hooks/useStripe';
 import { products } from '../stripe-config';
+import { TestiFlowIcon } from '../components/TestiFlowIcon';
 
 export const Pricing: React.FC = () => {
   const { user } = useAuth();
@@ -25,9 +26,9 @@ export const Pricing: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <div className="flex justify-center mb-8">
-            <div className="flex items-center space-x-2 bg-indigo-100 px-4 py-2 rounded-full">
-              <TestTube className="h-6 w-6 text-indigo-600" />
-              <span className="text-indigo-600 font-semibold">TestiFlow Pricing</span>
+            <div className="flex items-center space-x-2 bg-teal/10 px-4 py-2 rounded-full">
+              <TestiFlowIcon className="h-6 w-6 text-teal" />
+              <span className="text-teal font-semibold">TestiFlow Pricing</span>
             </div>
           </div>
           
@@ -44,7 +45,7 @@ export const Pricing: React.FC = () => {
             <div className="bg-indigo-600 px-6 py-8 text-center">
               <h3 className="text-2xl font-bold text-white">Pro Plan</h3>
               <div className="mt-4 flex items-baseline justify-center">
-                <span className="text-5xl font-bold text-white">$29</span>
+                <span className="text-5xl font-bold text-white">$49</span>
                 <span className="text-xl text-indigo-200 ml-1">/month</span>
               </div>
               <p className="mt-2 text-indigo-200">Everything you need to manage testimonials</p>
