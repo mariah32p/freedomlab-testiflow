@@ -129,41 +129,9 @@ export const Pricing: React.FC = () => {
                   )}
                 </button>
                 <p className="text-sm text-gray-500 text-center mt-2">
-                  14-day free trial • No credit card required
+                  7-day free trial • No credit card required
                 </p>
               </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-16 text-center">
-          <h3 className="text-2xl font-bold text-gray-900 mb-8">
-            Frequently Asked Questions
-          </h3>
-          <div className="max-w-3xl mx-auto space-y-6">
-            <div className="bg-white rounded-lg p-6 shadow-sm">
-              <h4 className="font-semibold text-gray-900 mb-2">
-                What's included in the free trial?
-              </h4>
-              <p className="text-gray-600">
-                Full access to all Pro features for 14 days. No credit card required to start.
-              </p>
-            </div>
-            <div className="bg-white rounded-lg p-6 shadow-sm">
-              <h4 className="font-semibold text-gray-900 mb-2">
-                Can I cancel anytime?
-              </h4>
-              <p className="text-gray-600">
-                Yes, you can cancel your subscription at any time. No long-term contracts or cancellation fees.
-              </p>
-            </div>
-            <div className="bg-white rounded-lg p-6 shadow-sm">
-              <h4 className="font-semibold text-gray-900 mb-2">
-                Do you offer refunds?
-              </h4>
-              <p className="text-gray-600">
-                We offer a 30-day money-back guarantee if you're not satisfied with TestiFlow.
-              </p>
             </div>
           </div>
         </div>
