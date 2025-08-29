@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { TestTube, Star, Shield, Zap, ArrowRight, MessageSquare, Download, BarChart3, Users, CheckCircle, Clock, Globe } from 'lucide-react';
+import { TestTube, Star, Shield, Zap, ArrowRight, MessageSquare, Download, BarChart3, Users, CheckCircle, Clock, Globe, User } from 'lucide-react';
 
 export const Home: React.FC = () => {
   return (
