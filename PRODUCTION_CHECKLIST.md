@@ -25,7 +25,7 @@ If active and Basic → same UI, but Basic-gated actions remain disabled.
 If past_due or other payment issues → show a “Payment issue” banner and allow a 30-day grace window; after 30 days, treat as no active subscription.
 If no active subscription (canceled, >30-day payment issue, or sign-up abandoned before payment) → route to /get-started.
 Settings → Manage Subscription: Opens Stripe Customer Portal (https://billing.stripe.com/p/login/28E28r3f7fJDc9y7sG5os00) for cancel and payment method updates only. Do not use the portal for plan switching.
-Upgrade/Downgrade (plan changes): Handled manually in-app. When the user changes plans, the server starts a new Checkout Session without a trial, and Stripe charges immediately based on your proration policy. (Plan changes do not create a new trial.) Basic Price ID: price_1RzrMYDn6VTzl81bogCwhX1U, Pro Price ID price_1RzrMYDn6VTzl81bTSgcl0ZA. Both monthly subscriptions.
+Upgrade/Downgrade (plan changes): Handled manually in-app. When the user changes plans, the server starts a new Checkout Session without a trial, and Stripe charges immediately based on your proration policy. (Plan changes do not create a new trial.) Basic Price ID: price_1Rznb5Dn6VTzl81bjqFfCagv, Pro Price ID price_1Rznb5Dn6VTzl81b8Hx5UQt6. Both monthly subscriptions.
 
 4) Data model (Supabase)
 profiles (one row per user, keyed by auth.users.id) stores:
