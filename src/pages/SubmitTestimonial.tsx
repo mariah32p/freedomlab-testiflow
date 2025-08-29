@@ -40,16 +40,19 @@ export const SubmitTestimonial: React.FC = () => {
         const { data, error } = await supabase
           .from('testimonial_forms')
           .select('*')
-          .eq('id', formId)
           .maybeSingle();
 
         if (error) {
+         console.error('Supabase error:', error);
           setError('Failed to load form');
         } else if (!data) {
+         console.log('No form found with ID:', formId);
           setError('Form not found or inactive');
         } else if (!data.is_active) {
+         console.log('Form found but inactive:', data);
           setError('This form is currently inactive');
         } else {
+         console.log('Form loaded successfully:', data);
           setForm(data);
         }
       } catch (error) {
