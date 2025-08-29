@@ -3,13 +3,17 @@ import Stripe from 'npm:stripe@17.7.0';
 import { createClient } from 'npm:@supabase/supabase-js@2.49.1';
 
 const supabase = createClient(Deno.env.get('SUPABASE_URL') ?? '', Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '');
-const stripeSecret = Deno.env.get('STRIPE_SECRET_KEY')!;
-const stripe = new Stripe(stripeSecret, {
-  appInfo: {
-    name: 'Bolt Integration',
-    version: '1.0.0',
-  },
-});
+const stripeSecret = Deno.env.get('STRIPE_SECRET_KEY');
+
+let stripe: Stripe | null = null;
+if (stripeSecret) {
+  stripe = new Stripe(stripeSecret, {
+    appInfo: {
+      name: 'Bolt Integration',
+      version: '1.0.0',
+    },
+  });
+}
 
 // Helper function to create responses with CORS headers
 function corsResponse(body: string | object | null, status = 200) {
@@ -41,6 +45,11 @@ Deno.serve(async (req) => {
 
     if (req.method !== 'POST') {
       return corsResponse({ error: 'Method not allowed' }, 405);
+    }
+
+    // Check if Stripe is properly configured
+    if (!stripe || !stripeSecret) {
+      return corsResponse({ error: 'Stripe is not configured. Please set STRIPE_SECRET_KEY environment variable.' }, 500);
     }
 
     const { price_id, success_url, cancel_url, mode, customer_email } = await req.json();
