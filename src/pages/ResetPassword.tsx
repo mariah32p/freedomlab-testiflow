@@ -34,14 +34,15 @@ export const ResetPassword: React.FC = () => {
   const isPasswordStrong = passwordStrength.score >= 4;
 
   useEffect(() => {
-    // Check if we have the required tokens from the URL
-    const accessToken = searchParams.get('access_token');
-    const refreshToken = searchParams.get('refresh_token');
-
     if (!APP_CONFIG.ENABLE_REAL_AUTH) {
       // Mock mode - allow password reset
       return;
     }
+
+    // Supabase sends reset tokens in the URL hash (#) rather than the query string
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    const accessToken = searchParams.get('access_token') || hashParams.get('access_token');
+    const refreshToken = searchParams.get('refresh_token') || hashParams.get('refresh_token');
 
     if (!accessToken || !refreshToken) {
       setError('Invalid or expired reset link. Please request a new password reset.');
