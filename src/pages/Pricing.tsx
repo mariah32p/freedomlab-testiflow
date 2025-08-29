@@ -71,9 +71,9 @@ export const Pricing: React.FC = () => {
               <button
                 onClick={() => !user ? navigate('/signup') : createCheckoutSession('price_basic')}
                 disabled={loading}
-                className="w-full bg-gray-100 text-navy py-3 px-6 rounded-lg font-semibold hover:bg-gray-200 transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed border border-gray-300"
+                className="w-full bg-primary-950 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-900 transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {user ? 'Choose Basic' : 'Get Started'}
+                Start Free Trial
               </button>
             </div>
           </div>
@@ -117,16 +117,13 @@ export const Pricing: React.FC = () => {
                 <button
                   onClick={handleSubscribe}
                   disabled={loading}
-                  className="w-full bg-navy text-white py-3 px-6 rounded-lg font-semibold hover:bg-navy/90 transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+                  className="w-full bg-secondary-500 text-white py-3 px-6 rounded-lg font-semibold hover:bg-secondary-600 transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
                 >
                   {loading ? (
                     <div className="flex items-center">
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                       Processing...
                     </div>
-                  ) : user ? (
-                    'Choose Pro'
-                  ) : (
                     'Start Free Trial'
                   )}
                 </button>
