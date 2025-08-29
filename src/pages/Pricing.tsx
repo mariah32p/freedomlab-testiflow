@@ -79,12 +79,7 @@ export const Pricing: React.FC = () => {
           </div>
 
           {/* Pro Plan */}
-          <div className="bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-secondary-500 relative">
-            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-              <span className="bg-purple text-white px-4 py-1 rounded-full text-sm font-semibold">
-                Most Popular
-              </span>
-            </div>
+          <div className="bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-secondary-500">
             <div className="bg-gradient-to-r from-primary-950 to-secondary-500 px-6 py-8 text-center">
               <h3 className="text-2xl font-bold text-white">Pro</h3>
               <div className="mt-4 flex items-baseline justify-center">
