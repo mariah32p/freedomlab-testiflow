@@ -4,7 +4,6 @@ export interface Product {
   name: string;
   description: string;
   mode: 'payment' | 'subscription';
-  price: number;
 }
 
 export const products: Product[] = [
@@ -13,8 +12,7 @@ export const products: Product[] = [
     priceId: 'price_1Rznb5Dn6VTzl81bjqFfCagv',
     name: 'TestiFlow',
     description: 'Complete testimonial collection and management platform with legal rights tracking and automatic ad-ready export formats for marketing teams.',
-    mode: 'subscription',
-    price: 29.00
+    mode: 'subscription'
   }
 ];
 
