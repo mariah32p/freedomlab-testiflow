@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
+import { APP_CONFIG } from '../config/app';
 
 interface AuthContextType {
   user: User | null;
@@ -27,14 +28,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Get initial session
+    if (!APP_CONFIG.ENABLE_REAL_AUTH) {
+      // Mock mode - simulate loading then no user
+      setLoading(false);
+      return;
+    }
+
+    // Real auth mode
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
     });
 
-    // Listen for auth changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -47,6 +53,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const signUp = async (email: string, password: string) => {
+    if (!APP_CONFIG.ENABLE_REAL_AUTH) {
+      // Mock signup - simulate success and redirect
+      setUser(APP_CONFIG.MOCK_USER as User);
+      return { error: null };
+    }
+
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -58,6 +70,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signIn = async (email: string, password: string) => {
+    if (!APP_CONFIG.ENABLE_REAL_AUTH) {
+      // Mock signin - simulate success
+      setUser(APP_CONFIG.MOCK_USER as User);
+      return { error: null };
+    }
+
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -66,6 +84,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signOut = async () => {
+    if (!APP_CONFIG.ENABLE_REAL_AUTH) {
+      // Mock signout
+      setUser(null);
+      setSession(null);
+      return;
+    }
+
     await supabase.auth.signOut();
   };
 
