@@ -18,7 +18,7 @@ export const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <Link to="/" className="flex items-center space-x-2">
+            <Link to={user ? "/dashboard" : "/"} className="flex items-center space-x-2">
               <TestiFlowIcon className="h-8 w-8 text-navy" />
               <span className="text-xl font-bold text-primary-950">TestiFlow</span>
             </Link>
