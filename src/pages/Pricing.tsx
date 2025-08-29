@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Check } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useStripe } from '../hooks/useStripe';
-import { products } from '../stripe-config';
+import { products } from '../stripe-config.js';
 import { TestiFlowIcon } from '../components/TestiFlowIcon';
 
 export const Pricing: React.FC = () => {

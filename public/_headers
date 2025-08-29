@@ -1,11 +1,21 @@
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+
 /*.js
-  Content-Type: application/javascript
+  Content-Type: application/javascript; charset=utf-8
 
 /*.mjs
-  Content-Type: application/javascript
+  Content-Type: application/javascript; charset=utf-8
+
+/*.ts
+  Content-Type: application/javascript; charset=utf-8
+
+/*.tsx
+  Content-Type: application/javascript; charset=utf-8
 
 /*.css
-  Content-Type: text/css
+  Content-Type: text/css; charset=utf-8
 
 /*.svg
   Content-Type: image/svg+xml
@@ -13,42 +23,50 @@
 /*.ico
   Content-Type: image/x-icon
 
-/*.ts
-  Content-Type: application/javascript
+/*.png
+  Content-Type: image/png
 
-/*.tsx
-  Content-Type: application/javascript
+/*.jpg
+  Content-Type: image/jpeg
 
-/src/*.ts
-  Content-Type: application/javascript
+/*.jpeg
+  Content-Type: image/jpeg
 
-/src/*.tsx
-  Content-Type: application/javascript
+/*.gif
+  Content-Type: image/gif
 
-/src/*/*.ts
-  Content-Type: application/javascript
+/*.webp
+  Content-Type: image/webp
 
-/src/*/*.tsx
-  Content-Type: application/javascript
+/*.json
+  Content-Type: application/json; charset=utf-8
 
-/src/*.css
-  Content-Type: text/css
-
-/src/*/*.css
-  Content-Type: text/css
+/*.html
+  Content-Type: text/html; charset=utf-8
 
 /assets/*.js
-  Content-Type: application/javascript
+  Content-Type: application/javascript; charset=utf-8
 
 /assets/*.mjs
-  Content-Type: application/javascript
+  Content-Type: application/javascript; charset=utf-8
 
 /assets/*.css
-  Content-Type: text/css
+  Content-Type: text/css; charset=utf-8
 
 /assets/*.svg
   Content-Type: image/svg+xml
 
-/assets/*.ico
-  Content-Type: image/x-icon
+/dist/*.js
+  Content-Type: application/javascript; charset=utf-8
 
+/dist/*.mjs
+  Content-Type: application/javascript; charset=utf-8
+
+/dist/assets/*.js
+  Content-Type: application/javascript; charset=utf-8
+
+/dist/assets/*.mjs
+  Content-Type: application/javascript; charset=utf-8
+
+/dist/assets/*.css
+  Content-Type: text/css; charset=utf-8
