@@ -21,6 +21,7 @@ export const Forms: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingForm, setEditingForm] = useState<TestimonialForm | null>(null);
+  const [deletingForm, setDeletingForm] = useState<TestimonialForm | null>(null);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -140,10 +141,6 @@ export const Forms: React.FC = () => {
   };
 
   const handleDeleteForm = async (formId: string) => {
-    if (!confirm('Are you sure you want to delete this form? This will also delete all associated testimonials.')) {
-      return;
-    }
-
     try {
       const { error } = await supabase
         .from('testimonial_forms')
@@ -154,6 +151,7 @@ export const Forms: React.FC = () => {
       if (error) throw error;
 
       setForms(forms.filter(f => f.id !== formId));
+      setDeletingForm(null);
     } catch (error) {
       console.error('Error deleting form:', error);
       setError('Failed to delete form');
@@ -311,6 +309,34 @@ export const Forms: React.FC = () => {
               </div>
             )}
 
+            {/* Delete Confirmation Modal */}
+            {deletingForm && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+                  <h2 className="text-xl font-bold text-gray-900 mb-4">Delete Form</h2>
+                  <p className="text-gray-600 mb-6">
+                    Are you sure you want to delete "<strong>{deletingForm.title}</strong>"? 
+                    This will also delete all associated testimonials and cannot be undone.
+                  </p>
+                  
+                  <div className="flex space-x-3">
+                    <button
+                      onClick={() => handleDeleteForm(deletingForm.id)}
+                      className="flex-1 bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition-colors font-medium"
+                    >
+                      Delete Form
+                    </button>
+                    <button
+                      onClick={() => setDeletingForm(null)}
+                      className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 transition-colors font-medium"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Forms List */}
             {forms.length === 0 ? (
               <div className="text-center py-12">
@@ -392,7 +418,7 @@ export const Forms: React.FC = () => {
                           {form.is_active ? 'Deactivate' : 'Activate'}
                         </button>
                         <button
-                          onClick={() => handleDeleteForm(form.id)}
+                          onClick={() => setDeletingForm(form)}
                           className="p-1 text-red-400 hover:text-red-600 transition-colors"
                           title="Delete form"
                         >
