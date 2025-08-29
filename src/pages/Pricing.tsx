@@ -1,8 +1,25 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Check, TestTube } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import { useStripe } from '../hooks/useStripe';
+import { products } from '../stripe-config';
 
 export const Pricing: React.FC = () => {
+  const { user } = useAuth();
+  const { createCheckoutSession, loading, error } = useStripe();
+  const navigate = useNavigate();
+
+  const handleSubscribe = async () => {
+    if (!user) {
+      navigate('/signup');
+      return;
+    }
+
+    const product = products[0]; // Get the first (and only) product
+    await createCheckoutSession(product.priceId);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -52,12 +69,27 @@ export const Pricing: React.FC = () => {
               </ul>
               
               <div className="mt-8">
-                <Link
-                  to="/signup"
-                  className="w-full bg-indigo-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-indigo-700 transition-colors flex items-center justify-center"
+                {error && (
+                  <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <p className="text-red-800 text-sm">{error}</p>
+                  </div>
+                )}
+                <button
+                  onClick={handleSubscribe}
+                  disabled={loading}
+                  className="w-full bg-indigo-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-indigo-700 transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Start Free Trial
-                </Link>
+                  {loading ? (
+                    <div className="flex items-center">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      Processing...
+                    </div>
+                  ) : user ? (
+                    'Subscribe Now'
+                  ) : (
+                    'Sign Up & Subscribe'
+                  )}
+                </button>
                 <p className="text-sm text-gray-500 text-center mt-2">
                   14-day free trial • No credit card required
                 </p>
