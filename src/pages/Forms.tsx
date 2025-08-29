@@ -161,7 +161,7 @@ export const Forms: React.FC = () => {
   };
 
   const getFormUrl = (formId: string) => {
-    return `${window.location.origin}/form/${formId}`;
+    return `${window.location.origin}/submit/${formId}`;
   };
 
   const copyFormUrl = (formId: string) => {
@@ -363,13 +363,14 @@ export const Forms: React.FC = () => {
                         <button
                           onClick={() => copyFormUrl(form.id)}
                           data-copy-id={form.id}
-                          className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
-                          title="Copy form URL"
+                          className="px-3 py-1 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-md text-xs font-medium transition-colors flex items-center space-x-1"
+                          title="Copy shareable link"
                         >
-                          <Copy className="h-4 w-4" />
+                          <Copy className="h-3 w-3" />
+                          <span>Copy Link</span>
                         </button>
                         <a
-                          href={getFormUrl(form.id)}
+                          href={`/form/${form.id}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
