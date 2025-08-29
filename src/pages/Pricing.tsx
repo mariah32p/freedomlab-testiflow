@@ -5,6 +5,8 @@ import { TestiFlowIcon } from '../components/TestiFlowIcon';
 
 export const Pricing: React.FC = () => {
   const navigate = useNavigate();
+  const [error] = React.useState<string>('');
+  const [loading] = React.useState<boolean>(false);
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
