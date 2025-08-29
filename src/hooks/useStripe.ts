@@ -12,14 +12,6 @@ export const useStripe = () => {
     setError(null);
 
     try {
-      if (!APP_CONFIG.ENABLE_REAL_AUTH) {
-        // Mock checkout - simulate redirect to success page
-        setTimeout(() => {
-          window.location.href = `${window.location.origin}/success`;
-        }, 1000);
-        return;
-      }
-
       const { data: { session } } = await supabase.auth.getSession();
       
       if (!session) {
@@ -34,14 +26,15 @@ export const useStripe = () => {
       const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/stripe-checkout`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${session.access_token}`,
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           price_id: priceId,
           mode: product.mode,
+          customer_email: session?.user?.email,
           success_url: `${window.location.origin}/success`,
-          cancel_url: `${window.location.origin}/pricing`,
+          cancel_url: `${window.location.origin}/get-started`,
         }),
       });
 
