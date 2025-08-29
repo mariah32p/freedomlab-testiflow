@@ -50,7 +50,7 @@ export const GetStarted: React.FC = () => {
           </div>
         )}
 
-        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-12">
+        <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto mb-12">
           {/* Basic Plan */}
           <div 
             className={`bg-white rounded-2xl shadow-lg overflow-hidden border-2 cursor-pointer transition-all duration-300 hover:shadow-xl ${
