@@ -13,6 +13,30 @@
 /*.ico
   Content-Type: image/x-icon
 
+/*.ts
+  Content-Type: application/javascript
+
+/*.tsx
+  Content-Type: application/javascript
+
+/src/*.ts
+  Content-Type: application/javascript
+
+/src/*.tsx
+  Content-Type: application/javascript
+
+/src/*/*.ts
+  Content-Type: application/javascript
+
+/src/*/*.tsx
+  Content-Type: application/javascript
+
+/src/*.css
+  Content-Type: text/css
+
+/src/*/*.css
+  Content-Type: text/css
+
 /assets/*.js
   Content-Type: application/javascript
 
