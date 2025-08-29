@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Star, Shield, Zap, ArrowRight, MessageSquare, Download, BarChart3, Users, CheckCircle, Clock, Globe, User, TrendingUp, Award, Target, Sparkles } from 'lucide-react';
+import { Star, Shield, Zap, ArrowRight, MessageSquare, Download, BarChart3, CheckCircle, Globe, User } from 'lucide-react';
 import { TestiFlowIcon } from '../components/TestiFlowIcon';
 
 export const Home: React.FC = () => {
