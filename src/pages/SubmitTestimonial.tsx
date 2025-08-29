@@ -42,7 +42,7 @@ export const SubmitTestimonial: React.FC = () => {
           .select('*')
           .eq('id', formId)
           .eq('is_active', true)
-          .single();
+          .maybeSingle();
 
         if (error || !data) {
           setError('Form not found or inactive');
