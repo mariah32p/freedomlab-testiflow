@@ -53,7 +53,9 @@ export const useRouteGuard = () => {
     // Real auth mode route logic
     if (!user) {
       // Not signed in → send to /signup (unless on public page)
+      console.log('No user found, current path:', location.pathname, 'Is public page:', isPublicPage);
       if (!isPublicPage) {
+        console.log('Redirecting to signup because not on public page');
         navigate('/signup');
       }
       return;

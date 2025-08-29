@@ -34,8 +34,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return;
     }
 
+    console.log('AuthContext: Initializing auth state check');
+
     // Real auth mode
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('AuthContext: Initial session check', session?.user?.email || 'No user');
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
@@ -44,6 +47,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log('AuthContext: Auth state changed', _event, session?.user?.email || 'No user');
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
