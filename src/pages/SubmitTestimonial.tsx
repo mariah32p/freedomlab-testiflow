@@ -68,7 +68,10 @@ export const SubmitTestimonial: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form || rating === 0) return;
+    if (!form || rating === 0) {
+      setError('Please provide a rating before submitting');
+      return;
+    }
 
     setSubmitting(true);
     setError(null);
@@ -86,8 +89,12 @@ export const SubmitTestimonial: React.FC = () => {
           status: 'pending'
         }]);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
+      }
 
+      console.log('Testimonial submitted successfully');
       setSubmitted(true);
     } catch (error) {
       console.error('Error submitting testimonial:', error);
