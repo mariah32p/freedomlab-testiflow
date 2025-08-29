@@ -38,18 +38,6 @@ export const useRouteGuard = () => {
     const isPublicPage = publicPages.includes(location.pathname);
         console.log('No user found, redirecting to signup if not on public page');
 
-    if (!APP_CONFIG.ENABLE_REAL_AUTH) {
-      // Mock mode - allow access to get-started for testing
-      if (location.pathname === '/get-started') {
-        return;
-      }
-      // In mock mode, treat as not signed in for public pages
-      if (!isPublicPage && location.pathname !== '/get-started') {
-        navigate('/get-started');
-      }
-      return;
-    }
-
     // Real auth mode route logic
     if (!user) {
       // Not signed in → send to /signup (unless on public page)
@@ -82,7 +70,7 @@ export const useRouteGuard = () => {
         if (!customerData) {
           // No customer record = no subscription
           if (location.pathname !== '/get-started' && !isPublicPage) {
-        console.log('Mock mode active');
+        console.log('No user authenticated');
             navigate('/get-started');
           }
           return;

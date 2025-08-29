@@ -17,13 +17,6 @@ export const ForgotPassword: React.FC = () => {
     setLoading(true);
     setError('');
 
-    if (!APP_CONFIG.ENABLE_REAL_AUTH) {
-      // Mock mode - simulate success
-      setSuccess(true);
-      setLoading(false);
-      return;
-    }
-
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/reset-password`,
     });

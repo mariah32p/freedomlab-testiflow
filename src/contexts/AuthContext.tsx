@@ -28,12 +28,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!APP_CONFIG.ENABLE_REAL_AUTH) {
-      // Mock mode - simulate loading then no user
-      setLoading(false);
-      return;
-    }
-
     console.log('AuthContext: Initializing auth state check');
 
     // Real auth mode
@@ -57,12 +51,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const signUp = async (email: string, password: string) => {
-    if (!APP_CONFIG.ENABLE_REAL_AUTH) {
-      // Mock signup - simulate success and redirect
-      setUser(APP_CONFIG.MOCK_USER as User);
-      return { error: null };
-    }
-
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -74,12 +62,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signIn = async (email: string, password: string) => {
-    if (!APP_CONFIG.ENABLE_REAL_AUTH) {
-      // Mock signin - simulate success
-      setUser(APP_CONFIG.MOCK_USER as User);
-      return { error: null };
-    }
-
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -88,13 +70,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signOut = async () => {
-    if (!APP_CONFIG.ENABLE_REAL_AUTH) {
-      // Mock signout
-      setUser(null);
-      setSession(null);
-      return;
-    }
-
     await supabase.auth.signOut();
   };
 

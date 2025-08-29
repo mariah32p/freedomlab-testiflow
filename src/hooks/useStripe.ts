@@ -12,21 +12,17 @@ export const useStripe = () => {
     setError(null);
 
     try {
-      // Always try to get real user first, fallback to mock if needed
+      // Get authenticated user
       let userEmail: string;
       let userId: string;
       
-      // Try to get real user session first
+      // Get user session
       const { data: { session } } = await supabase.auth.getSession();
       
       if (session?.user?.email) {
-        // Use real user data if available
+        // Use authenticated user data
         userEmail = session.user.email;
         userId = session.user.id;
-      } else if (!APP_CONFIG.ENABLE_REAL_AUTH) {
-        // Fallback to mock user only if real auth is disabled and no real session
-        userEmail = APP_CONFIG.MOCK_USER.email;
-        userId = APP_CONFIG.MOCK_USER.id;
       } else {
         throw new Error('You must be logged in to make a purchase');
       }

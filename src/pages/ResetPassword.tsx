@@ -34,11 +34,6 @@ export const ResetPassword: React.FC = () => {
   const isPasswordStrong = passwordStrength.score >= 4;
 
   useEffect(() => {
-    if (!APP_CONFIG.ENABLE_REAL_AUTH) {
-      // Mock mode - allow password reset
-      return;
-    }
-
     // Supabase sends reset tokens in the URL hash (#) rather than the query string
     const hashParams = new URLSearchParams(window.location.hash.substring(1));
     const accessToken = searchParams.get('access_token') || hashParams.get('access_token');
@@ -73,13 +68,6 @@ export const ResetPassword: React.FC = () => {
       return;
     }
 
-    if (!APP_CONFIG.ENABLE_REAL_AUTH) {
-      // Mock mode - simulate success
-      setSuccess(true);
-      setLoading(false);
-      return;
-    }
-
     const { error } = await supabase.auth.updateUser({
       password: password,
     });
@@ -95,9 +83,7 @@ export const ResetPassword: React.FC = () => {
 
   const handleBackToLogin = () => {
     // Clear any existing session and redirect to login
-    if (APP_CONFIG.ENABLE_REAL_AUTH) {
-      supabase.auth.signOut();
-    }
+    supabase.auth.signOut();
     navigate('/login');
     window.location.reload(); // Refresh to ensure clean state
   };
