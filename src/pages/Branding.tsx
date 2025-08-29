@@ -44,6 +44,7 @@ export const Branding: React.FC = () => {
 
   // Form state
   const [logoUrl, setLogoUrl] = useState('');
+  const [uploading, setUploading] = useState(false);
   const [primaryColor, setPrimaryColor] = useState('#01004d');
   const [secondaryColor, setSecondaryColor] = useState('#01b79e');
   const [fontFamily, setFontFamily] = useState('Montserrat');
@@ -131,6 +132,44 @@ export const Branding: React.FC = () => {
     setSecondaryColor(preset.secondary);
   };
 
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      setError('Please select an image file');
+      return;
+    }
+
+    // Validate file size (max 2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      setError('Image must be smaller than 2MB');
+      return;
+    }
+
+    setUploading(true);
+    setError(null);
+
+    try {
+      // Convert to base64
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const base64 = e.target?.result as string;
+        setLogoUrl(base64);
+        setUploading(false);
+      };
+      reader.onerror = () => {
+        setError('Failed to process image');
+        setUploading(false);
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      setError('Failed to upload image');
+      setUploading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -187,16 +226,35 @@ export const Branding: React.FC = () => {
                         className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                         placeholder="https://example.com/logo.png"
                       />
-                      <button
-                        type="button"
-                        className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors flex items-center space-x-2"
-                      >
-                        <Upload className="h-4 w-4" />
-                        <span>Upload</span>
-                      </button>
+                      <div className="relative">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleFileUpload}
+                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                          disabled={uploading}
+                        />
+                        <button
+                          type="button"
+                          disabled={uploading}
+                          className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {uploading ? (
+                            <>
+                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600"></div>
+                              <span>Uploading...</span>
+                            </>
+                          ) : (
+                            <>
+                              <Upload className="h-4 w-4" />
+                              <span>Upload</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
                     </div>
                     <p className="text-xs text-gray-500 mt-1">
-                      Enter a URL to your logo image (PNG, JPG, or SVG recommended)
+                      Enter a URL or upload an image file (PNG, JPG, or SVG recommended, max 2MB)
                     </p>
                   </div>
 
@@ -345,7 +403,7 @@ export const Branding: React.FC = () => {
                         <img 
                           src={logoUrl} 
                           alt="Logo" 
-                          className="h-8 max-w-32 object-contain"
+                          className="h-12 max-w-48 object-contain"
                           onError={(e) => {
                             e.currentTarget.style.display = 'none';
                           }}
