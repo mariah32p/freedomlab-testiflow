@@ -89,9 +89,9 @@ export const Pricing: React.FC = () => {
               <h3 className="text-2xl font-bold text-white">Pro</h3>
               <div className="mt-4 flex items-baseline justify-center">
                 <span className="text-5xl font-bold text-white">$49</span>
-                <span className="text-xl text-teal-200 ml-1">/month</span>
+                <span className="text-xl text-white/80 ml-1">/month</span>
               </div>
-              <p className="mt-2 text-teal-200">Everything you need to scale</p>
+              <p className="mt-2 text-white/90">Everything you need to scale</p>
             </div>
             
             <div className="px-6 py-8">
