@@ -25,13 +25,18 @@ export const useRouteGuard = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  console.log('Route guard running - User:', user?.email, 'Loading:', loading, 'Path:', location.pathname);
+
   useEffect(() => {
+    console.log('Route guard useEffect triggered');
     if (loading) return;
 
     const checkSubscriptionStatus = async () => {
+      console.log('Starting subscription status check');
     // Allow certain pages without authentication
     const publicPages = ['/login', '/signup', '/forgot-password', '/reset-password', '/pricing', '/'];
     const isPublicPage = publicPages.includes(location.pathname);
+        console.log('No user found, redirecting to signup if not on public page');
 
     if (!APP_CONFIG.ENABLE_REAL_AUTH) {
       // Mock mode - allow access to get-started for testing
@@ -75,6 +80,7 @@ export const useRouteGuard = () => {
         if (!customerData) {
           // No customer record = no subscription
           if (location.pathname !== '/get-started' && !isPublicPage) {
+        console.log('Mock mode active');
             navigate('/get-started');
           }
           return;
@@ -146,6 +152,7 @@ export const useRouteGuard = () => {
       }
     };
 
+      console.log('Real auth mode - checking subscription');
     checkSubscriptionStatus();
 
   }, [user, loading, location.pathname, navigate]);
