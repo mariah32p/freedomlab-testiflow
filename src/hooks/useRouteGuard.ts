@@ -47,11 +47,12 @@ export const useRouteGuard = () => {
       if (!user) {
         // Not signed in → send to /signup (unless on public page)
         console.log('No user found, current path:', location.pathname, 'Is public page:', isPublicPage);
-        setRouteLoading(false);
         if (!isPublicPage && !isLandingPage) {
           console.log('Redirecting to signup because not on public page');
           navigate('/signup');
+          return;
         }
+        setRouteLoading(false);
         return;
       }
 
@@ -72,10 +73,11 @@ export const useRouteGuard = () => {
         if (!customerData) {
           // No customer record = no subscription
           console.log('No customer record found, user needs to subscribe');
-          setRouteLoading(false);
           if (location.pathname !== '/get-started' && !isPublicPage && !isLandingPage) {
             navigate('/get-started');
+            return;
           }
+          setRouteLoading(false);
           return;
         }
 
@@ -109,26 +111,26 @@ export const useRouteGuard = () => {
           case 'active':
             // Active subscription → allow dashboard
             console.log('User has active/trialing subscription, allowing dashboard access');
-            setRouteLoading(false);
             if (location.pathname === '/get-started' || isLandingPage) {
               navigate('/dashboard');
             }
+            setRouteLoading(false);
             break;
 
           case 'past_due':
             // Check if in 30-day grace period
             if (isInGracePeriod(subscription.payment_issue_since)) {
               // Allow dashboard but will show payment issue banner
-              setRouteLoading(false);
               if (location.pathname === '/get-started' || isLandingPage) {
                 navigate('/dashboard');
               }
+              setRouteLoading(false);
             } else {
               // Grace period expired → send to get-started
-              setRouteLoading(false);
               if (location.pathname !== '/get-started' && !isPublicPage && !isLandingPage) {
                 navigate('/get-started');
               }
+              setRouteLoading(false);
             }
             break;
 
@@ -137,19 +139,19 @@ export const useRouteGuard = () => {
           default:
             // No active subscription → send to get-started
             console.log('No active subscription, staying on get-started');
-            setRouteLoading(false);
             if (location.pathname !== '/get-started' && !isPublicPage && !isLandingPage) {
               navigate('/get-started');
             }
+            setRouteLoading(false);
             break;
         }
       } catch (error) {
         console.error('Error fetching subscription status:', error);
-        setRouteLoading(false);
         // On error, treat as no subscription
         if (location.pathname !== '/get-started' && !isPublicPage) {
           navigate('/get-started');
         }
+        setRouteLoading(false);
       }
     };
 
