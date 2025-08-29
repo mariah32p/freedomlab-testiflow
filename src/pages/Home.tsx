@@ -37,12 +37,6 @@ export const Home: React.FC = () => {
                 <span>Start Free Trial</span>
                 <ArrowRight className="h-5 w-5" />
               </Link>
-              <Link
-                to="/pricing"
-                className="border border-gray-300 text-gray-700 px-8 py-4 rounded-lg font-semibold hover:bg-gray-50 transition-all duration-200 hover:shadow-md"
-              >
-                View Pricing
-              </Link>
             </div>
 
             {/* Hero Mockup */}
@@ -532,12 +526,6 @@ export const Home: React.FC = () => {
             >
               <span>Start Free Trial</span>
               <ArrowRight className="h-5 w-5" />
-            </Link>
-            <Link
-              to="/pricing"
-              className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-primary-950 transition-all duration-200"
-            >
-              View Pricing
             </Link>
           </div>
         </div>
