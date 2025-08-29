@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { products } from '../stripe-config.js';
+import { products } from '../stripe-config';
 import { APP_CONFIG } from '../config/app';
 
 export const useStripe = () => {
@@ -33,29 +33,22 @@ export const useStripe = () => {
         throw new Error('Product not found');
       }
 
-      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/stripe-checkout`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      const { data, error: functionError } = await supabase.functions.invoke('stripe-checkout', {
+        body: {
           price_id: priceId,
           mode: product.mode,
           customer_email: session?.user?.email,
           success_url: `${window.location.origin}/success`,
           cancel_url: `${window.location.origin}/get-started`,
-        }),
+        },
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to create checkout session');
+      if (functionError) {
+        throw new Error(functionError.message);
       }
 
       // Redirect to Stripe Checkout
-      if (data.url) {
+      if (data?.url) {
         window.open(data.url, '_blank');
       }
     } catch (err) {
