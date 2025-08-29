@@ -131,7 +131,6 @@ export const GetStarted: React.FC = () => {
                 <span className="text-5xl font-bold text-white">$49</span>
                 <span className="text-xl text-white/80 ml-1">/mo</span>
               </div>
-              <p className="mt-2 text-white/90">Everything you need to scale</p>
               <p className="mt-2 text-white/90">Perfect for agencies and growing businesses</p>
             </div>
             
@@ -155,8 +154,8 @@ export const GetStarted: React.FC = () => {
         </div>
         
         {/* Single CTA Section */}
-        <div className="text-center">
-          <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8 max-w-lg mx-auto">
+        <div className="text-center mt-16">
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 max-w-md mx-auto">
             <div className="mb-6">
               <div className="flex items-center justify-center mb-4">
                 <div className="bg-gradient-to-r from-secondary-500 to-accent-500 w-12 h-12 rounded-full flex items-center justify-center">
@@ -198,7 +197,7 @@ export const GetStarted: React.FC = () => {
             <button
               onClick={handleStartTrial}
               disabled={loading}
-              className="w-full bg-gradient-to-r from-primary-950 to-secondary-500 text-white py-4 px-6 rounded-xl font-semibold hover:from-primary-900 hover:to-secondary-600 transition-all duration-200 flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+              className="w-full bg-primary-950 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-900 transition-colors flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <div className="flex items-center">
@@ -212,6 +211,9 @@ export const GetStarted: React.FC = () => {
                 </>
               )}
             </button>
+            <p className="text-sm text-gray-500 text-center mt-2">
+              7-day free trial
+            </p>
             
             <div className="mt-4 text-center">
               <p className="text-xs text-gray-500">
