@@ -8,10 +8,17 @@ export interface Product {
 
 export const products: Product[] = [
   {
-    id: 'prod_SveuRRh7dEbDXz',
+    id: 'basic',
     priceId: 'price_1Rznb5Dn6VTzl81bjqFfCagv',
-    name: 'TestiFlow',
-    description: 'Complete testimonial collection and management platform with legal rights tracking and automatic ad-ready export formats for marketing teams.',
+    name: 'Basic Plan',
+    description: 'Perfect for small teams getting started with testimonial management.',
+    mode: 'subscription'
+  },
+  {
+    id: 'pro',
+    priceId: 'price_1Rznb5Dn6VTzl81b8Hx5UQt6',
+    name: 'Pro Plan',
+    description: 'Everything you need to scale your testimonial collection and management.',
     mode: 'subscription'
   }
 ];

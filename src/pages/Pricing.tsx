@@ -17,7 +17,21 @@ export const Pricing: React.FC = () => {
       return;
     }
 
-    const product = products[0]; // Get the first (and only) product
+    const product = products.find(p => p.id === 'pro'); // Get the Pro product
+    if (!product) return;
+    
+    await createCheckoutSession(product.priceId);
+  };
+
+  const handleBasicSubscribe = async () => {
+    if (!user) {
+      navigate('/signup');
+      return;
+    }
+
+    const product = products.find(p => p.id === 'basic'); // Get the Basic product
+    if (!product) return;
+    
     await createCheckoutSession(product.priceId);
   };
 
@@ -69,11 +83,18 @@ export const Pricing: React.FC = () => {
               </ul>
               
               <button
-                onClick={() => !user ? navigate('/signup') : createCheckoutSession('price_basic')}
+                onClick={handleBasicSubscribe}
                 disabled={loading}
                 className="w-full bg-primary-950 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-900 transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Start Free Trial
+                {loading ? (
+                  <div className="flex items-center">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    Processing...
+                  </div>
+                ) : (
+                  'Start Free Trial'
+                )}
               </button>
             </div>
           </div>
