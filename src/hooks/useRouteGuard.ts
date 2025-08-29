@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '../lib/supabase';
 import { APP_CONFIG } from '../config/app';
 
 interface UserSubscription {
@@ -27,6 +28,7 @@ export const useRouteGuard = () => {
   useEffect(() => {
     if (loading) return;
 
+    const checkSubscriptionStatus = async () => {
     // Allow certain pages without authentication
     const publicPages = ['/login', '/signup', '/forgot-password', '/reset-password', '/pricing', '/'];
     const isPublicPage = publicPages.includes(location.pathname);
@@ -61,32 +63,52 @@ export const useRouteGuard = () => {
       // payment_issue_since: '2024-12-01T00:00:00Z', // Uncomment to test grace period
     };
 
-    const { status, payment_issue_since } = mockSubscription;
+      // User is signed in - fetch real subscription data
+      try {
+        const { data: subscriptionData, error } = await supabase
+          .from('stripe_user_subscriptions')
+          .select('*')
+          .single();
 
-    // Route guard logic based on subscription status
-    switch (status) {
-      case 'trialing':
-      case 'active':
-        // Allow access to dashboard
-        if (location.pathname === '/get-started') {
-          navigate('/dashboard');
+        let subscription: UserSubscription;
+        
+        if (error || !subscriptionData) {
+          // No subscription found
+          subscription = { status: 'not_started' };
+          case 'past_due':
+            // Check if in 30-day grace period
+            if (isInGracePeriod(payment_issue_since)) {
+              // Allow dashboard but will show payment issue banner
+              if (location.pathname === '/get-started') {
+                navigate('/dashboard');
+              }
+            } else {
+              // Grace period expired → send to get-started
+              if (location.pathname !== '/get-started' && !isPublicPage) {
+                navigate('/get-started');
+              }
+            }
+            break;
+            if (location.pathname === '/get-started') {
+          case 'canceled':
+          case 'not_started':
+          default:
+            // No active subscription → send to get-started
+            if (location.pathname !== '/get-started' && !isPublicPage) {
+              navigate('/get-started');
+            }
+            break;
         }
-        break;
+      } catch (error) {
+        console.error('Error fetching subscription status:', error);
+        // On error, treat as no subscription
+        if (location.pathname !== '/get-started' && !isPublicPage) {
+          navigate('/get-started');
+        }
+      }
+    };
 
-      case 'past_due':
-        // Check if in 30-day grace period
-        if (isInGracePeriod(payment_issue_since)) {
-          // Allow dashboard but will show payment issue banner
-          if (location.pathname === '/get-started') {
-            navigate('/dashboard');
-          }
-        } else {
-          // Grace period expired → send to get-started
-          if (location.pathname !== '/get-started' && !isPublicPage) {
-            navigate('/get-started');
-          }
-        }
-        break;
+    checkSubscriptionStatus();
 
       case 'canceled':
       case 'not_started':
