@@ -4,12 +4,6 @@
 /*.mjs
   Content-Type: application/javascript
 
-/*.ts
-  Content-Type: application/javascript
-
-/*.tsx
-  Content-Type: application/javascript
-
 /*.css
   Content-Type: text/css
 
@@ -18,3 +12,19 @@
 
 /*.ico
   Content-Type: image/x-icon
+
+/assets/*.js
+  Content-Type: application/javascript
+
+/assets/*.mjs
+  Content-Type: application/javascript
+
+/assets/*.css
+  Content-Type: text/css
+
+/assets/*.svg
+  Content-Type: image/svg+xml
+
+/assets/*.ico
+  Content-Type: image/x-icon
+
