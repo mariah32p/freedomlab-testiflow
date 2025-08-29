@@ -153,16 +153,20 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session, custome
   console.log(`Processing ${isSubscription ? 'subscription' : 'one-time payment'} checkout session`);
 
   if (isSubscription) {
-    // Store customer relationship
-    const { error: customerError } = await supabase.from('stripe_customers').upsert({
-      customer_id: customerId,
-      user_id: client_reference_id,
-    }, {
-      onConflict: 'customer_id',
-    });
+    // Store customer relationship - only if we have a user ID
+    if (client_reference_id) {
+      const { error: customerError } = await supabase.from('stripe_customers').upsert({
+        customer_id: customerId,
+        user_id: client_reference_id,
+      }, {
+        onConflict: 'customer_id',
+      });
 
-    if (customerError) {
-      console.error('Error storing customer relationship:', customerError);
+      if (customerError) {
+        console.error('Error storing customer relationship:', customerError);
+      } else {
+        console.log(`Successfully linked customer ${customerId} to user ${client_reference_id}`);
+      }
     }
 
     // Sync subscription data
@@ -212,21 +216,13 @@ async function syncCustomerFromStripe(customerId: string) {
 
     if (subscriptions.data.length === 0) {
       console.log(`No subscriptions found for customer: ${customerId}`);
-      const { error } = await supabase.from('stripe_subscriptions').upsert({
-        customer_id: customerId,
-        status: 'not_started',
-      }, {
-        onConflict: 'customer_id',
-      });
-
-      if (error) {
-        console.error('Error updating subscription status:', error);
-      }
       return;
     }
 
     // Assumes that a customer can only have a single subscription
     const subscription = subscriptions.data[0];
+
+    console.log(`Syncing subscription ${subscription.id} with status: ${subscription.status}`);
 
     // Store subscription state
     const subscriptionData: any = {
@@ -252,7 +248,7 @@ async function syncCustomerFromStripe(customerId: string) {
     if (error) {
       console.error('Error syncing subscription:', error);
     } else {
-      console.log(`Successfully synced subscription for customer: ${customerId}`);
+      console.log(`Successfully synced subscription for customer: ${customerId} - Status: ${subscription.status}`);
     }
   } catch (error) {
     console.error(`Failed to sync subscription for customer ${customerId}:`, error);
@@ -260,6 +256,7 @@ async function syncCustomerFromStripe(customerId: string) {
 }
 
 async function handleSubscriptionDeleted(customerId: string) {
+  console.log(`Handling subscription deletion for customer: ${customerId}`);
   const { error } = await supabase.from('stripe_subscriptions').upsert({
     customer_id: customerId,
     status: 'canceled',
@@ -275,6 +272,7 @@ async function handleSubscriptionDeleted(customerId: string) {
 }
 
 async function handlePaymentFailed(customerId: string) {
+  console.log(`Handling payment failure for customer: ${customerId}`);
   const { error } = await supabase.from('stripe_subscriptions').upsert({
     customer_id: customerId,
     status: 'past_due',
