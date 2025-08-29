@@ -65,9 +65,26 @@ export const useRouteGuard = () => {
 
       // User is signed in - fetch real subscription data
       try {
+        // First check if user has a customer record
+        const { data: customerData } = await supabase
+          .from('stripe_customers')
+          .select('customer_id')
+          .eq('user_id', user.id)
+          .single();
+
+        if (!customerData) {
+          // No customer record = no subscription
+          if (location.pathname !== '/get-started' && !isPublicPage) {
+            navigate('/get-started');
+          }
+          return;
+        }
+
+        // Get subscription data
         const { data: subscriptionData, error } = await supabase
-          .from('stripe_user_subscriptions')
+          .from('stripe_subscriptions')
           .select('*')
+          .eq('customer_id', customerData.customer_id)
           .single();
 
         let subscription: UserSubscription;
@@ -76,17 +93,21 @@ export const useRouteGuard = () => {
           // No subscription found
           subscription = { status: 'not_started' };
         } else {
+          console.log('Found subscription:', subscriptionData);
           subscription = {
-            status: subscriptionData.subscription_status,
-            payment_issue_since: subscriptionData.payment_issue_since
+            status: subscriptionData.status,
+            payment_issue_since: subscriptionData.updated_at // Using updated_at as payment issue tracker for now
           };
         }
+
+        console.log('Current subscription status:', subscription.status);
 
         // Handle routing based on subscription status
         switch (subscription.status) {
           case 'trialing':
           case 'active':
             // Active subscription → allow dashboard
+            console.log('User has active/trialing subscription, allowing dashboard access');
             if (location.pathname === '/get-started') {
               navigate('/dashboard');
             }
