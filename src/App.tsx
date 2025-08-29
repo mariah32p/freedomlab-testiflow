@@ -9,6 +9,8 @@ import { Dashboard } from './pages/Dashboard';
 import { Pricing } from './pages/Pricing.tsx';
 import { Success } from './pages/Success.tsx';
 import { GetStarted } from './pages/GetStarted';
+import { ForgotPassword } from './pages/ForgotPassword';
+import { ResetPassword } from './pages/ResetPassword';
 
 function App() {
   return (
@@ -20,6 +22,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/get-started" element={<GetStarted />} />
             <Route path="/success" element={<Success />} />
