@@ -20,44 +20,51 @@ const AppContent: React.FC = () => {
   useRouteGuard();
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/pricing" element={<Pricing />} />
-        <Route path="/get-started" element={<GetStarted />} />
-        <Route path="/success" element={<Success />} />
-        <Route path="/submit/:formId" element={<SubmitTestimonial />} />
-        <Route
-          path="/forms"
-          element={
-            <ProtectedRoute>
-              <Forms />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/settings"
-          element={
-            <ProtectedRoute>
-              <Settings />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
-    </div>
+    <Routes>
+      {/* Public form submission - no navbar */}
+      <Route path="/submit/:formId" element={<SubmitTestimonial />} />
+      
+      {/* All other routes with navbar */}
+      <Route path="/*" element={
+        <div className="min-h-screen bg-gray-50">
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/get-started" element={<GetStarted />} />
+            <Route path="/success" element={<Success />} />
+            <Route
+              path="/forms"
+              element={
+                <ProtectedRoute>
+                  <Forms />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <ProtectedRoute>
+                  <Settings />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </div>
+      } />
+    </Routes>
   );
 };
 

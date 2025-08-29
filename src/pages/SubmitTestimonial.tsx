@@ -41,11 +41,14 @@ export const SubmitTestimonial: React.FC = () => {
           .from('testimonial_forms')
           .select('*')
           .eq('id', formId)
-          .eq('is_active', true)
           .maybeSingle();
 
-        if (error || !data) {
+        if (error) {
+          setError('Failed to load form');
+        } else if (!data) {
           setError('Form not found or inactive');
+        } else if (!data.is_active) {
+          setError('This form is currently inactive');
         } else {
           setForm(data);
         }
