@@ -115,7 +115,7 @@ export const Pricing: React.FC = () => {
               <ArrowRight className="h-5 w-5" />
             </button>
             <p className="text-sm text-gray-500 text-center mt-2">
-              7-day free trial • No credit card required
+              7-day free trial
             </p>
           </div>
         </div>
