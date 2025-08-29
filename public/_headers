@@ -4,12 +4,6 @@
 /*.mjs
   Content-Type: application/javascript
 
-/*.ts
-  Content-Type: application/javascript
-
-/*.tsx
-  Content-Type: application/javascript
-
 /*.css
   Content-Type: text/css
 
@@ -23,12 +17,6 @@
   Content-Type: application/javascript
 
 /assets/*.mjs
-  Content-Type: application/javascript
-
-/assets/*.ts
-  Content-Type: application/javascript
-
-/assets/*.tsx
   Content-Type: application/javascript
 
 /assets/*.css
