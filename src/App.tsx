@@ -14,6 +14,7 @@ import { GetStarted } from './pages/GetStarted';
 import { ForgotPassword } from './pages/ForgotPassword';
 import { ResetPassword } from './pages/ResetPassword';
 import { Forms } from './pages/Forms';
+import { Testimonials } from './pages/Testimonials';
 import { SubmitTestimonial } from './pages/SubmitTestimonial';
 
 const AppContent: React.FC = () => {
@@ -42,6 +43,14 @@ const AppContent: React.FC = () => {
               element={
                 <ProtectedRoute>
                   <Forms />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/testimonials"
+              element={
+                <ProtectedRoute>
+                  <Testimonials />
                 </ProtectedRoute>
               }
             />

@@ -8,13 +8,17 @@ import { Link } from 'react-router-dom';
 
 export const Dashboard: React.FC = () => {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState('dashboard');
   const [subscription, setSubscription] = useState<any>(null);
+  const [stats, setStats] = useState({
+    total: 0,
+    approved: 0,
+    thisMonth: 0
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchSubscriptionData = async () => {
+    const fetchData = async () => {
       if (!user) return;
       
       try {
@@ -36,16 +40,56 @@ export const Dashboard: React.FC = () => {
 
           setSubscription(subscriptionData);
         }
+
+        // Get testimonial stats
+        const { data: formsData } = await supabase
+          .from('testimonial_forms')
+          .select('id')
+          .eq('user_id', user.id);
+
+        if (formsData && formsData.length > 0) {
+          const formIds = formsData.map(f => f.id);
+          
+          // Get total testimonials
+          const { count: totalCount } = await supabase
+            .from('testimonials')
+            .select('*', { count: 'exact', head: true })
+            .in('form_id', formIds);
+
+          // Get approved testimonials
+          const { count: approvedCount } = await supabase
+            .from('testimonials')
+            .select('*', { count: 'exact', head: true })
+            .in('form_id', formIds)
+            .eq('status', 'approved');
+
+          // Get this month's testimonials
+          const startOfMonth = new Date();
+          startOfMonth.setDate(1);
+          startOfMonth.setHours(0, 0, 0, 0);
+
+          const { count: thisMonthCount } = await supabase
+            .from('testimonials')
+            .select('*', { count: 'exact', head: true })
+            .in('form_id', formIds)
+            .gte('created_at', startOfMonth.toISOString());
+
+          setStats({
+            total: totalCount || 0,
+            approved: approvedCount || 0,
+            thisMonth: thisMonthCount || 0
+          });
+        }
         
         setLoading(false);
       } catch (error) {
         console.error('Error fetching subscription data:', error);
-        setError('Failed to load subscription data');
+        setError('Failed to load dashboard data');
         setLoading(false);
       }
     };
 
-    fetchSubscriptionData();
+    fetchData();
   }, [user]);
 
   const getTrialDaysLeft = () => {
@@ -124,115 +168,80 @@ export const Dashboard: React.FC = () => {
               </div>
             )}
 
-            {/* Tab Navigation */}
-            <div className="border-b border-gray-200 mb-8">
-              <nav className="-mb-px flex space-x-8">
-                <button
-                  onClick={() => setActiveTab('dashboard')}
-                  className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                    activeTab === 'dashboard'
-                      ? 'border-primary-950 text-primary-950'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
-                >
-                  Overview
-                </button>
-                <button
-                  onClick={() => setActiveTab('submissions')}
-                  className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                    activeTab === 'submissions'
-                      ? 'border-primary-950 text-primary-950'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
-                >
-                  Testimonials
-                </button>
-              </nav>
+
+            {/* Dashboard Content */}
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome back!</h2>
+              <p className="text-gray-600">Here's what's happening with your testimonials</p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-100">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-semibold text-gray-900">Total</h3>
+                  <MessageSquare className="h-5 w-5 text-primary-950" />
+                </div>
+                <div className="text-3xl font-bold text-primary-950">{stats.total}</div>
+                <div className="text-sm text-gray-600 mt-1">testimonials collected</div>
+              </div>
+              <div className="bg-gradient-to-br from-secondary-50 to-secondary-100 p-6 rounded-xl border border-secondary-200">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-semibold text-gray-900">Approved</h3>
+                  <CheckCircle className="h-5 w-5 text-secondary-500" />
+                </div>
+                <div className="text-3xl font-bold text-secondary-500">{stats.approved}</div>
+                <div className="text-sm text-gray-600 mt-1">ready to use</div>
+              </div>
+              <div className="bg-gradient-to-br from-accent-50 to-accent-100 p-6 rounded-xl border border-accent-200">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-semibold text-gray-900">This Month</h3>
+                  <Download className="h-5 w-5 text-accent-600" />
+                </div>
+                <div className="text-3xl font-bold text-accent-600">{stats.thisMonth}</div>
+                <div className="text-sm text-gray-600 mt-1">new testimonials</div>
+              </div>
             </div>
 
-            {/* Overview Tab */}
-            {activeTab === 'dashboard' && (
-              <div>
-                <div className="mb-8">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome back!</h2>
-                  <p className="text-gray-600">Here's what's happening with your testimonials</p>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                  <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-100">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="font-semibold text-gray-900">Total</h3>
-                      <MessageSquare className="h-5 w-5 text-primary-950" />
-                    </div>
-                    <div className="text-3xl font-bold text-primary-950">0</div>
-                    <div className="text-sm text-gray-600 mt-1">testimonials collected</div>
+            {stats.total === 0 ? (
+              <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-200 p-8">
+                <h3 className="text-xl font-semibold text-gray-900 mb-6 text-center">Get Started</h3>
+                <div className="text-center">
+                  <MessageSquare className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+                  <h4 className="text-lg font-medium text-gray-900 mb-2">Create your first collection form</h4>
+                  <p className="text-gray-500 mb-6 max-w-md mx-auto">Start gathering customer testimonials by creating a customized form that you can share with your customers.</p>
+                  <button
+                    onClick={() => window.location.href = '/forms'}
+                    className="bg-primary-950 text-white px-6 py-3 rounded-lg hover:bg-primary-900 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                  >
+                    Create Your First Form
+                  </button>
                   </div>
-                  <div className="bg-gradient-to-br from-secondary-50 to-secondary-100 p-6 rounded-xl border border-secondary-200">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="font-semibold text-gray-900">Published</h3>
-                      <CheckCircle className="h-5 w-5 text-secondary-500" />
-                    </div>
-                    <div className="text-3xl font-bold text-secondary-500">0</div>
-                    <div className="text-sm text-gray-600 mt-1">ready to use</div>
-                  </div>
-                  <div className="bg-gradient-to-br from-accent-50 to-accent-100 p-6 rounded-xl border border-accent-200">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="font-semibold text-gray-900">This Month</h3>
-                      <Download className="h-5 w-5 text-accent-600" />
-                    </div>
-                    <div className="text-3xl font-bold text-accent-600">0</div>
-                    <div className="text-sm text-gray-600 mt-1">new testimonials</div>
-                  </div>
-                </div>
-
-                <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-200 p-8">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-6 text-center">Get Started</h3>
-                  <div className="text-center">
-                    <MessageSquare className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                    <h4 className="text-lg font-medium text-gray-900 mb-2">Create your first collection form</h4>
-                    <p className="text-gray-500 mb-6 max-w-md mx-auto">Start gathering customer testimonials by creating a customized form that you can share with your customers.</p>
+              </div>
+            ) : (
+              <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-200 p-8">
+                <h3 className="text-xl font-semibold text-gray-900 mb-6 text-center">Recent Activity</h3>
+                <div className="text-center">
+                  <CheckCircle className="h-12 w-12 text-secondary-500 mx-auto mb-4" />
+                  <h4 className="text-lg font-medium text-gray-900 mb-2">Great progress!</h4>
+                  <p className="text-gray-500 mb-6 max-w-md mx-auto">
+                    You've collected {stats.total} testimonial{stats.total !== 1 ? 's' : ''} so far. 
+                    {stats.approved > 0 && ` ${stats.approved} ${stats.approved === 1 ? 'is' : 'are'} approved and ready to use.`}
+                  </p>
+                  <div className="flex justify-center space-x-4">
+                    <button
+                      onClick={() => window.location.href = '/testimonials'}
+                      className="bg-secondary-500 text-white px-6 py-3 rounded-lg hover:bg-secondary-600 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                    >
+                      View Testimonials
+                    </button>
                     <button
                       onClick={() => window.location.href = '/forms'}
                       className="bg-primary-950 text-white px-6 py-3 rounded-lg hover:bg-primary-900 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                     >
-                      Create Your First Form
+                      Create Another Form
                     </button>
                   </div>
-                </div>
-              </div>
-            )}
-
-            {/* Forms Tab */}
-
-            {/* Testimonials Tab */}
-            {activeTab === 'submissions' && (
-              <div>
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <h2 className="text-2xl font-bold text-gray-900">Testimonials</h2>
-                    <p className="text-gray-600 mt-1">Review, approve, and manage customer testimonials</p>
                   </div>
-                  <div className="flex space-x-2">
-                    <button className="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors">
-                      Filter
-                    </button>
-                    <button className="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors">
-                      Export
-                    </button>
-                  </div>
-                </div>
-                
-                <div className="text-center py-12">
-                  <MessageSquare className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">No testimonials yet</h3>
-                  <p className="text-gray-500 mb-8 max-w-md mx-auto">Once you create and share forms, customer testimonials will appear here for review and approval.</p>
-                  <button 
-                    onClick={() => window.location.href = '/forms'}
-                    className="bg-primary-950 text-white px-6 py-3 rounded-lg hover:bg-primary-900 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                  >
-                    Create a Form First
-                  </button>
-                </div>
               </div>
             )}
           </div>
