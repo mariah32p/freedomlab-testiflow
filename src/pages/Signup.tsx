@@ -38,7 +38,7 @@ export const Signup: React.FC = () => {
     if (error) {
       setError(error.message);
     } else {
-      navigate('/dashboard');
+      navigate('/get-started');
     }
     
     setLoading(false);
