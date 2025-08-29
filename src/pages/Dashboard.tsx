@@ -24,15 +24,15 @@ export const Dashboard: React.FC = () => {
           .from('stripe_customers')
           .select('*')
           .eq('user_id', user.id)
-          .single();
+          .maybeSingle();
 
         if (customerData) {
           // Get subscription data
           const { data: subscriptionData } = await supabase
             .from('stripe_subscriptions')
             .select('*')
-            .eq('customer_id', customerData.stripe_customer_id)
-            .single();
+            .eq('customer_id', customerData.customer_id)
+            .maybeSingle();
 
           setSubscription(subscriptionData);
         }
