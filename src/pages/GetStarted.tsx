@@ -18,22 +18,6 @@ export const GetStarted: React.FC = () => {
     await createCheckoutSession(product.priceId);
   };
 
-  const basicFeatures = [
-    'Up to 50 testimonials - Collect and organize customer feedback',
-    'Email collection forms - Simple forms to request testimonials',
-    'Basic organization - Tag and categorize testimonials',
-    'Export to CSV - Download testimonials for your marketing',
-    'Simple branding - Add your logo and colors',
-  ];
-
-  const proFeatures = [
-    'Everything in Basic, plus:',
-    'Unlimited testimonials - No limits on collection',
-    'Approval workflow - Review before testimonials go live',
-    'Rich media support - Collect video and image testimonials',
-    'Integration tools - Embed testimonials directly on your site',
-  ];
-
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -97,11 +81,18 @@ export const GetStarted: React.FC = () => {
               </div>
               <p className="mt-2 text-gray-600">Perfect for small teams getting started</p>
               <p className="mt-2 text-gray-600">Perfect for small businesses and consultants</p>
+              <p className="mt-2 text-gray-600">Perfect for small businesses and consultants</p>
             </div>
             
             <div className="px-6 py-8">
               <ul className="space-y-4">
-                {basicFeatures.map((feature, index) => (
+                {[
+                  'Up to 50 testimonials - Collect and organize customer feedback',
+                  'Email collection forms - Simple forms to request testimonials',
+                  'Basic organization - Tag and categorize testimonials',
+                  'Export to CSV - Download testimonials for your marketing',
+                  'Simple branding - Add your logo and colors',
+                ].map((feature, index) => (
                   <li key={index} className="flex items-center">
                     <Check className="h-5 w-5 text-secondary-500 mr-3 flex-shrink-0" />
                     <span className="text-gray-700">{feature}</span>
@@ -144,11 +135,18 @@ export const GetStarted: React.FC = () => {
               </div>
               <p className="mt-2 text-white/90">Everything you need to scale</p>
               <p className="mt-2 text-white/90">Perfect for agencies and growing businesses</p>
+              <p className="mt-2 text-white/90">Perfect for agencies and growing businesses</p>
             </div>
             
             <div className="px-6 py-8">
               <ul className="space-y-4">
-                {proFeatures.map((feature, index) => (
+                {[
+                  'Everything in Basic, plus:',
+                  'Unlimited testimonials - No limits on collection',
+                  'Approval workflow - Review before testimonials go live',
+                  'Rich media support - Collect video and image testimonials',
+                  'Integration tools - Embed testimonials directly on your site',
+                ].map((feature, index) => (
                   <li key={index} className="flex items-center">
                     <Check className="h-5 w-5 text-secondary-500 mr-3 flex-shrink-0" />
                     <span className="text-gray-700">{feature}</span>
