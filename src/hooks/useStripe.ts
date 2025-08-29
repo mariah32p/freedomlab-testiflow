@@ -53,7 +53,7 @@ export const useStripe = () => {
 
       // Redirect to Stripe Checkout
       if (data.url) {
-        window.location.href = data.url;
+        window.open(data.url, '_blank');
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');

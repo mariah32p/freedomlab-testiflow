@@ -193,11 +193,17 @@ Deno.serve(async (req) => {
       } : undefined,
       success_url,
       cancel_url,
+      allow_promotion_codes: true,
+      billing_address_collection: 'auto',
     });
 
     console.log(`Created checkout session ${session.id} for customer ${customerId}`);
 
-    return corsResponse({ sessionId: session.id, url: session.url });
+    return corsResponse({ 
+      sessionId: session.id, 
+      url: session.url,
+      success: true 
+    });
   } catch (error: any) {
     console.error(`Checkout error: ${error.message}`);
     return corsResponse({ error: error.message }, 500);
