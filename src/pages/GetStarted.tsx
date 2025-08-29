@@ -130,7 +130,6 @@ export const GetStarted: React.FC = () => {
               <div className="mt-4 flex items-baseline justify-center">
                 <span className="text-5xl font-bold text-white">$49</span>
                 <span className="text-xl text-white/80 ml-1">/mo</span>
-              </div>
               <p className="mt-2 text-white/90">Perfect for agencies and growing businesses</p>
             </div>
             
