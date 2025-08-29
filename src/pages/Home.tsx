@@ -1,9 +1,16 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Star, Shield, Zap, ArrowRight, MessageSquare, Download, BarChart3, CheckCircle, Globe, User } from 'lucide-react';
 import { TestiFlowIcon } from '../components/TestiFlowIcon';
 
 export const Home: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleSignupClick = () => {
+    navigate('/signup');
+    window.scrollTo(0, 0);
+  };
+
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
@@ -30,13 +37,13 @@ export const Home: React.FC = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-              <Link
-                to="/signup"
+              <button
+                onClick={handleSignupClick}
                 className="bg-primary-950 text-white px-8 py-4 rounded-lg font-semibold hover:bg-primary-900 transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
               >
                 <span>Start Free Trial</span>
                 <ArrowRight className="h-5 w-5" />
-              </Link>
+              </button>
             </div>
 
             {/* Hero Mockup */}
@@ -520,13 +527,13 @@ export const Home: React.FC = () => {
             Join thousands of marketing teams who trust TestiFlow to manage their customer testimonials.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to="/signup"
+            <button
+              onClick={handleSignupClick}
               className="bg-white text-primary-950 px-8 py-4 rounded-lg font-semibold hover:bg-gray-50 transition-all duration-200 inline-flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
             >
               <span>Start Free Trial</span>
               <ArrowRight className="h-5 w-5" />
-            </Link>
+            </button>
           </div>
         </div>
       </div>

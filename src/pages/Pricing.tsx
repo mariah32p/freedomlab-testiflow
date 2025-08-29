@@ -8,6 +8,11 @@ export const Pricing: React.FC = () => {
   const [error] = React.useState<string>('');
   const [loading] = React.useState<boolean>(false);
 
+  const handleSignupClick = () => {
+    navigate('/signup');
+    window.scrollTo(0, 0);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -107,7 +112,7 @@ export const Pricing: React.FC = () => {
             )}
             
             <button
-              onClick={() => navigate('/signup')}
+              onClick={handleSignupClick}
               disabled={loading}
               className="w-full bg-primary-950 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-900 transition-colors flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
