@@ -33,33 +33,26 @@ export const useRouteGuard = () => {
 
     const checkSubscriptionStatus = async () => {
       console.log('Starting subscription status check');
-    // Allow certain pages without authentication
-    const publicPages = ['/login', '/signup', '/forgot-password', '/reset-password', '/pricing', '/'];
-    const isPublicPage = publicPages.includes(location.pathname);
-        console.log('No user found, redirecting to signup if not on public page');
+      // Allow certain pages without authentication
+      const publicPages = ['/login', '/signup', '/forgot-password', '/reset-password', '/pricing', '/'];
+      const isPublicPage = publicPages.includes(location.pathname);
 
-    // Real auth mode route logic
-    if (!user) {
-      // Not signed in → send to /signup (unless on public page)
-      console.log('No user found, current path:', location.pathname, 'Is public page:', isPublicPage);
-      if (!isPublicPage) {
-        console.log('Redirecting to signup because not on public page');
-        navigate('/signup');
+      // Real auth mode route logic
+      if (!user) {
+        // Not signed in → send to /signup (unless on public page)
+        console.log('No user found, current path:', location.pathname, 'Is public page:', isPublicPage);
+        if (!isPublicPage) {
+          console.log('Redirecting to signup because not on public page');
+          navigate('/signup');
+        }
+        return;
       }
-      return;
-    }
 
-    // User is signed in - implement subscription-based routing
-    // For now, we'll simulate different states for testing
-    // In production, this would fetch from Supabase subscription data
-    
-    const mockSubscription: UserSubscription = {
-      status: 'not_started', // Change this to test different states
-      // payment_issue_since: '2024-12-01T00:00:00Z', // Uncomment to test grace period
-    };
-
+      console.log('User is authenticated:', user.email);
+      
       // User is signed in - fetch real subscription data
       try {
+        console.log('Checking for customer record...');
         // First check if user has a customer record
         const { data: customerData } = await supabase
           .from('stripe_customers')
@@ -67,26 +60,30 @@ export const useRouteGuard = () => {
           .eq('user_id', user.id)
           .maybeSingle();
 
+        console.log('Customer data:', customerData);
+
         if (!customerData) {
           // No customer record = no subscription
+          console.log('No customer record found, user needs to subscribe');
           if (location.pathname !== '/get-started' && !isPublicPage) {
-        console.log('No user authenticated');
             navigate('/get-started');
           }
           return;
         }
 
+        console.log('Found customer record, checking subscription...');
         // Get subscription data
         const { data: subscriptionData, error } = await supabase
           .from('stripe_subscriptions')
           .select('*')
           .eq('customer_id', customerData.customer_id)
-          .single();
+          .maybeSingle();
 
         let subscription: UserSubscription;
         
         if (error || !subscriptionData) {
           // No subscription found
+          console.log('No subscription found for customer');
           subscription = { status: 'not_started' };
         } else {
           console.log('Found subscription:', subscriptionData);
@@ -128,6 +125,7 @@ export const useRouteGuard = () => {
           case 'not_started':
           default:
             // No active subscription → send to get-started
+            console.log('No active subscription, staying on get-started');
             if (location.pathname !== '/get-started' && !isPublicPage) {
               navigate('/get-started');
             }
@@ -142,7 +140,7 @@ export const useRouteGuard = () => {
       }
     };
 
-      console.log('Real auth mode - checking subscription');
+    console.log('Real auth mode - checking subscription');
     checkSubscriptionStatus();
 
   }, [user, loading, location.pathname, navigate]);
