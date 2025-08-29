@@ -85,7 +85,6 @@ export const Dashboard: React.FC = () => {
                   </div>
                   <Link
                     to="/settings"
-                    onClick={() => setActiveTab('settings')}
                     className="text-blue-600 hover:text-blue-700 text-sm font-medium"
                   >
                     Manage Subscription
@@ -108,7 +107,6 @@ export const Dashboard: React.FC = () => {
                   </div>
                   <Link
                     to="/settings"
-                    onClick={() => setActiveTab('settings')}
                     className="text-red-600 hover:text-red-700 text-sm font-medium"
                   >
                     Update Payment
@@ -160,7 +158,7 @@ export const Dashboard: React.FC = () => {
                   Testimonials
                 </button>
                 <button
-                  onClick={() => setActiveTab('settings')}
+                  onClick={() => window.location.href = '/settings'}
                   className={`py-2 px-1 border-b-2 font-medium text-sm ${
                     activeTab === 'settings'
                       ? 'border-primary-950 text-primary-950'

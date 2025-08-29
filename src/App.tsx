@@ -9,6 +9,7 @@ import { Signup } from './pages/Signup';
 import { Dashboard } from './pages/Dashboard';
 import { Pricing } from './pages/Pricing.tsx';
 import { Success } from './pages/Success.tsx';
+import { Settings } from './pages/Settings';
 import { GetStarted } from './pages/GetStarted';
 import { ForgotPassword } from './pages/ForgotPassword';
 import { ResetPassword } from './pages/ResetPassword';
@@ -28,6 +29,14 @@ const AppContent: React.FC = () => {
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/get-started" element={<GetStarted />} />
         <Route path="/success" element={<Success />} />
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute>
+              <Settings />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/dashboard"
           element={
