@@ -38,7 +38,7 @@ export const useRouteGuard = () => {
       }
       // In mock mode, treat as not signed in for public pages
       if (!isPublicPage && location.pathname !== '/get-started') {
-        navigate('/signup');
+        navigate('/get-started');
       }
       return;
     }
