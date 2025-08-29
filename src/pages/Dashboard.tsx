@@ -162,14 +162,12 @@ export const Dashboard: React.FC = () => {
                 <button
                   onClick={() => setActiveTab('settings')}
                   className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                    activeTab === 'settings'
-                      ? 'border-primary-950 text-primary-950'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
-                >
-                  Settings
+              <button
+                onClick={() => setActiveTab('settings')}
+                className="text-red-600 hover:text-red-700 text-sm font-medium"
+              >
                 </button>
-              </nav>
+              </button>
             </div>
 
             {/* Overview Tab */}
