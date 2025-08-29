@@ -188,6 +188,9 @@ Deno.serve(async (req) => {
         },
       ],
       mode,
+      subscription_data: mode === 'subscription' ? {
+        trial_period_days: 7,
+      } : undefined,
       success_url,
       cancel_url,
     });
