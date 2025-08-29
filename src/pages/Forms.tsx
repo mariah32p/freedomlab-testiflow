@@ -108,6 +108,7 @@ export const Forms: React.FC = () => {
 
       setForms(forms.map(form => form.id === editingForm.id ? data : form));
       setEditingForm(null);
+      setShowCreateForm(false);
       setFormData({
         title: 'Share Your Experience',
         description: "We'd love to hear about your experience with us!",
@@ -277,7 +278,7 @@ export const Forms: React.FC = () => {
                         type="submit"
                         className="flex-1 bg-primary-950 text-white py-2 px-4 rounded-md hover:bg-primary-900 transition-colors"
                       >
-                        {editingForm ? 'Update Form' : 'Create Form'}
+                        {editingForm ? 'Save Changes' : 'Create Form'}
                       </button>
                       <button
                         type="button"

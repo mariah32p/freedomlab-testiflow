@@ -138,16 +138,6 @@ export const Dashboard: React.FC = () => {
                   Overview
                 </button>
                 <button
-                  onClick={() => setActiveTab('forms')}
-                  className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                    activeTab === 'forms'
-                      ? 'border-primary-950 text-primary-950'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
-                >
-                  Forms
-                </button>
-                <button
                   onClick={() => setActiveTab('submissions')}
                   className={`py-2 px-1 border-b-2 font-medium text-sm ${
                     activeTab === 'submissions'
@@ -202,7 +192,7 @@ export const Dashboard: React.FC = () => {
                     <h4 className="text-lg font-medium text-gray-900 mb-2">Create your first collection form</h4>
                     <p className="text-gray-500 mb-6 max-w-md mx-auto">Start gathering customer testimonials by creating a customized form that you can share with your customers.</p>
                     <button
-                      onClick={() => setActiveTab('forms')}
+                      onClick={() => window.location.href = '/forms'}
                       className="bg-primary-950 text-white px-6 py-3 rounded-lg hover:bg-primary-900 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                     >
                       Create Your First Form
@@ -213,36 +203,6 @@ export const Dashboard: React.FC = () => {
             )}
 
             {/* Forms Tab */}
-            {activeTab === 'forms' && (
-              <div>
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <h2 className="text-2xl font-bold text-gray-900">Forms</h2>
-                    <p className="text-gray-600 mt-1">Create and manage testimonial collection forms</p>
-                  </div>
-                  <Link
-                    to="/forms"
-                    className="bg-primary-950 text-white px-4 py-2 rounded-lg hover:bg-primary-900 transition-colors flex items-center space-x-2"
-                  >
-                    <Plus className="h-4 w-4" />
-                    <span>New Form</span>
-                  </Link>
-                </div>
-                
-                <div className="text-center py-12">
-                  <FileText className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">No forms yet</h3>
-                  <p className="text-gray-500 mb-8 max-w-md mx-auto">Create your first testimonial collection form to start gathering customer feedback and build social proof.</p>
-                  <Link
-                    to="/forms"
-                    className="bg-primary-950 text-white px-6 py-3 rounded-lg hover:bg-primary-900 transition-all duration-200 flex items-center space-x-2 mx-auto font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                  >
-                    <Plus className="h-5 w-5" />
-                    <span>Create Your First Form</span>
-                  </Link>
-                </div>
-              </div>
-            )}
 
             {/* Testimonials Tab */}
             {activeTab === 'submissions' && (
@@ -267,7 +227,7 @@ export const Dashboard: React.FC = () => {
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">No testimonials yet</h3>
                   <p className="text-gray-500 mb-8 max-w-md mx-auto">Once you create and share forms, customer testimonials will appear here for review and approval.</p>
                   <button 
-                    onClick={() => setActiveTab('forms')}
+                    onClick={() => window.location.href = '/forms'}
                     className="bg-primary-950 text-white px-6 py-3 rounded-lg hover:bg-primary-900 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                   >
                     Create a Form First
