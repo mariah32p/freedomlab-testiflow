@@ -70,7 +70,6 @@ export const Pricing: React.FC = () => {
                 <span className="text-5xl font-bold text-white">$49</span>
                 <span className="text-xl text-white/80 ml-1">/month</span>
               </div>
-              <p className="mt-2 text-white/90">Everything you need to scale</p>
               <p className="mt-2 text-white/90">Perfect for agencies and growing businesses</p>
             </div>
             
