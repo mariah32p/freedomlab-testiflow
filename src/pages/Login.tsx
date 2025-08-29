@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Alert } from '../components/Alert';
-import { TestTube, Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { TestiFlowIcon } from '../components/TestiFlowIcon';
 
 export const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -34,7 +35,7 @@ export const Login: React.FC = () => {
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
           <div className="flex items-center space-x-2">
-            <TestTube className="h-8 w-8 text-indigo-600" />
+            <TestiFlowIcon className="h-8 w-8 text-indigo-600" />
             <span className="text-2xl font-bold text-gray-900">TestiFlow</span>
           </div>
         </div>

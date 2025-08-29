@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { TestTube, LogOut, User } from 'lucide-react';
+import { LogOut, User } from 'lucide-react';
+import { TestiFlowIcon } from './TestiFlowIcon';
 
 export const Navbar: React.FC = () => {
   const { user, signOut } = useAuth();
@@ -18,7 +19,7 @@ export const Navbar: React.FC = () => {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-2">
-              <TestTube className="h-8 w-8 text-primary-950" />
+              <TestiFlowIcon className="h-8 w-8 text-navy" />
               <span className="text-xl font-bold text-primary-950">TestiFlow</span>
             </Link>
           </div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { TestTube, User, Mail } from 'lucide-react';
+import { User, Mail } from 'lucide-react';
+import { TestiFlowIcon } from '../components/TestiFlowIcon';
 
 export const Dashboard: React.FC = () => {
   const { user } = useAuth();
@@ -11,7 +12,7 @@ export const Dashboard: React.FC = () => {
         <div className="bg-white shadow rounded-lg">
           <div className="px-4 py-5 sm:p-6">
             <div className="flex items-center mb-6">
-              <TestTube className="h-8 w-8 text-indigo-600 mr-3" />
+              <TestiFlowIcon className="h-8 w-8 text-indigo-600 mr-3" />
               <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
             </div>
             
