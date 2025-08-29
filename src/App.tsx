@@ -7,8 +7,8 @@ import { Home } from './pages/Home';
 import { Login } from './pages/Login';
 import { Signup } from './pages/Signup';
 import { Dashboard } from './pages/Dashboard';
-import { Pricing } from './pages/Pricing';
-import { Success } from './pages/Success';
+import { Pricing } from './pages/Pricing.tsx';
+import { Success } from './pages/Success.tsx';
 
 function App() {
   return (
