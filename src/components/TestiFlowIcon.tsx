@@ -1,0 +1,53 @@
+import React from 'react';
+
+interface TestiFlowIconProps {
+  className?: string;
+}
+
+export const TestiFlowIcon: React.FC<TestiFlowIconProps> = ({ className = "h-8 w-8" }) => {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 32 32"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      {/* Outer circle */}
+      <circle
+        cx="16"
+        cy="16"
+        r="14"
+        fill="url(#gradient1)"
+        stroke="currentColor"
+        strokeWidth="1"
+      />
+      
+      {/* Inner speech bubble */}
+      <path
+        d="M10 12h12c1.1 0 2 .9 2 2v6c0 1.1-.9 2-2 2h-8l-4 3v-3c-1.1 0-2-.9-2-2v-6c0-1.1.9-2 2-2z"
+        fill="white"
+        stroke="currentColor"
+        strokeWidth="0.5"
+      />
+      
+      {/* Quote marks */}
+      <path
+        d="M13 16c0-.6.4-1 1-1s1 .4 1 1-.4 1-1 1-1-.4-1-1zm4 0c0-.6.4-1 1-1s1 .4 1 1-.4 1-1 1-1-.4-1-1z"
+        fill="currentColor"
+      />
+      
+      {/* Star accent */}
+      <path
+        d="M20 8l1 2h2l-1.5 1.5L22 14l-2-1-2 1 .5-2.5L17 10h2l1-2z"
+        fill="#a855f7"
+      />
+      
+      <defs>
+        <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#01b79e" />
+          <stop offset="100%" stopColor="#01004d" />
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+};
