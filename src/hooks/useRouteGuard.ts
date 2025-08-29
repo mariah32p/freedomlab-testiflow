@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
@@ -22,6 +23,7 @@ export const isInGracePeriod = (paymentIssueSince?: string): boolean => {
 
 export const useRouteGuard = () => {
   const { user, loading } = useAuth();
+  const [routeLoading, setRouteLoading] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -29,7 +31,10 @@ export const useRouteGuard = () => {
 
   useEffect(() => {
     console.log('Route guard useEffect triggered');
-    if (loading) return;
+    if (loading) {
+      setRouteLoading(true);
+      return;
+    }
 
     const checkSubscriptionStatus = async () => {
       console.log('Starting subscription status check');
@@ -42,6 +47,7 @@ export const useRouteGuard = () => {
       if (!user) {
         // Not signed in → send to /signup (unless on public page)
         console.log('No user found, current path:', location.pathname, 'Is public page:', isPublicPage);
+        setRouteLoading(false);
         if (!isPublicPage && !isLandingPage) {
           console.log('Redirecting to signup because not on public page');
           navigate('/signup');
@@ -66,6 +72,7 @@ export const useRouteGuard = () => {
         if (!customerData) {
           // No customer record = no subscription
           console.log('No customer record found, user needs to subscribe');
+          setRouteLoading(false);
           if (location.pathname !== '/get-started' && !isPublicPage && !isLandingPage) {
             navigate('/get-started');
           }
@@ -102,6 +109,7 @@ export const useRouteGuard = () => {
           case 'active':
             // Active subscription → allow dashboard
             console.log('User has active/trialing subscription, allowing dashboard access');
+            setRouteLoading(false);
             if (location.pathname === '/get-started' || isLandingPage) {
               navigate('/dashboard');
             }
@@ -111,11 +119,13 @@ export const useRouteGuard = () => {
             // Check if in 30-day grace period
             if (isInGracePeriod(subscription.payment_issue_since)) {
               // Allow dashboard but will show payment issue banner
+              setRouteLoading(false);
               if (location.pathname === '/get-started' || isLandingPage) {
                 navigate('/dashboard');
               }
             } else {
               // Grace period expired → send to get-started
+              setRouteLoading(false);
               if (location.pathname !== '/get-started' && !isPublicPage && !isLandingPage) {
                 navigate('/get-started');
               }
@@ -127,6 +137,7 @@ export const useRouteGuard = () => {
           default:
             // No active subscription → send to get-started
             console.log('No active subscription, staying on get-started');
+            setRouteLoading(false);
             if (location.pathname !== '/get-started' && !isPublicPage && !isLandingPage) {
               navigate('/get-started');
             }
@@ -134,6 +145,7 @@ export const useRouteGuard = () => {
         }
       } catch (error) {
         console.error('Error fetching subscription status:', error);
+        setRouteLoading(false);
         // On error, treat as no subscription
         if (location.pathname !== '/get-started' && !isPublicPage) {
           navigate('/get-started');
@@ -146,5 +158,5 @@ export const useRouteGuard = () => {
 
   }, [user, loading, location.pathname, navigate]);
 
-  return { user, loading };
+  return { user, loading: loading || routeLoading };
 };
