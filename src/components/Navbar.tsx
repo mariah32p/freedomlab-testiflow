@@ -34,6 +34,12 @@ export const Navbar: React.FC = () => {
                   <User className="h-4 w-4" />
                   <span>Dashboard</span>
                 </Link>
+                <Link
+                  to="/settings"
+                  className="flex items-center space-x-1 text-gray-700 hover:text-primary-950 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  <span>Settings</span>
+                </Link>
                 <button
                   onClick={handleSignOut}
                   className="flex items-center space-x-1 text-gray-700 hover:text-red-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
