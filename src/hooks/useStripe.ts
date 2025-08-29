@@ -35,6 +35,7 @@ export const useStripe = () => {
           price_id: priceId,
           mode: product.mode,
           customer_email: userEmail,
+          client_reference_id: APP_CONFIG.ENABLE_REAL_AUTH ? undefined : APP_CONFIG.MOCK_USER.id,
           success_url: `${window.location.origin}/success`,
           cancel_url: `${window.location.origin}/get-started`,
         },

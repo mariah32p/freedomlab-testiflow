@@ -52,7 +52,7 @@ Deno.serve(async (req) => {
       return corsResponse({ error: 'Stripe is not configured. Please set STRIPE_SECRET_KEY environment variable.' }, 500);
     }
 
-    const { price_id, success_url, cancel_url, mode, customer_email } = await req.json();
+    const { price_id, success_url, cancel_url, mode, customer_email, client_reference_id } = await req.json();
 
     const error = validateParameters(
       { price_id, success_url, cancel_url, mode, customer_email },
@@ -76,7 +76,7 @@ Deno.serve(async (req) => {
 
     console.log(`Created new Stripe customer ${newCustomer.id} for email ${customer_email}`);
 
-    // create Checkout Session
+    // Create Checkout Session
     const session = await stripe.checkout.sessions.create({
       customer: newCustomer.id,
       payment_method_types: ['card'],
@@ -90,11 +90,11 @@ Deno.serve(async (req) => {
       subscription_data: mode === 'subscription' ? {
         trial_period_days: 7,
       } : undefined,
+      client_reference_id,
       success_url,
       cancel_url,
       allow_promotion_codes: true,
       billing_address_collection: 'auto',
-      customer_email: customer_email,
     });
 
     console.log(`Created checkout session ${session.id} for customer ${newCustomer.id}`);
