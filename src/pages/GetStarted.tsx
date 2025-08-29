@@ -199,7 +199,7 @@ export const GetStarted: React.FC = () => {
             <p className="text-gray-600 mb-6 text-center">
               After your trial, you'll be charged ${selectedPlan === 'basic' ? '$29' : '$49'}/month. 
               You can change or cancel your plan anytime.
-            </h3>
+            </p>
             
             <button
               onClick={handleStartTrial}
