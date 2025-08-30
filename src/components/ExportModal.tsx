@@ -414,7 +414,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                 )}
 
                 {/* Widget Testimonial Selection */}
-                {selectedFormat === 'widget' && (
+                {(
                   <div>
                     <h3 className="text-lg font-medium text-gray-900 mb-4">Select Testimonials for Widget</h3>
                     
