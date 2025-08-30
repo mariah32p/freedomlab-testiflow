@@ -242,7 +242,7 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({ formId, onFieldsChange
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-lg font-medium text-gray-900">Custom Fields</h3>
-          <p className="text-sm text-gray-600">Add custom questions to collect specific information</p>
+          <p className="text-sm text-gray-600">Add custom questions beyond the standard fields (name, email, company, rating, testimonial)</p>
         </div>
         <button
           onClick={() => setShowAddField(true)}
@@ -253,6 +253,39 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({ formId, onFieldsChange
         </button>
       </div>
 
+      {/* Standard Fields Info */}
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+        <h4 className="text-sm font-medium text-blue-900 mb-2">📋 Standard Fields (Already Included)</h4>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
+          <div className="flex items-center space-x-2">
+            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+            <span className="text-blue-800">⭐ Overall Rating</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+            <span className="text-blue-800">👤 Customer Name</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+            <span className="text-blue-800">📧 Email Address</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+            <span className="text-blue-800">🏢 Company (Optional)</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+            <span className="text-blue-800">💬 Main Testimonial</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+            <span className="text-blue-800">📸 Media Uploads</span>
+          </div>
+        </div>
+        <p className="text-xs text-blue-700 mt-3">
+          ✨ These fields are automatically included in every form. Use custom fields below to ask additional questions.
+        </p>
+      </div>
       {/* Fields List */}
       <div className="space-y-3">
         {fields.map((field, index) => (
@@ -306,7 +339,7 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({ formId, onFieldsChange
 
         {fields.length === 0 && (
           <div className="text-center py-8 text-gray-500">
-            <p>No custom fields yet. Add your first custom question above.</p>
+            <p>No custom fields yet. Your form already includes the standard fields above - add additional questions here!</p>
           </div>
         )}
       </div>
