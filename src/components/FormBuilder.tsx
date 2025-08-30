@@ -23,10 +23,10 @@ const FIELD_TYPES = [
   { value: 'textarea', label: 'Long Text', icon: '📄' },
   { value: 'email', label: 'Email', icon: '📧' },
   { value: 'url', label: 'Website URL', icon: '🔗' },
-  { value: 'select', label: 'Dropdown', icon: '📋' },
-  { value: 'radio', label: 'Multiple Choice', icon: '🔘' },
-  { value: 'checkbox', label: 'Checkboxes', icon: '☑️' },
-  { value: 'rating', label: 'Star Rating', icon: '⭐' },
+  { value: 'select', label: 'Dropdown Menu', icon: '📋', description: 'Select one option from a list' },
+  { value: 'radio', label: 'Single Choice', icon: '🔘', description: 'Choose one option (radio buttons)' },
+  { value: 'checkbox', label: 'Multi-Select', icon: '✅', description: 'Select multiple options (checkboxes)' },
+  { value: 'rating', label: 'Additional Rating', icon: '⭐', description: 'Extra star rating (main rating already included)' },
 ];
 
 export const FormBuilder: React.FC<FormBuilderProps> = ({ formId, onFieldsChange }) => {
