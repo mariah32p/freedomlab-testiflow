@@ -3,6 +3,8 @@ import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { MessageSquare, Star, User, CheckCircle, Clock, X, Filter, Download, Trash2, MoreVertical, Eye, Mail, Building } from 'lucide-react';
 import { Alert } from '../components/Alert';
+import { ExportModal } from '../components/ExportModal';
+import { ExportTestimonial } from '../utils/exportUtils';
 
 interface Testimonial {
   id: string;
@@ -46,6 +48,8 @@ export const Testimonials: React.FC = () => {
   const [deletingTestimonial, setDeletingTestimonial] = useState<Testimonial | null>(null);
   const [showActionsFor, setShowActionsFor] = useState<string | null>(null);
   const [viewingTestimonial, setViewingTestimonial] = useState<Testimonial | null>(null);
+  const [showExportModal, setShowExportModal] = useState(false);
+  const [success, setSuccess] = useState<string | null>(null);
 
   useEffect(() => {
     fetchData();
@@ -166,6 +170,24 @@ export const Testimonials: React.FC = () => {
     return form?.title || 'Unknown Form';
   };
 
+  const prepareExportData = (): ExportTestimonial[] => {
+    return filteredTestimonials.map(testimonial => ({
+      id: testimonial.id,
+      name: testimonial.name,
+      email: testimonial.email,
+      company: testimonial.company,
+      message: testimonial.message,
+      rating: testimonial.rating,
+      status: testimonial.status,
+      submitted_at: testimonial.submitted_at,
+      form_title: getFormTitle(testimonial.form_id),
+      custom_responses: testimonialResponses[testimonial.id]?.reduce((acc, response) => {
+        acc[response.field.label] = response.value;
+        return acc;
+      }, {} as Record<string, string>)
+    }));
+  };
+
   const renderCustomFieldValue = (response: FormResponse) => {
     const { field, value } = response;
     
@@ -255,7 +277,10 @@ export const Testimonials: React.FC = () => {
                   <option value="approved">Approved</option>
                   <option value="rejected">Rejected</option>
                 </select>
-                <button className="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors flex items-center space-x-2">
+                <button 
+                  onClick={() => setShowExportModal(true)}
+                  className="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors flex items-center space-x-2"
+                >
                   <Download className="h-4 w-4" />
                   <span>Export</span>
                 </button>
@@ -268,6 +293,16 @@ export const Testimonials: React.FC = () => {
                   type="error"
                   message={error}
                   onClose={() => setError(null)}
+                />
+              </div>
+            )}
+
+            {success && (
+              <div className="mb-6">
+                <Alert
+                  type="success"
+                  message={success}
+                  onClose={() => setSuccess(null)}
                 />
               </div>
             )}
@@ -699,6 +734,18 @@ export const Testimonials: React.FC = () => {
                   </div>
                 </div>
               </div>
+            )}
+
+            {/* Export Modal */}
+            {showExportModal && (
+              <ExportModal
+                testimonials={prepareExportData()}
+                onClose={() => setShowExportModal(false)}
+                onSuccess={(message) => {
+                  setSuccess(message);
+                  setShowExportModal(false);
+                }}
+              />
             )}
           </div>
         </div>
