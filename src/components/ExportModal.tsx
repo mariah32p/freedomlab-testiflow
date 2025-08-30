@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Download, FileText, Code, Share2, X, Copy, CheckCircle, Eye, Star, User, Building, Mail } from 'lucide-react';
 import { ExportTestimonial, exportToCSV, exportToJSON, generateSocialMediaPost, generateWebsiteWidget } from '../utils/exportUtils';
+import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '../lib/supabase';
 
 interface ExportModalProps {
   testimonials: ExportTestimonial[];
@@ -9,6 +11,7 @@ interface ExportModalProps {
 }
 
 export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose, onSuccess }) => {
+  const { user } = useAuth();
   const [selectedFormat, setSelectedFormat] = useState<'csv' | 'json' | 'social' | 'widget'>('csv');
   const [selectedTestimonials, setSelectedTestimonials] = useState<string[]>([]);
   const [selectAll, setSelectAll] = useState(true);
@@ -16,6 +19,30 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
   const [generatedContent, setGeneratedContent] = useState<string>('');
   const [copied, setCopied] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const [branding, setBranding] = useState<{ primary_color: string; secondary_color: string } | null>(null);
+
+  // Fetch user's branding
+  useEffect(() => {
+    const fetchBranding = async () => {
+      if (!user) return;
+      
+      try {
+        const { data } = await supabase
+          .from('form_branding')
+          .select('primary_color, secondary_color')
+          .eq('user_id', user.id)
+          .maybeSingle();
+        
+        if (data) {
+          setBranding(data);
+        }
+      } catch (error) {
+        console.error('Error fetching branding:', error);
+      }
+    };
+
+    fetchBranding();
+  }, [user]);
 
   // Reset selections when format changes
   useEffect(() => {
@@ -74,7 +101,11 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
         }
         return '';
       case 'widget':
-        return generateWebsiteWidget(widgetTestimonials);
+        return generateWebsiteWidget(
+          widgetTestimonials, 
+          branding?.primary_color || '#01004d', 
+          branding?.secondary_color || '#01b79e'
+        );
       default:
         return '';
     }
@@ -113,7 +144,11 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
           onSuccess('No approved testimonials available for widget');
           return;
         }
-        const widgetContent = generatePreview();
+        const widgetContent = generateWebsiteWidget(
+          widgetTestimonials, 
+          branding?.primary_color || '#01004d', 
+          branding?.secondary_color || '#01b79e'
+        );
         setGeneratedContent(widgetContent);
         break;
     }
@@ -481,16 +516,22 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                       </div>
                       <div className="p-6">
                         {/* Render the actual widget */}
-                        <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '20px' }}>
+                        <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '20px', fontFamily: 'Montserrat, system-ui, sans-serif' }}>
                           <h3 style={{ textAlign: 'center', marginBottom: '20px', color: '#333' }}>What Our Customers Say</h3>
                           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
                             {widgetTestimonials.map(testimonial => (
-                              <div key={testimonial.id} style={{ background: '#f9f9f9', padding: '20px', borderRadius: '12px', borderLeft: `4px solid #01b79e`, boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                              <div key={testimonial.id} style={{ 
+                                background: '#f9f9f9', 
+                                padding: '20px', 
+                                borderRadius: '12px', 
+                                borderLeft: `4px solid ${branding?.secondary_color || '#01b79e'}`, 
+                                boxShadow: '0 2px 4px rgba(0,0,0,0.1)' 
+                              }}>
                                 <div style={{ display: 'flex', marginBottom: '8px' }}>
                                   {'★'.repeat(testimonial.rating)}<span style={{ color: '#ddd' }}>{'★'.repeat(5 - testimonial.rating)}</span>
                                 </div>
-                                <p style={{ margin: '0 0 15px 0', fontStyle: 'italic', color: '#555', lineHeight: '1.5' }}>"{testimonial.message}"</p>
-                                <div style={{ fontSize: '14px', color: '#777' }}>
+                                <p style={{ margin: '0 0 15px 0', fontStyle: 'italic', color: branding?.primary_color || '#555', lineHeight: '1.5' }}>"{testimonial.message}"</p>
+                                <div style={{ fontSize: '14px', color: '#777', fontWeight: '500' }}>
                                   - {testimonial.name}{testimonial.company ? `, ${testimonial.company}` : ''}
                                 </div>
                               </div>
