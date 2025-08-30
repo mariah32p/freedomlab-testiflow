@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
-import { Plus, Edit, Trash2, ExternalLink, Copy, Eye, Settings, X } from 'lucide-react';
+import { Plus, Edit, Trash2, ExternalLink, Copy, Eye, Settings, X, Calendar, ToggleLeft, ToggleRight } from 'lucide-react';
 import { Alert } from '../components/Alert';
 import { FormBuilder } from '../components/FormBuilder';
 
@@ -20,10 +20,12 @@ export const Forms: React.FC = () => {
   const [forms, setForms] = useState<TestimonialForm[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingForm, setEditingForm] = useState<TestimonialForm | null>(null);
   const [deletingForm, setDeletingForm] = useState<TestimonialForm | null>(null);
   const [customizingForm, setCustomizingForm] = useState<TestimonialForm | null>(null);
+  const [viewingForm, setViewingForm] = useState<TestimonialForm | null>(null);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -83,6 +85,7 @@ export const Forms: React.FC = () => {
         description: "We'd love to hear about your experience with us!",
         thank_you_message: 'Thank you for your testimonial!'
       });
+      setSuccess('Form created successfully!');
     } catch (error) {
       console.error('Error creating form:', error);
       setError('Failed to create form');
@@ -117,6 +120,7 @@ export const Forms: React.FC = () => {
         description: "We'd love to hear about your experience with us!",
         thank_you_message: 'Thank you for your testimonial!'
       });
+      setSuccess('Form updated successfully!');
     } catch (error) {
       console.error('Error updating form:', error);
       setError('Failed to update form');
@@ -136,6 +140,7 @@ export const Forms: React.FC = () => {
       setForms(forms.map(f => 
         f.id === form.id ? { ...f, is_active: !f.is_active } : f
       ));
+      setSuccess(`Form ${!form.is_active ? 'activated' : 'deactivated'} successfully!`);
     } catch (error) {
       console.error('Error toggling form status:', error);
       setError('Failed to update form status');
@@ -154,6 +159,7 @@ export const Forms: React.FC = () => {
 
       setForms(forms.filter(f => f.id !== formId));
       setDeletingForm(null);
+      setSuccess('Form deleted successfully!');
     } catch (error) {
       console.error('Error deleting form:', error);
       setError('Failed to delete form');
@@ -166,15 +172,7 @@ export const Forms: React.FC = () => {
 
   const copyFormUrl = (formId: string) => {
     navigator.clipboard.writeText(getFormUrl(formId)).then(() => {
-      // Simple feedback - you could enhance this with a toast later
-      const button = document.querySelector(`[data-copy-id="${formId}"]`);
-      if (button) {
-        const originalText = button.innerHTML;
-        button.innerHTML = '<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>';
-        setTimeout(() => {
-          button.innerHTML = originalText;
-        }, 2000);
-      }
+      setSuccess('Form link copied to clipboard!');
     }).catch(err => {
       console.error('Failed to copy URL:', err);
       // Fallback for older browsers
@@ -184,6 +182,7 @@ export const Forms: React.FC = () => {
       textArea.select();
       document.execCommand('copy');
       document.body.removeChild(textArea);
+      setSuccess('Form link copied to clipboard!');
     });
   };
 
@@ -228,9 +227,9 @@ export const Forms: React.FC = () => {
               </div>
               <button
                 onClick={() => setShowCreateForm(true)}
-                className="bg-primary-950 text-white px-4 py-2 rounded-lg hover:bg-primary-900 transition-colors flex items-center space-x-2"
+                className="bg-primary-950 text-white px-6 py-3 rounded-lg hover:bg-primary-900 transition-all duration-200 flex items-center space-x-2 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
               >
-                <Plus className="h-4 w-4" />
+                <Plus className="h-5 w-5" />
                 <span>New Form</span>
               </button>
             </div>
@@ -245,13 +244,37 @@ export const Forms: React.FC = () => {
               </div>
             )}
 
+            {success && (
+              <div className="mb-6">
+                <Alert
+                  type="success"
+                  message={success}
+                  onClose={() => setSuccess(null)}
+                />
+              </div>
+            )}
+
             {/* Create/Edit Form Modal */}
             {showCreateForm && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
-                  <h2 className="text-xl font-bold text-gray-900 mb-4">
-                    {editingForm ? 'Edit Form' : 'Create New Form'}
-                  </h2>
+              <div 
+                className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+                onClick={() => cancelEdit()}
+              >
+                <div 
+                  className="bg-white rounded-lg p-6 w-full max-w-md mx-4"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-xl font-bold text-gray-900">
+                      {editingForm ? 'Edit Form' : 'Create New Form'}
+                    </h2>
+                    <button
+                      onClick={cancelEdit}
+                      className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+                    >
+                      <X className="h-5 w-5" />
+                    </button>
+                  </div>
                   
                   <form onSubmit={editingForm ? handleUpdateForm : handleCreateForm} className="space-y-4">
                     <div>
@@ -306,14 +329,14 @@ export const Forms: React.FC = () => {
                     <div className="flex space-x-3 pt-4">
                       <button
                         type="submit"
-                        className="flex-1 bg-primary-950 text-white py-2 px-4 rounded-md hover:bg-primary-900 transition-colors"
+                        className="flex-1 bg-primary-950 text-white py-2 px-4 rounded-md hover:bg-primary-900 transition-colors font-medium"
                       >
                         {editingForm ? 'Save Changes' : 'Create Form'}
                       </button>
                       <button
                         type="button"
                         onClick={cancelEdit}
-                        className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 transition-colors"
+                        className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 transition-colors font-medium"
                       >
                         Cancel
                       </button>
@@ -325,9 +348,23 @@ export const Forms: React.FC = () => {
 
             {/* Delete Confirmation Modal */}
             {deletingForm && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
-                  <h2 className="text-xl font-bold text-gray-900 mb-4">Delete Form</h2>
+              <div 
+                className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+                onClick={() => setDeletingForm(null)}
+              >
+                <div 
+                  className="bg-white rounded-lg p-6 w-full max-w-md mx-4"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-xl font-bold text-gray-900">Delete Form</h2>
+                    <button
+                      onClick={() => setDeletingForm(null)}
+                      className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+                    >
+                      <X className="h-5 w-5" />
+                    </button>
+                  </div>
                   <p className="text-gray-600 mb-6">
                     Are you sure you want to delete "<strong>{deletingForm.title}</strong>"? 
                     This will also delete all associated testimonials and cannot be undone.
@@ -351,100 +388,101 @@ export const Forms: React.FC = () => {
               </div>
             )}
 
-            {/* Forms List */}
+            {/* Forms Grid */}
             {forms.length === 0 ? (
-              <div className="text-center py-12">
-                <Settings className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">No forms yet</h3>
-                <p className="text-gray-500 mb-8 max-w-md mx-auto">
-                  Create your first testimonial collection form to start gathering customer feedback.
+              <div className="text-center py-16">
+                <div className="w-24 h-24 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Settings className="h-12 w-12 text-primary-950" />
+                </div>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-3">Create Your First Form</h3>
+                <p className="text-gray-500 mb-8 max-w-md mx-auto text-lg">
+                  Start gathering customer testimonials by creating a customized form that you can share with your customers.
                 </p>
                 <button
                   onClick={() => setShowCreateForm(true)}
-                  className="bg-primary-950 text-white px-6 py-3 rounded-lg hover:bg-primary-900 transition-all duration-200 flex items-center space-x-2 mx-auto font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                  className="bg-primary-950 text-white px-8 py-4 rounded-lg hover:bg-primary-900 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-lg"
                 >
-                  <Plus className="h-5 w-5" />
-                  <span>Create Your First Form</span>
+                  Create Your First Form
                 </button>
               </div>
             ) : (
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {forms.map((form) => (
-                  <div key={form.id} className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex-1">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-1">{form.title}</h3>
-                        <p className="text-gray-600 text-sm line-clamp-2">{form.description}</p>
-                      </div>
-                      <div className="flex items-center space-x-1 ml-4">
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          form.is_active 
-                            ? 'bg-green-100 text-green-800' 
-                            : 'bg-gray-100 text-gray-800'
-                        }`}>
-                          {form.is_active ? 'Active' : 'Inactive'}
-                        </span>
+                  <div key={form.id} className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-200 relative group">
+                    {/* Status Toggle */}
+                    <div className="absolute top-4 right-4">
+                      <button
+                        onClick={() => handleToggleActive(form)}
+                        className="flex items-center space-x-2 transition-colors"
+                        title={form.is_active ? 'Deactivate form' : 'Activate form'}
+                      >
+                        {form.is_active ? (
+                          <ToggleRight className="h-6 w-6 text-secondary-500" />
+                        ) : (
+                          <ToggleLeft className="h-6 w-6 text-gray-400" />
+                        )}
+                      </button>
+                    </div>
+
+                    {/* Form Header */}
+                    <div className="mb-4 pr-8">
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2 leading-tight">{form.title}</h3>
+                      <p className="text-gray-600 text-sm leading-relaxed line-clamp-2">{form.description}</p>
+                    </div>
+
+                    {/* Status Badge */}
+                    <div className="mb-4">
+                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                        form.is_active 
+                          ? 'bg-secondary-100 text-secondary-800' 
+                          : 'bg-gray-100 text-gray-600'
+                      }`}>
+                        <div className={`w-2 h-2 rounded-full mr-2 ${
+                          form.is_active ? 'bg-secondary-500' : 'bg-gray-400'
+                        }`}></div>
+                        {form.is_active ? 'Active' : 'Inactive'}
+                      </span>
+                    </div>
+
+                    {/* Form Info */}
+                    <div className="mb-6">
+                      <div className="flex items-center text-sm text-gray-500 space-x-4">
+                        <div className="flex items-center space-x-1">
+                          <Calendar className="h-4 w-4" />
+                          <span>Created {new Date(form.created_at).toLocaleDateString()}</span>
+                        </div>
                       </div>
                     </div>
 
-                    <div className="text-xs text-gray-500 mb-4">
-                      Created {new Date(form.created_at).toLocaleDateString()}
-                    </div>
+                    {/* Quick Actions */}
+                    <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                      <button
+                        onClick={() => setViewingForm(form)}
+                        className="text-primary-950 hover:text-primary-800 text-sm font-medium flex items-center space-x-1 transition-colors"
+                      >
+                        <Eye className="h-4 w-4" />
+                        <span>View Details</span>
+                      </button>
 
-                    <div className="flex items-center justify-between">
                       <div className="flex space-x-2">
                         <button
-                          onClick={() => startEdit(form)}
-                          className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
-                          title="Edit form"
-                        >
-                          <Edit className="h-4 w-4" />
-                        </button>
-                        <button
-                          onClick={() => setCustomizingForm(form)}
-                          className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
-                          title="Customize fields"
-                        >
-                          <Settings className="h-4 w-4" />
-                        </button>
-                        <button
                           onClick={() => copyFormUrl(form.id)}
-                          data-copy-id={form.id}
-                          className="px-3 py-1 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-md text-xs font-medium transition-colors flex items-center space-x-1"
+                          className="bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-1 rounded-md text-sm font-medium transition-colors flex items-center space-x-1"
                           title="Copy shareable link"
                         >
                           <Copy className="h-3 w-3" />
-                          <span>Copy Link</span>
+                          <span>Copy</span>
                         </button>
                         <a
                           href={getFormUrl(form.id)}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+                          className="bg-gray-50 text-gray-600 hover:bg-gray-100 px-3 py-1 rounded-md text-sm font-medium transition-colors flex items-center space-x-1"
                           title="Preview form"
                         >
-                          <ExternalLink className="h-4 w-4" />
+                          <ExternalLink className="h-3 w-3" />
+                          <span>Preview</span>
                         </a>
-                      </div>
-
-                      <div className="flex space-x-2">
-                        <button
-                          onClick={() => handleToggleActive(form)}
-                          className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
-                            form.is_active
-                              ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                              : 'bg-green-100 text-green-700 hover:bg-green-200'
-                          }`}
-                        >
-                          {form.is_active ? 'Deactivate' : 'Activate'}
-                        </button>
-                        <button
-                          onClick={() => setDeletingForm(form)}
-                          className="p-1 text-red-400 hover:text-red-600 transition-colors"
-                          title="Delete form"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
                       </div>
                     </div>
                   </div>
@@ -452,10 +490,134 @@ export const Forms: React.FC = () => {
               </div>
             )}
 
+            {/* View Form Details Modal */}
+            {viewingForm && (
+              <div 
+                className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+                onClick={() => setViewingForm(null)}
+              >
+                <div 
+                  className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-hidden"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {/* Modal Header */}
+                  <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                    <h2 className="text-xl font-bold text-gray-900">Form Details</h2>
+                    <button
+                      onClick={() => setViewingForm(null)}
+                      className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+                    >
+                      <X className="h-5 w-5" />
+                    </button>
+                  </div>
+
+                  {/* Modal Content */}
+                  <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+                    {/* Form Info */}
+                    <div className="mb-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-2xl font-semibold text-gray-900">{viewingForm.title}</h3>
+                        <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                          viewingForm.is_active 
+                            ? 'bg-secondary-100 text-secondary-800' 
+                            : 'bg-gray-100 text-gray-600'
+                        }`}>
+                          {viewingForm.is_active ? 'Active' : 'Inactive'}
+                        </span>
+                      </div>
+                      
+                      <div className="bg-gray-50 rounded-lg p-4 mb-4">
+                        <h4 className="text-sm font-medium text-gray-700 mb-2">Description</h4>
+                        <p className="text-gray-600">{viewingForm.description}</p>
+                      </div>
+
+                      <div className="bg-gray-50 rounded-lg p-4 mb-4">
+                        <h4 className="text-sm font-medium text-gray-700 mb-2">Thank You Message</h4>
+                        <p className="text-gray-600">{viewingForm.thank_you_message}</p>
+                      </div>
+
+                      <div className="bg-blue-50 rounded-lg p-4">
+                        <h4 className="text-sm font-medium text-blue-900 mb-2">Shareable Link</h4>
+                        <div className="flex items-center space-x-2">
+                          <code className="flex-1 bg-white px-3 py-2 rounded border text-sm text-gray-700 font-mono">
+                            {getFormUrl(viewingForm.id)}
+                          </code>
+                          <button
+                            onClick={() => copyFormUrl(viewingForm.id)}
+                            className="bg-blue-600 text-white px-3 py-2 rounded hover:bg-blue-700 transition-colors flex items-center space-x-1"
+                          >
+                            <Copy className="h-4 w-4" />
+                            <span>Copy</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Form Metadata */}
+                    <div className="bg-gray-50 rounded-lg p-4 mb-6">
+                      <div className="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                          <span className="text-gray-500">Created:</span>
+                          <div className="font-medium text-gray-900">
+                            {new Date(viewingForm.created_at).toLocaleDateString()}
+                          </div>
+                        </div>
+                        <div>
+                          <span className="text-gray-500">Last Updated:</span>
+                          <div className="font-medium text-gray-900">
+                            {new Date(viewingForm.updated_at).toLocaleDateString()}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex space-x-3">
+                      <button
+                        onClick={() => {
+                          startEdit(viewingForm);
+                          setViewingForm(null);
+                        }}
+                        className="flex-1 bg-primary-950 text-white py-3 px-4 rounded-lg hover:bg-primary-900 transition-colors font-medium flex items-center justify-center space-x-2"
+                      >
+                        <Edit className="h-4 w-4" />
+                        <span>Edit Form</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setCustomizingForm(viewingForm);
+                          setViewingForm(null);
+                        }}
+                        className="flex-1 bg-secondary-500 text-white py-3 px-4 rounded-lg hover:bg-secondary-600 transition-colors font-medium flex items-center justify-center space-x-2"
+                      >
+                        <Settings className="h-4 w-4" />
+                        <span>Custom Fields</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setDeletingForm(viewingForm);
+                          setViewingForm(null);
+                        }}
+                        className="bg-red-500 text-white py-3 px-4 rounded-lg hover:bg-red-600 transition-colors font-medium flex items-center justify-center"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Form Customization Modal */}
             {customizingForm && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                <div className="bg-white rounded-lg w-full max-w-4xl mx-4 max-h-[90vh] overflow-hidden">
+              <div 
+                className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+                onClick={() => setCustomizingForm(null)}
+              >
+                <div 
+                  className="bg-white rounded-lg w-full max-w-4xl mx-4 max-h-[90vh] overflow-hidden"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
                     <h2 className="text-xl font-bold text-gray-900">
                       Customize Form: {customizingForm.title}
