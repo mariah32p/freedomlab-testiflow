@@ -428,7 +428,7 @@ export const Forms: React.FC = () => {
                         <div>
                           <h4 className="text-sm font-medium text-blue-900 mb-1">💡 Want to ask custom questions?</h4>
                           <p className="text-sm text-blue-700">
-                            After creating your form, click <strong>"View Details"</strong> → <strong>"Custom Fields"</strong> to add questions like "What's your role?" or "How did you hear about us?"
+                            After creating your form, click <strong>"View Details"</strong> → <strong>"Custom Fields"</strong> to add questions like "What's your role?\" or "How did you hear about us?"
                           </p>
                         </div>
                       </div>
