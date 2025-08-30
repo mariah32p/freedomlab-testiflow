@@ -293,7 +293,7 @@ export const Forms: React.FC = () => {
                 onClick={() => cancelEdit()}
               >
                 <div 
-                  className="bg-white rounded-lg p-6 w-full max-w-md mx-4"
+                  className="bg-white rounded-lg p-6 w-full max-w-2xl mx-4"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <div className="flex items-center justify-between mb-4">
