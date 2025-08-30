@@ -87,15 +87,15 @@ export const generateWebsiteWidget = (testimonials: ExportTestimonial[]): string
   const approvedTestimonials = testimonials.filter(t => t.status === 'approved').slice(0, 3);
   
   return `<!-- Testimonials Widget -->
-<div class="testimonials-widget" style="max-width: 600px; margin: 0 auto; padding: 20px;">
+<div class="testimonials-widget" style="max-width: 1000px; margin: 0 auto; padding: 20px;">
   <h3 style="text-align: center; margin-bottom: 20px; color: #333;">What Our Customers Say</h3>
-  <div style="display: grid; gap: 15px;">
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
     ${approvedTestimonials.map(testimonial => `
-    <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; border-left: 4px solid #01b79e;">
+    <div style="background: #f9f9f9; padding: 20px; border-radius: 12px; border-left: 4px solid #01b79e; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
       <div style="display: flex; margin-bottom: 8px;">
         ${'★'.repeat(testimonial.rating)}<span style="color: #ddd;">${'★'.repeat(5 - testimonial.rating)}</span>
       </div>
-      <p style="margin: 0 0 10px 0; font-style: italic; color: #555;">"${testimonial.message}"</p>
+      <p style="margin: 0 0 15px 0; font-style: italic; color: #555; line-height: 1.5;">"${testimonial.message}"</p>
       <div style="font-size: 14px; color: #777;">
         - ${testimonial.name}${testimonial.company ? `, ${testimonial.company}` : ''}
       </div>

@@ -426,9 +426,9 @@ export const Forms: React.FC = () => {
                           <span className="text-blue-600 font-bold text-sm">?</span>
                         </div>
                         <div>
-                          <h4 className="text-sm font-medium text-blue-900 mb-1">💡 Want to ask custom questions?</h4>
+                          <h4 className="text-sm font-medium text-blue-900 mb-1">💡 Standard vs Custom Fields</h4>
                           <p className="text-sm text-blue-700">
-                            After creating your form, click <strong>"View Details"</strong> → <strong>"Custom Fields"</strong> to add questions like "What's your role?\" or \"How did you hear about us?"
+                            Your form includes: <strong>Name</strong> (for attribution), <strong>Email</strong> (contact), <strong>Company</strong> (optional), <strong>Rating</strong> (1-5 stars), and <strong>Testimonial</strong> (main message for marketing). Add custom fields after creation for extra questions.
                           </p>
                         </div>
                       </div>

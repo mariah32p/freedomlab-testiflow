@@ -477,15 +477,15 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                       </div>
                       <div className="p-6">
                         {/* Render the actual widget */}
-                        <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
+                        <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '20px' }}>
                           <h3 style={{ textAlign: 'center', marginBottom: '20px', color: '#333' }}>What Our Customers Say</h3>
-                          <div style={{ display: 'grid', gap: '15px' }}>
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
                             {widgetTestimonials.map(testimonial => (
-                              <div key={testimonial.id} style={{ background: '#f9f9f9', padding: '15px', borderRadius: '8px', borderLeft: '4px solid #01b79e' }}>
+                              <div key={testimonial.id} style={{ background: '#f9f9f9', padding: '20px', borderRadius: '12px', borderLeft: '4px solid #01b79e', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
                                 <div style={{ display: 'flex', marginBottom: '8px' }}>
                                   {'★'.repeat(testimonial.rating)}<span style={{ color: '#ddd' }}>{'★'.repeat(5 - testimonial.rating)}</span>
                                 </div>
-                                <p style={{ margin: '0 0 10px 0', fontStyle: 'italic', color: '#555' }}>"{testimonial.message}"</p>
+                                <p style={{ margin: '0 0 15px 0', fontStyle: 'italic', color: '#555', lineHeight: '1.5' }}>"{testimonial.message}"</p>
                                 <div style={{ fontSize: '14px', color: '#777' }}>
                                   - {testimonial.name}{testimonial.company ? `, ${testimonial.company}` : ''}
                                 </div>
