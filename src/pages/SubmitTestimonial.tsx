@@ -355,6 +355,7 @@ export const SubmitTestimonial: React.FC = () => {
       case 'email':
       case 'url':
         return (
+          <div>
           <input
             type={field.field_type}
             value={value}
@@ -363,6 +364,12 @@ export const SubmitTestimonial: React.FC = () => {
             placeholder={field.placeholder}
             required={field.is_required}
           />
+          {field.field_type === 'url' && (
+            <p className="text-xs text-gray-500 mt-1">
+              Please include http:// or https:// (e.g., https://www.32p.com)
+            </p>
+          )}
+          </div>
         );
 
       case 'textarea':
