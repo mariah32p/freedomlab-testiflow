@@ -137,7 +137,7 @@ export const SubmitTestimonial: React.FC = () => {
           message,
           rating,
           status: 'pending'
-        }]);
+        }])
         .select()
         .single();
 
