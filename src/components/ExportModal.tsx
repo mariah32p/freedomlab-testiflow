@@ -285,6 +285,23 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                     </button>
 
                     <button
+                      onClick={() => setSelectedFormat('social')}
+                      className={`w-full p-4 border rounded-lg text-left transition-colors ${
+                        selectedFormat === 'social'
+                          ? 'border-primary-500 bg-primary-50'
+                          : 'border-gray-200 hover:bg-gray-50'
+                      }`}
+                    >
+                      <div className="flex items-center space-x-3">
+                        <Share2 className="h-6 w-6 text-purple-600" />
+                        <div>
+                          <div className="font-medium">Social Media Post</div>
+                          <div className="text-sm text-gray-500">Ready-to-share content for social platforms</div>
+                        </div>
+                      </div>
+                    </button>
+
+                    <button
                       onClick={() => setSelectedFormat('widget')}
                       className={`w-full p-4 border rounded-lg text-left transition-colors ${
                         selectedFormat === 'widget'
@@ -391,8 +408,16 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                             <p className="text-sm text-gray-600 truncate">"{testimonial.message}"</p>
                           </div>
                         </div>
+                      ))}
                     </div>
+                  </div>
+                )}
 
+                {/* Widget Testimonial Selection */}
+                {selectedFormat === 'widget' && (
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-900 mb-4">Select Testimonials for Widget</h3>
+                    
                     {approvedTestimonials.length === 0 ? (
                       <div className="text-center py-8 text-gray-500">
                         <p>No approved testimonials available for widget</p>
