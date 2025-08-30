@@ -309,7 +309,8 @@ export const Forms: React.FC = () => {
                   </div>
                   
                   <form onSubmit={editingForm ? handleUpdateForm : handleCreateForm} className="space-y-4">
-                    <div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         Form Title
                       </label>
@@ -321,6 +322,18 @@ export const Forms: React.FC = () => {
                         required
                       />
                     </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Thank You Message
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.thank_you_message}
+                          onChange={(e) => setFormData({ ...formData, thank_you_message: e.target.value })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                        />
+                      </div>
+                    </div>
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -329,18 +342,6 @@ export const Forms: React.FC = () => {
                       <textarea
                         value={formData.description}
                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                        rows={3}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Thank You Message
-                      </label>
-                      <textarea
-                        value={formData.thank_you_message}
-                        onChange={(e) => setFormData({ ...formData, thank_you_message: e.target.value })}
                         rows={2}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                       />
