@@ -391,23 +391,6 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                             <p className="text-sm text-gray-600 truncate">"{testimonial.message}"</p>
                           </div>
                         </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Widget Testimonial Selection */}
-                {selectedFormat === 'widget' && (
-                  <div>
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-medium text-gray-900">Select Testimonials for Widget</h3>
-                      <button
-                        onClick={() => setShowPreview(!showPreview)}
-                        className="bg-blue-100 text-blue-800 px-3 py-1 rounded-md text-sm font-medium hover:bg-blue-200 transition-colors flex items-center space-x-1"
-                      >
-                        <Eye className="h-4 w-4" />
-                        <span>{showPreview ? 'Hide' : 'Show'} Preview</span>
-                      </button>
                     </div>
 
                     {approvedTestimonials.length === 0 ? (
@@ -465,6 +448,25 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                       </p>
                     </div>
                     <div className="flex space-x-2">
+                      {selectedFormat === 'widget' && (
+                        <button
+                          onClick={() => {
+                            setShowPreview(!showPreview);
+                            if (!showPreview) {
+                              setTimeout(() => {
+                                document.getElementById('widget-preview')?.scrollIntoView({ 
+                                  behavior: 'smooth', 
+                                  block: 'start' 
+                                });
+                              }, 100);
+                            }
+                          }}
+                          className="bg-blue-100 text-blue-800 px-3 py-1 rounded-md text-sm font-medium hover:bg-blue-200 transition-colors flex items-center space-x-1"
+                        >
+                          <Eye className="h-4 w-4" />
+                          <span>{showPreview ? 'Hide' : 'Show'} Preview</span>
+                        </button>
+                      )}
                       <button
                         onClick={handleExport}
                         disabled={
