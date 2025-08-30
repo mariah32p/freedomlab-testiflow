@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { Plus, Trash2, GripVertical, Edit3, Save, X } from 'lucide-react';
+import { Plus, Trash2, GripVertical, Edit3, Save, X, ArrowUp, ArrowDown } from 'lucide-react';
 import { Alert } from './Alert';
 
 interface FormField {
@@ -157,35 +157,44 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({ formId, onFieldsChange
   };
 
   const handleReorder = async (dragIndex: number, hoverIndex: number) => {
-    const draggedField = fields[dragIndex];
+    if (dragIndex === hoverIndex) return;
+    
     const newFields = [...fields];
-    newFields.splice(dragIndex, 1);
+    const [draggedField] = newFields.splice(dragIndex, 1);
     newFields.splice(hoverIndex, 0, draggedField);
-
+    
     // Update sort_order for all fields
     const updatedFields = newFields.map((field, index) => ({
       ...field,
       sort_order: index,
     }));
-
+    
     setFields(updatedFields);
-
+    
     // Save new order to database
     try {
-      const updates = updatedFields.map(field => ({
-        id: field.id,
-        sort_order: field.sort_order,
-      }));
-
-      for (const update of updates) {
+      for (let i = 0; i < updatedFields.length; i++) {
         await supabase
           .from('form_fields')
-          .update({ sort_order: update.sort_order })
-          .eq('id', update.id);
+          .update({ sort_order: i })
+          .eq('id', updatedFields[i].id);
       }
+      setSuccess('Field order updated!');
     } catch (error) {
       console.error('Error reordering fields:', error);
       setError('Failed to save field order');
+    }
+  };
+
+  const moveFieldUp = (index: number) => {
+    if (index > 0) {
+      handleReorder(index, index - 1);
+    }
+  };
+
+  const moveFieldDown = (index: number) => {
+    if (index < fields.length - 1) {
+      handleReorder(index, index + 1);
     }
   };
 
@@ -250,7 +259,22 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({ formId, onFieldsChange
           <div key={field.id} className="bg-gray-50 border border-gray-200 rounded-lg p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <GripVertical className="h-4 w-4 text-gray-400 cursor-move" />
+                <div className="flex flex-col space-y-1">
+                  <button
+                    onClick={() => moveFieldUp(index)}
+                    disabled={index === 0}
+                    className="p-1 text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                    title="Move up"
+                  >
+                    <ArrowUp className="h-3 w-3" />
+                  </button>
+                  <button
+                    onClick={() => moveFieldDown(index)}
+                    disabled={index === fields.length - 1}
+                    className="p-1 text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                    title="Move down"
+                  </button>
+                </div>
                 <div>
                   <div className="font-medium text-gray-900">
                     {field.label}
