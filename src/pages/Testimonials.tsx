@@ -331,7 +331,12 @@ export const Testimonials: React.FC = () => {
               </div>
             ) : (
               <div className="space-y-4">
-                {filteredTestimonials.map((testimonial) => (
+                {filteredTestimonials.map((testimonial) => {
+                  const customResponses = testimonialResponses[testimonial.id] || [];
+                  const isExpanded = expandedTestimonials.has(testimonial.id);
+                  const hasCustomFields = customResponses.length > 0;
+
+                  return (
                   <div key={testimonial.id} className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow relative">
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center space-x-3">
@@ -344,9 +349,6 @@ export const Testimonials: React.FC = () => {
                           {testimonial.company && (
                             <div className="text-sm text-gray-500">{testimonial.company}</div>
                           )}
-                  const customResponses = testimonialResponses[testimonial.id] || [];
-                  const isExpanded = expandedTestimonials.has(testimonial.id);
-                  const hasCustomFields = customResponses.length > 0;
 
                         </div>
                       </div>
@@ -466,7 +468,8 @@ export const Testimonials: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                ))}
+                  );
+                })}
               </div>
             )}
 
