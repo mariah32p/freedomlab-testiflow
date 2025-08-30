@@ -465,44 +465,6 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                       </p>
                     </div>
                     <div className="flex space-x-2">
-                      {(selectedFormat === 'social' || selectedFormat === 'widget') && (
-                        <button
-                          onClick={() => {
-                            if (selectedFormat === 'widget') {
-                              setShowPreview(!showPreview);
-                             // Scroll to preview after a short delay to ensure it's rendered
-                             if (!showPreview) {
-                               setTimeout(() => {
-                                 const previewElement = document.getElementById('widget-preview');
-                                 if (previewElement) {
-                                   previewElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                                 }
-                               }, 100);
-                             }
-                            } else {
-                              const preview = generatePreview();
-                              if (preview) {
-                                setGeneratedContent(preview);
-                               // Scroll to generated content after a short delay
-                               setTimeout(() => {
-                                 const contentElement = document.getElementById('generated-content');
-                                 if (contentElement) {
-                                   contentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                                 }
-                               }, 100);
-                              }
-                            }
-                          }}
-                          disabled={
-                            (selectedFormat === 'social' && selectedTestimonials.length !== 1) ||
-                            (selectedFormat === 'widget' && widgetTestimonials.length === 0)
-                          }
-                          className="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg hover:bg-blue-200 transition-colors flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                          <Eye className="h-4 w-4" />
-                          <span>{selectedFormat === 'widget' ? (showPreview ? 'Hide Preview' : 'Show Preview') : 'Preview'}</span>
-                        </button>
-                      )}
                       <button
                         onClick={handleExport}
                         disabled={
