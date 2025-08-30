@@ -94,12 +94,13 @@ export const Branding: React.FC = () => {
     try {
       const brandingData = {
         user_id: user.id,
-        logo_url: logoUrl || null,
+        logo_url: logoUrl.trim() || null,
         primary_color: primaryColor,
         secondary_color: secondaryColor,
         font_family: fontFamily,
       };
 
+      console.log('Saving branding data:', { ...brandingData, logo_url: brandingData.logo_url ? `${brandingData.logo_url.substring(0, 50)}...` : null });
       const { data, error } = await supabase
         .from('form_branding')
         .upsert(brandingData, {
@@ -110,6 +111,7 @@ export const Branding: React.FC = () => {
 
       if (error) throw error;
 
+      console.log('Branding saved successfully:', { ...data, logo_url: data.logo_url ? `${data.logo_url.substring(0, 50)}...` : null });
       setBranding(data);
       setSuccess('Branding settings saved successfully!');
     } catch (error) {
