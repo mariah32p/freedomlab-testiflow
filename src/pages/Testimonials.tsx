@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
-import { MessageSquare, Star, User, CheckCircle, Clock, X, Filter, Download, Trash2, MoreVertical } from 'lucide-react';
+import { MessageSquare, Star, User, CheckCircle, Clock, X, Filter, Download, Trash2, MoreVertical, ChevronDown, ChevronUp } from 'lucide-react';
 import { Alert } from '../components/Alert';
 
 interface Testimonial {
@@ -21,15 +21,29 @@ interface TestimonialForm {
   title: string;
 }
 
+interface FormField {
+  id: string;
+  label: string;
+  field_type: string;
+}
+
+interface FormResponse {
+  field_id: string;
+  value: string;
+  field: FormField;
+}
+
 export const Testimonials: React.FC = () => {
   const { user } = useAuth();
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [forms, setForms] = useState<TestimonialForm[]>([]);
+  const [testimonialResponses, setTestimonialResponses] = useState<Record<string, FormResponse[]>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('all');
   const [deletingTestimonial, setDeletingTestimonial] = useState<Testimonial | null>(null);
   const [showActionsFor, setShowActionsFor] = useState<string | null>(null);
+  const [expandedTestimonials, setExpandedTestimonials] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     fetchData();
@@ -62,6 +76,39 @@ export const Testimonials: React.FC = () => {
 
         if (testimonialsError) throw testimonialsError;
         setTestimonials(testimonialsData || []);
+
+        // Get custom field responses for all testimonials
+        if (testimonialsData && testimonialsData.length > 0) {
+          const testimonialIds = testimonialsData.map(t => t.id);
+          
+          const { data: responsesData, error: responsesError } = await supabase
+            .from('form_responses')
+            .select(`
+              testimonial_id,
+              field_id,
+              value,
+              field:form_fields(id, label, field_type)
+            `)
+            .in('testimonial_id', testimonialIds);
+
+          if (responsesError) {
+            console.error('Error fetching responses:', responsesError);
+          } else if (responsesData) {
+            // Group responses by testimonial ID
+            const responsesByTestimonial: Record<string, FormResponse[]> = {};
+            responsesData.forEach((response: any) => {
+              if (!responsesByTestimonial[response.testimonial_id]) {
+                responsesByTestimonial[response.testimonial_id] = [];
+              }
+              responsesByTestimonial[response.testimonial_id].push({
+                field_id: response.field_id,
+                value: response.value,
+                field: response.field
+              });
+            });
+            setTestimonialResponses(responsesByTestimonial);
+          }
+        }
       }
       
       setLoading(false);
@@ -111,9 +158,75 @@ export const Testimonials: React.FC = () => {
       setError('Failed to delete testimonial');
     }
   };
+
   const getFormTitle = (formId: string) => {
     const form = forms.find(f => f.id === formId);
     return form?.title || 'Unknown Form';
+  };
+
+  const toggleExpanded = (testimonialId: string) => {
+    const newExpanded = new Set(expandedTestimonials);
+    if (newExpanded.has(testimonialId)) {
+      newExpanded.delete(testimonialId);
+    } else {
+      newExpanded.add(testimonialId);
+    }
+    setExpandedTestimonials(newExpanded);
+  };
+
+  const renderCustomFieldValue = (response: FormResponse) => {
+    const { field, value } = response;
+    
+    switch (field.field_type) {
+      case 'rating':
+        const rating = parseInt(value) || 0;
+        return (
+          <div className="flex items-center space-x-1">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <Star
+                key={star}
+                className={`h-4 w-4 ${
+                  star <= rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
+                }`}
+              />
+            ))}
+            <span className="text-sm text-gray-600 ml-2">({rating}/5)</span>
+          </div>
+        );
+      case 'checkbox':
+        const selectedOptions = value.split(',').filter(v => v.trim());
+        return (
+          <div className="flex flex-wrap gap-1">
+            {selectedOptions.map((option, index) => (
+              <span key={index} className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                {option.trim()}
+              </span>
+            ))}
+          </div>
+        );
+      case 'url':
+        return (
+          <a 
+            href={value} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:text-blue-800 underline text-sm"
+          >
+            {value}
+          </a>
+        );
+      case 'email':
+        return (
+          <a 
+            href={`mailto:${value}`}
+            className="text-blue-600 hover:text-blue-800 underline text-sm"
+          >
+            {value}
+          </a>
+        );
+      default:
+        return <span className="text-sm text-gray-700">{value}</span>;
+    }
   };
 
   const filteredTestimonials = testimonials.filter(t => 
@@ -231,6 +344,10 @@ export const Testimonials: React.FC = () => {
                           {testimonial.company && (
                             <div className="text-sm text-gray-500">{testimonial.company}</div>
                           )}
+                  const customResponses = testimonialResponses[testimonial.id] || [];
+                  const isExpanded = expandedTestimonials.has(testimonial.id);
+                  const hasCustomFields = customResponses.length > 0;
+
                         </div>
                       </div>
                       <div className="flex items-center space-x-3">
@@ -296,6 +413,40 @@ export const Testimonials: React.FC = () => {
                                 >
                                   <Trash2 className="h-4 w-4" />
                                   <span>Delete</span>
+                      {/* Custom Fields Section */}
+                      {hasCustomFields && (
+                        <div className="mb-4">
+                          <button
+                            onClick={() => toggleExpanded(testimonial.id)}
+                            className="flex items-center space-x-2 text-sm text-gray-600 hover:text-gray-800 transition-colors"
+                          >
+                            {isExpanded ? (
+                              <ChevronUp className="h-4 w-4" />
+                            ) : (
+                              <ChevronDown className="h-4 w-4" />
+                            )}
+                            <span>
+                              {isExpanded ? 'Hide' : 'Show'} additional responses ({customResponses.length})
+                            </span>
+                          </button>
+                          
+                          {isExpanded && (
+                            <div className="mt-3 bg-gray-50 rounded-lg p-4 space-y-3">
+                              {customResponses.map((response) => (
+                                <div key={response.field_id} className="border-b border-gray-200 pb-3 last:border-b-0 last:pb-0">
+                                  <div className="text-sm font-medium text-gray-700 mb-1">
+                                    {response.field.label}
+                                  </div>
+                                  <div className="text-sm text-gray-600">
+                                    {renderCustomFieldValue(response)}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      )}
+
                                 </button>
                               </div>
                             </div>
