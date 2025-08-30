@@ -476,7 +476,6 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                 </div>
               )}
             </div>
-            </div>
           )}
         </div>
       </div>
