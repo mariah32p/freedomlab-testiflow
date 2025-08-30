@@ -5,8 +5,6 @@ import { MessageSquare, Star, User, CheckCircle, Clock, X, Filter, Download, Tra
 import { Alert } from '../components/Alert';
 import { ExportModal } from '../components/ExportModal';
 import { ExportTestimonial } from '../utils/exportUtils';
-import { TestimonialTagger } from '../components/TestimonialTagger';
-import { TagManager } from '../components/TagManager';
 
 interface Testimonial {
   id: string;
@@ -52,9 +50,6 @@ export const Testimonials: React.FC = () => {
   const [viewingTestimonial, setViewingTestimonial] = useState<Testimonial | null>(null);
   const [showExportModal, setShowExportModal] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
-  const [showTagManager, setShowTagManager] = useState(false);
-  const [selectedTagFilter, setSelectedTagFilter] = useState<string>('all');
-  const [availableTags, setAvailableTags] = useState<any[]>([]);
 
   useEffect(() => {
     fetchData();
@@ -122,15 +117,6 @@ export const Testimonials: React.FC = () => {
         }
       }
 
-      // Fetch available tags for filtering
-      const { data: tagsData } = await supabase
-        .from('testimonial_tags')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('name');
-      
-      setAvailableTags(tagsData || []);
-      
       setLoading(false);
     } catch (error) {
       console.error('Error fetching testimonials:', error);
@@ -188,12 +174,6 @@ export const Testimonials: React.FC = () => {
     let filtered = testimonials.filter(t => 
       filter === 'all' || t.status === filter
     );
-
-    // Apply tag filter if selected
-    if (selectedTagFilter !== 'all') {
-      // This would require a more complex query to filter by tags
-      // For now, we'll implement this in a future iteration
-    }
 
     return filtered;
   };
@@ -303,13 +283,6 @@ export const Testimonials: React.FC = () => {
                   <option value="approved">Approved</option>
                   <option value="rejected">Rejected</option>
                 </select>
-                <button
-                  onClick={() => setShowTagManager(true)}
-                  className="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors flex items-center space-x-2"
-                >
-                  <Tag className="h-4 w-4" />
-                  <span>Manage Tags</span>
-                </button>
                 <button 
                   onClick={() => setShowExportModal(true)}
                   className="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors flex items-center space-x-2"
@@ -448,15 +421,6 @@ export const Testimonials: React.FC = () => {
                           </div>
                         </div>
                       )}
-
-                      {/* Tags */}
-                      <div className="mb-4">
-                        <TestimonialTagger 
-                          testimonialId={testimonial.id}
-                          onTagsChange={fetchData}
-                          compact={true}
-                        />
-                      </div>
 
                       {/* Form & Date */}
                       <div className="text-xs text-gray-500 mb-4 space-y-1">
@@ -678,15 +642,6 @@ export const Testimonials: React.FC = () => {
                       </div>
                     )}
 
-                    {/* Tags in Modal */}
-                    <div className="mb-6">
-                      <h3 className="text-sm font-medium text-gray-700 mb-3">Tags</h3>
-                      <TestimonialTagger 
-                        testimonialId={viewingTestimonial.id}
-                        onTagsChange={fetchData}
-                      />
-                    </div>
-
                     {/* Form & Date Info */}
                     <div className="bg-gray-50 rounded-lg p-4 mb-6">
                       <div className="grid grid-cols-2 gap-4 text-sm">
@@ -797,32 +752,6 @@ export const Testimonials: React.FC = () => {
                   setShowExportModal(false);
                 }}
               />
-            )}
-
-            {/* Tag Manager Modal */}
-            {showTagManager && (
-              <div 
-                className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
-                onClick={() => setShowTagManager(false)}
-              >
-                <div 
-                  className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-hidden"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-                    <h2 className="text-xl font-bold text-gray-900">Manage Tags</h2>
-                    <button
-                      onClick={() => setShowTagManager(false)}
-                      className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
-                    >
-                      <X className="h-5 w-5" />
-                    </button>
-                  </div>
-                  <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
-                    <TagManager onTagsChange={fetchData} />
-                  </div>
-                </div>
-              </div>
             )}
           </div>
         </div>

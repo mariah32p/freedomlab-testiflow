@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
-import { Plus, Edit, Trash2, ExternalLink, Copy, Eye, Settings, X, Calendar, ToggleLeft, ToggleRight, Tag } from 'lucide-react';
+import { Plus, Edit, Trash2, ExternalLink, Copy, Eye, Settings, X, Calendar, ToggleLeft, ToggleRight } from 'lucide-react';
 import { Alert } from '../components/Alert';
 import { FormBuilder } from '../components/FormBuilder';
-import { TestimonialTagger } from '../components/TestimonialTagger';
 
 interface TestimonialForm {
   id: string;
@@ -20,16 +19,9 @@ interface TestimonialForm {
   max_video_size_mb?: number;
 }
 
-interface FormTag {
-  id: string;
-  name: string;
-  color: string;
-}
-
 export const Forms: React.FC = () => {
   const { user } = useAuth();
   const [forms, setForms] = useState<TestimonialForm[]>([]);
-  const [formTags, setFormTags] = useState<Record<string, FormTag[]>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -38,7 +30,6 @@ export const Forms: React.FC = () => {
   const [deletingForm, setDeletingForm] = useState<TestimonialForm | null>(null);
   const [customizingForm, setCustomizingForm] = useState<TestimonialForm | null>(null);
   const [viewingForm, setViewingForm] = useState<TestimonialForm | null>(null);
-  const [taggingForm, setTaggingForm] = useState<TestimonialForm | null>(null);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -53,7 +44,6 @@ export const Forms: React.FC = () => {
 
   useEffect(() => {
     fetchForms();
-    fetchFormTags();
   }, [user]);
 
   const fetchForms = async () => {
@@ -73,28 +63,6 @@ export const Forms: React.FC = () => {
       setError('Failed to load forms');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const fetchFormTags = async () => {
-    if (!user) return;
-
-    try {
-      // This is a placeholder - you'd need to create form_tag_assignments table
-      // For now, we'll use the testimonial tags as form tags
-      const { data: tags } = await supabase
-        .from('testimonial_tags')
-        .select('*')
-        .eq('user_id', user.id);
-
-      // Initialize empty tags for each form
-      const tagsByForm: Record<string, FormTag[]> = {};
-      forms.forEach(form => {
-        tagsByForm[form.id] = [];
-      });
-      setFormTags(tagsByForm);
-    } catch (error) {
-      console.error('Error fetching form tags:', error);
     }
   };
 
@@ -584,39 +552,6 @@ export const Forms: React.FC = () => {
                       </span>
                     </div>
 
-                    {/* Tags Display */}
-                    <div className="mb-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-medium text-gray-700">Tags</span>
-                        <button
-                          onClick={() => setTaggingForm(form)}
-                          className="text-xs text-primary-950 hover:text-primary-800 flex items-center space-x-1"
-                        >
-                          <Tag className="h-3 w-3" />
-                          <span>Manage</span>
-                        </button>
-                      </div>
-                      <div className="flex flex-wrap gap-1">
-                        {(formTags[form.id] || []).length > 0 ? (
-                          formTags[form.id].map((tag) => (
-                            <span
-                              key={tag.id}
-                              className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
-                              style={{ 
-                                backgroundColor: `${tag.color}20`,
-                                color: tag.color,
-                                border: `1px solid ${tag.color}40`
-                              }}
-                            >
-                              {tag.name}
-                            </span>
-                          ))
-                        ) : (
-                          <span className="text-xs text-gray-400 italic">No tags assigned</span>
-                        )}
-                      </div>
-                    </div>
-
                     {/* Form Info */}
                     <div className="mb-6">
                       <div className="flex items-center text-sm text-gray-500 space-x-4">
@@ -782,16 +717,6 @@ export const Forms: React.FC = () => {
                       </button>
                       <button
                         onClick={() => {
-                          setTaggingForm(viewingForm);
-                          setViewingForm(null);
-                        }}
-                        className="flex-1 bg-blue-500 text-white py-3 px-4 rounded-lg hover:bg-blue-600 transition-colors font-medium flex items-center justify-center space-x-2"
-                      >
-                        <Tag className="h-4 w-4" />
-                        <span>Tags</span>
-                      </button>
-                      <button
-                        onClick={() => {
                           setCustomizingForm(viewingForm);
                           setViewingForm(null);
                         }}
@@ -843,56 +768,6 @@ export const Forms: React.FC = () => {
                         // Optionally refresh form data or show success message
                       }}
                     />
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Form Tagging Modal */}
-            {taggingForm && (
-              <div 
-                className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-                onClick={() => setTaggingForm(null)}
-              >
-                <div 
-                  className="bg-white rounded-lg w-full max-w-2xl mx-4 max-h-[90vh] overflow-hidden"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-                    <h2 className="text-xl font-bold text-gray-900">
-                      Manage Tags: {taggingForm.title}
-                    </h2>
-                    <button
-                      onClick={() => setTaggingForm(null)}
-                      className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
-                    >
-                      <X className="h-5 w-5" />
-                    </button>
-                  </div>
-                  <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                      <p className="text-sm text-blue-700">
-                        💡 <strong>Note:</strong> Form tags help you organize your forms by purpose, campaign, or product. 
-                        This is different from testimonial tags which organize individual customer responses.
-                      </p>
-                    </div>
-                    
-                    <div className="text-center py-8">
-                      <Tag className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                      <h3 className="text-lg font-medium text-gray-900 mb-2">Form Tags Coming Soon</h3>
-                      <p className="text-gray-500 mb-6">
-                        We're working on form-specific tagging. For now, you can organize testimonials using the Tags feature.
-                      </p>
-                      <button
-                        onClick={() => {
-                          setTaggingForm(null);
-                          window.location.href = '/tags';
-                        }}
-                        className="bg-primary-950 text-white px-6 py-3 rounded-lg hover:bg-primary-900 transition-colors"
-                      >
-                        Manage Testimonial Tags
-                      </button>
-                    </div>
                   </div>
                 </div>
               </div>

@@ -17,7 +17,6 @@ import { Forms } from './pages/Forms';
 import { Testimonials } from './pages/Testimonials';
 import { SubmitTestimonial } from './pages/SubmitTestimonial';
 import { Branding } from './pages/Branding';
-import { Tags } from './pages/Tags';
 
 const AppContent: React.FC = () => {
   useRouteGuard();
@@ -53,14 +52,6 @@ const AppContent: React.FC = () => {
               element={
                 <ProtectedRoute>
                   <Branding />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/tags"
-              element={
-                <ProtectedRoute>
-                  <Tags />
                 </ProtectedRoute>
               }
             />
