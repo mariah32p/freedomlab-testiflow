@@ -3,6 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { Plus, Edit, Trash2, ExternalLink, Copy, Eye, Settings } from 'lucide-react';
 import { Alert } from '../components/Alert';
+import { FormBuilder } from '../components/FormBuilder';
 
 interface TestimonialForm {
   id: string;
@@ -22,6 +23,7 @@ export const Forms: React.FC = () => {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingForm, setEditingForm] = useState<TestimonialForm | null>(null);
   const [deletingForm, setDeletingForm] = useState<TestimonialForm | null>(null);
+  const [customizingForm, setCustomizingForm] = useState<TestimonialForm | null>(null);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -387,6 +389,13 @@ export const Forms: React.FC = () => {
                           <Edit className="h-4 w-4" />
                         </button>
                         <button
+                          onClick={() => setCustomizingForm(form)}
+                          className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+                          title="Customize fields"
+                        >
+                          <Settings className="h-4 w-4" />
+                        </button>
+                        <button
                           onClick={() => copyFormUrl(form.id)}
                           data-copy-id={form.id}
                           className="px-3 py-1 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-md text-xs font-medium transition-colors flex items-center space-x-1"
@@ -428,6 +437,33 @@ export const Forms: React.FC = () => {
                     </div>
                   </div>
                 ))}
+              </div>
+            )}
+
+            {/* Form Customization Modal */}
+            {customizingForm && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="bg-white rounded-lg w-full max-w-4xl mx-4 max-h-[90vh] overflow-hidden">
+                  <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                    <h2 className="text-xl font-bold text-gray-900">
+                      Customize Form: {customizingForm.title}
+                    </h2>
+                    <button
+                      onClick={() => setCustomizingForm(null)}
+                      className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+                    >
+                      <X className="h-5 w-5" />
+                    </button>
+                  </div>
+                  <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+                    <FormBuilder 
+                      formId={customizingForm.id}
+                      onFieldsChange={() => {
+                        // Optionally refresh form data or show success message
+                      }}
+                    />
+                  </div>
+                </div>
               </div>
             )}
           </div>
