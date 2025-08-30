@@ -132,8 +132,16 @@ Deno.serve(async (req) => {
 
     switch (type) {
       case 'new_testimonial':
-        const { testimonial, form_title, user_email } = data;
-        const emailTemplate = generateNewTestimonialEmail(testimonial, form_title, user_email);
+        const { testimonial, form_title, user_id } = data;
+        
+        // Get form owner's email using admin privileges (secure in Edge Function)
+        const { data: userData, error: userError } = await supabase.auth.admin.getUserById(user_id);
+        
+        if (userError || !userData?.user?.email) {
+          throw new Error(`Failed to get user email: ${userError?.message || 'User not found'}`);
+        }
+        
+        const emailTemplate = generateNewTestimonialEmail(testimonial, form_title, userData.user.email);
         await sendEmail(emailTemplate);
         break;
 

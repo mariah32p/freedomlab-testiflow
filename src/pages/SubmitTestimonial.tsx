@@ -291,21 +291,16 @@ export const SubmitTestimonial: React.FC = () => {
 
       // Send email notification to form owner
       try {
-        // Get form owner's email
-        const { data: userData } = await supabase.auth.admin.getUserById(form.user_id);
-        
-        if (userData?.user?.email) {
-          await sendNewTestimonialNotification(
-            {
-              name,
-              company: company || undefined,
-              rating,
-              message,
-            },
-            form.title,
-            userData.user.email
-          );
-        }
+        await sendNewTestimonialNotification(
+          {
+            name,
+            company: company || undefined,
+            rating,
+            message,
+          },
+          form.title,
+          form.user_id
+        );
       } catch (emailError) {
         console.error('Failed to send email notification:', emailError);
         // Don't fail the testimonial submission if email fails

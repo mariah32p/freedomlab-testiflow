@@ -9,7 +9,7 @@ export const useEmailNotifications = () => {
       message: string;
     },
     formTitle: string,
-    userEmail: string
+    userId: string
   ) => {
     try {
       const { error } = await supabase.functions.invoke('send-notification', {
@@ -18,7 +18,7 @@ export const useEmailNotifications = () => {
           data: {
             testimonial,
             form_title: formTitle,
-            user_email: userEmail,
+            user_id: userId,
           },
         },
       });
