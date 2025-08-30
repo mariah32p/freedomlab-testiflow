@@ -676,6 +676,25 @@ export const Forms: React.FC = () => {
                       </div>
                     </div>
 
+                    {/* Media Upload Settings */}
+                    <div className="bg-blue-50 rounded-lg p-4 mb-6">
+                      <h4 className="text-sm font-medium text-blue-900 mb-3">📸 Media Upload Settings</h4>
+                      <div className="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                          <span className="text-blue-700">Image Uploads:</span>
+                          <div className="font-medium text-blue-900">
+                            {viewingForm.allow_image_uploads ? `Enabled (${viewingForm.max_image_size_mb}MB max)` : 'Disabled'}
+                          </div>
+                        </div>
+                        <div>
+                          <span className="text-blue-700">Video Uploads:</span>
+                          <div className="font-medium text-blue-900">
+                            {viewingForm.allow_video_uploads ? `Enabled (${viewingForm.max_video_size_mb}MB max)` : 'Disabled'}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
                     {/* Action Buttons */}
                     <div className="flex space-x-3">
                       <button
