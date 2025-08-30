@@ -34,7 +34,7 @@ const sendEmail = async (template: EmailTemplate) => {
     },
     body: JSON.stringify({
       from: 'TestiFlow by Freedom Lab <info@freedomlab.ai>',
-      to: template.to,
+      to: [template.to],
       subject: template.subject,
       html: template.html,
       text: template.text,
