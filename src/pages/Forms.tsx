@@ -291,6 +291,18 @@ export const Forms: React.FC = () => {
                       />
                     </div>
 
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <div className="flex items-start space-x-3">
+                        <Settings className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                        <div>
+                          <h4 className="text-sm font-medium text-blue-900 mb-1">Custom Fields</h4>
+                          <p className="text-sm text-blue-700">
+                            After creating your form, click the ⚙️ settings icon to add custom questions like "What's your role?" or "How did you hear about us?"
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
                     <div className="flex space-x-3 pt-4">
                       <button
                         type="submit"
