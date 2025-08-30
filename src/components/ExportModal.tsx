@@ -437,7 +437,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                         <span>
                           {selectedFormat === 'csv' || selectedFormat === 'json' ? 'Download' : 'Generate'}
                         </span>
-                      </div>
+                      </button>
                     </div>
                   </div>
                 )}
