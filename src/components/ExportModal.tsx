@@ -423,7 +423,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                         <p>No approved testimonials available for widget</p>
                       </div>
                     ) : (
-                      <>
+                      <div>
                         <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
                           <p className="text-sm text-blue-700">
                             💡 Select specific testimonials or leave unselected to use your top 3 approved testimonials automatically
@@ -453,7 +453,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                             </div>
                           ))}
                         </div>
-                      </>
+                      </div>
                     )}
                   </div>
                 )}
