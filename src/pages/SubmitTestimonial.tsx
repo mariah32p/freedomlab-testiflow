@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { Star, Send, CheckCircle, Upload, X, Play, Image as ImageIcon } from 'lucide-react';
 import { TestiFlowIcon } from '../components/TestiFlowIcon';
+import { useEmailNotifications } from '../hooks/useEmailNotifications';
 
 interface TestimonialForm {
   id: string;
@@ -35,6 +36,7 @@ interface FormField {
 }
 export const SubmitTestimonial: React.FC = () => {
   const { formId } = useParams<{ formId: string }>();
+  const { sendNewTestimonialNotification } = useEmailNotifications();
   const [form, setForm] = useState<TestimonialForm | null>(null);
   const [branding, setBranding] = useState<FormBranding | null>(null);
   const [customFields, setCustomFields] = useState<FormField[]>([]);
@@ -286,6 +288,29 @@ export const SubmitTestimonial: React.FC = () => {
           }
         }
       }
+
+      // Send email notification to form owner
+      try {
+        // Get form owner's email
+        const { data: userData } = await supabase.auth.admin.getUserById(form.user_id);
+        
+        if (userData?.user?.email) {
+          await sendNewTestimonialNotification(
+            {
+              name,
+              company: company || undefined,
+              rating,
+              message,
+            },
+            form.title,
+            userData.user.email
+          );
+        }
+      } catch (emailError) {
+        console.error('Failed to send email notification:', emailError);
+        // Don't fail the testimonial submission if email fails
+      }
+
       console.log('Testimonial submitted successfully');
       setSubmitted(true);
     } catch (error) {
