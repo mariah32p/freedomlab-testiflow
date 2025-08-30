@@ -200,6 +200,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                   Done
                 </button>
               </div>
+            </div>
             </>
           ) : (
             /* Export Options View */
