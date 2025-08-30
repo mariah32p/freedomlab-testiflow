@@ -285,18 +285,18 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                     </button>
 
                     <button
-                      onClick={() => setSelectedFormat('social')}
+                      onClick={() => setSelectedFormat('widget')}
                       className={`w-full p-4 border rounded-lg text-left transition-colors ${
-                        selectedFormat === 'social'
+                        selectedFormat === 'widget'
                           ? 'border-primary-500 bg-primary-50'
                           : 'border-gray-200 hover:bg-gray-50'
                       }`}
                     >
                       <div className="flex items-center space-x-3">
-                        <Share2 className="h-6 w-6 text-purple-600" />
+                        <Code className="h-6 w-6 text-purple-600" />
                         <div>
-                          <div className="font-medium">Social Media Post</div>
-                          <div className="text-sm text-gray-500">Ready-to-share content for social platforms</div>
+                          <div className="font-medium">Website Widget</div>
+                          <div className="text-sm text-gray-500">HTML code to embed on your website</div>
                         </div>
                       </div>
                     </button>
