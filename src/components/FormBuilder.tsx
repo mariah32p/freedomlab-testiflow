@@ -475,9 +475,14 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({ formId, onFieldsChange
                           : 'border-gray-200 hover:bg-gray-50'
                       }`}
                     >
-                      <div className="flex items-center space-x-2">
+                      <div className="space-y-1">
+                        <div className="flex items-center space-x-2">
                         <span className="text-lg">{type.icon}</span>
                         <span className="font-medium">{type.label}</span>
+                      </div>
+                        {type.description && (
+                          <p className="text-xs text-gray-500">{type.description}</p>
+                        )}
                       </div>
                     </button>
                   ))}
