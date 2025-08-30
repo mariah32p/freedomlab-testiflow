@@ -631,14 +631,15 @@ export const Forms: React.FC = () => {
                         </span>
                       </div>
                       
-                      <div className="bg-gray-50 rounded-lg p-4 mb-4">
-                        <h4 className="text-sm font-medium text-gray-700 mb-2">Description</h4>
-                        <p className="text-gray-600">{viewingForm.description}</p>
-                      </div>
-
-                      <div className="bg-gray-50 rounded-lg p-4 mb-4">
-                        <h4 className="text-sm font-medium text-gray-700 mb-2">Thank You Message</h4>
-                        <p className="text-gray-600">{viewingForm.thank_you_message}</p>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div className="bg-gray-50 rounded-lg p-4">
+                          <h4 className="text-sm font-medium text-gray-700 mb-2">Description</h4>
+                          <p className="text-gray-600 text-sm">{viewingForm.description}</p>
+                        </div>
+                        <div className="bg-gray-50 rounded-lg p-4">
+                          <h4 className="text-sm font-medium text-gray-700 mb-2">Thank You Message</h4>
+                          <p className="text-gray-600 text-sm">{viewingForm.thank_you_message}</p>
+                        </div>
                       </div>
 
                       <div className="bg-blue-50 rounded-lg p-4">
@@ -658,38 +659,42 @@ export const Forms: React.FC = () => {
                       </div>
                     </div>
 
-                    {/* Form Metadata */}
-                    <div className="bg-gray-50 rounded-lg p-4 mb-6">
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div>
-                          <span className="text-gray-500">Created:</span>
-                          <div className="font-medium text-gray-900">
-                            {new Date(viewingForm.created_at).toLocaleDateString()}
+                    {/* Combined Settings Row */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                      {/* Form Metadata */}
+                      <div className="bg-gray-50 rounded-lg p-4">
+                        <h4 className="text-sm font-medium text-gray-700 mb-3">📅 Form Details</h4>
+                        <div className="space-y-2 text-sm">
+                          <div className="flex justify-between">
+                            <span className="text-gray-500">Created:</span>
+                            <span className="font-medium text-gray-900">
+                              {new Date(viewingForm.created_at).toLocaleDateString()}
+                            </span>
                           </div>
-                        </div>
-                        <div>
-                          <span className="text-gray-500">Last Updated:</span>
-                          <div className="font-medium text-gray-900">
-                            {new Date(viewingForm.updated_at).toLocaleDateString()}
+                          <div className="flex justify-between">
+                            <span className="text-gray-500">Updated:</span>
+                            <span className="font-medium text-gray-900">
+                              {new Date(viewingForm.updated_at).toLocaleDateString()}
+                            </span>
                           </div>
                         </div>
                       </div>
-                    </div>
 
-                    {/* Media Upload Settings */}
-                    <div className="bg-blue-50 rounded-lg p-4 mb-6">
-                      <h4 className="text-sm font-medium text-blue-900 mb-3">📸 Media Upload Settings</h4>
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div>
-                          <span className="text-blue-700">Image Uploads:</span>
-                          <div className="font-medium text-blue-900">
-                            {viewingForm.allow_image_uploads ? `Enabled (${viewingForm.max_image_size_mb}MB max)` : 'Disabled'}
+                      {/* Media Upload Settings */}
+                      <div className="bg-blue-50 rounded-lg p-4">
+                        <h4 className="text-sm font-medium text-blue-900 mb-3">📸 Media Settings</h4>
+                        <div className="space-y-2 text-sm">
+                          <div className="flex justify-between">
+                            <span className="text-blue-700">Images:</span>
+                            <span className="font-medium text-blue-900">
+                              {viewingForm.allow_image_uploads ? `${viewingForm.max_image_size_mb}MB` : 'Disabled'}
+                            </span>
                           </div>
-                        </div>
-                        <div>
-                          <span className="text-blue-700">Video Uploads:</span>
-                          <div className="font-medium text-blue-900">
-                            {viewingForm.allow_video_uploads ? `Enabled (${viewingForm.max_video_size_mb}MB max)` : 'Disabled'}
+                          <div className="flex justify-between">
+                            <span className="text-blue-700">Videos:</span>
+                            <span className="font-medium text-blue-900">
+                              {viewingForm.allow_video_uploads ? `${viewingForm.max_video_size_mb}MB` : 'Disabled'}
+                            </span>
                           </div>
                         </div>
                       </div>
