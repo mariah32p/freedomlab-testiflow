@@ -14,6 +14,8 @@ interface Testimonial {
   status: 'pending' | 'approved' | 'rejected';
   submitted_at: string;
   form_id: string;
+  image_url: string | null;
+  video_url: string | null;
 }
 
 interface TestimonialForm {
@@ -348,6 +350,24 @@ export const Testimonials: React.FC = () => {
                         <p className="text-gray-700 text-sm leading-relaxed line-clamp-3">
                           "{testimonial.message}"
                         </p>
+                        
+                        {/* Media Indicators */}
+                        {(testimonial.image_url || testimonial.video_url) && (
+                          <div className="flex items-center space-x-2 mt-3">
+                            {testimonial.image_url && (
+                              <div className="flex items-center space-x-1 bg-blue-50 text-blue-700 px-2 py-1 rounded-full text-xs">
+                                <Eye className="h-3 w-3" />
+                                <span>Image</span>
+                              </div>
+                            )}
+                            {testimonial.video_url && (
+                              <div className="flex items-center space-x-1 bg-purple-50 text-purple-700 px-2 py-1 rounded-full text-xs">
+                                <Eye className="h-3 w-3" />
+                                <span>Video</span>
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
 
                       {/* Custom Fields Indicator */}
@@ -532,6 +552,35 @@ export const Testimonials: React.FC = () => {
                         </p>
                       </div>
                     </div>
+
+                    {/* Media Content */}
+                    {(viewingTestimonial.image_url || viewingTestimonial.video_url) && (
+                      <div className="mb-6">
+                        <h3 className="text-sm font-medium text-gray-700 mb-3">Media</h3>
+                        <div className="space-y-4">
+                          {viewingTestimonial.image_url && (
+                            <div>
+                              <h4 className="text-sm font-medium text-gray-600 mb-2">Image</h4>
+                              <img 
+                                src={viewingTestimonial.image_url} 
+                                alt="Testimonial" 
+                                className="w-full max-w-md rounded-lg border border-gray-200 shadow-sm"
+                              />
+                            </div>
+                          )}
+                          {viewingTestimonial.video_url && (
+                            <div>
+                              <h4 className="text-sm font-medium text-gray-600 mb-2">Video</h4>
+                              <video 
+                                src={viewingTestimonial.video_url} 
+                                className="w-full max-w-md rounded-lg border border-gray-200 shadow-sm"
+                                controls
+                              />
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
 
                     {/* Custom Field Responses */}
                     {testimonialResponses[viewingTestimonial.id] && testimonialResponses[viewingTestimonial.id].length > 0 && (

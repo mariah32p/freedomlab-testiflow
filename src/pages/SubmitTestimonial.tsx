@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { Star, Send, CheckCircle } from 'lucide-react';
+import { Star, Send, CheckCircle, Upload, X, Play, Image as ImageIcon } from 'lucide-react';
 import { TestiFlowIcon } from '../components/TestiFlowIcon';
 
 interface TestimonialForm {
@@ -47,6 +47,11 @@ export const SubmitTestimonial: React.FC = () => {
   const [rating, setRating] = useState(0);
   const [hoveredRating, setHoveredRating] = useState(0);
   const [customResponses, setCustomResponses] = useState<Record<string, string>>({});
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [videoPreview, setVideoPreview] = useState<string | null>(null);
+  const [uploadingMedia, setUploadingMedia] = useState(false);
 
   useEffect(() => {
     const fetchForm = async () => {
@@ -109,6 +114,109 @@ export const SubmitTestimonial: React.FC = () => {
     fetchForm();
   }, [formId]);
 
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      setError('Please select an image file');
+      return;
+    }
+
+    // Validate file size (max 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      setError('Image must be smaller than 10MB');
+      return;
+    }
+
+    setImageFile(file);
+    
+    // Create preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setImagePreview(e.target?.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleVideoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('video/')) {
+      setError('Please select a video file');
+      return;
+    }
+
+    // Validate file size (max 100MB)
+    if (file.size > 100 * 1024 * 1024) {
+      setError('Video must be smaller than 100MB');
+      return;
+    }
+
+    setVideoFile(file);
+    
+    // Create preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setVideoPreview(e.target?.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const removeImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+  };
+
+  const removeVideo = () => {
+    setVideoFile(null);
+    setVideoPreview(null);
+  };
+
+  const uploadMediaFiles = async () => {
+    const uploadedUrls: { image_url?: string; video_url?: string } = {};
+
+    if (imageFile) {
+      setUploadingMedia(true);
+      try {
+        // Convert to base64 for storage
+        const reader = new FileReader();
+        const imageBase64 = await new Promise<string>((resolve, reject) => {
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = reject;
+          reader.readAsDataURL(imageFile);
+        });
+        uploadedUrls.image_url = imageBase64;
+      } catch (error) {
+        console.error('Error processing image:', error);
+        throw new Error('Failed to process image');
+      }
+    }
+
+    if (videoFile) {
+      setUploadingMedia(true);
+      try {
+        // Convert to base64 for storage
+        const reader = new FileReader();
+        const videoBase64 = await new Promise<string>((resolve, reject) => {
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = reject;
+          reader.readAsDataURL(videoFile);
+        });
+        uploadedUrls.video_url = videoBase64;
+      } catch (error) {
+        console.error('Error processing video:', error);
+        throw new Error('Failed to process video');
+      }
+    }
+
+    setUploadingMedia(false);
+    return uploadedUrls;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form || rating === 0) {
@@ -127,6 +235,9 @@ export const SubmitTestimonial: React.FC = () => {
     setError(null);
 
     try {
+      // Upload media files first
+      const mediaUrls = await uploadMediaFiles();
+
       const { data: testimonialData, error } = await supabase
         .from('testimonials')
         .insert([{
@@ -136,7 +247,9 @@ export const SubmitTestimonial: React.FC = () => {
           company: company || null,
           message,
           rating,
-          status: 'pending'
+          status: 'pending',
+          image_url: mediaUrls.image_url || null,
+          video_url: mediaUrls.video_url || null
         }])
         .select()
         .single();
@@ -491,17 +604,98 @@ export const SubmitTestimonial: React.FC = () => {
                  </div>
                ))}
               {/* Submit Button */}
+              {/* Media Upload Section */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium text-gray-900">Add Media (Optional)</h3>
+                
+                {/* Image Upload */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Upload Image
+                  </label>
+                  {imagePreview ? (
+                    <div className="relative">
+                      <img 
+                        src={imagePreview} 
+                        alt="Preview" 
+                        className="w-full h-48 object-cover rounded-lg border border-gray-300"
+                      />
+                      <button
+                        type="button"
+                        onClick={removeImage}
+                        className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition-colors"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                        id="image-upload"
+                      />
+                      <label htmlFor="image-upload" className="cursor-pointer">
+                        <ImageIcon className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                        <p className="text-sm text-gray-600">Click to upload an image</p>
+                        <p className="text-xs text-gray-500 mt-1">PNG, JPG, GIF up to 10MB</p>
+                      </label>
+                    </div>
+                  )}
+                </div>
+
+                {/* Video Upload */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Upload Video
+                  </label>
+                  {videoPreview ? (
+                    <div className="relative">
+                      <video 
+                        src={videoPreview} 
+                        className="w-full h-48 object-cover rounded-lg border border-gray-300"
+                        controls
+                      />
+                      <button
+                        type="button"
+                        onClick={removeVideo}
+                        className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition-colors"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
+                      <input
+                        type="file"
+                        accept="video/*"
+                        onChange={handleVideoUpload}
+                        className="hidden"
+                        id="video-upload"
+                      />
+                      <label htmlFor="video-upload" className="cursor-pointer">
+                        <Play className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                        <p className="text-sm text-gray-600">Click to upload a video</p>
+                        <p className="text-xs text-gray-500 mt-1">MP4, MOV, AVI up to 100MB</p>
+                      </label>
+                    </div>
+                  )}
+                </div>
+              </div>
+
               <div className="pt-4">
                 <button
                   type="submit"
-                  disabled={submitting || rating === 0}
+                  disabled={submitting || rating === 0 || uploadingMedia}
                   className="w-full text-white py-3 px-6 rounded-lg font-semibold transition-colors flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{ 
                     backgroundColor: secondaryColor,
                     fontFamily 
                   }}
                   onMouseEnter={(e) => {
-                    if (!submitting && rating > 0) {
+                    if (!submitting && rating > 0 && !uploadingMedia) {
                       e.currentTarget.style.opacity = '0.9';
                     }
                   }}
@@ -509,10 +703,10 @@ export const SubmitTestimonial: React.FC = () => {
                     e.currentTarget.style.opacity = '1';
                   }}
                 >
-                  {submitting ? (
+                  {submitting || uploadingMedia ? (
                     <>
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                      <span>Submitting...</span>
+                      <span>{uploadingMedia ? 'Processing media...' : 'Submitting...'}</span>
                     </>
                   ) : (
                     <>
