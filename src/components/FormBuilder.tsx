@@ -264,7 +264,6 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({ formId, onFieldsChange
                     onClick={() => moveFieldUp(index)}
                     disabled={index === 0}
                     className="p-1 text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                    title="Move up"
                   >
                     <ArrowUp className="h-3 w-3" />
                   </button>
@@ -272,7 +271,6 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({ formId, onFieldsChange
                     onClick={() => moveFieldDown(index)}
                     disabled={index === fields.length - 1}
                     className="p-1 text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                    title="Move down"
                   >
                     <ArrowDown className="h-3 w-3" />
                   </button>
