@@ -200,10 +200,11 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                   Done
                 </button>
               </div>
-            </div>
+            </>
           ) : (
             /* Export Options View */
-            <div className="space-y-6">
+            <>
+              <div className="space-y-6">
                 {/* Export Format Selection */}
                 <div>
                   <h3 className="text-lg font-medium text-gray-900 mb-4">Choose Export Format</h3>
