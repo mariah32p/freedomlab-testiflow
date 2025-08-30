@@ -17,6 +17,12 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
   const [copied, setCopied] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
 
+  // Reset selections when format changes
+  useEffect(() => {
+    setSelectedTestimonials([]);
+    setSelectAll(true);
+  }, [selectedFormat]);
+
   // Get approved testimonials
   const approvedTestimonials = testimonials.filter(t => t.status === 'approved');
   
@@ -291,10 +297,12 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                 )}
 
                 {/* Testimonial Selection for CSV/JSON */}
-                {(selectedFormat === 'csv' || selectedFormat === 'json') && statusFilteredTestimonials.length > 0 && (
+                {(selectedFormat === 'csv' || selectedFormat === 'json' || selectedFormat === 'social') && statusFilteredTestimonials.length > 0 && (
                   <div>
                     <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-medium text-gray-900">Select Testimonials</h3>
+                      <h3 className="text-lg font-medium text-gray-900">
+                        {selectedFormat === 'social' ? 'Select a Testimonial' : 'Select Testimonials'}
+                      </h3>
                       <div className="flex items-center space-x-2">
                         <input
                           type="checkbox"
@@ -302,20 +310,37 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                           checked={selectAll}
                           onChange={(e) => handleSelectAll(e.target.checked)}
                           className="rounded border-gray-300 text-primary-950 focus:ring-primary-500"
+                          disabled={selectedFormat === 'social'}
                         />
                         <label htmlFor="select-all" className="text-sm text-gray-700">
-                          Select All ({statusFilteredTestimonials.length})
+                          {selectedFormat === 'social' ? 'Choose one testimonial' : `Select All (${statusFilteredTestimonials.length})`}
                         </label>
                       </div>
                     </div>
+
+                    {selectedFormat === 'social' && (
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+                        <p className="text-sm text-blue-700">
+                          💡 Select exactly one testimonial to generate a social media post
+                        </p>
+                      </div>
+                    )}
 
                     <div className="max-h-64 overflow-y-auto border border-gray-200 rounded-lg">
                       {statusFilteredTestimonials.map((testimonial) => (
                         <div key={testimonial.id} className="flex items-center space-x-3 p-3 border-b border-gray-100 last:border-b-0">
                           <input
-                            type="checkbox"
+                            type={selectedFormat === 'social' ? 'radio' : 'checkbox'}
+                            name={selectedFormat === 'social' ? 'social-testimonial' : undefined}
                             checked={selectAll || selectedTestimonials.includes(testimonial.id)}
-                            onChange={(e) => handleTestimonialSelect(testimonial.id, e.target.checked)}
+                            onChange={(e) => {
+                              if (selectedFormat === 'social') {
+                                setSelectedTestimonials([testimonial.id]);
+                                setSelectAll(false);
+                              } else {
+                                handleTestimonialSelect(testimonial.id, e.target.checked);
+                              }
+                            }}
                             className="rounded border-gray-300 text-primary-950 focus:ring-primary-500"
                             disabled={selectAll}
                           />
