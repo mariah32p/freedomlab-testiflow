@@ -83,7 +83,7 @@ export const generateSocialMediaPost = (testimonial: ExportTestimonial): string 
   return `${stars} Customer Love!\n\n"${truncatedMessage}"\n\n- ${testimonial.name}${testimonial.company ? `, ${testimonial.company}` : ''}\n\n#CustomerSuccess #Testimonial`;
 };
 
-export const generateWebsiteWidget = (testimonials: ExportTestimonial[]): string => {
+export const generateWebsiteWidget = (testimonials: ExportTestimonial[], primaryColor: string = '#01004d', secondaryColor: string = '#01b79e'): string => {
   const approvedTestimonials = testimonials.filter(t => t.status === 'approved').slice(0, 3);
   
   return `<!-- Testimonials Widget -->
@@ -91,7 +91,7 @@ export const generateWebsiteWidget = (testimonials: ExportTestimonial[]): string
   <h3 style="text-align: center; margin-bottom: 20px; color: #333;">What Our Customers Say</h3>
   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
     ${approvedTestimonials.map(testimonial => `
-    <div style="background: #f9f9f9; padding: 20px; border-radius: 12px; border-left: 4px solid #01b79e; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+    <div style="background: #f9f9f9; padding: 20px; border-radius: 12px; border-left: 4px solid ${secondaryColor}; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
       <div style="display: flex; margin-bottom: 8px;">
         ${'★'.repeat(testimonial.rating)}<span style="color: #ddd;">${'★'.repeat(5 - testimonial.rating)}</span>
       </div>

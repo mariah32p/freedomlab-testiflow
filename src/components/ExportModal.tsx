@@ -433,9 +433,13 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                       {(selectedFormat === 'social' || selectedFormat === 'widget') && (
                         <button
                           onClick={() => {
-                            const preview = generatePreview();
-                            if (preview) {
-                              setGeneratedContent(preview);
+                            if (selectedFormat === 'widget') {
+                              setShowPreview(!showPreview);
+                            } else {
+                              const preview = generatePreview();
+                              if (preview) {
+                                setGeneratedContent(preview);
+                              }
                             }
                           }}
                           disabled={
@@ -445,7 +449,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                           className="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg hover:bg-blue-200 transition-colors flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           <Eye className="h-4 w-4" />
-                          <span>Preview</span>
+                          <span>{selectedFormat === 'widget' ? (showPreview ? 'Hide Preview' : 'Show Preview') : 'Preview'}</span>
                         </button>
                       )}
                       <button
@@ -481,7 +485,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                           <h3 style={{ textAlign: 'center', marginBottom: '20px', color: '#333' }}>What Our Customers Say</h3>
                           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
                             {widgetTestimonials.map(testimonial => (
-                              <div key={testimonial.id} style={{ background: '#f9f9f9', padding: '20px', borderRadius: '12px', borderLeft: '4px solid #01b79e', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                              <div key={testimonial.id} style={{ background: '#f9f9f9', padding: '20px', borderRadius: '12px', borderLeft: `4px solid #01b79e`, boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
                                 <div style={{ display: 'flex', marginBottom: '8px' }}>
                                   {'★'.repeat(testimonial.rating)}<span style={{ color: '#ddd' }}>{'★'.repeat(5 - testimonial.rating)}</span>
                                 </div>
