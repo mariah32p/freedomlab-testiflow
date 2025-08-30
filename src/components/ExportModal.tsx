@@ -301,22 +301,6 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                       </div>
                     </button>
 
-                    <button
-                      onClick={() => setSelectedFormat('widget')}
-                      className={`w-full p-4 border rounded-lg text-left transition-colors ${
-                        selectedFormat === 'widget'
-                          ? 'border-primary-500 bg-primary-50'
-                          : 'border-gray-200 hover:bg-gray-50'
-                      }`}
-                    >
-                      <div className="flex items-center space-x-3">
-                        <Code className="h-6 w-6 text-orange-600" />
-                        <div>
-                          <div className="font-medium">Website Widget</div>
-                          <div className="text-sm text-gray-500">HTML testimonial display for your site</div>
-                        </div>
-                      </div>
-                    </button>
                   </div>
                 </div>
 
