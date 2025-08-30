@@ -440,7 +440,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                       </button>
                     </div>
                   </div>
-                )}
+                </div>
               </div>
 
               {/* Right Column - Live Preview */}
