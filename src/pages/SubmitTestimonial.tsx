@@ -20,10 +20,20 @@ interface FormBranding {
   font_family: string;
 }
 
+interface FormField {
+  id: string;
+  field_type: 'text' | 'textarea' | 'select' | 'radio' | 'checkbox' | 'rating' | 'email' | 'url';
+  label: string;
+  placeholder: string;
+  options: string[];
+  is_required: boolean;
+  sort_order: number;
+}
 export const SubmitTestimonial: React.FC = () => {
   const { formId } = useParams<{ formId: string }>();
   const [form, setForm] = useState<TestimonialForm | null>(null);
   const [branding, setBranding] = useState<FormBranding | null>(null);
+  const [customFields, setCustomFields] = useState<FormField[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -36,6 +46,7 @@ export const SubmitTestimonial: React.FC = () => {
   const [message, setMessage] = useState('');
   const [rating, setRating] = useState(0);
   const [hoveredRating, setHoveredRating] = useState(0);
+  const [customResponses, setCustomResponses] = useState<Record<string, string>>({});
 
   useEffect(() => {
     const fetchForm = async () => {
@@ -48,7 +59,8 @@ export const SubmitTestimonial: React.FC = () => {
       try {
         const { data, error } = await supabase
           .from('testimonial_forms')
-          .select('*, user_id')
+          .select('*')
+          .eq('id', formId)
           .maybeSingle();
 
         if (error) {
@@ -74,6 +86,17 @@ export const SubmitTestimonial: React.FC = () => {
           if (brandingData) {
             setBranding(brandingData);
           }
+
+          // Fetch custom fields for this form
+          const { data: fieldsData } = await supabase
+            .from('form_fields')
+            .select('*')
+            .eq('form_id', data.id)
+            .order('sort_order', { ascending: true });
+          
+          if (fieldsData) {
+            setCustomFields(fieldsData);
+          }
         }
       } catch (error) {
         console.error('Error fetching form:', error);
@@ -93,11 +116,18 @@ export const SubmitTestimonial: React.FC = () => {
       return;
     }
 
+    // Validate required custom fields
+    for (const field of customFields) {
+      if (field.is_required && !customResponses[field.id]?.trim()) {
+        setError(`Please fill in the required field: ${field.label}`);
+        return;
+      }
+    }
     setSubmitting(true);
     setError(null);
 
     try {
-      const { error } = await supabase
+      const { data: testimonialData, error } = await supabase
         .from('testimonials')
         .insert([{
           form_id: form.id,
@@ -108,12 +138,35 @@ export const SubmitTestimonial: React.FC = () => {
           rating,
           status: 'pending'
         }]);
+        .select()
+        .single();
 
-      if (error) {
+      if (error || !testimonialData) {
         console.error('Supabase error:', error);
         throw error;
       }
 
+      // Save custom field responses
+      if (customFields.length > 0) {
+        const responses = customFields
+          .filter(field => customResponses[field.id]?.trim())
+          .map(field => ({
+            testimonial_id: testimonialData.id,
+            field_id: field.id,
+            value: customResponses[field.id]
+          }));
+
+        if (responses.length > 0) {
+          const { error: responsesError } = await supabase
+            .from('form_responses')
+            .insert(responses);
+
+          if (responsesError) {
+            console.error('Error saving custom responses:', responsesError);
+            // Don't fail the whole submission for this
+          }
+        }
+      }
       console.log('Testimonial submitted successfully');
       setSubmitted(true);
     } catch (error) {
@@ -172,6 +225,127 @@ export const SubmitTestimonial: React.FC = () => {
   const fontFamily = branding?.font_family || 'Montserrat';
   const logoUrl = branding?.logo_url;
 
+  const renderCustomField = (field: FormField) => {
+    const value = customResponses[field.id] || '';
+    const updateValue = (newValue: string) => {
+      setCustomResponses(prev => ({ ...prev, [field.id]: newValue }));
+    };
+
+    switch (field.field_type) {
+      case 'text':
+      case 'email':
+      case 'url':
+        return (
+          <input
+            type={field.field_type}
+            value={value}
+            onChange={(e) => updateValue(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+            placeholder={field.placeholder}
+            required={field.is_required}
+          />
+        );
+
+      case 'textarea':
+        return (
+          <textarea
+            value={value}
+            onChange={(e) => updateValue(e.target.value)}
+            rows={3}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+            placeholder={field.placeholder}
+            required={field.is_required}
+          />
+        );
+
+      case 'select':
+        return (
+          <select
+            value={value}
+            onChange={(e) => updateValue(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+            required={field.is_required}
+          >
+            <option value="">Select an option...</option>
+            {field.options.map((option, index) => (
+              <option key={index} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        );
+
+      case 'radio':
+        return (
+          <div className="space-y-2">
+            {field.options.map((option, index) => (
+              <label key={index} className="flex items-center space-x-2">
+                <input
+                  type="radio"
+                  name={field.id}
+                  value={option}
+                  checked={value === option}
+                  onChange={(e) => updateValue(e.target.value)}
+                  className="text-primary-500 focus:ring-primary-500"
+                  required={field.is_required}
+                />
+                <span className="text-sm text-gray-700">{option}</span>
+              </label>
+            ))}
+          </div>
+        );
+
+      case 'checkbox':
+        const selectedValues = value ? value.split(',') : [];
+        return (
+          <div className="space-y-2">
+            {field.options.map((option, index) => (
+              <label key={index} className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  checked={selectedValues.includes(option)}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      updateValue([...selectedValues, option].join(','));
+                    } else {
+                      updateValue(selectedValues.filter(v => v !== option).join(','));
+                    }
+                  }}
+                  className="text-primary-500 focus:ring-primary-500"
+                />
+                <span className="text-sm text-gray-700">{option}</span>
+              </label>
+            ))}
+          </div>
+        );
+
+      case 'rating':
+        const ratingValue = parseInt(value) || 0;
+        return (
+          <div className="flex space-x-1">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <button
+                key={star}
+                type="button"
+                onClick={() => updateValue(star.toString())}
+                className="p-1 transition-colors"
+              >
+                <Star
+                  className={`h-6 w-6 ${
+                    star <= ratingValue
+                      ? 'text-yellow-400 fill-current'
+                      : 'text-gray-300'
+                  }`}
+                />
+              </button>
+            ))}
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
   return (
     <div className="min-h-screen bg-gray-50 py-12" style={{ fontFamily }}>
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -306,6 +480,16 @@ export const SubmitTestimonial: React.FC = () => {
                 />
               </div>
 
+               {/* Custom Fields */}
+               {customFields.map((field) => (
+                 <div key={field.id}>
+                   <label className="block text-sm font-medium text-gray-700 mb-1">
+                     {field.label}
+                     {field.is_required && <span className="text-red-500 ml-1">*</span>}
+                   </label>
+                   {renderCustomField(field)}
+                 </div>
+               ))}
               {/* Submit Button */}
               <div className="pt-4">
                 <button

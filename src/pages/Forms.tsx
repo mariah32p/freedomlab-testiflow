@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
-import { Plus, Edit, Trash2, ExternalLink, Copy, Eye, Settings } from 'lucide-react';
+import { Plus, Edit, Trash2, ExternalLink, Copy, Eye, Settings, X } from 'lucide-react';
 import { Alert } from '../components/Alert';
 import { FormBuilder } from '../components/FormBuilder';
 
