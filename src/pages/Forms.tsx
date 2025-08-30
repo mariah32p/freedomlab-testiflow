@@ -422,11 +422,13 @@ export const Forms: React.FC = () => {
 
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                       <div className="flex items-start space-x-3">
-                        <Settings className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                        <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                          <span className="text-blue-600 font-bold text-sm">?</span>
+                        </div>
                         <div>
-                          <h4 className="text-sm font-medium text-blue-900 mb-1">Custom Fields</h4>
+                          <h4 className="text-sm font-medium text-blue-900 mb-1">💡 Want to ask custom questions?</h4>
                           <p className="text-sm text-blue-700">
-                            After creating your form, click the ⚙️ settings icon to add custom questions like "What's your role?" or "How did you hear about us?"
+                            After creating your form, click <strong>"View Details"</strong> → <strong>"Custom Fields"</strong> to add questions like "What's your role?" or "How did you hear about us?"
                           </p>
                         </div>
                       </div>
