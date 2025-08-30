@@ -13,6 +13,10 @@ interface TestimonialForm {
   is_active: boolean;
   created_at: string;
   updated_at: string;
+  allow_image_uploads?: boolean;
+  allow_video_uploads?: boolean;
+  max_image_size_mb?: number;
+  max_video_size_mb?: number;
 }
 
 export const Forms: React.FC = () => {
@@ -31,7 +35,11 @@ export const Forms: React.FC = () => {
   const [formData, setFormData] = useState({
     title: 'Share Your Experience',
     description: "We'd love to hear about your experience with us!",
-    thank_you_message: 'Thank you for your testimonial!'
+    thank_you_message: 'Thank you for your testimonial!',
+    allow_image_uploads: true,
+    allow_video_uploads: false,
+    max_image_size_mb: 10,
+    max_video_size_mb: 100
   });
 
   useEffect(() => {
@@ -71,7 +79,11 @@ export const Forms: React.FC = () => {
           title: formData.title,
           description: formData.description,
           thank_you_message: formData.thank_you_message,
-          is_active: true
+          is_active: true,
+          allow_image_uploads: formData.allow_image_uploads,
+          allow_video_uploads: formData.allow_video_uploads,
+          max_image_size_mb: formData.max_image_size_mb,
+          max_video_size_mb: formData.max_video_size_mb
         }])
         .select()
         .single();
@@ -83,7 +95,11 @@ export const Forms: React.FC = () => {
       setFormData({
         title: 'Share Your Experience',
         description: "We'd love to hear about your experience with us!",
-        thank_you_message: 'Thank you for your testimonial!'
+        thank_you_message: 'Thank you for your testimonial!',
+        allow_image_uploads: true,
+        allow_video_uploads: false,
+        max_image_size_mb: 10,
+        max_video_size_mb: 100
       });
       setSuccess('Form created successfully!');
     } catch (error) {
@@ -103,7 +119,11 @@ export const Forms: React.FC = () => {
         .update({
           title: formData.title,
           description: formData.description,
-          thank_you_message: formData.thank_you_message
+          thank_you_message: formData.thank_you_message,
+          allow_image_uploads: formData.allow_image_uploads,
+          allow_video_uploads: formData.allow_video_uploads,
+          max_image_size_mb: formData.max_image_size_mb,
+          max_video_size_mb: formData.max_video_size_mb
         })
         .eq('id', editingForm.id)
         .eq('user_id', user.id)
@@ -118,7 +138,11 @@ export const Forms: React.FC = () => {
       setFormData({
         title: 'Share Your Experience',
         description: "We'd love to hear about your experience with us!",
-        thank_you_message: 'Thank you for your testimonial!'
+        thank_you_message: 'Thank you for your testimonial!',
+        allow_image_uploads: true,
+        allow_video_uploads: false,
+        max_image_size_mb: 10,
+        max_video_size_mb: 100
       });
       setSuccess('Form updated successfully!');
     } catch (error) {
@@ -191,7 +215,11 @@ export const Forms: React.FC = () => {
     setFormData({
       title: form.title,
       description: form.description || '',
-      thank_you_message: form.thank_you_message || ''
+      thank_you_message: form.thank_you_message || '',
+      allow_image_uploads: form.allow_image_uploads ?? true,
+      allow_video_uploads: form.allow_video_uploads ?? false,
+      max_image_size_mb: form.max_image_size_mb ?? 10,
+      max_video_size_mb: form.max_video_size_mb ?? 100
     });
     setShowCreateForm(true);
   };
@@ -202,7 +230,11 @@ export const Forms: React.FC = () => {
     setFormData({
       title: 'Share Your Experience',
       description: "We'd love to hear about your experience with us!",
-      thank_you_message: 'Thank you for your testimonial!'
+      thank_you_message: 'Thank you for your testimonial!',
+      allow_image_uploads: true,
+      allow_video_uploads: false,
+      max_image_size_mb: 10,
+      max_video_size_mb: 100
     });
   };
 
@@ -312,6 +344,79 @@ export const Forms: React.FC = () => {
                         rows={2}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                       />
+                    </div>
+
+                    {/* Media Upload Settings */}
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <h4 className="text-sm font-medium text-blue-900 mb-3">📸 Media Upload Options</h4>
+                      
+                      <div className="space-y-4">
+                        {/* Image Uploads */}
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-2">
+                            <input
+                              type="checkbox"
+                              id="allow_images"
+                              checked={formData.allow_image_uploads}
+                              onChange={(e) => setFormData({ ...formData, allow_image_uploads: e.target.checked })}
+                              className="rounded border-gray-300 text-primary-950 focus:ring-primary-500"
+                            />
+                            <label htmlFor="allow_images" className="text-sm font-medium text-gray-700">
+                              Allow image uploads
+                            </label>
+                          </div>
+                          {formData.allow_image_uploads && (
+                            <div className="flex items-center space-x-2">
+                              <span className="text-xs text-gray-500">Max size:</span>
+                              <select
+                                value={formData.max_image_size_mb}
+                                onChange={(e) => setFormData({ ...formData, max_image_size_mb: parseInt(e.target.value) })}
+                                className="text-xs border border-gray-300 rounded px-2 py-1"
+                              >
+                                <option value={5}>5MB</option>
+                                <option value={10}>10MB</option>
+                                <option value={20}>20MB</option>
+                                <option value={50}>50MB</option>
+                              </select>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Video Uploads */}
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-2">
+                            <input
+                              type="checkbox"
+                              id="allow_videos"
+                              checked={formData.allow_video_uploads}
+                              onChange={(e) => setFormData({ ...formData, allow_video_uploads: e.target.checked })}
+                              className="rounded border-gray-300 text-primary-950 focus:ring-primary-500"
+                            />
+                            <label htmlFor="allow_videos" className="text-sm font-medium text-gray-700">
+                              Allow video uploads
+                            </label>
+                          </div>
+                          {formData.allow_video_uploads && (
+                            <div className="flex items-center space-x-2">
+                              <span className="text-xs text-gray-500">Max size:</span>
+                              <select
+                                value={formData.max_video_size_mb}
+                                onChange={(e) => setFormData({ ...formData, max_video_size_mb: parseInt(e.target.value) })}
+                                className="text-xs border border-gray-300 rounded px-2 py-1"
+                              >
+                                <option value={50}>50MB</option>
+                                <option value={100}>100MB</option>
+                                <option value={200}>200MB</option>
+                                <option value={500}>500MB</option>
+                              </select>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      
+                      <p className="text-xs text-blue-700 mt-3">
+                        💡 Enable media uploads to collect richer testimonials with photos and videos
+                      </p>
                     </div>
 
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">

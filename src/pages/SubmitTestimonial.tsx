@@ -11,6 +11,10 @@ interface TestimonialForm {
   thank_you_message: string;
   is_active: boolean;
   user_id: string;
+  allow_image_uploads?: boolean;
+  allow_video_uploads?: boolean;
+  max_image_size_mb?: number;
+  max_video_size_mb?: number;
 }
 
 interface FormBranding {
@@ -125,8 +129,9 @@ export const SubmitTestimonial: React.FC = () => {
     }
 
     // Validate file size (max 10MB)
-    if (file.size > 10 * 1024 * 1024) {
-      setError('Image must be smaller than 10MB');
+    const maxSizeMB = form?.max_image_size_mb || 10;
+    if (file.size > maxSizeMB * 1024 * 1024) {
+      setError(`Image must be smaller than ${maxSizeMB}MB`);
       return;
     }
 
@@ -151,8 +156,9 @@ export const SubmitTestimonial: React.FC = () => {
     }
 
     // Validate file size (max 100MB)
-    if (file.size > 100 * 1024 * 1024) {
-      setError('Video must be smaller than 100MB');
+    const maxSizeMB = form?.max_video_size_mb || 100;
+    if (file.size > maxSizeMB * 1024 * 1024) {
+      setError(`Video must be smaller than ${maxSizeMB}MB`);
       return;
     }
 
@@ -605,85 +611,95 @@ export const SubmitTestimonial: React.FC = () => {
                ))}
               {/* Submit Button */}
               {/* Media Upload Section */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-medium text-gray-900">Add Media (Optional)</h3>
-                
-                {/* Image Upload */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Upload Image
-                  </label>
-                  {imagePreview ? (
-                    <div className="relative">
-                      <img 
-                        src={imagePreview} 
-                        alt="Preview" 
-                        className="w-full h-48 object-cover rounded-lg border border-gray-300"
-                      />
-                      <button
-                        type="button"
-                        onClick={removeImage}
-                        className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition-colors"
-                      >
-                        <X className="h-4 w-4" />
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                        className="hidden"
-                        id="image-upload"
-                      />
-                      <label htmlFor="image-upload" className="cursor-pointer">
-                        <ImageIcon className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                        <p className="text-sm text-gray-600">Click to upload an image</p>
-                        <p className="text-xs text-gray-500 mt-1">PNG, JPG, GIF up to 10MB</p>
+              {(form.allow_image_uploads || form.allow_video_uploads) && (
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium text-gray-900">Add Media (Optional)</h3>
+                  
+                  {/* Image Upload */}
+                  {form.allow_image_uploads && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Upload Image
                       </label>
+                      {imagePreview ? (
+                        <div className="relative">
+                          <img 
+                            src={imagePreview} 
+                            alt="Preview" 
+                            className="w-full h-48 object-cover rounded-lg border border-gray-300"
+                          />
+                          <button
+                            type="button"
+                            onClick={removeImage}
+                            className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition-colors"
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageUpload}
+                            className="hidden"
+                            id="image-upload"
+                          />
+                          <label htmlFor="image-upload" className="cursor-pointer">
+                            <ImageIcon className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                            <p className="text-sm text-gray-600">Click to upload an image</p>
+                            <p className="text-xs text-gray-500 mt-1">
+                              PNG, JPG, GIF up to {form.max_image_size_mb || 10}MB
+                            </p>
+                          </label>
+                        </div>
+                      )}
                     </div>
                   )}
-                </div>
 
-                {/* Video Upload */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Upload Video
-                  </label>
-                  {videoPreview ? (
-                    <div className="relative">
-                      <video 
-                        src={videoPreview} 
-                        className="w-full h-48 object-cover rounded-lg border border-gray-300"
-                        controls
-                      />
-                      <button
-                        type="button"
-                        onClick={removeVideo}
-                        className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition-colors"
-                      >
-                        <X className="h-4 w-4" />
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
-                      <input
-                        type="file"
-                        accept="video/*"
-                        onChange={handleVideoUpload}
-                        className="hidden"
-                        id="video-upload"
-                      />
-                      <label htmlFor="video-upload" className="cursor-pointer">
-                        <Play className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                        <p className="text-sm text-gray-600">Click to upload a video</p>
-                        <p className="text-xs text-gray-500 mt-1">MP4, MOV, AVI up to 100MB</p>
+                  {/* Video Upload */}
+                  {form.allow_video_uploads && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Upload Video
                       </label>
+                      {videoPreview ? (
+                        <div className="relative">
+                          <video 
+                            src={videoPreview} 
+                            className="w-full h-48 object-cover rounded-lg border border-gray-300"
+                            controls
+                          />
+                          <button
+                            type="button"
+                            onClick={removeVideo}
+                            className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition-colors"
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
+                          <input
+                            type="file"
+                            accept="video/*"
+                            onChange={handleVideoUpload}
+                            className="hidden"
+                            id="video-upload"
+                          />
+                          <label htmlFor="video-upload" className="cursor-pointer">
+                            <Play className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                            <p className="text-sm text-gray-600">Click to upload a video</p>
+                            <p className="text-xs text-gray-500 mt-1">
+                              MP4, MOV, AVI up to {form.max_video_size_mb || 100}MB
+                            </p>
+                          </label>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
-              </div>
+              )}
 
               <div className="pt-4">
                 <button
