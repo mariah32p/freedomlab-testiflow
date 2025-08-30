@@ -438,47 +438,44 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                     </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Right Column - Live Preview */}
+              {/* Widget Preview */}
               {(selectedFormat === 'widget' && showPreview && widgetTestimonials.length > 0) && (
                 <div className="space-y-4">
-                  <>
-                    <h3 className="text-lg font-medium text-gray-900">Live Preview</h3>
-                    
-                    {/* Widget Preview */}
-                    <div className="border border-gray-200 rounded-lg overflow-hidden bg-white">
-                      <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
-                        <span className="text-sm text-gray-600">How this will look on your website:</span>
-                      </div>
-                      <div className="p-6">
-                        {/* Render the actual widget */}
-                        <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
-                          <h3 style={{ textAlign: 'center', marginBottom: '20px', color: '#333' }}>What Our Customers Say</h3>
-                          <div style={{ display: 'grid', gap: '15px' }}>
-                            {widgetTestimonials.map(testimonial => (
-                              <div key={testimonial.id} style={{ background: '#f9f9f9', padding: '15px', borderRadius: '8px', borderLeft: '4px solid #01b79e' }}>
-                                <div style={{ display: 'flex', marginBottom: '8px' }}>
-                                  {'★'.repeat(testimonial.rating)}<span style={{ color: '#ddd' }}>{'★'.repeat(5 - testimonial.rating)}</span>
-                                </div>
-                                <p style={{ margin: '0 0 10px 0', fontStyle: 'italic', color: '#555' }}>"{testimonial.message}"</p>
-                                <div style={{ fontSize: '14px', color: '#777' }}>
-                                  - {testimonial.name}{testimonial.company ? `, ${testimonial.company}` : ''}
-                                </div>
+                  <h3 className="text-lg font-medium text-gray-900">Live Preview</h3>
+                  
+                  <div className="border border-gray-200 rounded-lg overflow-hidden bg-white">
+                    <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
+                      <span className="text-sm text-gray-600">How this will look on your website:</span>
+                    </div>
+                    <div className="p-6">
+                      {/* Render the actual widget */}
+                      <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
+                        <h3 style={{ textAlign: 'center', marginBottom: '20px', color: '#333' }}>What Our Customers Say</h3>
+                        <div style={{ display: 'grid', gap: '15px' }}>
+                          {widgetTestimonials.map(testimonial => (
+                            <div key={testimonial.id} style={{ background: '#f9f9f9', padding: '15px', borderRadius: '8px', borderLeft: '4px solid #01b79e' }}>
+                              <div style={{ display: 'flex', marginBottom: '8px' }}>
+                                {'★'.repeat(testimonial.rating)}<span style={{ color: '#ddd' }}>{'★'.repeat(5 - testimonial.rating)}</span>
                               </div>
-                            ))}
-                          </div>
+                              <p style={{ margin: '0 0 10px 0', fontStyle: 'italic', color: '#555' }}>"{testimonial.message}"</p>
+                              <div style={{ fontSize: '14px', color: '#777' }}>
+                                - {testimonial.name}{testimonial.company ? `, ${testimonial.company}` : ''}
+                              </div>
+                            </div>
+                          ))}
                         </div>
                       </div>
                     </div>
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                      <p className="text-sm text-blue-700">
-                        ✨ This preview shows exactly how the widget will appear on your website
-                      </p>
-                    </div>
-                  </>
+                  </div>
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                    <p className="text-sm text-blue-700">
+                      ✨ This preview shows exactly how the widget will appear on your website
+                    </p>
+                  </div>
                 </div>
               )}
+            </div>
             </div>
           )}
         </div>
