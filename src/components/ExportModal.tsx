@@ -189,7 +189,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
         <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
           {generatedContent ? (
             /* Generated Content View */
-            <div className="space-y-4">
+           <div id="generated-content" className="space-y-4">
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-medium text-gray-900">
                   {selectedFormat === 'social' ? 'Social Media Post' : 'Website Widget Code'}
@@ -470,10 +470,26 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                           onClick={() => {
                             if (selectedFormat === 'widget') {
                               setShowPreview(!showPreview);
+                             // Scroll to preview after a short delay to ensure it's rendered
+                             if (!showPreview) {
+                               setTimeout(() => {
+                                 const previewElement = document.getElementById('widget-preview');
+                                 if (previewElement) {
+                                   previewElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                 }
+                               }, 100);
+                             }
                             } else {
                               const preview = generatePreview();
                               if (preview) {
                                 setGeneratedContent(preview);
+                               // Scroll to generated content after a short delay
+                               setTimeout(() => {
+                                 const contentElement = document.getElementById('generated-content');
+                                 if (contentElement) {
+                                   contentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                 }
+                               }, 100);
                               }
                             }
                           }}
@@ -507,7 +523,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
 
                 {/* Widget Preview */}
                 {(selectedFormat === 'widget' && showPreview && widgetTestimonials.length > 0) && (
-                  <div className="space-y-4">
+                 <div id="widget-preview" className="space-y-4">
                     <h3 className="text-lg font-medium text-gray-900">Live Preview</h3>
                     
                     <div className="border border-gray-200 rounded-lg overflow-hidden bg-white">
