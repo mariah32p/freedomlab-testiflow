@@ -100,6 +100,7 @@ export const Demo: React.FC = () => {
 
   // Step-specific animations
   useEffect(() => {
+    let startDelay: NodeJS.Timeout;
     resetAllAnimations();
 
     if (currentStep === 0) {
@@ -111,7 +112,6 @@ export const Demo: React.FC = () => {
         thank_you_message: 'Thank you for taking the time to share your feedback!'
       }), 2500);
       setTimeout(() => {
-    let startDelay: NodeJS.Timeout;
         setShowCreateForm(false);
         setCreatedForm({
           id: '1',
@@ -208,28 +208,34 @@ export const Demo: React.FC = () => {
           form_id: '1'
         }
       ]);
-      setTimeout(() => setViewingTestimonial(testimonials[0] || {
-        id: '1',
-        name: 'Sarah Johnson',
-        email: 'sarah@techcorp.com',
-        company: 'TechCorp Solutions',
       startDelay = setTimeout(() => {
-        rating: 5,
-        status: 'pending',
-        submitted_at: new Date().toISOString(),
-        form_id: '1',
-        custom_responses: {
-          'What is your role?': 'CTO',
-          'What industry are you in?': 'Technology'
-        }
+        setViewingTestimonial(testimonials[0] || {
+          id: '1',
+          name: 'Sarah Johnson',
+          email: 'sarah@techcorp.com',
+          company: 'TechCorp Solutions',
+          message: 'TestiFlow has completely transformed how we collect and manage customer feedback. The automated workflows save us hours every week, and the approval system ensures we only showcase our best testimonials. Our conversion rates have improved by 40% since implementing their testimonial widgets on our website!',
+          rating: 5,
+          status: 'pending',
+          submitted_at: new Date().toISOString(),
+          form_id: '1',
+          custom_responses: {
+            'What is your role?': 'CTO',
+            'What industry are you in?': 'Technology'
+          }
+        });
+      }, 2000);
 
     } else if (currentStep === 4) {
       // Branding step
       setTimeout(() => setLogoUrl('https://images.pexels.com/photos/1181467/pexels-photo-1181467.jpeg?auto=compress&cs=tinysrgb&w=200&h=60&fit=crop'), 1500);
       setTimeout(() => setPrimaryColor('#2563eb'), 3000);
-      if (startDelay) clearTimeout(startDelay);
       setTimeout(() => setSecondaryColor('#10b981'), 4500);
     }
+
+    return () => {
+      if (startDelay) clearTimeout(startDelay);
+    };
   }, [currentStep]);
 
   const getActiveTab = () => {
@@ -534,7 +540,7 @@ export const Demo: React.FC = () => {
                               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                                 <p className="text-sm text-yellow-800">
                                   💡 <strong>Tip:</strong> Your form already includes name, email, company, rating, and testimonial fields. 
-                                  Add custom fields here for additional questions like "How did you hear about us?\" or \"What's your role?"
+                                  Add custom fields here for additional questions like "How did you hear about us?" or "What's your role?"
                                 </p>
                               </div>
                               <div className="grid grid-cols-2 gap-2">
