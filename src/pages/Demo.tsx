@@ -208,7 +208,6 @@ export const Demo: React.FC = () => {
           form_id: '1'
         }
       ]);
-      startDelay = setTimeout(() => {
         setViewingTestimonial(testimonials[0] || {
           id: '1',
           name: 'Sarah Johnson',
