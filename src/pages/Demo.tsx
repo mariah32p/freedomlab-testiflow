@@ -134,7 +134,6 @@ export const Demo: React.FC = () => {
       rating: 4,
       status: 'approved',
       submitted_at: '2024-01-13T09:15:00Z',
-    'Export & Marketing',
       form_title: 'Customer Experience Survey'
     }
   ];
