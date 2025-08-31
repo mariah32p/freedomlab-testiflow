@@ -44,6 +44,13 @@ export const Home: React.FC = () => {
                 <span>Start Free Trial</span>
                 <ArrowRight className="h-5 w-5" />
               </button>
+              <button
+                onClick={() => navigate('/demo')}
+                className="border border-primary-950 text-primary-950 px-8 py-4 rounded-lg font-semibold hover:bg-primary-50 transition-all duration-200 flex items-center justify-center space-x-2"
+              >
+                <span>Watch Demo</span>
+                <ArrowRight className="h-5 w-5" />
+              </button>
             </div>
 
             {/* Hero Mockup */}

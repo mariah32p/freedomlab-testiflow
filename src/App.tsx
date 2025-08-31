@@ -17,6 +17,7 @@ import { Forms } from './pages/Forms';
 import { Testimonials } from './pages/Testimonials';
 import { SubmitTestimonial } from './pages/SubmitTestimonial';
 import { Branding } from './pages/Branding';
+import { Demo } from './pages/Demo';
 
 const AppContent: React.FC = () => {
   useRouteGuard();
@@ -32,6 +33,7 @@ const AppContent: React.FC = () => {
           <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/demo" element={<Demo />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />

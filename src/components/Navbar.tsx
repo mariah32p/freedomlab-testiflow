@@ -75,6 +75,12 @@ export const Navbar: React.FC = () => {
                   Pricing
                 </Link>
                 <Link
+                  to="/demo"
+                  className="text-gray-700 hover:text-primary-950 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  Demo
+                </Link>
+                <Link
                   to="/login"
                   className="text-gray-700 hover:text-primary-950 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >
