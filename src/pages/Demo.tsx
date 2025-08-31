@@ -204,6 +204,7 @@ export const Demo: React.FC = () => {
           message: 'As a startup, we needed a cost-effective way to collect and showcase customer testimonials. TestiFlow delivered exactly what we needed with their intuitive interface and powerful export features.',
           rating: 5,
           status: 'approved',
+    let startDelay: NodeJS.Timeout;
           submitted_at: new Date(Date.now() - 86400000).toISOString(),
           form_id: '1'
         }
@@ -215,7 +216,7 @@ export const Demo: React.FC = () => {
           email: 'sarah@techcorp.com',
           company: 'TechCorp Solutions',
           message: 'TestiFlow has completely transformed how we collect and manage customer feedback. The automated workflows save us hours every week, and the approval system ensures we only showcase our best testimonials. Our conversion rates have improved by 40% since implementing their testimonial widgets on our website!',
-          rating: 5,
+      startDelay = setTimeout(() => {
           status: 'pending',
           submitted_at: new Date().toISOString(),
           form_id: '1',
@@ -224,16 +225,12 @@ export const Demo: React.FC = () => {
             'What industry are you in?': 'Technology'
           }
         });
-      }, 2000);
-
-    } else if (currentStep === 4) {
-      // Branding step
-      setTimeout(() => setLogoUrl('https://images.pexels.com/photos/1181467/pexels-photo-1181467.jpeg?auto=compress&cs=tinysrgb&w=200&h=60&fit=crop'), 1500);
       setTimeout(() => setPrimaryColor('#2563eb'), 3000);
       setTimeout(() => setSecondaryColor('#10b981'), 4500);
     }
 
     return () => {
+      if (startDelay) clearTimeout(startDelay);
       if (startDelay) clearTimeout(startDelay);
     };
   }, [currentStep]);
