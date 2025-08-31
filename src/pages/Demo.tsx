@@ -693,7 +693,7 @@ export const Demo: React.FC = () => {
 
               {/* Custom Fields */}
               {customFields.map((field) => (
-                <div key={field.id}>
+                        className="p-1 transition-colors"
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     {field.label}
                     {field.is_required && <span className="text-red-500 ml-1">*</span>}
