@@ -204,7 +204,6 @@ export const Demo: React.FC = () => {
           message: 'As a startup, we needed a cost-effective way to collect and showcase customer testimonials. TestiFlow delivered exactly what we needed with their intuitive interface and powerful export features.',
           rating: 5,
           status: 'approved',
-    let startDelay: NodeJS.Timeout;
           submitted_at: new Date(Date.now() - 86400000).toISOString(),
           form_id: '1'
         }
@@ -216,7 +215,7 @@ export const Demo: React.FC = () => {
           email: 'sarah@techcorp.com',
           company: 'TechCorp Solutions',
           message: 'TestiFlow has completely transformed how we collect and manage customer feedback. The automated workflows save us hours every week, and the approval system ensures we only showcase our best testimonials. Our conversion rates have improved by 40% since implementing their testimonial widgets on our website!',
-      startDelay = setTimeout(() => {
+          rating: 5,
           status: 'pending',
           submitted_at: new Date().toISOString(),
           form_id: '1',
@@ -225,12 +224,12 @@ export const Demo: React.FC = () => {
             'What industry are you in?': 'Technology'
           }
         });
+      }, 2000);
       setTimeout(() => setPrimaryColor('#2563eb'), 3000);
       setTimeout(() => setSecondaryColor('#10b981'), 4500);
     }
 
     return () => {
-      if (startDelay) clearTimeout(startDelay);
       if (startDelay) clearTimeout(startDelay);
     };
   }, [currentStep]);
@@ -537,7 +536,7 @@ export const Demo: React.FC = () => {
                               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                                 <p className="text-sm text-yellow-800">
                                   💡 <strong>Tip:</strong> Your form already includes name, email, company, rating, and testimonial fields. 
-                                  Add custom fields here for additional questions like "How did you hear about us?\" or "What's your role?"
+                                  Add custom fields here for additional questions like "How did you hear about us?" or \"What's your role?"
                                 </p>
                               </div>
                               <div className="grid grid-cols-2 gap-2">
