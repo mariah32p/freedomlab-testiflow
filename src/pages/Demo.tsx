@@ -100,13 +100,13 @@ export const Demo: React.FC = () => {
   };
   // Debug: Log current step changes
   useEffect(() => {
-    console.log('Current step changed to:', currentStep, steps[currentStep]?.name);
-    setScrollPosition(0); // Reset scroll position when step changes
+    console.log('Current step changed to:', currentStep, demoSteps[currentStep]?.title);
     setIsScrolling(false);
   }, [currentStep]);
 
   // Scrolling animation for long content
   // Step-specific animations
+  useEffect(() => {
     console.log('Scrolling useEffect triggered for step:', currentStep);
     resetAllAnimations();
 
@@ -208,54 +208,38 @@ export const Demo: React.FC = () => {
           name: 'Mike Chen',
           email: 'mike@startupxyz.com',
           company: 'StartupXYZ',
-      console.log('Setting up Custom Fields scrolling');
-      setIsScrolling(true);
-      const scrollInterval = setInterval(() => {
+          message: 'Amazing tool for collecting testimonials!',
           rating: 5,
+          status: 'approved',
           submitted_at: new Date(Date.now() - 86400000).toISOString(),
           form_id: '1'
         }
       ]);
       setTimeout(() => {
-      
-      return () => {
-        console.log('Cleaning up Custom Fields scrolling');
-        clearInterval(scrollInterval);
-        setIsScrolling(false);
-      };
-      
         setViewingTestimonial(testimonials[0] || {
-      console.log('Setting up Customer Form scrolling with 3s delay');
-      const startDelay = setTimeout(() => {
-        console.log('Starting Customer Form scrolling now');
-        setIsScrolling(true);
-        const scrollInterval = setInterval(() => {
+          id: '1',
+          name: 'Sarah Johnson',
+          email: 'sarah@techcorp.com',
           company: 'TechCorp Solutions',
           message: 'TestiFlow has completely transformed how we collect and manage customer feedback. The automated workflows save us hours every week, and the approval system ensures we only showcase our best testimonials. Our conversion rates have improved by 40% since implementing their testimonial widgets on our website!',
           rating: 5,
-            console.log('Customer form scroll position:', newPosition);
           status: 'pending',
           submitted_at: new Date().toISOString(),
           form_id: '1',
-        
-        // Stop scrolling after reaching bottom
-        setTimeout(() => {
-          clearInterval(scrollInterval);
-          setIsScrolling(false);
-          console.log('Customer Form scrolling completed');
-        }, 8000); // Stop after 8 seconds of scrolling
           custom_responses: {
             'What is your role?': 'CTO',
             'What industry are you in?': 'Technology'
-        console.log('Cleaning up Customer Form scrolling');
           }
-        setIsScrolling(false);
+        });
       }, 2000);
+
+    } else if (currentStep === 4) {
+      // Branding step
+      setTimeout(() => setLogoUrl('https://via.placeholder.com/200x60/01004d/ffffff?text=TechCorp'), 1500);
       setTimeout(() => setPrimaryColor('#2563eb'), 3000);
-      console.log('Resetting scroll position for step:', currentStep);
       setTimeout(() => setSecondaryColor('#10b981'), 4500);
-      setIsScrolling(false);
     }
+  }, [currentStep]);
 
   const getActiveTab = () => {
     switch (currentStep) {
@@ -559,7 +543,7 @@ export const Demo: React.FC = () => {
                               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                                 <p className="text-sm text-yellow-800">
                                   💡 <strong>Tip:</strong> Your form already includes name, email, company, rating, and testimonial fields. 
-                                  Add custom fields here for additional questions like "How did you hear about us?\" or \"What's your role?"
+                                  Add custom fields here for additional questions like "How did you hear about us?" or "What's your role?"
                                 </p>
                               </div>
                               <div className="grid grid-cols-2 gap-2">
