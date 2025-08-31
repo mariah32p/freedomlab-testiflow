@@ -627,7 +627,11 @@ export const Demo: React.FC = () => {
             style={{ backgroundColor: primaryColor }}
           >
             <div className="flex justify-center mb-4">
-              <TestiFlowIcon className="h-8 w-8 text-white" />
+              <img 
+                src="/Freedom Lab Logos (3).png" 
+                alt="Freedom Lab Logo" 
+                className="h-8 max-w-32 object-contain bg-white rounded px-2 py-1"
+              />
             </div>
             <h1 className="text-2xl font-bold mb-2">Share Your Experience with TechCorp</h1>
             <p className="text-white/90">We'd love to hear about your experience with our software solutions!</p>
