@@ -693,6 +693,26 @@ export const Demo: React.FC = () => {
                 <textarea
                   rows={4}
                   value={customerFormData.message}
+                  onChange={(e) => setCustomerFormData({ ...customerFormData, message: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  placeholder="Tell us about your experience..."
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-secondary-500 text-white py-3 px-6 rounded-lg font-semibold hover:bg-secondary-600 transition-colors flex items-center justify-center space-x-2"
+              >
+                <Send className="h-4 w-4" />
+                <span>Submit Testimonial</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                   placeholder="Share your experience with us..."
                   readOnly
