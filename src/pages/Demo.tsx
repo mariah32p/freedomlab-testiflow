@@ -349,7 +349,7 @@ export const Demo: React.FC = () => {
         <div className="bg-white shadow rounded-lg">
           <div className="px-4 py-5 sm:p-6">
             <div className="flex items-center justify-between mb-8">
-        setGeneratedContent(demoGenerateWebsiteWidget());
+              <div>
                 <h1 className="text-3xl font-bold text-gray-900">Forms</h1>
                 <p className="text-gray-600 mt-2">Create and manage testimonial collection forms</p>
               </div>
