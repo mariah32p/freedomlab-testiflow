@@ -21,6 +21,7 @@ export const Demo: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [progress, setProgress] = useState(0);
+  const [isScrolling, setIsScrolling] = useState(false);
 
   // Demo state
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -97,10 +98,16 @@ export const Demo: React.FC = () => {
     setSecondaryColor('#01b79e');
     setLogoUrl('');
   };
-
-  // Step-specific animations
+  // Debug: Log current step changes
   useEffect(() => {
-    let startDelay: NodeJS.Timeout;
+    console.log('Current step changed to:', currentStep, steps[currentStep]?.name);
+    setScrollPosition(0); // Reset scroll position when step changes
+    setIsScrolling(false);
+  }, [currentStep]);
+
+  // Scrolling animation for long content
+  // Step-specific animations
+    console.log('Scrolling useEffect triggered for step:', currentStep);
     resetAllAnimations();
 
     if (currentStep === 0) {
@@ -201,37 +208,54 @@ export const Demo: React.FC = () => {
           name: 'Mike Chen',
           email: 'mike@startupxyz.com',
           company: 'StartupXYZ',
-          message: 'As a startup, we needed a cost-effective way to collect and showcase customer testimonials. TestiFlow delivered exactly what we needed with their intuitive interface and powerful export features.',
+      console.log('Setting up Custom Fields scrolling');
+      setIsScrolling(true);
+      const scrollInterval = setInterval(() => {
           rating: 5,
           submitted_at: new Date(Date.now() - 86400000).toISOString(),
           form_id: '1'
         }
       ]);
       setTimeout(() => {
+      
+      return () => {
+        console.log('Cleaning up Custom Fields scrolling');
+        clearInterval(scrollInterval);
+        setIsScrolling(false);
+      };
+      
         setViewingTestimonial(testimonials[0] || {
-          id: '1',
-          name: 'Sarah Johnson',
-          email: 'sarah@techcorp.com',
+      console.log('Setting up Customer Form scrolling with 3s delay');
+      const startDelay = setTimeout(() => {
+        console.log('Starting Customer Form scrolling now');
+        setIsScrolling(true);
+        const scrollInterval = setInterval(() => {
           company: 'TechCorp Solutions',
           message: 'TestiFlow has completely transformed how we collect and manage customer feedback. The automated workflows save us hours every week, and the approval system ensures we only showcase our best testimonials. Our conversion rates have improved by 40% since implementing their testimonial widgets on our website!',
           rating: 5,
+            console.log('Customer form scroll position:', newPosition);
           status: 'pending',
           submitted_at: new Date().toISOString(),
           form_id: '1',
+        
+        // Stop scrolling after reaching bottom
+        setTimeout(() => {
+          clearInterval(scrollInterval);
+          setIsScrolling(false);
+          console.log('Customer Form scrolling completed');
+        }, 8000); // Stop after 8 seconds of scrolling
           custom_responses: {
             'What is your role?': 'CTO',
             'What industry are you in?': 'Technology'
+        console.log('Cleaning up Customer Form scrolling');
           }
-        });
+        setIsScrolling(false);
       }, 2000);
       setTimeout(() => setPrimaryColor('#2563eb'), 3000);
+      console.log('Resetting scroll position for step:', currentStep);
       setTimeout(() => setSecondaryColor('#10b981'), 4500);
+      setIsScrolling(false);
     }
-
-    return () => {
-      if (startDelay) clearTimeout(startDelay);
-    };
-  }, [currentStep]);
 
   const getActiveTab = () => {
     switch (currentStep) {
