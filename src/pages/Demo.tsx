@@ -649,7 +649,7 @@ export const Demo: React.FC = () => {
                     <Star
                       key={star}
                       className={`h-8 w-8 ${
-                        star <= customerFormData.rating
+                      className="h-12 max-w-48 object-contain"
                           ? 'text-yellow-400 fill-current'
                           : 'text-gray-300'
                       }`}
