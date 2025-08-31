@@ -13,7 +13,7 @@ const demoSteps: DemoStep[] = [
   { id: 'create-form', title: 'Create Forms', description: 'Setting up testimonial collection forms', duration: 7000 },
   { id: 'custom-fields', title: 'Add Custom Fields', description: 'Adding custom questions to the form', duration: 8000 },
   { id: 'customer-submission', title: 'Customer Fills Form', description: 'Customer submitting their testimonial', duration: 5000 },
-  { id: 'testimonials-approval', title: 'Review & Approve', description: 'Managing testimonials in the dashboard', duration: 7000 },
+  { id: 'testimonials-approval', title: 'Review & Approve', description: 'Managing testimonials in the dashboard', duration: 4000 },
   { id: 'export-use', title: 'Export & Use', description: 'Using testimonials in your marketing', duration: 8000 },
 ];
 
