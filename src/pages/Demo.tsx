@@ -634,80 +634,6 @@ export const Demo: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Demo Header */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <TestiFlowIcon className="h-8 w-8 text-primary-950" />
-                <span className="text-xl font-bold text-primary-950">TestiFlow</span>
-                <span className="bg-accent-100 text-accent-800 px-2 py-1 rounded-full text-xs font-medium">
-                  DEMO
-                </span>
-              </div>
-            </div>
-            
-            <div className="flex items-center space-x-4">
-              <div className="text-sm text-gray-600">
-                {demoSteps[currentStep].title}
-              </div>
-              <div className="flex items-center space-x-2">
-                <button
-                  onClick={prevStep}
-                  disabled={currentStep === 0}
-                  className="p-2 text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed"
-                >
-                  <SkipBack className="h-4 w-4" />
-                </button>
-                <button
-                  onClick={togglePlayPause}
-                  className="p-2 text-gray-600 hover:text-gray-800"
-                >
-                  {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-                </button>
-                <button
-                  onClick={nextStep}
-                  disabled={currentStep === demoSteps.length - 1}
-                  className="p-2 text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed"
-                >
-                  <SkipForward className="h-4 w-4" />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Progress Bar */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center space-x-4 py-4">
-            {demoSteps.map((step, index) => (
-              <div key={step.id} className="flex-1">
-                <button
-                  onClick={() => handleStepClick(index)}
-                  className={`w-full text-left transition-colors ${
-                    index === currentStep ? 'text-primary-950' : 'text-gray-500 hover:text-gray-700'
-                  }`}
-                >
-                  <div className="text-sm font-medium">{step.title}</div>
-                  <div className="text-xs text-gray-400">{step.description}</div>
-                </button>
-                <div className="mt-2 h-1 bg-gray-200 rounded-full overflow-hidden">
-                  <div 
-                    className="h-full bg-primary-950 transition-all duration-100 ease-out"
-                    style={{ 
-                      width: index === currentStep ? `${progress}%` : index < currentStep ? '100%' : '0%' 
-                    }}
-                  ></div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
       {/* Demo Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 min-h-[600px]">
@@ -715,29 +641,6 @@ export const Demo: React.FC = () => {
         </div>
       </div>
 
-      {/* Demo Footer */}
-      <div className="bg-primary-950 text-white py-8">
-        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold mb-4">Ready to Transform Your Testimonials?</h2>
-          <p className="text-xl text-primary-100 mb-8">
-            See how TestiFlow can streamline your testimonial collection and management.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button
-              onClick={() => window.location.href = '/signup'}
-              className="bg-white text-primary-950 px-8 py-4 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
-            >
-              Start Free Trial
-            </button>
-            <button
-              onClick={() => window.location.href = '/pricing'}
-              className="border border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white/10 transition-colors"
-            >
-              View Pricing
-            </button>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
