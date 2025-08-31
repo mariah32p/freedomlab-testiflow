@@ -11,8 +11,8 @@ interface DemoStep {
 
 const demoSteps: DemoStep[] = [
   { id: 'create-form', title: 'Create Forms', description: 'Setting up testimonial collection forms', duration: 10000 },
-  { id: 'custom-fields', title: 'Add Custom Fields', description: 'Adding custom questions to the form', duration: 8000 },
-  { id: 'customer-submission', title: 'Customer Fills Form', description: 'Customer submitting their testimonial', duration: 12000 },
+  { id: 'custom-fields', title: 'Add Custom Fields', description: 'Adding custom questions to the form', duration: 12000 },
+  { id: 'customer-submission', title: 'Customer Fills Form', description: 'Customer submitting their testimonial', duration: 15000 },
   { id: 'testimonials-approval', title: 'Review & Approve', description: 'Managing testimonials in the dashboard', duration: 10000 },
   { id: 'branding', title: 'Customize Branding', description: 'Personalizing form appearance', duration: 8000 },
 ];
