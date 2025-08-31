@@ -134,6 +134,7 @@ export const Demo: React.FC = () => {
       rating: 4,
       status: 'approved',
       submitted_at: '2024-01-13T09:15:00Z',
+    'Export & Marketing',
       form_title: 'Customer Experience Survey'
     }
   ];
@@ -1414,6 +1415,8 @@ export const Demo: React.FC = () => {
         return renderCustomFieldsStep();
       case 2:
         return renderCustomerSubmissionStep();
+      case 'Export & Marketing':
+        return renderExportStep();
       case 3:
         return renderTestimonialsApprovalStep();
       case 4:
@@ -1421,6 +1424,223 @@ export const Demo: React.FC = () => {
       default:
         return renderCreateFormsStep();
     }
+  };
+
+  const renderExportStep = () => {
+    return (
+      <div className="space-y-8">
+        <div className="text-center">
+          <h2 className="text-3xl font-bold text-primary-950 mb-4">Export to Any Marketing Channel</h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Transform approved testimonials into marketing-ready content with one-click exports
+          </p>
+        </div>
+
+        <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
+          <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+            <h3 className="font-semibold text-gray-900">Export Testimonials</h3>
+            <div className="flex space-x-2">
+              <select className="border border-gray-300 text-gray-700 px-3 py-1 rounded text-sm">
+                <option>Approved Only (3)</option>
+              </select>
+              <button className="bg-primary-950 text-white px-4 py-2 rounded text-sm font-medium hover:bg-primary-900 transition-colors">
+                Export Selected
+              </button>
+            </div>
+          </div>
+          
+          <div className="p-6">
+            {/* Export Format Selection */}
+            <div className="mb-8">
+              <h4 className="text-lg font-medium text-gray-900 mb-4">Choose Export Format</h4>
+              <div className="grid md:grid-cols-3 gap-4">
+                {[
+                  {
+                    value: 'csv',
+                    label: 'CSV Spreadsheet',
+                    icon: FileText,
+                    description: 'For analysis in Excel/Google Sheets',
+                    color: 'green'
+                  },
+                  {
+                    value: 'json',
+                    label: 'JSON Data',
+                    icon: Code,
+                    description: 'For developers and integrations',
+                    color: 'blue'
+                  },
+                  {
+                    value: 'widget',
+                    label: 'Website Widget',
+                    icon: Code,
+                    description: 'HTML code to embed on your website',
+                    color: 'purple'
+                  }
+                ].map((format) => (
+                  <button
+                    key={format.value}
+                    onClick={() => setSelectedExportFormat(format.value as any)}
+                    className={`p-4 border rounded-lg text-left transition-all duration-200 ${
+                      selectedExportFormat === format.value
+                        ? 'border-primary-500 bg-primary-50 shadow-md'
+                        : 'border-gray-200 hover:bg-gray-50 hover:shadow-sm'
+                    }`}
+                  >
+                    <div className="flex items-center space-x-3 mb-2">
+                      <format.icon className={`h-6 w-6 ${
+                        format.color === 'green' ? 'text-green-600' :
+                        format.color === 'blue' ? 'text-blue-600' :
+                        'text-purple-600'
+                      }`} />
+                      <span className="font-medium text-gray-900">{format.label}</span>
+                    </div>
+                    <p className="text-sm text-gray-600">{format.description}</p>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Export Previews */}
+            {selectedExportFormat === 'csv' && (
+              <div className="bg-green-50 border border-green-200 rounded-lg p-6">
+                <h4 className="text-lg font-medium text-green-900 mb-4">📊 CSV Export Preview</h4>
+                <div className="bg-white rounded-lg border border-green-200 overflow-hidden">
+                  <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
+                    <span className="text-sm text-gray-600">testimonials_2024-12-15.csv</span>
+                  </div>
+                  <div className="p-4 font-mono text-xs overflow-x-auto">
+                    <div className="whitespace-nowrap text-gray-800">
+                      Name,Email,Company,Rating,Testimonial,Status,Date,Form<br/>
+                      "Sarah Johnson","sarah@techcorp.com","TechCorp",5,"Amazing platform!","approved","2024-12-15","Customer Feedback"<br/>
+                      "Mike Chen","mike@startupxyz.com","StartupXYZ",5,"Game changer for us","approved","2024-12-14","Customer Feedback"<br/>
+                      "Emily Davis","emily@growthco.com","GrowthCo",4,"Very satisfied","approved","2024-12-13","Customer Feedback"
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-4 flex items-center justify-between">
+                  <span className="text-sm text-green-700">✅ Ready for Excel, Google Sheets, or data analysis</span>
+                  <button className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors">
+                    Download CSV
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {selectedExportFormat === 'json' && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                <h4 className="text-lg font-medium text-blue-900 mb-4">💻 JSON Export Preview</h4>
+                <div className="bg-white rounded-lg border border-blue-200 overflow-hidden">
+                  <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
+                    <span className="text-sm text-gray-600">testimonials_2024-12-15.json</span>
+                  </div>
+                  <div className="p-4 font-mono text-xs overflow-x-auto max-h-48 overflow-y-auto">
+                    <pre className="text-gray-800">{`[
+  {
+    "id": "test-1",
+    "name": "Sarah Johnson",
+    "email": "sarah@techcorp.com",
+    "company": "TechCorp",
+    "rating": 5,
+    "message": "TestiFlow has completely transformed how we manage customer feedback!",
+    "status": "approved",
+    "submitted_at": "2024-12-15T10:30:00Z",
+    "form_title": "Customer Feedback"
+  },
+  {
+    "id": "test-2", 
+    "name": "Mike Chen",
+    "email": "mike@startupxyz.com",
+    "company": "StartupXYZ",
+    "rating": 5,
+    "message": "The automation features are incredible. Saves us hours every week!",
+    "status": "approved",
+    "submitted_at": "2024-12-14T14:20:00Z",
+    "form_title": "Customer Feedback"
+  }
+]`}</pre>
+                  </div>
+                </div>
+                <div className="mt-4 flex items-center justify-between">
+                  <span className="text-sm text-blue-700">✅ Perfect for API integrations and custom development</span>
+                  <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
+                    Download JSON
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {selectedExportFormat === 'widget' && (
+              <div className="bg-purple-50 border border-purple-200 rounded-lg p-6">
+                <h4 className="text-lg font-medium text-purple-900 mb-4">🌐 Website Widget Preview</h4>
+                
+                {/* Live Preview */}
+                <div className="bg-white rounded-lg border border-purple-200 overflow-hidden mb-4">
+                  <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
+                    <span className="text-sm text-gray-600">How this will look on your website:</span>
+                  </div>
+                  <div className="p-6">
+                    <div style={{ maxWidth: '800px', margin: '0 auto', fontFamily: 'Montserrat, system-ui, sans-serif' }}>
+                      <h3 style={{ textAlign: 'center', marginBottom: '20px', color: '#333', fontSize: '20px', fontWeight: '600' }}>What Our Customers Say</h3>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '16px' }}>
+                        {mockTestimonials.slice(0, 3).map(testimonial => (
+                          <div key={testimonial.id} style={{ 
+                            background: '#f9f9f9', 
+                            padding: '20px', 
+                            borderRadius: '12px', 
+                            borderLeft: '4px solid #01b79e', 
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)' 
+                          }}>
+                            <div style={{ display: 'flex', marginBottom: '8px', fontSize: '16px' }}>
+                              {'★'.repeat(testimonial.rating)}<span style={{ color: '#ddd' }}>{'★'.repeat(5 - testimonial.rating)}</span>
+                            </div>
+                            <p style={{ margin: '0 0 15px 0', fontStyle: 'italic', color: '#555', lineHeight: '1.5', fontSize: '14px' }}>"{testimonial.message}"</p>
+                            <div style={{ fontSize: '12px', color: '#777', fontWeight: '500' }}>
+                              - {testimonial.name}, {testimonial.company}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* HTML Code Preview */}
+                <div className="bg-white rounded-lg border border-purple-200 overflow-hidden">
+                  <div className="bg-gray-50 px-4 py-2 border-b border-gray-200 flex items-center justify-between">
+                    <span className="text-sm text-gray-600">HTML Code (Copy & Paste)</span>
+                    <button 
+                      onClick={() => {
+                        navigator.clipboard.writeText('<!-- Widget HTML code copied! -->');
+                      }}
+                      className="text-purple-600 hover:text-purple-700 text-sm font-medium flex items-center space-x-1"
+                    >
+                      <Copy className="h-4 w-4" />
+                      <span>Copy Code</span>
+                    </button>
+                  </div>
+                  <div className="p-4 font-mono text-xs overflow-x-auto max-h-32 overflow-y-auto">
+                    <pre className="text-gray-800">{`<!-- Testimonials Widget -->
+<div class="testimonials-widget">
+  <h3>What Our Customers Say</h3>
+  <div class="testimonials-grid">
+    <!-- Your testimonials will appear here -->
+  </div>
+</div>`}</pre>
+                  </div>
+                </div>
+                
+                <div className="mt-4 flex items-center justify-between">
+                  <span className="text-sm text-purple-700">✅ Responsive design, matches your branding automatically</span>
+                  <button className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors">
+                    Generate Widget
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
   };
 
   return (
