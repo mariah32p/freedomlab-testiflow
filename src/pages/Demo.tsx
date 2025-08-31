@@ -21,7 +21,6 @@ export const Demo: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [progress, setProgress] = useState(0);
-  const [isScrolling, setIsScrolling] = useState(false);
 
   // Demo state
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -98,22 +97,15 @@ export const Demo: React.FC = () => {
     setSecondaryColor('#01b79e');
     setLogoUrl('');
   };
-  // Debug: Log current step changes
-  useEffect(() => {
-    console.log('Current step changed to:', currentStep, demoSteps[currentStep]?.title);
-    setIsScrolling(false);
-  }, [currentStep]);
 
-  // Scrolling animation for long content
   // Step-specific animations
   useEffect(() => {
-    console.log('Scrolling useEffect triggered for step:', currentStep);
     resetAllAnimations();
 
     if (currentStep === 0) {
       // Create Forms step
       setTimeout(() => setShowCreateForm(true), 1000);
-      setTimeout(() => setFormData({ 
+      setTimeout(() => setFormData({
         title: 'Share Your Experience with TechCorp',
         description: "We'd love to hear about your experience with our software solutions!",
         thank_you_message: 'Thank you for taking the time to share your feedback!'
@@ -173,6 +165,11 @@ export const Demo: React.FC = () => {
       }, 7500);
 
     } else if (currentStep === 2) {
+        // Set custom fields so they render in the form
+        setCustomFields([
+            { id: '1', field_type: 'select', label: 'What is your role?', options: ['CEO/Founder', 'CTO', 'Marketing Manager', 'Operations Manager'], is_required: true },
+            { id: '2', field_type: 'select', label: 'What industry are you in?', options: ['Technology', 'Healthcare', 'Finance', 'E-commerce', 'Consulting'], is_required: false }
+        ]);
       // Customer submission step
       setTimeout(() => setCustomerFormData(prev => ({ ...prev, rating: 5 })), 1000);
       setTimeout(() => setCustomerFormData(prev => ({ ...prev, name: 'Sarah Johnson' })), 2000);
@@ -180,14 +177,14 @@ export const Demo: React.FC = () => {
       setTimeout(() => setCustomerFormData(prev => ({ ...prev, company: 'TechCorp Solutions' })), 4000);
       setTimeout(() => setCustomerFormData(prev => ({ ...prev, role: 'CTO' })), 5000);
       setTimeout(() => setCustomerFormData(prev => ({ ...prev, industry: 'Technology' })), 6000);
-      setTimeout(() => setCustomerFormData(prev => ({ 
-        ...prev, 
+      setTimeout(() => setCustomerFormData(prev => ({
+        ...prev,
         message: 'TestiFlow has completely transformed how we collect and manage customer feedback. The automated workflows save us hours every week, and the approval system ensures we only showcase our best testimonials. Our conversion rates have improved by 40% since implementing their testimonial widgets on our website!'
       })), 7000);
 
     } else if (currentStep === 3) {
       // Testimonials approval step
-      setTestimonials([
+      const testimonialsData = [
         {
           id: '1',
           name: 'Sarah Johnson',
@@ -214,28 +211,15 @@ export const Demo: React.FC = () => {
           submitted_at: new Date(Date.now() - 86400000).toISOString(),
           form_id: '1'
         }
-      ]);
+      ];
+      setTestimonials(testimonialsData);
       setTimeout(() => {
-        setViewingTestimonial(testimonials[0] || {
-          id: '1',
-          name: 'Sarah Johnson',
-          email: 'sarah@techcorp.com',
-          company: 'TechCorp Solutions',
-          message: 'TestiFlow has completely transformed how we collect and manage customer feedback. The automated workflows save us hours every week, and the approval system ensures we only showcase our best testimonials. Our conversion rates have improved by 40% since implementing their testimonial widgets on our website!',
-          rating: 5,
-          status: 'pending',
-          submitted_at: new Date().toISOString(),
-          form_id: '1',
-          custom_responses: {
-            'What is your role?': 'CTO',
-            'What industry are you in?': 'Technology'
-          }
-        });
+        setViewingTestimonial(testimonialsData[0]);
       }, 2000);
 
     } else if (currentStep === 4) {
       // Branding step
-      setTimeout(() => setLogoUrl('https://via.placeholder.com/200x60/01004d/ffffff?text=TechCorp'), 1500);
+      setTimeout(() => setLogoUrl('https://via.placeholder.com/200x60/ffffff/01004d?text=TechCorp'), 1500);
       setTimeout(() => setPrimaryColor('#2563eb'), 3000);
       setTimeout(() => setSecondaryColor('#10b981'), 4500);
     }
@@ -542,7 +526,7 @@ export const Demo: React.FC = () => {
                               <label className="block text-sm font-medium text-gray-700 mb-2">Field Type</label>
                               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                                 <p className="text-sm text-yellow-800">
-                                  💡 <strong>Tip:</strong> Your form already includes name, email, company, rating, and testimonial fields. 
+                                  💡 <strong>Tip:</strong> Your form already includes name, email, company, rating, and testimonial fields.
                                   Add custom fields here for additional questions like "How did you hear about us?\" or \"What's your role?"
                                 </p>
                               </div>
@@ -622,16 +606,15 @@ export const Demo: React.FC = () => {
     <div className="min-h-screen bg-gray-50 py-12" style={{ fontFamily: 'Montserrat' }}>
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-          <div 
+          <div
             className="px-6 py-8 text-center text-white"
             style={{ backgroundColor: primaryColor }}
           >
             <div className="flex justify-center mb-4">
-              <img 
-                src="/Freedom Lab Logos (2).png" 
-                alt="Freedom Lab Logo" 
-                className="h-8 max-w-32 object-contain bg-white rounded px-2 py-1"
-              />
+                {logoUrl ? 
+                    <img src={logoUrl} alt="Company Logo" className="h-12 max-w-48 object-contain" /> :
+                    <TestiFlowIcon className="h-8 w-8 text-white" />
+                }
             </div>
             <h1 className="text-2xl font-bold mb-2">Share Your Experience with TechCorp</h1>
             <p className="text-white/90">We'd love to hear about your experience with our software solutions!</p>
@@ -648,8 +631,8 @@ export const Demo: React.FC = () => {
                   {[1, 2, 3, 4, 5].map((star) => (
                     <Star
                       key={star}
-                      className={`h-8 w-8 ${
-                      className="h-12 max-w-48 object-contain"
+                      className={`h-8 w-8 transition-colors ${
+                        star <= customerFormData.rating
                           ? 'text-yellow-400 fill-current'
                           : 'text-gray-300'
                       }`}
@@ -693,20 +676,21 @@ export const Demo: React.FC = () => {
 
               {/* Custom Fields */}
               {customFields.map((field) => (
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                <div key={field.id}>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
                     {field.label}
                     {field.is_required && <span className="text-red-500 ml-1">*</span>}
-                  </label>
-                  <select
+                    </label>
+                    <select
                     value={customerFormData[field.label.includes('role') ? 'role' : 'industry']}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 bg-gray-50"
                     disabled
-                  >
+                    >
                     <option value="">Select an option...</option>
                     {field.options.map((option, index) => (
-                      <option key={index} value={option}>{option}</option>
+                        <option key={index} value={option}>{option}</option>
                     ))}
-                  </select>
+                    </select>
                 </div>
               ))}
 
@@ -948,7 +932,7 @@ export const Demo: React.FC = () => {
                           {Object.entries(viewingTestimonial.custom_responses).map(([question, answer]) => (
                             <div key={question} className="bg-gray-50 rounded-lg p-4">
                               <div className="text-sm font-medium text-gray-700 mb-2">{question}</div>
-                              <div className="text-sm text-gray-700">{answer}</div>
+                              <div className="text-sm text-gray-700">{typeof answer === 'string' ? answer : ''}</div>
                             </div>
                           ))}
                         </div>
@@ -1082,29 +1066,15 @@ export const Demo: React.FC = () => {
                 </div>
 
                 <div className="border border-gray-200 rounded-lg overflow-hidden shadow-lg">
-                  <div 
+                  <div
                     className="px-6 py-8 text-center text-white"
                     style={{ backgroundColor: primaryColor }}
                   >
-                    <div className="flex justify-center mb-4">
-                      <img 
-                        src="/Freedom Lab_Favicon copy.png" 
-                        alt="Freedom Lab Logo" 
-                        className="h-12 w-12 object-contain bg-white rounded-lg p-2"
-                      />
-                    </div>
-                    <div className="flex justify-center mb-4">
-                      <img 
-                        src="/Freedom Lab_Favicon copy.png" 
-                        alt="Freedom Lab Logo" 
-                        className="h-12 w-12 object-contain bg-white rounded-lg p-2"
-                      />
-                    </div>
                     {logoUrl && (
                       <div className="flex justify-center mb-4">
-                        <img 
-                          src={logoUrl} 
-                          alt="Logo" 
+                        <img
+                          src={logoUrl}
+                          alt="Logo"
                           className="h-12 max-w-48 object-contain"
                         />
                       </div>
