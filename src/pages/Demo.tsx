@@ -17,7 +17,7 @@ const demoSteps: DemoStep[] = [
   { id: 'export-use', title: 'Export & Use', description: 'Using testimonials in your marketing', duration: 12000 },
   { id: 'branding', title: 'Customize Branding', description: 'Personalizing form appearance', duration: 8000 },
 ];
-xclvnsLDKNVFlwknfee
+
 // Mock testimonials for export demo
 const mockTestimonials = [
   {
@@ -59,8 +59,6 @@ export const Demo: React.FC = () => {
   const demoContainerRef = useRef<HTMLDivElement>(null);
 
   const [currentStep, setCurrentStep] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [progress, setProgress] = useState(0);
 
   // Demo state
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -101,12 +99,9 @@ export const Demo: React.FC = () => {
 
   // Auto-advance timer
   useEffect(() => {
-    if (!isPlaying) return;
-
     const timer = setTimeout(() => {
       if (currentStep < demoSteps.length - 1) {
         setCurrentStep(prev => prev + 1);
-        setProgress(0);
       } else {
         // Reset to beginning
         setCurrentStep(0);
@@ -115,22 +110,7 @@ export const Demo: React.FC = () => {
     }, demoSteps[currentStep].duration);
 
     return () => clearTimeout(timer);
-  }, [currentStep, isPlaying]);
-
-  // Progress bar animation
-  useEffect(() => {
-    const duration = demoSteps[currentStep].duration;
-    const interval = 50;
-    const increment = (interval / duration) * 100;
-
-    const timer = setInterval(() => {
-      if (isPlaying) {
-        setProgress(prev => Math.min(prev + increment, 100));
-      }
-    }, interval);
-
-    return () => clearInterval(timer);
-  }, [currentStep, isPlaying]);
+  }, [currentStep]);
 
   const resetAllAnimations = () => {
     setShowCreateForm(false);
@@ -415,7 +395,7 @@ export const Demo: React.FC = () => {
                       <X className="h-5 w-5" />
                     </button>
                   </div>
-                  
+
                   <form className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Form Title</label>
@@ -528,7 +508,7 @@ export const Demo: React.FC = () => {
                   <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-slide-in">
                     <div className="bg-white rounded-lg p-6 w-full max-w-2xl mx-4">
                       <h2 className="text-xl font-bold text-gray-900 mb-4">Add Custom Field</h2>
-                      
+
                       <form className="space-y-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-1">Question/Label</label>
@@ -591,15 +571,15 @@ export const Demo: React.FC = () => {
     <div className="min-h-screen bg-gray-50 py-12" style={{ fontFamily: 'Montserrat' }}>
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-          <div 
+          <div
             className="px-6 py-8 text-center text-white"
             style={{ backgroundColor: primaryColor }}
           >
             <div className="flex justify-center mb-4">
               {logoUrl ? (
-                <img 
-                  src={logoUrl} 
-                  alt="Logo" 
+                <img
+                  src={logoUrl}
+                  alt="Logo"
                   className="h-8 max-w-32 object-contain"
                 />
               ) : (
@@ -730,8 +710,8 @@ export const Demo: React.FC = () => {
                 <div key={testimonial.id} className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-all duration-200 relative animate-slide-in">
                   <div className="absolute top-4 right-4">
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      testimonial.status === 'approved' 
-                        ? 'bg-secondary-100 text-secondary-800' 
+                      testimonial.status === 'approved'
+                        ? 'bg-secondary-100 text-secondary-800'
                         : testimonial.status === 'pending'
                         ? 'bg-yellow-100 text-yellow-800'
                         : 'bg-red-100 text-red-800'
@@ -979,7 +959,7 @@ export const Demo: React.FC = () => {
                         <span>Copy</span>
                       </button>
                     </div>
-                    
+
                     <div className="bg-gray-900 text-white rounded-lg p-4 border border-gray-200">
                       <pre className="text-sm whitespace-pre-wrap font-mono max-h-64 overflow-y-auto">
                         {generatedContent}
@@ -1105,15 +1085,15 @@ export const Demo: React.FC = () => {
                 </div>
 
                 <div className="border border-gray-200 rounded-lg overflow-hidden shadow-lg">
-                  <div 
+                  <div
                     className="px-6 py-8 text-center text-white"
                     style={{ backgroundColor: primaryColor }}
                   >
                     {logoUrl && (
                       <div className="flex justify-center mb-4">
-                        <img 
-                          src={logoUrl} 
-                          alt="Logo" 
+                        <img
+                          src={logoUrl}
+                          alt="Logo"
                           className="h-12 max-w-48 object-contain"
                         />
                       </div>
@@ -1188,72 +1168,6 @@ export const Demo: React.FC = () => {
 
   return (
     <div ref={demoContainerRef} className="min-h-screen bg-white">
-      {/* Demo Controls */}
-      <div className="fixed top-4 left-4 z-50 bg-white rounded-lg shadow-lg border border-gray-200 p-4 max-w-sm">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="font-semibold text-gray-900">Demo Controls</h3>
-          <div className="flex space-x-2">
-            <button
-              onClick={() => setIsPlaying(!isPlaying)}
-              className="bg-primary-950 text-white px-3 py-1 rounded text-sm hover:bg-primary-900 transition-colors"
-            >
-              {isPlaying ? 'Pause' : 'Play'}
-            </button>
-            <button
-              onClick={() => {
-                setCurrentStep(0);
-                setProgress(0);
-                resetAllAnimations();
-              }}
-              className="bg-gray-500 text-white px-3 py-1 rounded text-sm hover:bg-gray-600 transition-colors"
-            >
-              Restart
-            </button>
-          </div>
-        </div>
-        
-        <div className="space-y-2">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-600">Step {currentStep + 1} of {demoSteps.length}</span>
-            <span className="font-medium text-gray-900">{demoSteps[currentStep].title}</span>
-          </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
-            <div 
-              className="bg-primary-950 h-2 rounded-full transition-all duration-100"
-              style={{ width: `${progress}%` }}
-            ></div>
-          </div>
-          <p className="text-xs text-gray-500">{demoSteps[currentStep].description}</p>
-        </div>
-
-        <div className="mt-4 flex space-x-1">
-          <button
-            onClick={() => {
-              if (currentStep > 0) {
-                setCurrentStep(currentStep - 1);
-                setProgress(0);
-              }
-            }}
-            disabled={currentStep === 0}
-            className="flex-1 bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Previous
-          </button>
-          <button
-            onClick={() => {
-              if (currentStep < demoSteps.length - 1) {
-                setCurrentStep(currentStep + 1);
-                setProgress(0);
-              }
-            }}
-            disabled={currentStep === demoSteps.length - 1}
-            className="flex-1 bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Next
-          </button>
-        </div>
-      </div>
-
       {/* Fake Header */}
       <nav className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1306,7 +1220,7 @@ export const Demo: React.FC = () => {
               <button className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-950 transition-colors">
                 Settings
               </button>
-              
+
               <div className="flex items-center space-x-3 pl-4 border-l border-gray-200">
                 <div className="flex items-center space-x-2">
                   <div className="w-8 h-8 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
