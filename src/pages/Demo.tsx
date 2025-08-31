@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { TestiFlowIcon } from '../components/TestiFlowIcon';
-import { User, LogOut, Plus, Settings, Eye, Copy, ExternalLink, Star, CheckCircle, X, Download, FileText, Code, Send } from 'lucide-react';
+import { User, LogOut, Plus, Settings, Eye, Copy, ExternalLink, Star, Download, FileText, Code, Send } from 'lucide-react';
 
 interface DemoStep {
   id: string;
@@ -27,7 +27,7 @@ const mockTestimonials = [
     message: 'TestiFlow has completely transformed how we collect customer feedback. The automated workflows save us hours every week!',
     rating: 5,
     status: 'approved',
-    submitted_at: '2024-01-15T10:30:00Z',
+    submitted_at: '2025-01-15T10:30:00Z',
     form_title: 'Customer Experience Survey'
   },
   {
@@ -38,7 +38,7 @@ const mockTestimonials = [
     message: 'Amazing product! The testimonial management features are exactly what we needed for our marketing campaigns.',
     rating: 5,
     status: 'approved',
-    submitted_at: '2024-01-14T14:20:00Z',
+    submitted_at: '2025-01-14T14:20:00Z',
     form_title: 'Customer Experience Survey'
   },
   {
@@ -49,7 +49,7 @@ const mockTestimonials = [
     message: 'The export features are incredible. We can now easily use testimonials across all our marketing channels.',
     rating: 4,
     status: 'approved',
-    submitted_at: '2024-01-13T09:15:00Z',
+    submitted_at: '2025-01-13T09:15:00Z',
     form_title: 'Customer Experience Survey'
   }
 ];
@@ -83,7 +83,6 @@ export const Demo: React.FC = () => {
     industry: ''
   });
   const [testimonials, setTestimonials] = useState<any[]>([]);
-  const [viewingTestimonial, setViewingTestimonial] = useState<any>(null);
   const [showExportModal, setShowExportModal] = useState(false);
   const [selectedExportFormat, setSelectedExportFormat] = useState<'csv' | 'json' | 'widget'>('csv');
   const [generatedContent, setGeneratedContent] = useState('');
@@ -130,7 +129,6 @@ export const Demo: React.FC = () => {
     setNewField({ field_type: 'select', label: '', options: [''] });
     setCustomerFormData({ name: '', email: '', company: '', message: '', rating: 0, role: '', industry: '' });
     setTestimonials([]);
-    setViewingTestimonial(null);
     setShowExportModal(false);
     setGeneratedContent('');
   };
@@ -160,9 +158,9 @@ export const Demo: React.FC = () => {
         break;
       case 'csv':
         setGeneratedContent(`Name,Email,Company,Rating,Testimonial,Status,Date,Form
-"Sarah Johnson","sarah@techcorp.com","TechCorp",5,"TestiFlow has completely transformed how we collect customer feedback. The automated workflows save us hours every week!","approved","2024-01-15","Customer Experience Survey"
-"Mike Chen","mike@startup.com","StartupXYZ",5,"Amazing product! The testimonial management features are exactly what we needed for our marketing campaigns.","approved","2024-01-14","Customer Experience Survey"
-"Emily Davis","emily@growth.com","GrowthCo",4,"The export features are incredible. We can now easily use testimonials across all our marketing channels.","approved","2024-01-13","Customer Experience Survey"`);
+"Sarah Johnson","sarah@techcorp.com","TechCorp",5,"TestiFlow has completely transformed how we collect customer feedback. The automated workflows save us hours every week!","approved","2025-01-15","Customer Experience Survey"
+"Mike Chen","mike@startup.com","StartupXYZ",5,"Amazing product! The testimonial management features are exactly what we needed for our marketing campaigns.","approved","2025-01-14","Customer Experience Survey"
+"Emily Davis","emily@growth.com","GrowthCo",4,"The export features are incredible. We can now easily use testimonials across all our marketing channels.","approved","2025-01-13","Customer Experience Survey"`);
         break;
       case 'json':
         setGeneratedContent(JSON.stringify(mockTestimonials, null, 2));
@@ -268,9 +266,6 @@ export const Demo: React.FC = () => {
         }
       ];
       setTestimonials(testimonialsData);
-      setTimeout(() => {
-        setViewingTestimonial(testimonialsData[0]);
-      }, 1500);
 
     } else if (currentStep === 4) { // Total Duration: 8000ms
       setTestimonials(mockTestimonials);
@@ -356,59 +351,6 @@ export const Demo: React.FC = () => {
                 </p>
               </div>
             )}
-
-            {showCreateForm && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-slide-in">
-                <div className="bg-white rounded-lg p-6 w-full max-w-2xl mx-4">
-                  <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-bold text-gray-900">Create New Form</h2>
-                    <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
-                      <X className="h-5 w-5" />
-                    </button>
-                  </div>
-                  <form className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Form Title</label>
-                      <input
-                        type="text"
-                        value={formData.title}
-                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-                        placeholder="Enter form title..."
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                      <textarea
-                        value={formData.description}
-                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                        rows={2}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-                        placeholder="Describe what this form is for..."
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Thank You Message</label>
-                      <input
-                        type="text"
-                        value={formData.thank_you_message}
-                        onChange={(e) => setFormData({ ...formData, thank_you_message: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-                        placeholder="Message shown after submission..."
-                      />
-                    </div>
-                    <div className="flex space-x-3 pt-4">
-                      <button type="button" className="flex-1 bg-primary-950 text-white py-2 px-4 rounded-md hover:bg-primary-900 transition-colors font-medium">
-                        Create Form
-                      </button>
-                      <button type="button" className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 transition-colors font-medium">
-                        Cancel
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </div>
@@ -439,7 +381,6 @@ export const Demo: React.FC = () => {
                     <span>Add Field</span>
                   </button>
                 </div>
-
                 <div className="space-y-3">
                   {customFields.map((field) => (
                     <div key={field.id} className="bg-gray-50 border border-gray-200 rounded-lg p-4 animate-slide-in">
@@ -463,53 +404,6 @@ export const Demo: React.FC = () => {
                     </div>
                   ))}
                 </div>
-
-                {showAddField && (
-                  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-slide-in">
-                    <div className="bg-white rounded-lg p-6 w-full max-w-2xl mx-4">
-                      <h2 className="text-xl font-bold text-gray-900 mb-4">Add Custom Field</h2>
-                      <form className="space-y-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Question/Label</label>
-                          <input
-                            type="text"
-                            value={newField.label}
-                            onChange={(e) => setNewField({ ...newField, label: e.target.value })}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-                            placeholder="What would you like to ask?"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">Options</label>
-                          <div className="space-y-2">
-                            {newField.options.map((option, index) => (
-                              <input
-                                key={index}
-                                type="text"
-                                value={option}
-                                onChange={(e) => {
-                                  const newOptions = [...newField.options];
-                                  newOptions[index] = e.target.value;
-                                  setNewField({ ...newField, options: newOptions });
-                                }}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-                                placeholder={`Option ${index + 1}`}
-                              />
-                            ))}
-                          </div>
-                        </div>
-                        <div className="flex space-x-3 pt-4">
-                          <button type="button" className="flex-1 bg-primary-950 text-white py-2 px-4 rounded-md hover:bg-primary-900 transition-colors">
-                            Add Field
-                          </button>
-                          <button type="button" className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 transition-colors">
-                            Cancel
-                          </button>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                )}
               </div>
             )}
           </div>
@@ -532,82 +426,44 @@ export const Demo: React.FC = () => {
             <h1 className="text-2xl font-bold mb-2">Share Your Experience with TechCorp</h1>
             <p className="text-white/90">We'd love to hear about your experience with our software solutions!</p>
           </div>
-
           <div className="p-6">
             <form className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  How would you rate your experience? *
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-3">How would you rate your experience? *</label>
                 <div className="flex space-x-1">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <div key={star} className="w-8 h-8 flex items-center justify-center">
-                      <Star
-                        className={`h-6 w-6 ${star <= customerFormData.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}`}
-                      />
+                      <Star className={`h-6 w-6 ${star <= customerFormData.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} />
                     </div>
                   ))}
                 </div>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Your Name *</label>
-                <input
-                  type="text"
-                  value={customerFormData.name}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                  readOnly
-                />
+                <input type="text" value={customerFormData.name} className="w-full px-3 py-2 border border-gray-300 rounded-md" readOnly />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Email Address *</label>
-                <input
-                  type="email"
-                  value={customerFormData.email}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                  readOnly
-                />
+                <input type="email" value={customerFormData.email} className="w-full px-3 py-2 border border-gray-300 rounded-md" readOnly />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Company (Optional)</label>
-                <input
-                  type="text"
-                  value={customerFormData.company}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                  readOnly
-                />
+                <input type="text" value={customerFormData.company} className="w-full px-3 py-2 border border-gray-300 rounded-md" readOnly />
               </div>
               {customFields.map((field) => (
                 <div key={field.id}>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {field.label}
-                    {field.is_required && <span className="text-red-500 ml-1">*</span>}
-                  </label>
-                  <select
-                    value={field.id === '1' ? customerFormData.role : customerFormData.industry}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                    readOnly
-                  >
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{field.label}{field.is_required && <span className="text-red-500 ml-1">*</span>}</label>
+                  <select value={field.id === '1' ? customerFormData.role : customerFormData.industry} className="w-full px-3 py-2 border border-gray-300 rounded-md" readOnly>
                     <option value="">Select an option...</option>
-                    {field.options.map((option: string, index: number) => (
-                      <option key={index} value={option}>{option}</option>
-                    ))}
+                    {field.options.map((option: string, index: number) => (<option key={index} value={option}>{option}</option>))}
                   </select>
                 </div>
               ))}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Your Testimonial *</label>
-                <textarea
-                  rows={4}
-                  value={customerFormData.message}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                  readOnly
-                />
+                <textarea rows={4} value={customerFormData.message} className="w-full px-3 py-2 border border-gray-300 rounded-md" readOnly />
               </div>
-              <button
-                ref={submitButtonRef}
-                type="submit"
-                className="w-full bg-secondary-500 text-white py-3 px-6 rounded-lg font-semibold hover:bg-secondary-600 transition-colors flex items-center justify-center space-x-2"
-              >
+              <button ref={submitButtonRef} type="submit" className="w-full bg-secondary-500 text-white py-3 px-6 rounded-lg font-semibold hover:bg-secondary-600 transition-colors flex items-center justify-center space-x-2">
                 <Send className="h-4 w-4" />
                 <span>Submit Testimonial</span>
               </button>
@@ -629,7 +485,6 @@ export const Demo: React.FC = () => {
                 <p className="text-gray-600 mt-2">Review, approve, and manage customer testimonials</p>
               </div>
             </div>
-
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {testimonials.map((testimonial) => (
                 <div key={testimonial.id} className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-all duration-200 relative animate-slide-in">
@@ -649,20 +504,12 @@ export const Demo: React.FC = () => {
                   </div>
                   <div className="flex items-center space-x-2 mb-4">
                     <div className="flex">
-                      {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
-                      ))}
+                      {[...Array(testimonial.rating)].map((_, i) => (<Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />))}
                     </div>
                     <span className="text-sm text-gray-500">({testimonial.rating}/5)</span>
                   </div>
-                  <p className="text-gray-700 text-sm leading-relaxed line-clamp-3 mb-4">
-                    "{testimonial.message}"
-                  </p>
-                  <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                    <button className="text-primary-950 hover:text-primary-800 text-sm font-medium flex items-center space-x-1 transition-colors">
-                      <Eye className="h-4 w-4" />
-                      <span>View Full</span>
-                    </button>
+                  <p className="text-gray-700 text-sm leading-relaxed line-clamp-3 mb-4">"{testimonial.message}"</p>
+                  <div className="flex items-center justify-end pt-4 border-t border-gray-100">
                     {testimonial.status === 'pending' && (
                       <div className="flex space-x-2">
                         <button className="bg-secondary-100 text-secondary-800 hover:bg-secondary-200 px-3 py-1 rounded-md text-xs font-medium transition-colors">Approve</button>
@@ -673,22 +520,6 @@ export const Demo: React.FC = () => {
                 </div>
               ))}
             </div>
-
-            {viewingTestimonial && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 animate-slide-in">
-                <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-hidden">
-                  <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-                    <h2 className="text-xl font-bold text-gray-900">Testimonial Details</h2>
-                    <button onClick={() => setViewingTestimonial(null)} className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
-                      <X className="h-5 w-5" />
-                    </button>
-                  </div>
-                  <div className="p-6 overflow-y-auto">
-                    {/* Modal content */}
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </div>
@@ -701,17 +532,12 @@ export const Demo: React.FC = () => {
         <div className="space-y-8">
           <div className="text-center">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Export & Use Your Testimonials</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Export your approved testimonials in multiple formats for use across your marketing channels
-            </p>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">Export your approved testimonials in multiple formats for use across your marketing channels</p>
           </div>
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-semibold text-gray-900">Export Testimonials</h3>
-              <button
-                onClick={() => setShowExportModal(!showExportModal)}
-                className="bg-primary-950 text-white px-4 py-2 rounded-lg hover:bg-primary-900 transition-colors flex items-center space-x-2"
-              >
+              <button onClick={() => setShowExportModal(!showExportModal)} className="bg-primary-950 text-white px-4 py-2 rounded-lg hover:bg-primary-900 transition-colors flex items-center space-x-2">
                 <Download className="h-4 w-4" />
                 <span>Export Options</span>
               </button>
@@ -722,24 +548,15 @@ export const Demo: React.FC = () => {
                   <h4 className="text-sm font-medium text-gray-700 mb-3">Choose Export Format</h4>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                     <button onClick={() => setSelectedExportFormat('csv')} className={`p-3 border rounded-lg text-left transition-colors ${selectedExportFormat === 'csv' ? 'border-primary-500 bg-primary-50' : 'border-gray-200 hover:bg-gray-50'}`}>
-                      <div className="flex items-center space-x-2">
-                        <FileText className="h-5 w-5 text-green-600" />
-                        <span className="font-medium">CSV</span>
-                      </div>
+                      <div className="flex items-center space-x-2"><FileText className="h-5 w-5 text-green-600" /><span className="font-medium">CSV</span></div>
                       <p className="text-xs text-gray-500 mt-1">For spreadsheets</p>
                     </button>
                     <button onClick={() => setSelectedExportFormat('json')} className={`p-3 border rounded-lg text-left transition-colors ${selectedExportFormat === 'json' ? 'border-primary-500 bg-primary-50' : 'border-gray-200 hover:bg-gray-50'}`}>
-                      <div className="flex items-center space-x-2">
-                        <Code className="h-5 w-5 text-blue-600" />
-                        <span className="font-medium">JSON</span>
-                      </div>
+                      <div className="flex items-center space-x-2"><Code className="h-5 w-5 text-blue-600" /><span className="font-medium">JSON</span></div>
                       <p className="text-xs text-gray-500 mt-1">For developers</p>
                     </button>
                     <button onClick={() => setSelectedExportFormat('widget')} className={`p-3 border rounded-lg text-left transition-colors ${selectedExportFormat === 'widget' ? 'border-primary-500 bg-primary-50' : 'border-gray-200 hover:bg-gray-50'}`}>
-                      <div className="flex items-center space-x-2">
-                        <Code className="h-5 w-5 text-indigo-600" />
-                        <span className="font-medium">Widget</span>
-                      </div>
+                      <div className="flex items-center space-x-2"><Code className="h-5 w-5 text-indigo-600" /><span className="font-medium">Widget</span></div>
                       <p className="text-xs text-gray-500 mt-1">HTML embed</p>
                     </button>
                   </div>
