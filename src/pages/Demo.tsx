@@ -111,6 +111,7 @@ export const Demo: React.FC = () => {
         thank_you_message: 'Thank you for taking the time to share your feedback!'
       }), 2500);
       setTimeout(() => {
+    let startDelay: NodeJS.Timeout;
         setShowCreateForm(false);
         setCreatedForm({
           id: '1',
@@ -212,7 +213,7 @@ export const Demo: React.FC = () => {
         name: 'Sarah Johnson',
         email: 'sarah@techcorp.com',
         company: 'TechCorp Solutions',
-        message: 'TestiFlow has completely transformed how we collect and manage customer feedback. The automated workflows save us hours every week, and the approval system ensures we only showcase our best testimonials. Our conversion rates have improved by 40% since implementing their testimonial widgets on our website!',
+      startDelay = setTimeout(() => {
         rating: 5,
         status: 'pending',
         submitted_at: new Date().toISOString(),
@@ -221,16 +222,12 @@ export const Demo: React.FC = () => {
           'What is your role?': 'CTO',
           'What industry are you in?': 'Technology'
         }
-      }), 2000);
-      setTimeout(() => {
-        setViewingTestimonial(null);
-        setTestimonials(prev => prev.map(t => t.id === '1' ? { ...t, status: 'approved' } : t));
-      }, 7000);
 
     } else if (currentStep === 4) {
       // Branding step
       setTimeout(() => setLogoUrl('https://images.pexels.com/photos/1181467/pexels-photo-1181467.jpeg?auto=compress&cs=tinysrgb&w=200&h=60&fit=crop'), 1500);
       setTimeout(() => setPrimaryColor('#2563eb'), 3000);
+      if (startDelay) clearTimeout(startDelay);
       setTimeout(() => setSecondaryColor('#10b981'), 4500);
     }
   }, [currentStep]);
