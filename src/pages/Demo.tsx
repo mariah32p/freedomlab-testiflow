@@ -89,7 +89,7 @@ export const Demo: React.FC = () => {
   const [secondaryColor, setSecondaryColor] = useState('#01b79e');
   const [logoUrl, setLogoUrl] = useState('');
   const [showExportModal, setShowExportModal] = useState(false);
-  const [selectedExportFormat, setSelectedExportFormat] = useState<'csv' | 'json' | 'social' | 'widget'>('csv');
+  const [selectedExportFormat, setSelectedExportFormat] = useState<'csv' | 'json' | 'widget'>('csv');
   const [generatedContent, setGeneratedContent] = useState('');
 
   // Auto-scroll effect
@@ -175,9 +175,6 @@ export const Demo: React.FC = () => {
 
   const handleExportDemo = () => {
     switch (selectedExportFormat) {
-      case 'social':
-        setGeneratedContent(generateSocialPost(mockTestimonials[0]));
-        break;
       case 'widget':
         setGeneratedContent(demoGenerateWebsiteWidget());
         break;
@@ -938,21 +935,6 @@ export const Demo: React.FC = () => {
                         <span className="font-medium">JSON</span>
                       </div>
                       <p className="text-xs text-gray-500 mt-1">For developers</p>
-                    </button>
-                    
-                    <button
-                      onClick={() => setSelectedExportFormat('social')}
-                      className={`p-3 border rounded-lg text-left transition-colors ${
-                        selectedExportFormat === 'social'
-                          ? 'border-primary-500 bg-primary-50'
-                          : 'border-gray-200 hover:bg-gray-50'
-                      }`}
-                    >
-                      <div className="flex items-center space-x-2">
-                        <Share2 className="h-5 w-5 text-purple-600" />
-                        <span className="font-medium">Social Post</span>
-                      </div>
-                      <p className="text-xs text-gray-500 mt-1">For social media</p>
                     </button>
 
                     <button
