@@ -54,9 +54,6 @@ export const Demo: React.FC = () => {
   const [showExportModal, setShowExportModal] = useState(false);
   const [selectedExportFormat, setSelectedExportFormat] = useState<'csv' | 'json' | 'social' | 'widget'>('csv');
   const [generatedContent, setGeneratedContent] = useState('');
-  const [showExportModal, setShowExportModal] = useState(false);
-  const [selectedExportFormat, setSelectedExportFormat] = useState<'csv' | 'json' | 'social' | 'widget'>('csv');
-  const [generatedContent, setGeneratedContent] = useState('');
 
   useEffect(() => {
     if (demoContainerRef.current) {
