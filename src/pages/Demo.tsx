@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { TestiFlowIcon } from '../components/TestiFlowIcon';
-import { User, LogOut, Plus, Settings, Eye, Copy, ExternalLink, Star, CheckCircle, X, Clock, Upload, Save, Palette, Download, FileText, Code, Share2 } from 'lucide-react';
+import { User, LogOut, Plus, Settings, Eye, Copy, ExternalLink, Star, CheckCircle, X, Clock, Upload, Save, Palette, Download, FileText, Code, Share2, Send } from 'lucide-react';
 
 interface DemoStep {
   id: string;
@@ -343,31 +343,13 @@ export const Demo: React.FC = () => {
     }
   };
 
-  const generateWebsiteWidget = () => {
-    return `<div class="testimonials-widget" style="max-width: 1000px; margin: 0 auto; padding: 20px;">
-  <h3 style="text-align: center; margin-bottom: 20px; color: #333;">What Our Customers Say</h3>
-  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
-    ${mockTestimonials.slice(0, 3).map(testimonial => `
-    <div style="background: #f9f9f9; padding: 20px; border-radius: 12px; border-left: 4px solid #01b79e; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-      <div style="display: flex; margin-bottom: 8px;">
-        ${'★'.repeat(testimonial.rating)}<span style="color: #ddd;">${'★'.repeat(5 - testimonial.rating)}</span>
-      </div>
-      <p style="margin: 0 0 15px 0; font-style: italic; color: #555; line-height: 1.5;">"${testimonial.message}"</p>
-      <div style="font-size: 14px; color: #777;">
-        - ${testimonial.name}${testimonial.company ? `, ${testimonial.company}` : ''}
-      </div>
-    </div>`).join('')}
-  </div>
-</div>`;
-  };
-
   const renderCreateFormsStep = () => (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white shadow rounded-lg">
           <div className="px-4 py-5 sm:p-6">
             <div className="flex items-center justify-between mb-8">
-              <div>
+        setGeneratedContent(demoGenerateWebsiteWidget());
                 <h1 className="text-3xl font-bold text-gray-900">Forms</h1>
                 <p className="text-gray-600 mt-2">Create and manage testimonial collection forms</p>
               </div>
