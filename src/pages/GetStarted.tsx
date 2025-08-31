@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Check, ArrowRight } from 'lucide-react';
 import { TestiFlowIcon } from '../components/TestiFlowIcon';
 import { useStripe } from '../hooks/useStripe';

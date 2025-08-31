@@ -687,13 +687,13 @@ export const Testimonials: React.FC = () => {
                       {viewingTestimonial.status !== 'pending' && (
                         <button
                           onClick={() => {
-                            handleStatusChange(viewingTestimonial.id, 'pending' as any);
+                            handleStatusChange(viewingTestimonial.id, 'approved');
                             setViewingTestimonial(null);
                           }}
-                          className="flex-1 bg-yellow-500 text-white py-3 px-4 rounded-lg hover:bg-yellow-600 transition-colors font-medium flex items-center justify-center space-x-2"
+                          className="flex-1 bg-gray-500 text-white py-3 px-4 rounded-lg hover:bg-gray-600 transition-colors font-medium flex items-center justify-center space-x-2"
                         >
-                          <Clock className="h-4 w-4" />
-                          <span>Mark Pending</span>
+                          <CheckCircle className="h-4 w-4" />
+                          <span>Re-approve</span>
                         </button>
                       )}
                     </div>
