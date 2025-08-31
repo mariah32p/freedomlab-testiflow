@@ -535,7 +535,7 @@ export const Demo: React.FC = () => {
                               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                                 <p className="text-sm text-yellow-800">
                                   💡 <strong>Tip:</strong> Your form already includes name, email, company, rating, and testimonial fields. 
-                                  Add custom fields here for additional questions like "How did you hear about us?" or \"What's your role?"
+                                  Add custom fields here for additional questions like "How did you hear about us?\" or \"What's your role?"
                                 </p>
                               </div>
                               <div className="grid grid-cols-2 gap-2">
