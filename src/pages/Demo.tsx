@@ -203,7 +203,6 @@ export const Demo: React.FC = () => {
           company: 'StartupXYZ',
           message: 'As a startup, we needed a cost-effective way to collect and showcase customer testimonials. TestiFlow delivered exactly what we needed with their intuitive interface and powerful export features.',
           rating: 5,
-          status: 'approved',
           submitted_at: new Date(Date.now() - 86400000).toISOString(),
           form_id: '1'
         }
