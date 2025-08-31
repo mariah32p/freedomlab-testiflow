@@ -125,7 +125,6 @@ export const Testimonials: React.FC = () => {
     }
   };
 
-  const handleStatusChange = async (testimonialId: string, newStatus: 'approved' | 'rejected') => {
   const handleStatusChange = async (testimonialId: string, newStatus: 'approved' | 'rejected' | 'pending') => {
     try {
       const { error } = await supabase
@@ -664,7 +663,7 @@ export const Testimonials: React.FC = () => {
                       {viewingTestimonial.status !== 'approved' && (
                         <button
                           onClick={() => {
-                            handleStatusChange(viewingTestimonial.id, 'approved' as 'approved' | 'rejected');
+                            handleStatusChange(viewingTestimonial.id, 'approved');
                             setViewingTestimonial(null);
                           }}
                           className="flex-1 bg-secondary-500 text-white py-3 px-4 rounded-lg hover:bg-secondary-600 transition-colors font-medium flex items-center justify-center space-x-2"
@@ -676,7 +675,7 @@ export const Testimonials: React.FC = () => {
                       {viewingTestimonial.status !== 'rejected' && (
                         <button
                           onClick={() => {
-                            handleStatusChange(viewingTestimonial.id, 'rejected' as 'approved' | 'rejected');
+                            handleStatusChange(viewingTestimonial.id, 'rejected');
                             setViewingTestimonial(null);
                           }}
                           className="flex-1 bg-red-500 text-white py-3 px-4 rounded-lg hover:bg-red-600 transition-colors font-medium flex items-center justify-center space-x-2"
@@ -688,13 +687,13 @@ export const Testimonials: React.FC = () => {
                       {viewingTestimonial.status !== 'pending' && (
                         <button
                           onClick={() => {
-                            handleStatusChange(viewingTestimonial.id, 'approved');
+                            handleStatusChange(viewingTestimonial.id, 'pending');
                             setViewingTestimonial(null);
                           }}
                           className="flex-1 bg-gray-500 text-white py-3 px-4 rounded-lg hover:bg-gray-600 transition-colors font-medium flex items-center justify-center space-x-2"
                         >
-                          <CheckCircle className="h-4 w-4" />
-                          <span>Re-approve</span>
+                          <Clock className="h-4 w-4" />
+                          <span>Mark as Pending</span>
                         </button>
                       )}
                     </div>
