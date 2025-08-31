@@ -303,7 +303,7 @@ export const Demo: React.FC = () => {
 
     } else if (currentStep === 4) {
       // Branding step
-      setTimeout(() => setLogoUrl('https://via.placeholder.com/200x60/ffffff/01004d?text=TechCorp'), 1500);
+      setTimeout(() => setLogoUrl('/2.png'), 1500);
       setTimeout(() => setPrimaryColor('#2563eb'), 3000);
       setTimeout(() => setSecondaryColor('#10b981'), 4500);
     }
