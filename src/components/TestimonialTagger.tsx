@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
-import { Tag, X, Plus } from 'lucide-react';
+import { X, Plus } from 'lucide-react';
 
 interface TestimonialTag {
   id: string;
@@ -12,13 +12,11 @@ interface TestimonialTag {
 interface TestimonialTaggerProps {
   testimonialId: string;
   onTagsChange?: () => void;
-  compact?: boolean;
 }
 
 export const TestimonialTagger: React.FC<TestimonialTaggerProps> = ({ 
   testimonialId, 
-  onTagsChange,
-  compact = false 
+  onTagsChange
 }) => {
   const { user } = useAuth();
   const [availableTags, setAvailableTags] = useState<TestimonialTag[]>([]);
