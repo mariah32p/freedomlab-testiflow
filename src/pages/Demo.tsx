@@ -212,6 +212,9 @@ export const Demo: React.FC = () => {
           field_type: 'select',
           label: 'What is your role?',
           options: ['CEO/Founder', 'CTO', 'Marketing Manager', 'Operations Manager'],
+          is_required: true
+        }]);
+      }, 3000);
       setTimeout(() => {
         submitButtonRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }, 3200);
