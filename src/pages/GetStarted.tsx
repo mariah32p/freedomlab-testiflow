@@ -7,7 +7,6 @@ import { products } from '../stripe-config';
 import { Alert } from '../components/Alert';
 
 export const GetStarted: React.FC = () => {
-  const navigate = useNavigate();
   const { createCheckoutSession, loading, error } = useStripe();
   const [selectedPlan, setSelectedPlan] = useState<string>('pro');
 

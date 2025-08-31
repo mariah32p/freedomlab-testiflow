@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { products } from '../stripe-config';
 
 export const useStripe = () => {
   const [loading, setLoading] = useState(false);

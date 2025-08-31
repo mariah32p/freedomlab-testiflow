@@ -71,8 +71,8 @@ export const Demo: React.FC = () => {
   const [createdForm, setCreatedForm] = useState<any>(null);
   const [showCustomFields, setShowCustomFields] = useState(false);
   const [customFields, setCustomFields] = useState<any[]>([]);
-  const [showAddField, setShowAddField] = useState(false);
-  const [newField, setNewField] = useState({ field_type: 'select', label: '', options: [''] });
+  const [, setShowAddField] = useState(false);
+  const [, setNewField] = useState({ field_type: 'select', label: '', options: [''] });
   const [customerFormData, setCustomerFormData] = useState({
     name: '',
     email: '',
@@ -549,7 +549,7 @@ export const Demo: React.FC = () => {
               {customFields.map((field) => (
                 <div key={field.id}>
                   <label className="block text-sm font-medium text-gray-700 mb-1">{field.label}{field.is_required && <span className="text-red-500 ml-1">*</span>}</label>
-                  <select value={field.id === '1' ? customerFormData.role : customerFormData.industry} className="w-full px-3 py-2 border border-gray-300 rounded-md" readOnly>
+                  <select value={field.id === '1' ? customerFormData.role : customerFormData.industry} className="w-full px-3 py-2 border border-gray-300 rounded-md" disabled>
                     <option value="">Select an option...</option>
                     {field.options.map((option: string, index: number) => (<option key={index} value={option}>{option}</option>))}
                   </select>

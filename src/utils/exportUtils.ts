@@ -83,7 +83,7 @@ export const generateSocialMediaPost = (testimonial: ExportTestimonial): string 
   return `${stars} Customer Love!\n\n"${truncatedMessage}"\n\n- ${testimonial.name}${testimonial.company ? `, ${testimonial.company}` : ''}\n\n#CustomerSuccess #Testimonial`;
 };
 
-export const generateWebsiteWidget = (testimonials: ExportTestimonial[], primaryColor: string = '#01004d', secondaryColor: string = '#01b79e'): string => {
+export const generateWebsiteWidget = (testimonials: ExportTestimonial[], _primaryColor: string = '#01004d', secondaryColor: string = '#01b79e'): string => {
   const approvedTestimonials = testimonials.filter(t => t.status === 'approved').slice(0, 3);
   
   return `<!-- Testimonials Widget -->

@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { MessageSquare, CheckCircle, Download, Clock, AlertCircle } from 'lucide-react';
-import { TestiFlowIcon } from '../components/TestiFlowIcon';
-import { APP_CONFIG } from '../config/app';
 import { supabase } from '../lib/supabase';
 import { Link } from 'react-router-dom';
 
@@ -14,7 +12,7 @@ export const Dashboard: React.FC = () => {
     approved: 0,
     thisMonth: 0
   });
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {

@@ -4,7 +4,6 @@ import { supabase } from '../lib/supabase';
 import { Alert } from '../components/Alert';
 import { Mail, ArrowLeft } from 'lucide-react';
 import { TestiFlowIcon } from '../components/TestiFlowIcon';
-import { APP_CONFIG } from '../config/app';
 
 export const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState('');
