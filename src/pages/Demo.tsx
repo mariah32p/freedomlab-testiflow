@@ -935,7 +935,7 @@ export const Demo: React.FC = () => {
                         <p className="text-gray-800 leading-relaxed italic">
                           "{viewingTestimonial.message}"
                         </p>
-                      </div>
+                            /Freedom Lab_Favicon copy.png
                     </div>
 
                     {viewingTestimonial.custom_responses && (
@@ -1083,6 +1083,20 @@ export const Demo: React.FC = () => {
                     className="px-6 py-8 text-center text-white"
                     style={{ backgroundColor: primaryColor }}
                   >
+                    <div className="flex justify-center mb-4">
+                      <img 
+                        src="/Freedom Lab_Favicon copy.png" 
+                        alt="Freedom Lab Logo" 
+                        className="h-12 w-12 object-contain bg-white rounded-lg p-2"
+                      />
+                    </div>
+                    <div className="flex justify-center mb-4">
+                      <img 
+                        src="/Freedom Lab_Favicon copy.png" 
+                        alt="Freedom Lab Logo" 
+                        className="h-12 w-12 object-contain bg-white rounded-lg p-2"
+                      />
+                    </div>
                     {logoUrl && (
                       <div className="flex justify-center mb-4">
                         <img 
