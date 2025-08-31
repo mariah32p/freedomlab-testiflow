@@ -205,6 +205,7 @@ export const Demo: React.FC = () => {
         label: 'What is your role?',
         options: ['CEO/Founder', 'CTO', 'Marketing Manager', 'Operations Manager']
       }), 2000);
+      }), 2000);
       setTimeout(() => {
         setShowAddField(false);
         setCustomFields([{
