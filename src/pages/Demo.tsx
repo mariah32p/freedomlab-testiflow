@@ -57,6 +57,8 @@ const mockTestimonials = [
 
 export const Demo: React.FC = () => {
   const demoContainerRef = useRef<HTMLDivElement>(null);
+  const submitButtonRef = useRef<HTMLButtonElement>(null);
+  const livePreviewRef = useRef<HTMLDivElement>(null);
 
   const [currentStep, setCurrentStep] = useState(0);
 
@@ -90,12 +92,22 @@ export const Demo: React.FC = () => {
   const [selectedExportFormat, setSelectedExportFormat] = useState<'csv' | 'json' | 'widget'>('csv');
   const [generatedContent, setGeneratedContent] = useState('');
 
-  // Auto-scroll effect
+  // Auto-scroll effect for the whole component
   useEffect(() => {
     if (demoContainerRef.current) {
       demoContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }, [currentStep]);
+
+  // Auto-scroll for export widget preview
+  useEffect(() => {
+    if (generatedContent && selectedExportFormat === 'widget' && livePreviewRef.current) {
+      const timer = setTimeout(() => {
+        livePreviewRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 200);
+      return () => clearTimeout(timer);
+    }
+  }, [generatedContent, selectedExportFormat]);
 
   // Auto-advance timer
   useEffect(() => {
@@ -129,12 +141,7 @@ export const Demo: React.FC = () => {
     setShowExportModal(false);
     setGeneratedContent('');
   };
-
-  const generateSocialPost = (testimonial: any) => {
-    const stars = '⭐'.repeat(testimonial.rating);
-    return `${stars} Customer Love!\n\n"${testimonial.message}"\n\n- ${testimonial.name}${testimonial.company ? `, ${testimonial.company}` : ''}\n\n#CustomerSuccess #Testimonial`;
-  };
-
+  
   const demoGenerateWebsiteWidget = () => {
     return `<div class="testimonials-widget" style="max-width: 1000px; margin: 0 auto; padding: 20px;">
   <h3 style="text-align: center; margin-bottom: 20px; color: #333;">What Our Customers Say</h3>
@@ -253,6 +260,9 @@ export const Demo: React.FC = () => {
         ...prev,
         message: 'TestiFlow has completely transformed how we collect and manage customer feedback. The automated workflows save us hours every week, and the approval system ensures we only showcase our best testimonials. Our conversion rates have improved by 40% since implementing their testimonial widgets on our website!'
       })), 7000);
+      setTimeout(() => {
+        submitButtonRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 8000);
 
     } else if (currentStep === 3) {
       // Testimonials approval step
@@ -341,15 +351,8 @@ export const Demo: React.FC = () => {
 
             {createdForm ? (
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-200 relative group animate-slide-in">
-                  <div className="absolute top-4 right-4">
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-secondary-100 text-secondary-800">
-                      <div className="w-2 h-2 rounded-full mr-2 bg-secondary-500"></div>
-                      Active
-                    </span>
-                  </div>
-
-                  <div className="mb-4 pr-8">
+                <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-200 group animate-slide-in">
+                  <div className="mb-4">
                     <h3 className="text-xl font-semibold text-gray-900 mb-2 leading-tight">{createdForm.title}</h3>
                     <p className="text-gray-600 text-sm leading-relaxed">{createdForm.description}</p>
                   </div>
@@ -680,6 +683,7 @@ export const Demo: React.FC = () => {
               </div>
 
               <button
+                ref={submitButtonRef}
                 type="submit"
                 className="w-full bg-secondary-500 text-white py-3 px-6 rounded-lg font-semibold hover:bg-secondary-600 transition-colors flex items-center justify-center space-x-2"
               >
@@ -968,7 +972,7 @@ export const Demo: React.FC = () => {
 
                     {/* Live Preview for Widget */}
                     {selectedExportFormat === 'widget' && (
-                      <div className="space-y-3">
+                      <div ref={livePreviewRef} className="space-y-3">
                         <h4 className="text-sm font-medium text-gray-700">Live Preview</h4>
                         <div className="border border-gray-200 rounded-lg overflow-hidden bg-white">
                           <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
