@@ -1426,8 +1426,6 @@ export const Demo: React.FC = () => {
         return renderCustomFieldsStep();
       case 2:
         return renderCustomerSubmissionStep();
-      case 'Export & Marketing':
-        return renderExportStep();
       case 3:
         return renderTestimonialsApprovalStep();
       case 4:
