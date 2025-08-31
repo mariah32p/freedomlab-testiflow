@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { Check, ArrowRight } from 'lucide-react';
 import { TestiFlowIcon } from '../components/TestiFlowIcon';
 import { useStripe } from '../hooks/useStripe';
