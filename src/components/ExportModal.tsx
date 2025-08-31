@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Download, FileText, Code, Share2, X, Copy, CheckCircle, Eye, Star, User, Building, Mail } from 'lucide-react';
+import { Download, FileText, Code, X, Copy, CheckCircle, Eye, Star } from 'lucide-react';
 import { ExportTestimonial, exportToCSV, exportToJSON, generateSocialMediaPost, generateWebsiteWidget } from '../utils/exportUtils';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
