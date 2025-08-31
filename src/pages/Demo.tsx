@@ -155,7 +155,7 @@ export const Demo: React.FC = () => {
     return `${stars} Customer Love!\n\n"${testimonial.message}"\n\n- ${testimonial.name}${testimonial.company ? `, ${testimonial.company}` : ''}\n\n#CustomerSuccess #Testimonial`;
   };
 
-  const generateWebsiteWidget = () => {
+  const demoGenerateWebsiteWidget = () => {
     return `<div class="testimonials-widget" style="max-width: 1000px; margin: 0 auto; padding: 20px;">
   <h3 style="text-align: center; margin-bottom: 20px; color: #333;">What Our Customers Say</h3>
   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
@@ -179,7 +179,7 @@ export const Demo: React.FC = () => {
         setGeneratedContent(generateSocialPost(mockTestimonials[0]));
         break;
       case 'widget':
-        setGeneratedContent(generateWebsiteWidget());
+        setGeneratedContent(demoGenerateWebsiteWidget());
         break;
       case 'csv':
         setGeneratedContent(`Name,Email,Company,Rating,Testimonial,Status,Date,Form
@@ -320,7 +320,7 @@ export const Demo: React.FC = () => {
         setSelectedExportFormat('widget');
       }, 3000);
       setTimeout(() => {
-        setGeneratedContent(generateWebsiteWidget());
+        setGeneratedContent(demoGenerateWebsiteWidget());
       }, 5000);
 
     } else if (currentStep === 5) {
