@@ -1273,21 +1273,6 @@ export const Demo: React.FC = () => {
                 </button>
 
                 <button
-                  onClick={() => setSelectedExportFormat('social')}
-                  className={`p-3 border rounded-lg text-left transition-colors ${
-                    selectedExportFormat === 'social'
-                      ? 'border-primary-500 bg-primary-50'
-                      : 'border-gray-200 hover:bg-gray-50'
-                  }`}
-                >
-                  <div className="flex items-center space-x-2">
-                    <Share2 className="h-5 w-5 text-purple-600" />
-                    <span className="font-medium">Social Media</span>
-                  </div>
-                  <p className="text-xs text-gray-500 mt-1">Ready-to-post content</p>
-                </button>
-
-                <button
                   onClick={() => setSelectedExportFormat('widget')}
                   className={`p-3 border rounded-lg text-left transition-colors ${
                     selectedExportFormat === 'widget'
