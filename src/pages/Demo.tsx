@@ -303,17 +303,12 @@ export const Demo: React.FC = () => {
       }, 4000);
     } else if (currentStep === 4) { // Total Duration: 8000ms
       setTestimonials(mockTestimonials);
-      setTimeout(() => setShowExportModal(true), 500);
+      setTimeout(() => setShowExportModal(true), 1000);
       setTimeout(() => {
         setSelectedExportFormat('widget');
-      }, 1500);
+      }, 2500);
       setTimeout(() => {
         setGeneratedContent(demoGenerateWebsiteWidget());
-      }, 3000);
-      
-      // Add a scroll to the generated content
-      setTimeout(() => {
-        livePreviewRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }, 4000);
     }
   }, [currentStep]);
