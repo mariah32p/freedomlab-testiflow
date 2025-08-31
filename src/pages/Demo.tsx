@@ -628,7 +628,7 @@ export const Demo: React.FC = () => {
           >
             <div className="flex justify-center mb-4">
               <img 
-                src="/Freedom Lab Logos (3).png" 
+                src="/Freedom Lab Logos (2).png" 
                 alt="Freedom Lab Logo" 
                 className="h-8 max-w-32 object-contain bg-white rounded px-2 py-1"
               />
