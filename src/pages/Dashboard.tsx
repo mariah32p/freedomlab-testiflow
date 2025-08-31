@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { User, Mail, MessageSquare, CheckCircle, Download, Plus, FileText, Clock, AlertCircle } from 'lucide-react';
+import { MessageSquare, CheckCircle, Download, Clock, AlertCircle } from 'lucide-react';
 import { TestiFlowIcon } from '../components/TestiFlowIcon';
 import { APP_CONFIG } from '../config/app';
 import { supabase } from '../lib/supabase';

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
-import { Palette, Upload, Eye, Save, RotateCcw } from 'lucide-react';
+import { Upload, Eye, Save, RotateCcw } from 'lucide-react';
 import { Alert } from '../components/Alert';
 
 interface FormBranding {
@@ -36,7 +36,7 @@ const PRESET_COLORS = [
 
 export const Branding: React.FC = () => {
   const { user } = useAuth();
-  const [branding, setBranding] = useState<FormBranding | null>(null);
+  const [, setBranding] = useState<FormBranding | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);

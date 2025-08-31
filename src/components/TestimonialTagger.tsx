@@ -9,11 +9,13 @@ interface TestimonialTag {
   color: string;
 }
 
+interface TestimonialTaggerProps {
   testimonialId: string;
   onTagsChange?: () => void;
 }
 
 export const TestimonialTagger: React.FC<TestimonialTaggerProps> = ({ 
+  testimonialId,
   onTagsChange
 }) => {
   const { user } = useAuth();
