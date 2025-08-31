@@ -696,7 +696,15 @@ export const Demo: React.FC = () => {
           >
             <div className="flex justify-center mb-4">
                 {logoUrl ? 
-                    <img src={logoUrl} alt="Company Logo" className="h-12 max-w-48 object-contain" /> :
+                    <img 
+                      src="/2.png" 
+                      alt="Freedom Lab Logo" 
+                      className="h-8 max-w-32 object-contain"
+                      onError={(e) => {
+                        console.log('Logo failed to load');
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    /> :
                     <TestiFlowIcon className="h-8 w-8 text-white" />
                 }
             </div>
