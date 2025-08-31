@@ -12,7 +12,7 @@ interface DemoStep {
 const demoSteps: DemoStep[] = [
   { id: 'create-form', title: 'Create Forms', description: 'Setting up testimonial collection forms', duration: 7000 },
   { id: 'custom-fields', title: 'Add Custom Fields', description: 'Adding custom questions to the form', duration: 8000 },
-  { id: 'customer-submission', title: 'Customer Fills Form', description: 'Customer submitting their testimonial', duration: 10000 },
+  { id: 'customer-submission', title: 'Customer Fills Form', description: 'Customer submitting their testimonial', duration: 5000 },
   { id: 'testimonials-approval', title: 'Review & Approve', description: 'Managing testimonials in the dashboard', duration: 7000 },
   { id: 'export-use', title: 'Export & Use', description: 'Using testimonials in your marketing', duration: 8000 },
 ];
@@ -238,18 +238,18 @@ export const Demo: React.FC = () => {
         { id: '2', field_type: 'select', label: 'What industry are you in?', options: ['Technology', 'Healthcare', 'Finance', 'E-commerce', 'Consulting'], is_required: false }
       ]);
       setTimeout(() => setCustomerFormData(prev => ({ ...prev, rating: 5 })), 500);
-      setTimeout(() => setCustomerFormData(prev => ({ ...prev, name: 'Sarah Johnson' })), 1500);
-      setTimeout(() => setCustomerFormData(prev => ({ ...prev, email: 'sarah@techcorp.com' })), 2500);
-      setTimeout(() => setCustomerFormData(prev => ({ ...prev, company: 'TechCorp Solutions' })), 3500);
-      setTimeout(() => setCustomerFormData(prev => ({ ...prev, role: 'CTO' })), 4500);
-      setTimeout(() => setCustomerFormData(prev => ({ ...prev, industry: 'Technology' })), 5500);
+      setTimeout(() => setCustomerFormData(prev => ({ ...prev, name: 'Sarah Johnson' })), 800);
+      setTimeout(() => setCustomerFormData(prev => ({ ...prev, email: 'sarah@techcorp.com' })), 1200);
+      setTimeout(() => setCustomerFormData(prev => ({ ...prev, company: 'TechCorp Solutions' })), 1600);
+      setTimeout(() => setCustomerFormData(prev => ({ ...prev, role: 'CTO' })), 2000);
+      setTimeout(() => setCustomerFormData(prev => ({ ...prev, industry: 'Technology' })), 2400);
       setTimeout(() => setCustomerFormData(prev => ({
         ...prev,
         message: 'TestiFlow has completely transformed how we collect and manage customer feedback. The automated workflows save us hours every week!'
-      })), 6500);
+      })), 2800);
       setTimeout(() => {
         submitButtonRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 7500);
+      }, 3500);
 
     } else if (currentStep === 3) { // Total Duration: 7000ms
       const testimonialsData = [
