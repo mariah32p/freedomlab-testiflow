@@ -313,6 +313,68 @@ export const Demo: React.FC = () => {
               </button>
             </div>
 
+            {/* Create Form Modal */}
+            {showCreateForm && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="bg-white rounded-lg p-6 w-full max-w-2xl mx-4">
+                  <h2 className="text-xl font-bold text-gray-900 mb-4">Create New Form</h2>
+                  
+                  <form className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Form Title
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.title}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                        readOnly
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Description
+                      </label>
+                      <textarea
+                        value={formData.description}
+                        rows={2}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                        readOnly
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Thank You Message
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.thank_you_message}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                        readOnly
+                      />
+                    </div>
+
+                    <div className="flex space-x-3 pt-4">
+                      <button
+                        type="button"
+                        className="flex-1 bg-primary-950 text-white py-2 px-4 rounded-md font-medium"
+                      >
+                        Create Form
+                      </button>
+                      <button
+                        type="button"
+                        className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md font-medium"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
+
             {createdForm ? (
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-200 group animate-slide-in">
