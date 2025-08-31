@@ -39,7 +39,7 @@ export const useRouteGuard = () => {
     const checkSubscriptionStatus = async () => {
       console.log('Starting subscription status check');
       // Allow certain pages without authentication
-      const publicPages = ['/login', '/signup', '/forgot-password', '/reset-password', '/pricing', '/'];
+      const publicPages = ['/login', '/signup', '/forgot-password', '/reset-password', '/pricing', '/', '/demo'];
       const isPublicPage = publicPages.includes(location.pathname);
       const isLandingPage = location.pathname === '/';
 
