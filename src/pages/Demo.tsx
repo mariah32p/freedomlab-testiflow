@@ -13,7 +13,7 @@ const demoSteps: DemoStep[] = [
   { id: 'create-form', title: 'Create Forms', description: 'Setting up testimonial collection forms', duration: 7000 },
   { id: 'custom-fields', title: 'Add Custom Fields', description: 'Adding custom questions to the form', duration: 8000 },
   { id: 'customer-submission', title: 'Customer Fills Form', description: 'Customer submitting their testimonial', duration: 5000 },
-  { id: 'testimonials-approval', title: 'Review & Approve', description: 'Managing testimonials in the dashboard', duration: 4000 },
+  { id: 'testimonials-approval', title: 'Review & Approve', description: 'Managing testimonials in the dashboard', duration: 6000 },
   { id: 'export-use', title: 'Export & Use', description: 'Using testimonials in your marketing', duration: 8000 },
 ];
 
@@ -212,9 +212,24 @@ export const Demo: React.FC = () => {
           field_type: 'select',
           label: 'What is your role?',
           options: ['CEO/Founder', 'CTO', 'Marketing Manager', 'Operations Manager'],
-          is_required: true
-        }]);
-      }, 3500);
+      setTimeout(() => {
+        submitButtonRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 3200);
+      
+      // Add a subtle "submit" animation
+      setTimeout(() => {
+        if (submitButtonRef.current) {
+          submitButtonRef.current.style.transform = 'scale(1.05)';
+          submitButtonRef.current.style.boxShadow = '0 8px 25px rgba(1, 183, 158, 0.3)';
+        }
+      }, 4000);
+      
+      setTimeout(() => {
+        if (submitButtonRef.current) {
+          submitButtonRef.current.style.transform = 'scale(1)';
+          submitButtonRef.current.style.boxShadow = '';
+        }
+      }, 4500);
       setTimeout(() => setShowAddField(true), 4000);
       setTimeout(() => setNewField({
         field_type: 'select',
@@ -245,11 +260,8 @@ export const Demo: React.FC = () => {
       setTimeout(() => setCustomerFormData(prev => ({ ...prev, industry: 'Technology' })), 2400);
       setTimeout(() => setCustomerFormData(prev => ({
         ...prev,
-        message: 'TestiFlow has completely transformed how we collect and manage customer feedback. The automated workflows save us hours every week!'
+        message: 'TestiFlow has completely transformed how we collect and manage customer feedback. The automated workflows save us hours every week and the interface is so intuitive!'
       })), 2800);
-      setTimeout(() => {
-        submitButtonRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 3500);
 
     } else if (currentStep === 3) { // Total Duration: 7000ms
       const testimonialsData = [
@@ -261,20 +273,44 @@ export const Demo: React.FC = () => {
         },
         {
           id: '2', name: 'Mike Chen', email: 'mike@startupxyz.com', company: 'StartupXYZ',
-          message: 'Amazing tool for collecting testimonials!',
+          message: 'Amazing product! The testimonial management features are exactly what we needed for our marketing campaigns.',
           rating: 5, status: 'approved', submitted_at: new Date(Date.now() - 86400000).toISOString(), form_id: '1'
+        },
+        {
+          id: '3', name: 'Emily Davis', email: 'emily@growth.com', company: 'GrowthCo',
+          message: 'The export features are incredible. We can now easily use testimonials across all our marketing channels.',
+          rating: 4, status: 'pending', submitted_at: new Date(Date.now() - 172800000).toISOString(), form_id: '1'
         }
       ];
       setTestimonials(testimonialsData);
-
+      
+      // Show approval animation
+      setTimeout(() => {
+        // Auto-approve the first testimonial
+        setTestimonials(prev => prev.map(t => 
+          t.id === '1' ? { ...t, status: 'approved' } : t
+        ));
+      }, 2000);
+      
+      setTimeout(() => {
+        // Auto-approve the third testimonial
+        setTestimonials(prev => prev.map(t => 
+          t.id === '3' ? { ...t, status: 'approved' } : t
+        ));
+      }, 4000);
     } else if (currentStep === 4) { // Total Duration: 8000ms
       setTestimonials(mockTestimonials);
-      setTimeout(() => setShowExportModal(true), 1000);
+      setTimeout(() => setShowExportModal(true), 500);
       setTimeout(() => {
         setSelectedExportFormat('widget');
-      }, 2500);
+      }, 1500);
       setTimeout(() => {
         setGeneratedContent(demoGenerateWebsiteWidget());
+      }, 3000);
+      
+      // Add a scroll to the generated content
+      setTimeout(() => {
+        livePreviewRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }, 4000);
     }
   }, [currentStep]);
