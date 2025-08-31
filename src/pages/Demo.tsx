@@ -693,29 +693,6 @@ export const Demo: React.FC = () => {
                 <textarea
                   rows={4}
                   value={customerFormData.message}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-                  placeholder="Tell us about your experience..."
-                  readOnly
-                />
-              </div>
-
-              <div className="pt-4">
-                <button
-                  type="button"
-                  className="w-full text-white py-3 px-6 rounded-lg font-semibold transition-colors flex items-center justify-center space-x-2"
-                  style={{ backgroundColor: secondaryColor }}
-                >
-                  <Send className="h-4 w-4" />
-                  <span>Submit Testimonial</span>
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
   const renderTestimonialsApprovalStep = () => (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
