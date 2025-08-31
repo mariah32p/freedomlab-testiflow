@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
-import { MessageSquare, Star, User, CheckCircle, Clock, X, Filter, Download, Trash2, MoreVertical, Eye, Mail, Building } from 'lucide-react';
+import { MessageSquare, Star, User, CheckCircle, Clock, X, Download, Trash2, MoreVertical, Eye, Mail, Building } from 'lucide-react';
 import { Alert } from '../components/Alert';
 import { ExportModal } from '../components/ExportModal';
 import { ExportTestimonial } from '../utils/exportUtils';
@@ -663,7 +663,7 @@ export const Testimonials: React.FC = () => {
                       {viewingTestimonial.status !== 'approved' && (
                         <button
                           onClick={() => {
-                            handleStatusChange(viewingTestimonial.id, 'approved');
+                            handleStatusChange(viewingTestimonial.id, 'approved' as 'approved' | 'rejected');
                             setViewingTestimonial(null);
                           }}
                           className="flex-1 bg-secondary-500 text-white py-3 px-4 rounded-lg hover:bg-secondary-600 transition-colors font-medium flex items-center justify-center space-x-2"
@@ -675,7 +675,7 @@ export const Testimonials: React.FC = () => {
                       {viewingTestimonial.status !== 'rejected' && (
                         <button
                           onClick={() => {
-                            handleStatusChange(viewingTestimonial.id, 'rejected');
+                            handleStatusChange(viewingTestimonial.id, 'rejected' as 'approved' | 'rejected');
                             setViewingTestimonial(null);
                           }}
                           className="flex-1 bg-red-500 text-white py-3 px-4 rounded-lg hover:bg-red-600 transition-colors font-medium flex items-center justify-center space-x-2"
@@ -687,7 +687,7 @@ export const Testimonials: React.FC = () => {
                       {viewingTestimonial.status !== 'pending' && (
                         <button
                           onClick={() => {
-                            handleStatusChange(viewingTestimonial.id, 'pending');
+                            handleStatusChange(viewingTestimonial.id, 'pending' as any);
                             setViewingTestimonial(null);
                           }}
                           className="flex-1 bg-yellow-500 text-white py-3 px-4 rounded-lg hover:bg-yellow-600 transition-colors font-medium flex items-center justify-center space-x-2"

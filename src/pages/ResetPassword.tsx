@@ -4,7 +4,6 @@ import { supabase } from '../lib/supabase';
 import { Alert } from '../components/Alert';
 import { Lock, Eye, EyeOff, CheckCircle } from 'lucide-react';
 import { TestiFlowIcon } from '../components/TestiFlowIcon';
-import { APP_CONFIG } from '../config/app';
 
 export const ResetPassword: React.FC = () => {
   const [password, setPassword] = useState('');

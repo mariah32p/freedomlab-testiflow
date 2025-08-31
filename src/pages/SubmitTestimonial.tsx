@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { Star, Send, CheckCircle, Upload, X, Play, Image as ImageIcon } from 'lucide-react';
+import { Star, Send, CheckCircle, X, Play, Image as ImageIcon } from 'lucide-react';
 import { TestiFlowIcon } from '../components/TestiFlowIcon';
 import { useEmailNotifications } from '../hooks/useEmailNotifications';
 

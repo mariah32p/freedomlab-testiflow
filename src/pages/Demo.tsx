@@ -71,8 +71,8 @@ export const Demo: React.FC = () => {
   const [createdForm, setCreatedForm] = useState<any>(null);
   const [showCustomFields, setShowCustomFields] = useState(false);
   const [customFields, setCustomFields] = useState<any[]>([]);
-  const [showAddField, setShowAddField] = useState(false);
-  const [newField, setNewField] = useState({ field_type: 'select', label: '', options: [''] });
+  const [, setShowAddField] = useState(false);
+  const [, setNewField] = useState({ field_type: 'select', label: '', options: [''] });
   const [customerFormData, setCustomerFormData] = useState({
     name: '',
     email: '',
