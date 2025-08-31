@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { TestiFlowIcon } from '../components/TestiFlowIcon';
 import { User, LogOut, Plus, Settings, Eye, Copy, ExternalLink, Star, CheckCircle, X, Clock, Upload, Save, Palette, Download, FileText, Code, Share2 } from 'lucide-react';
 
@@ -14,10 +14,13 @@ const demoSteps: DemoStep[] = [
   { id: 'custom-fields', title: 'Add Custom Fields', description: 'Adding custom questions to the form', duration: 12000 },
   { id: 'customer-submission', title: 'Customer Fills Form', description: 'Customer submitting their testimonial', duration: 15000 },
   { id: 'testimonials-approval', title: 'Review & Approve', description: 'Managing testimonials in the dashboard', duration: 10000 },
+  { id: 'export-use', title: 'Export & Use', description: 'Using testimonials in your marketing', duration: 12000 },
   { id: 'branding', title: 'Customize Branding', description: 'Personalizing form appearance', duration: 8000 },
 ];
 
 export const Demo: React.FC = () => {
+  const demoContainerRef = useRef<HTMLDivElement>(null);
+
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [progress, setProgress] = useState(0);
@@ -51,6 +54,15 @@ export const Demo: React.FC = () => {
   const [showExportModal, setShowExportModal] = useState(false);
   const [selectedExportFormat, setSelectedExportFormat] = useState<'csv' | 'json' | 'social' | 'widget'>('csv');
   const [generatedContent, setGeneratedContent] = useState('');
+  const [showExportModal, setShowExportModal] = useState(false);
+  const [selectedExportFormat, setSelectedExportFormat] = useState<'csv' | 'json' | 'social' | 'widget'>('csv');
+  const [generatedContent, setGeneratedContent] = useState('');
+
+  useEffect(() => {
+    if (demoContainerRef.current) {
+      demoContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [currentStep]);
 
   // Auto-advance timer
   useEffect(() => {
@@ -99,6 +111,88 @@ export const Demo: React.FC = () => {
     setPrimaryColor('#01004d');
     setSecondaryColor('#01b79e');
     setLogoUrl('');
+    setShowExportModal(false);
+    setGeneratedContent('');
+  };
+
+  // Mock testimonials for export demo
+  const mockTestimonials = [
+    {
+      id: '1',
+      name: 'Sarah Johnson',
+      email: 'sarah@techcorp.com',
+      company: 'TechCorp',
+      message: 'TestiFlow has completely transformed how we collect customer feedback. The automated workflows save us hours every week!',
+      rating: 5,
+      status: 'approved',
+      submitted_at: '2024-01-15T10:30:00Z',
+      form_title: 'Customer Experience Survey'
+    },
+    {
+      id: '2',
+      name: 'Mike Chen',
+      email: 'mike@startup.com',
+      company: 'StartupXYZ',
+      message: 'Amazing product! The testimonial management features are exactly what we needed for our marketing campaigns.',
+      rating: 5,
+      status: 'approved',
+      submitted_at: '2024-01-14T14:20:00Z',
+      form_title: 'Customer Experience Survey'
+    },
+    {
+      id: '3',
+      name: 'Emily Davis',
+      email: 'emily@growth.com',
+      company: 'GrowthCo',
+      message: 'The export features are incredible. We can now easily use testimonials across all our marketing channels.',
+      rating: 4,
+      status: 'approved',
+      submitted_at: '2024-01-13T09:15:00Z',
+      form_title: 'Customer Experience Survey'
+    }
+  ];
+
+  const generateSocialPost = (testimonial: any) => {
+    const stars = '⭐'.repeat(testimonial.rating);
+    return `${stars} Customer Love!\n\n"${testimonial.message}"\n\n- ${testimonial.name}${testimonial.company ? `, ${testimonial.company}` : ''}\n\n#CustomerSuccess #Testimonial`;
+  };
+
+  const generateWebsiteWidget = () => {
+    return `<div class="testimonials-widget" style="max-width: 1000px; margin: 0 auto; padding: 20px;">
+  <h3 style="text-align: center; margin-bottom: 20px; color: #333;">What Our Customers Say</h3>
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+    ${mockTestimonials.slice(0, 3).map(testimonial => `
+    <div style="background: #f9f9f9; padding: 20px; border-radius: 12px; border-left: 4px solid #01b79e; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+      <div style="display: flex; margin-bottom: 8px;">
+        ${'★'.repeat(testimonial.rating)}<span style="color: #ddd;">${'★'.repeat(5 - testimonial.rating)}</span>
+      </div>
+      <p style="margin: 0 0 15px 0; font-style: italic; color: #555; line-height: 1.5;">"${testimonial.message}"</p>
+      <div style="font-size: 14px; color: #777;">
+        - ${testimonial.name}${testimonial.company ? `, ${testimonial.company}` : ''}
+      </div>
+    </div>`).join('')}
+  </div>
+</div>`;
+  };
+
+  const handleExportDemo = () => {
+    switch (selectedExportFormat) {
+      case 'social':
+        setGeneratedContent(generateSocialPost(mockTestimonials[0]));
+        break;
+      case 'widget':
+        setGeneratedContent(generateWebsiteWidget());
+        break;
+      case 'csv':
+        setGeneratedContent(`Name,Email,Company,Rating,Testimonial,Status,Date,Form
+"Sarah Johnson","sarah@techcorp.com","TechCorp",5,"TestiFlow has completely transformed how we collect customer feedback. The automated workflows save us hours every week!","approved","2024-01-15","Customer Experience Survey"
+"Mike Chen","mike@startup.com","StartupXYZ",5,"Amazing product! The testimonial management features are exactly what we needed for our marketing campaigns.","approved","2024-01-14","Customer Experience Survey"
+"Emily Davis","emily@growth.com","GrowthCo",4,"The export features are incredible. We can now easily use testimonials across all our marketing channels.","approved","2024-01-13","Customer Experience Survey"`);
+        break;
+      case 'json':
+        setGeneratedContent(JSON.stringify(mockTestimonials, null, 2));
+        break;
+    }
   };
 
   // Mock testimonials for export demo
@@ -302,6 +396,17 @@ export const Demo: React.FC = () => {
       }, 2000);
 
     } else if (currentStep === 4) {
+      // Export step animations
+      setTestimonials(mockTestimonials);
+      setTimeout(() => setShowExportModal(true), 1500);
+      setTimeout(() => {
+        setSelectedExportFormat('widget');
+      }, 3000);
+      setTimeout(() => {
+        setGeneratedContent(generateWebsiteWidget());
+      }, 5000);
+
+    } else if (currentStep === 5) {
       // Branding step
       setTimeout(() => setLogoUrl('/2.png'), 1500);
       setTimeout(() => setPrimaryColor('#2563eb'), 3000);
@@ -315,7 +420,8 @@ export const Demo: React.FC = () => {
       case 1: return 'forms';
       case 2: return 'submit';
       case 3: return 'testimonials';
-      case 4: return 'branding';
+      case 4: return 'testimonials';
+      case 5: return 'branding';
       default: return 'dashboard';
     }
   };
@@ -1072,6 +1178,178 @@ export const Demo: React.FC = () => {
     </div>
   );
 
+  const renderExportStep = () => (
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="space-y-8">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Export & Use Your Testimonials</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Export your approved testimonials in multiple formats for use across your marketing channels
+            </p>
+          </div>
+
+          {/* Export Modal */}
+          <div className="bg-white rounded-lg shadow p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-semibold text-gray-900">Export Testimonials</h3>
+              <button
+                onClick={() => setShowExportModal(!showExportModal)}
+                className="bg-primary-950 text-white px-4 py-2 rounded-lg hover:bg-primary-900 transition-colors flex items-center space-x-2"
+              >
+                <Download className="h-4 w-4" />
+                <span>Export Options</span>
+              </button>
+            </div>
+
+            {showExportModal && (
+              <div className="space-y-6 animate-slide-in">
+                {/* Format Selection */}
+                <div>
+                  <h4 className="text-sm font-medium text-gray-700 mb-3">Choose Export Format</h4>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <button
+                      onClick={() => setSelectedExportFormat('csv')}
+                      className={`p-3 border rounded-lg text-left transition-colors ${
+                        selectedExportFormat === 'csv'
+                          ? 'border-primary-500 bg-primary-50'
+                          : 'border-gray-200 hover:bg-gray-50'
+                      }`}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <FileText className="h-5 w-5 text-green-600" />
+                        <span className="font-medium">CSV</span>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1">For spreadsheets</p>
+                    </button>
+
+                    <button
+                      onClick={() => setSelectedExportFormat('json')}
+                      className={`p-3 border rounded-lg text-left transition-colors ${
+                        selectedExportFormat === 'json'
+                          ? 'border-primary-500 bg-primary-50'
+                          : 'border-gray-200 hover:bg-gray-50'
+                      }`}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <Code className="h-5 w-5 text-blue-600" />
+                        <span className="font-medium">JSON</span>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1">For developers</p>
+                    </button>
+                    
+                    <button
+                      onClick={() => setSelectedExportFormat('social')}
+                      className={`p-3 border rounded-lg text-left transition-colors ${
+                        selectedExportFormat === 'social'
+                          ? 'border-primary-500 bg-primary-50'
+                          : 'border-gray-200 hover:bg-gray-50'
+                      }`}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <Share2 className="h-5 w-5 text-purple-600" />
+                        <span className="font-medium">Social Post</span>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1">For social media</p>
+                    </button>
+
+                    <button
+                      onClick={() => setSelectedExportFormat('widget')}
+                      className={`p-3 border rounded-lg text-left transition-colors ${
+                        selectedExportFormat === 'widget'
+                          ? 'border-primary-500 bg-primary-50'
+                          : 'border-gray-200 hover:bg-gray-50'
+                      }`}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <Code className="h-5 w-5 text-indigo-600" />
+                        <span className="font-medium">Widget</span>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1">HTML embed</p>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Generate Button */}
+                <div className="text-center">
+                  <button
+                    onClick={handleExportDemo}
+                    className="bg-secondary-500 text-white px-6 py-3 rounded-lg hover:bg-secondary-600 transition-colors flex items-center space-x-2 mx-auto"
+                  >
+                    <Download className="h-5 w-5" />
+                    <span>Generate {selectedExportFormat.toUpperCase()}</span>
+                  </button>
+                </div>
+
+                {/* Generated Content Preview */}
+                {generatedContent && (
+                  <div className="space-y-4 animate-slide-in">
+                    <div className="flex items-center justify-between">
+                      <h4 className="text-sm font-medium text-gray-700">
+                        Generated {selectedExportFormat.toUpperCase()} Content
+                      </h4>
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(generatedContent);
+                        }}
+                        className="bg-blue-100 text-blue-800 px-3 py-1 rounded-md text-sm hover:bg-blue-200 transition-colors flex items-center space-x-1"
+                      >
+                        <Copy className="h-3 w-3" />
+                        <span>Copy</span>
+                      </button>
+                    </div>
+                    
+                    <div className="bg-gray-900 text-white rounded-lg p-4 border border-gray-200">
+                      <pre className="text-sm whitespace-pre-wrap font-mono max-h-64 overflow-y-auto">
+                        {generatedContent}
+                      </pre>
+                    </div>
+
+                    {/* Live Preview for Widget */}
+                    {selectedExportFormat === 'widget' && (
+                      <div className="space-y-3">
+                        <h4 className="text-sm font-medium text-gray-700">Live Preview</h4>
+                        <div className="border border-gray-200 rounded-lg overflow-hidden bg-white">
+                          <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
+                            <span className="text-sm text-gray-600">How this will look on your website:</span>
+                          </div>
+                          <div className="p-6">
+                            <div style={{ maxWidth: '1000px', margin: '0 auto', fontFamily: 'Montserrat, system-ui, sans-serif' }}>
+                              <h3 style={{ textAlign: 'center', marginBottom: '20px', color: '#333', fontSize: '1.5rem', fontWeight: 'bold' }}>What Our Customers Say</h3>
+                              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px' }}>
+                                {mockTestimonials.slice(0, 3).map(testimonial => (
+                                  <div key={testimonial.id} style={{
+                                    background: '#f9f9f9',
+                                    padding: '20px',
+                                    borderRadius: '12px',
+                                    borderLeft: '4px solid #01b79e',
+                                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                                  }}>
+                                    <div style={{ display: 'flex', marginBottom: '8px', color: '#f5b014' }}>
+                                      {'★'.repeat(testimonial.rating)}<span style={{ color: '#ddd' }}>{'★'.repeat(5 - testimonial.rating)}</span>
+                                    </div>
+                                    <p style={{ margin: '0 0 15px 0', fontStyle: 'italic', color: '#555', lineHeight: '1.5' }}>"{testimonial.message}"</p>
+                                    <div style={{ fontSize: '14px', color: '#333', fontWeight: '600' }}>
+                                      - {testimonial.name}{testimonial.company ? `, ${testimonial.company}` : ''}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   const renderBrandingStep = () => (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1431,6 +1709,8 @@ export const Demo: React.FC = () => {
       case 3:
         return renderTestimonialsApprovalStep();
       case 4:
+        return renderExportStep();
+      case 5:
         return renderBrandingStep();
       default:
         return renderCreateFormsStep();
@@ -1438,7 +1718,7 @@ export const Demo: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div ref={demoContainerRef} className="min-h-screen bg-white">
       {/* Fake Header */}
       <nav className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
