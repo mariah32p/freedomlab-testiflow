@@ -126,6 +126,7 @@ export const Testimonials: React.FC = () => {
   };
 
   const handleStatusChange = async (testimonialId: string, newStatus: 'approved' | 'rejected') => {
+  const handleStatusChange = async (testimonialId: string, newStatus: 'approved' | 'rejected' | 'pending') => {
     try {
       const { error } = await supabase
         .from('testimonials')
