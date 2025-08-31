@@ -18,6 +18,43 @@ const demoSteps: DemoStep[] = [
   { id: 'branding', title: 'Customize Branding', description: 'Personalizing form appearance', duration: 8000 },
 ];
 
+// Mock testimonials for export demo
+const mockTestimonials = [
+  {
+    id: '1',
+    name: 'Sarah Johnson',
+    email: 'sarah@techcorp.com',
+    company: 'TechCorp',
+    message: 'TestiFlow has completely transformed how we collect customer feedback. The automated workflows save us hours every week!',
+    rating: 5,
+    status: 'approved',
+    submitted_at: '2024-01-15T10:30:00Z',
+    form_title: 'Customer Experience Survey'
+  },
+  {
+    id: '2',
+    name: 'Mike Chen',
+    email: 'mike@startup.com',
+    company: 'StartupXYZ',
+    message: 'Amazing product! The testimonial management features are exactly what we needed for our marketing campaigns.',
+    rating: 5,
+    status: 'approved',
+    submitted_at: '2024-01-14T14:20:00Z',
+    form_title: 'Customer Experience Survey'
+  },
+  {
+    id: '3',
+    name: 'Emily Davis',
+    email: 'emily@growth.com',
+    company: 'GrowthCo',
+    message: 'The export features are incredible. We can now easily use testimonials across all our marketing channels.',
+    rating: 4,
+    status: 'approved',
+    submitted_at: '2024-01-13T09:15:00Z',
+    form_title: 'Customer Experience Survey'
+  }
+];
+
 export const Demo: React.FC = () => {
   const demoContainerRef = useRef<HTMLDivElement>(null);
 
@@ -55,6 +92,7 @@ export const Demo: React.FC = () => {
   const [selectedExportFormat, setSelectedExportFormat] = useState<'csv' | 'json' | 'social' | 'widget'>('csv');
   const [generatedContent, setGeneratedContent] = useState('');
 
+  // Auto-scroll effect
   useEffect(() => {
     if (demoContainerRef.current) {
       demoContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -112,51 +150,13 @@ export const Demo: React.FC = () => {
     setGeneratedContent('');
   };
 
-  // Mock testimonials for export demo
-  const mockTestimonials = [
-    {
-      id: '1',
-      name: 'Sarah Johnson',
-      email: 'sarah@techcorp.com',
-      company: 'TechCorp',
-      message: 'TestiFlow has completely transformed how we collect customer feedback. The automated workflows save us hours every week!',
-      rating: 5,
-      status: 'approved',
-      submitted_at: '2024-01-15T10:30:00Z',
-      form_title: 'Customer Experience Survey'
-    },
-    {
-      id: '2',
-      name: 'Mike Chen',
-      email: 'mike@startup.com',
-      company: 'StartupXYZ',
-      message: 'Amazing product! The testimonial management features are exactly what we needed for our marketing campaigns.',
-      rating: 5,
-      status: 'approved',
-      submitted_at: '2024-01-14T14:20:00Z',
-      form_title: 'Customer Experience Survey'
-    },
-    {
-      id: '3',
-      name: 'Emily Davis',
-      email: 'emily@growth.com',
-      company: 'GrowthCo',
-      message: 'The export features are incredible. We can now easily use testimonials across all our marketing channels.',
-      rating: 4,
-      status: 'approved',
-      submitted_at: '2024-01-13T09:15:00Z',
-      form_title: 'Customer Experience Survey'
-    }
-  ];
-
   const generateSocialPost = (testimonial: any) => {
     const stars = '⭐'.repeat(testimonial.rating);
     return `${stars} Customer Love!\n\n"${testimonial.message}"\n\n- ${testimonial.name}${testimonial.company ? `, ${testimonial.company}` : ''}\n\n#CustomerSuccess #Testimonial`;
   };
 
   const generateWebsiteWidget = () => {
-    return `<!-- Testimonials Widget -->
-<div class="testimonials-widget" style="max-width: 1000px; margin: 0 auto; padding: 20px;">
+    return `<div class="testimonials-widget" style="max-width: 1000px; margin: 0 auto; padding: 20px;">
   <h3 style="text-align: center; margin-bottom: 20px; color: #333;">What Our Customers Say</h3>
   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
     ${mockTestimonials.slice(0, 3).map(testimonial => `
@@ -260,11 +260,11 @@ export const Demo: React.FC = () => {
       }, 7500);
 
     } else if (currentStep === 2) {
-        // Set custom fields so they render in the form
-        setCustomFields([
-            { id: '1', field_type: 'select', label: 'What is your role?', options: ['CEO/Founder', 'CTO', 'Marketing Manager', 'Operations Manager'], is_required: true },
-            { id: '2', field_type: 'select', label: 'What industry are you in?', options: ['Technology', 'Healthcare', 'Finance', 'E-commerce', 'Consulting'], is_required: false }
-        ]);
+      // Set custom fields so they render in the form
+      setCustomFields([
+        { id: '1', field_type: 'select', label: 'What is your role?', options: ['CEO/Founder', 'CTO', 'Marketing Manager', 'Operations Manager'], is_required: true },
+        { id: '2', field_type: 'select', label: 'What industry are you in?', options: ['Technology', 'Healthcare', 'Finance', 'E-commerce', 'Consulting'], is_required: false }
+      ]);
       // Customer submission step
       setTimeout(() => setCustomerFormData(prev => ({ ...prev, rating: 5 })), 1000);
       setTimeout(() => setCustomerFormData(prev => ({ ...prev, name: 'Sarah Johnson' })), 2000);
@@ -343,6 +343,24 @@ export const Demo: React.FC = () => {
     }
   };
 
+  const generateWebsiteWidget = () => {
+    return `<div class="testimonials-widget" style="max-width: 1000px; margin: 0 auto; padding: 20px;">
+  <h3 style="text-align: center; margin-bottom: 20px; color: #333;">What Our Customers Say</h3>
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+    ${mockTestimonials.slice(0, 3).map(testimonial => `
+    <div style="background: #f9f9f9; padding: 20px; border-radius: 12px; border-left: 4px solid #01b79e; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+      <div style="display: flex; margin-bottom: 8px;">
+        ${'★'.repeat(testimonial.rating)}<span style="color: #ddd;">${'★'.repeat(5 - testimonial.rating)}</span>
+      </div>
+      <p style="margin: 0 0 15px 0; font-style: italic; color: #555; line-height: 1.5;">"${testimonial.message}"</p>
+      <div style="font-size: 14px; color: #777;">
+        - ${testimonial.name}${testimonial.company ? `, ${testimonial.company}` : ''}
+      </div>
+    </div>`).join('')}
+  </div>
+</div>`;
+  };
+
   const renderCreateFormsStep = () => (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -366,34 +384,15 @@ export const Demo: React.FC = () => {
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-200 relative group animate-slide-in">
                   <div className="absolute top-4 right-4">
-                    <div className="w-6 h-6 text-secondary-500">
-                      <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M17 7H22V9H17V7ZM17 11H22V13H17V11ZM17 15H22V17H17V15ZM13.5 12L16 14.5L11.5 19L8.5 16L10 14.5L11.5 16L13.5 12Z"/>
-                      </svg>
-                    </div>
-                  </div>
-
-                  <div className="mb-4 pr-8">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2 leading-tight">{createdForm.title}</h3>
-                    <p className="text-gray-600 text-sm leading-relaxed line-clamp-2">{createdForm.description}</p>
-                  </div>
-
-                  <div className="mb-4">
                     <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-secondary-100 text-secondary-800">
                       <div className="w-2 h-2 rounded-full mr-2 bg-secondary-500"></div>
                       Active
                     </span>
                   </div>
 
-                  <div className="mb-6">
-                    <div className="flex items-center text-sm text-gray-500 space-x-4">
-                      <div className="flex items-center space-x-1">
-                        <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
-                        </svg>
-                        <span>Created {new Date(createdForm.created_at).toLocaleDateString()}</span>
-                      </div>
-                    </div>
+                  <div className="mb-4 pr-8">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2 leading-tight">{createdForm.title}</h3>
+                    <p className="text-gray-600 text-sm leading-relaxed">{createdForm.description}</p>
                   </div>
 
                   <div className="flex items-center justify-between pt-4 border-t border-gray-100">
@@ -424,18 +423,12 @@ export const Demo: React.FC = () => {
                 <p className="text-gray-500 mb-8 max-w-md mx-auto text-lg">
                   Start gathering customer testimonials by creating a customized form that you can share with your customers.
                 </p>
-                <button
-                  onClick={() => setShowCreateForm(true)}
-                  className="bg-primary-950 text-white px-8 py-4 rounded-lg hover:bg-primary-900 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-lg"
-                >
-                  Create Your First Form
-                </button>
               </div>
             )}
 
             {/* Create Form Modal */}
             {showCreateForm && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-slide-in">
                 <div className="bg-white rounded-lg p-6 w-full max-w-2xl mx-4">
                   <div className="flex items-center justify-between mb-4">
                     <h2 className="text-xl font-bold text-gray-900">Create New Form</h2>
@@ -445,59 +438,37 @@ export const Demo: React.FC = () => {
                   </div>
                   
                   <form className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Form Title</label>
-                        <input
-                          type="text"
-                          value={formData.title}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-                          readOnly
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Thank You Message</label>
-                        <input
-                          type="text"
-                          value={formData.thank_you_message}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-                          readOnly
-                        />
-                      </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Form Title</label>
+                      <input
+                        type="text"
+                        value={formData.title}
+                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                        placeholder="Enter form title..."
+                      />
                     </div>
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
                       <textarea
                         value={formData.description}
+                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                         rows={2}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-                        readOnly
+                        placeholder="Describe what this form is for..."
                       />
                     </div>
 
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                      <h4 className="text-sm font-medium text-blue-900 mb-3">📸 Media Upload Options</h4>
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-2">
-                            <input type="checkbox" checked className="rounded border-gray-300 text-primary-950 focus:ring-primary-500" readOnly />
-                            <label className="text-sm font-medium text-gray-700">Allow image uploads</label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <span className="text-xs text-gray-500">Max size:</span>
-                            <select className="text-xs border border-gray-300 rounded px-2 py-1" disabled>
-                              <option>10MB</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-2">
-                            <input type="checkbox" className="rounded border-gray-300 text-primary-950 focus:ring-primary-500" readOnly />
-                            <label className="text-sm font-medium text-gray-700">Allow video uploads</label>
-                          </div>
-                        </div>
-                      </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Thank You Message</label>
+                      <input
+                        type="text"
+                        value={formData.thank_you_message}
+                        onChange={(e) => setFormData({ ...formData, thank_you_message: e.target.value })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                        placeholder="Message shown after submission..."
+                      />
                     </div>
 
                     <div className="flex space-x-3 pt-4">
@@ -529,178 +500,106 @@ export const Demo: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white shadow rounded-lg">
           <div className="px-4 py-5 sm:p-6">
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">Customize Form: {createdForm?.title}</h1>
+                <p className="text-gray-600 mt-2">Add custom questions beyond the standard fields</p>
+              </div>
+            </div>
+
             {showCustomFields && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                <div className="bg-white rounded-lg w-full max-w-4xl mx-4 max-h-[90vh] overflow-hidden">
-                  <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-                    <h2 className="text-xl font-bold text-gray-900">
-                      Customize Form: Share Your Experience with TechCorp
-                    </h2>
-                    <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
-                      <X className="h-5 w-5" />
-                    </button>
+              <div className="space-y-6 animate-slide-in">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-900">Custom Fields</h3>
+                    <p className="text-sm text-gray-600">Add custom questions beyond the standard fields (name, email, company, rating, testimonial)</p>
                   </div>
-                  <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
-                    <div className="space-y-6">
+                  <button className="bg-primary-950 text-white px-4 py-2 rounded-lg hover:bg-primary-900 transition-colors flex items-center space-x-2">
+                    <Plus className="h-4 w-4" />
+                    <span>Add Field</span>
+                  </button>
+                </div>
+
+                <div className="space-y-3">
+                  {customFields.map((field, index) => (
+                    <div key={field.id} className="bg-gray-50 border border-gray-200 rounded-lg p-4 animate-slide-in">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h3 className="text-lg font-medium text-gray-900">Custom Fields</h3>
-                          <p className="text-sm text-gray-600">Add custom questions beyond the standard fields (name, email, company, rating, testimonial)</p>
-                        </div>
-                        <button
-                          onClick={() => setShowAddField(true)}
-                          className="bg-primary-950 text-white px-4 py-2 rounded-lg hover:bg-primary-900 transition-colors flex items-center space-x-2"
-                        >
-                          <Plus className="h-4 w-4" />
-                          <span>Add Field</span>
-                        </button>
-                      </div>
-
-                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                        <h4 className="text-sm font-medium text-blue-900 mb-2">📋 Standard Fields (Already Included)</h4>
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
-                          <div className="flex items-center space-x-2">
-                            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                            <span className="text-blue-800">⭐ Overall Rating</span>
+                          <div className="font-medium text-gray-900">
+                            {field.label}
+                            {field.is_required && <span className="text-red-500 ml-1">*</span>}
                           </div>
-                          <div className="flex items-center space-x-2">
-                            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                            <span className="text-blue-800">👤 Customer Name</span>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                            <span className="text-blue-800">📧 Email Address</span>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                            <span className="text-blue-800">🏢 Company (Optional)</span>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                            <span className="text-blue-800">💬 Main Testimonial</span>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                            <span className="text-blue-800">📸 Media Uploads</span>
+                          <div className="text-sm text-gray-500">
+                            {field.field_type === 'select' ? 'Dropdown Menu' : field.field_type}
+                            {field.options && ` • ${field.options.length} options`}
                           </div>
                         </div>
+                        <div className="flex space-x-2">
+                          <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
+                            <Settings className="h-4 w-4" />
+                          </button>
+                        </div>
                       </div>
+                    </div>
+                  ))}
+                </div>
 
-                      <div className="space-y-3">
-                        {customFields.map((field, index) => (
-                          <div key={field.id} className="bg-gray-50 border border-gray-200 rounded-lg p-4 animate-slide-in">
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center space-x-3">
-                                <div>
-                                  <div className="font-medium text-gray-900">
-                                    {field.label}
-                                    {field.is_required && <span className="text-red-500 ml-1">*</span>}
-                                  </div>
-                                  <div className="text-sm text-gray-500">
-                                    Dropdown Menu • {field.options.join(', ')}
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="flex space-x-2">
-                                <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
-                                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                  </svg>
-                                </button>
-                                <button className="p-2 text-red-400 hover:text-red-600 transition-colors">
-                                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                  </svg>
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
+                {/* Add Field Modal */}
+                {showAddField && (
+                  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-slide-in">
+                    <div className="bg-white rounded-lg p-6 w-full max-w-2xl mx-4">
+                      <h2 className="text-xl font-bold text-gray-900 mb-4">Add Custom Field</h2>
+                      
+                      <form className="space-y-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Question/Label</label>
+                          <input
+                            type="text"
+                            value={newField.label}
+                            onChange={(e) => setNewField({ ...newField, label: e.target.value })}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                            placeholder="What would you like to ask?"
+                          />
+                        </div>
 
-                        {customFields.length === 0 && !showAddField && (
-                          <div className="text-center py-8 text-gray-500">
-                            <p>No custom fields yet. Your form already includes the standard fields above - add additional questions here!</p>
-                          </div>
-                        )}
-                      </div>
-
-                      {showAddField && (
-                        <div className="bg-white border border-gray-200 rounded-lg p-6 animate-slide-in">
-                          <h3 className="text-lg font-bold text-gray-900 mb-4">Add Custom Field</h3>
-                          
-                          <div className="space-y-4">
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-2">Field Type</label>
-                              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
-                                <p className="text-sm text-yellow-800">
-                                  💡 <strong>Tip:</strong> Your form already includes name, email, company, rating, and testimonial fields.
-                                  Add custom fields here for additional questions like "How did you hear about us?\" or \"What's your role?"
-                                </p>
-                              </div>
-                              <div className="grid grid-cols-2 gap-2">
-                                <button
-                                  type="button"
-                                  className="p-3 border border-primary-500 bg-primary-50 rounded-lg text-left transition-colors"
-                                >
-                                  <div className="flex items-center space-x-2">
-                                    <span className="text-lg">📋</span>
-                                    <span className="font-medium">Dropdown Menu</span>
-                                  </div>
-                                </button>
-                              </div>
-                            </div>
-
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-1">Question/Label</label>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Options</label>
+                          <div className="space-y-2">
+                            {newField.options.map((option, index) => (
                               <input
+                                key={index}
                                 type="text"
-                                value={newField.label}
+                                value={option}
+                                onChange={(e) => {
+                                  const newOptions = [...newField.options];
+                                  newOptions[index] = e.target.value;
+                                  setNewField({ ...newField, options: newOptions });
+                                }}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-                                readOnly
+                                placeholder={`Option ${index + 1}`}
                               />
-                            </div>
-
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-2">Options</label>
-                              <div className="space-y-2">
-                                {newField.options.map((option, index) => (
-                                  <div key={index} className="flex space-x-2">
-                                    <input
-                                      type="text"
-                                      value={option}
-                                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-                                      readOnly
-                                    />
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-
-                            <div className="flex items-center space-x-2">
-                              <input type="checkbox" checked className="rounded border-gray-300 text-primary-950 focus:ring-primary-500" readOnly />
-                              <label className="text-sm text-gray-700">Required field</label>
-                            </div>
-
-                            <div className="flex space-x-3 pt-4">
-                              <button
-                                type="button"
-                                className="flex-1 bg-primary-950 text-white py-2 px-4 rounded-md hover:bg-primary-900 transition-colors"
-                              >
-                                Add Field
-                              </button>
-                              <button
-                                type="button"
-                                className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 transition-colors"
-                              >
-                                Cancel
-                              </button>
-                            </div>
+                            ))}
                           </div>
                         </div>
-                      )}
+
+                        <div className="flex space-x-3 pt-4">
+                          <button
+                            type="button"
+                            className="flex-1 bg-primary-950 text-white py-2 px-4 rounded-md hover:bg-primary-900 transition-colors"
+                          >
+                            Add Field
+                          </button>
+                          <button
+                            type="button"
+                            className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 transition-colors"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </form>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
             )}
           </div>
@@ -713,27 +612,20 @@ export const Demo: React.FC = () => {
     <div className="min-h-screen bg-gray-50 py-12" style={{ fontFamily: 'Montserrat' }}>
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-          <div
+          <div 
             className="px-6 py-8 text-center text-white"
             style={{ backgroundColor: primaryColor }}
           >
             <div className="flex justify-center mb-4">
-                {logoUrl ? 
-                    <img 
-                      src="/2.png" 
-                      alt="Freedom Lab Logo" 
-                      className="h-8 max-w-32 object-contain"
-                      onError={(e) => {
-                        console.log('Logo failed to load');
-                        e.currentTarget.style.display = 'none';
-                      }}
-                    /> :
-                    <img 
-                      src="/2.png" 
-                      alt="Company Logo" 
-                      className="h-8 max-w-32 object-contain"
-                    />
-                }
+              {logoUrl ? (
+                <img 
+                  src={logoUrl} 
+                  alt="Logo" 
+                  className="h-8 max-w-32 object-contain"
+                />
+              ) : (
+                <TestiFlowIcon className="h-8 w-8 text-white" />
+              )}
             </div>
             <h1 className="text-2xl font-bold mb-2">Share Your Experience with TechCorp</h1>
             <p className="text-white/90">We'd love to hear about your experience with our software solutions!</p>
@@ -748,14 +640,15 @@ export const Demo: React.FC = () => {
                 </label>
                 <div className="flex space-x-1">
                   {[1, 2, 3, 4, 5].map((star) => (
-                    <Star
-                      key={star}
-                      className={`h-8 w-8 transition-colors ${
-                        star <= customerFormData.rating
-                          ? 'text-yellow-400 fill-current'
-                          : 'text-gray-300'
-                      }`}
-                    />
+                    <div key={star} className="w-8 h-8 flex items-center justify-center">
+                      <Star
+                        className={`h-6 w-6 ${
+                          star <= customerFormData.rating
+                            ? 'text-yellow-400 fill-current'
+                            : 'text-gray-300'
+                        }`}
+                      />
+                    </div>
                   ))}
                 </div>
               </div>
@@ -767,6 +660,7 @@ export const Demo: React.FC = () => {
                   type="text"
                   value={customerFormData.name}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  placeholder="Enter your full name"
                   readOnly
                 />
               </div>
@@ -778,6 +672,7 @@ export const Demo: React.FC = () => {
                   type="email"
                   value={customerFormData.email}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  placeholder="Enter your email address"
                   readOnly
                 />
               </div>
@@ -789,6 +684,7 @@ export const Demo: React.FC = () => {
                   type="text"
                   value={customerFormData.company}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  placeholder="Enter your company name"
                   readOnly
                 />
               </div>
@@ -796,20 +692,19 @@ export const Demo: React.FC = () => {
               {/* Custom Fields */}
               {customFields.map((field) => (
                 <div key={field.id}>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     {field.label}
                     {field.is_required && <span className="text-red-500 ml-1">*</span>}
-                    </label>
-                    <select
-                    value={customerFormData[field.label.includes('role') ? 'role' : 'industry']}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 bg-gray-50"
-                    disabled
-                    >
+                  </label>
+                  <select
+                    value={field.id === '1' ? customerFormData.role : customerFormData.industry}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  >
                     <option value="">Select an option...</option>
-                    {field.options.map((option, index) => (
-                        <option key={index} value={option}>{option}</option>
+                    {field.options.map((option: string, index: number) => (
+                      <option key={index} value={option}>{option}</option>
                     ))}
-                    </select>
+                  </select>
                 </div>
               ))}
 
@@ -820,22 +715,9 @@ export const Demo: React.FC = () => {
                   rows={4}
                   value={customerFormData.message}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  placeholder="Tell us about your experience..."
                   readOnly
                 />
-              </div>
-
-              {/* Media Upload Section */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-medium text-gray-900">Add Media (Optional)</h3>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Upload Image</label>
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
-                    <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                    <p className="text-sm text-gray-600">Click to upload an image</p>
-                    <p className="text-xs text-gray-500 mt-1">PNG, JPG, GIF up to 10MB</p>
-                  </div>
-                </div>
               </div>
 
               <div className="pt-4">
@@ -844,9 +726,7 @@ export const Demo: React.FC = () => {
                   className="w-full text-white py-3 px-6 rounded-lg font-semibold transition-colors flex items-center justify-center space-x-2"
                   style={{ backgroundColor: secondaryColor }}
                 >
-                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                  </svg>
+                  <Send className="h-4 w-4" />
                   <span>Submit Testimonial</span>
                 </button>
               </div>
@@ -867,19 +747,6 @@ export const Demo: React.FC = () => {
                 <h1 className="text-3xl font-bold text-gray-900">Testimonials</h1>
                 <p className="text-gray-600 mt-2">Review, approve, and manage customer testimonials</p>
               </div>
-              <div className="flex space-x-2">
-                <select className="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors">
-                  <option value="all">All Status</option>
-                  <option value="pending">Pending</option>
-                  <option value="approved">Approved</option>
-                </select>
-                <button className="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors flex items-center space-x-2">
-                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  <span>Export</span>
-                </button>
-              </div>
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -889,7 +756,9 @@ export const Demo: React.FC = () => {
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                       testimonial.status === 'approved' 
                         ? 'bg-secondary-100 text-secondary-800' 
-                        : 'bg-yellow-100 text-yellow-800'
+                        : testimonial.status === 'pending'
+                        ? 'bg-yellow-100 text-yellow-800'
+                        : 'bg-red-100 text-red-800'
                     }`}>
                       {testimonial.status}
                     </span>
@@ -901,20 +770,9 @@ export const Demo: React.FC = () => {
                     </div>
                     <div className="flex-1">
                       <div className="font-semibold text-gray-900">{testimonial.name}</div>
-                      <div className="text-sm text-gray-500 flex items-center">
-                        <svg className="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                          <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                          <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                        </svg>
-                        {testimonial.email}
-                      </div>
+                      <div className="text-sm text-gray-500">{testimonial.email}</div>
                       {testimonial.company && (
-                        <div className="text-sm text-gray-500 flex items-center">
-                          <svg className="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z" clipRule="evenodd" />
-                          </svg>
-                          {testimonial.company}
-                        </div>
+                        <div className="text-sm text-gray-500">{testimonial.company}</div>
                       )}
                     </div>
                   </div>
@@ -934,26 +792,8 @@ export const Demo: React.FC = () => {
                     </p>
                   </div>
 
-                  {testimonial.custom_responses && (
-                    <div className="mb-4">
-                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                        <div className="text-xs text-blue-800 font-medium">
-                          +{Object.keys(testimonial.custom_responses).length} additional response{Object.keys(testimonial.custom_responses).length !== 1 ? 's' : ''}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="text-xs text-gray-500 mb-4 space-y-1">
-                    <div>From: Share Your Experience with TechCorp</div>
-                    <div>Submitted: {new Date(testimonial.submitted_at).toLocaleDateString()}</div>
-                  </div>
-
                   <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                    <button
-                      onClick={() => setViewingTestimonial(testimonial)}
-                      className="text-primary-950 hover:text-primary-800 text-sm font-medium flex items-center space-x-1 transition-colors"
-                    >
+                    <button className="text-primary-950 hover:text-primary-800 text-sm font-medium flex items-center space-x-1 transition-colors">
                       <Eye className="h-4 w-4" />
                       <span>View Full</span>
                     </button>
@@ -977,7 +817,7 @@ export const Demo: React.FC = () => {
 
             {/* View Testimonial Modal */}
             {viewingTestimonial && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 animate-slide-in">
                 <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-hidden">
                   <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
                     <h2 className="text-xl font-bold text-gray-900">Testimonial Details</h2>
@@ -989,42 +829,22 @@ export const Demo: React.FC = () => {
                     </button>
                   </div>
 
-                  <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+                  <div className="p-6 overflow-y-auto">
                     <div className="flex items-center space-x-4 mb-6">
                       <div className="w-16 h-16 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
                         <User className="h-8 w-8 text-primary-950" />
                       </div>
                       <div className="flex-1">
                         <div className="text-xl font-semibold text-gray-900">{viewingTestimonial.name}</div>
-                        <div className="text-gray-600 flex items-center space-x-1">
-                          <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                            <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                          </svg>
-                          <span>{viewingTestimonial.email}</span>
-                        </div>
+                        <div className="text-gray-600">{viewingTestimonial.email}</div>
                         {viewingTestimonial.company && (
-                          <div className="text-gray-600 flex items-center space-x-1">
-                            <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                              <path fillRule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z" clipRule="evenodd" />
-                            </svg>
-                            <span>{viewingTestimonial.company}</span>
-                          </div>
+                          <div className="text-gray-600">{viewingTestimonial.company}</div>
                         )}
-                      </div>
-                      <div className="text-right">
-                        <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                          viewingTestimonial.status === 'approved' 
-                            ? 'bg-secondary-100 text-secondary-800' 
-                            : 'bg-yellow-100 text-yellow-800'
-                        }`}>
-                          {viewingTestimonial.status}
-                        </span>
                       </div>
                     </div>
 
                     <div className="mb-6">
-                      <h3 className="text-sm font-medium text-gray-700 mb-2">Overall Rating</h3>
+                      <h3 className="text-sm font-medium text-gray-700 mb-2">Rating</h3>
                       <div className="flex items-center space-x-2">
                         <div className="flex">
                           {[...Array(viewingTestimonial.rating)].map((_, i) => (
@@ -1047,44 +867,27 @@ export const Demo: React.FC = () => {
                     {viewingTestimonial.custom_responses && (
                       <div className="mb-6">
                         <h3 className="text-sm font-medium text-gray-700 mb-3">Additional Responses</h3>
-                        <div className="space-y-4">
+                        <div className="space-y-3">
                           {Object.entries(viewingTestimonial.custom_responses).map(([question, answer]) => (
-                            <div key={question} className="bg-gray-50 rounded-lg p-4">
-                              <div className="text-sm font-medium text-gray-700 mb-2">{question}</div>
-                              <div className="text-sm text-gray-700">{typeof answer === 'string' ? answer : ''}</div>
+                            <div key={question} className="bg-gray-50 rounded-lg p-3">
+                              <div className="text-sm font-medium text-gray-700 mb-1">{question}</div>
+                              <div className="text-sm text-gray-600">{answer}</div>
                             </div>
                           ))}
                         </div>
                       </div>
                     )}
 
-                    <div className="bg-gray-50 rounded-lg p-4 mb-6">
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div>
-                          <span className="text-gray-500">Form:</span>
-                          <div className="font-medium text-gray-900">Share Your Experience with TechCorp</div>
-                        </div>
-                        <div>
-                          <span className="text-gray-500">Submitted:</span>
-                          <div className="font-medium text-gray-900">
-                            {new Date(viewingTestimonial.submitted_at).toLocaleDateString()}
-                          </div>
-                        </div>
-                      </div>
+                    <div className="flex space-x-3">
+                      <button className="flex-1 bg-secondary-500 text-white py-3 px-4 rounded-lg hover:bg-secondary-600 transition-colors font-medium flex items-center justify-center space-x-2">
+                        <CheckCircle className="h-4 w-4" />
+                        <span>Approve</span>
+                      </button>
+                      <button className="flex-1 bg-red-500 text-white py-3 px-4 rounded-lg hover:bg-red-600 transition-colors font-medium flex items-center justify-center space-x-2">
+                        <X className="h-4 w-4" />
+                        <span>Reject</span>
+                      </button>
                     </div>
-
-                    {viewingTestimonial.status === 'pending' && (
-                      <div className="flex space-x-3">
-                        <button className="flex-1 bg-secondary-500 text-white py-3 px-4 rounded-lg hover:bg-secondary-600 transition-colors font-medium flex items-center justify-center space-x-2">
-                          <CheckCircle className="h-4 w-4" />
-                          <span>Approve</span>
-                        </button>
-                        <button className="flex-1 bg-red-500 text-white py-3 px-4 rounded-lg hover:bg-red-600 transition-colors font-medium flex items-center justify-center space-x-2">
-                          <X className="h-4 w-4" />
-                          <span>Reject</span>
-                        </button>
-                      </div>
-                    )}
                   </div>
                 </div>
               </div>
@@ -1278,78 +1081,62 @@ export const Demo: React.FC = () => {
             </div>
 
             <div className="grid lg:grid-cols-2 gap-8">
+              {/* Settings Panel */}
               <div className="space-y-6">
-                <form className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Logo URL</label>
-                    <div className="flex space-x-2">
-                      <input
-                        type="url"
-                        value={logoUrl}
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-                        placeholder="https://example.com/logo.png"
-                        readOnly
-                      />
-                      <button
-                        type="button"
-                        className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors flex items-center space-x-2"
-                      >
-                        <Upload className="h-4 w-4" />
-                        <span>Upload</span>
-                      </button>
-                    </div>
-                  </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Logo URL</label>
+                  <input
+                    type="url"
+                    value={logoUrl}
+                    onChange={(e) => setLogoUrl(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    placeholder="https://example.com/logo.png"
+                  />
+                </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Primary Color</label>
-                    <div className="flex space-x-3 items-center">
-                      <input
-                        type="color"
-                        value={primaryColor}
-                        className="w-12 h-10 border border-gray-300 rounded-md cursor-pointer"
-                        readOnly
-                      />
-                      <input
-                        type="text"
-                        value={primaryColor}
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 font-mono text-sm"
-                        readOnly
-                      />
-                    </div>
-                    <p className="text-xs text-gray-500 mt-1">Used for headers and primary buttons</p>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Primary Color</label>
+                  <div className="flex space-x-3 items-center">
+                    <input
+                      type="color"
+                      value={primaryColor}
+                      onChange={(e) => setPrimaryColor(e.target.value)}
+                      className="w-12 h-10 border border-gray-300 rounded-md cursor-pointer"
+                    />
+                    <input
+                      type="text"
+                      value={primaryColor}
+                      onChange={(e) => setPrimaryColor(e.target.value)}
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 font-mono text-sm"
+                    />
                   </div>
+                </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Secondary Color</label>
-                    <div className="flex space-x-3 items-center">
-                      <input
-                        type="color"
-                        value={secondaryColor}
-                        className="w-12 h-10 border border-gray-300 rounded-md cursor-pointer"
-                        readOnly
-                      />
-                      <input
-                        type="text"
-                        value={secondaryColor}
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 font-mono text-sm"
-                        readOnly
-                      />
-                    </div>
-                    <p className="text-xs text-gray-500 mt-1">Used for accents and highlights</p>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Secondary Color</label>
+                  <div className="flex space-x-3 items-center">
+                    <input
+                      type="color"
+                      value={secondaryColor}
+                      onChange={(e) => setSecondaryColor(e.target.value)}
+                      className="w-12 h-10 border border-gray-300 rounded-md cursor-pointer"
+                    />
+                    <input
+                      type="text"
+                      value={secondaryColor}
+                      onChange={(e) => setSecondaryColor(e.target.value)}
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 font-mono text-sm"
+                    />
                   </div>
+                </div>
 
-                  <div className="flex space-x-3 pt-4">
-                    <button
-                      type="button"
-                      className="flex-1 bg-primary-950 text-white py-3 px-4 rounded-lg hover:bg-primary-900 transition-colors flex items-center justify-center space-x-2"
-                    >
-                      <Save className="h-4 w-4" />
-                      <span>Save Changes</span>
-                    </button>
-                  </div>
-                </form>
+                <button className="bg-primary-950 text-white px-6 py-3 rounded-lg hover:bg-primary-900 transition-colors flex items-center space-x-2">
+                  <Save className="h-4 w-4" />
+                  <span>Save Changes</span>
+                </button>
               </div>
 
+              {/* Live Preview */}
               <div className="space-y-6">
                 <div className="flex items-center space-x-2 mb-4">
                   <Eye className="h-5 w-5 text-gray-400" />
@@ -1357,21 +1144,21 @@ export const Demo: React.FC = () => {
                 </div>
 
                 <div className="border border-gray-200 rounded-lg overflow-hidden shadow-lg">
-                  <div
+                  <div 
                     className="px-6 py-8 text-center text-white"
                     style={{ backgroundColor: primaryColor }}
                   >
                     {logoUrl && (
                       <div className="flex justify-center mb-4">
-                        <img
-                          src={logoUrl}
-                          alt="Logo"
+                        <img 
+                          src={logoUrl} 
+                          alt="Logo" 
                           className="h-12 max-w-48 object-contain"
                         />
                       </div>
                     )}
-                    <h1 className="text-2xl font-bold mb-2">Share Your Experience with TechCorp</h1>
-                    <p className="text-white/90">We'd love to hear about your experience with our software solutions!</p>
+                    <h1 className="text-2xl font-bold mb-2">Share Your Experience</h1>
+                    <p className="text-white/90">We'd love to hear about your experience with us!</p>
                   </div>
 
                   <div className="p-6 space-y-6">
@@ -1382,9 +1169,7 @@ export const Demo: React.FC = () => {
                       <div className="flex space-x-1">
                         {[1, 2, 3, 4, 5].map((star) => (
                           <div key={star} className="w-8 h-8 flex items-center justify-center">
-                            <svg className="w-6 h-6 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
+                            <Star className="w-6 h-6 text-yellow-400 fill-current" />
                           </div>
                         ))}
                       </div>
@@ -1393,14 +1178,14 @@ export const Demo: React.FC = () => {
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Your Name *</label>
                       <div className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-500">
-                        Sarah Johnson
+                        John Smith
                       </div>
                     </div>
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Your Testimonial *</label>
                       <div className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-500 h-20 flex items-start">
-                        <span className="text-sm">TestiFlow has completely transformed how we collect feedback...</span>
+                        <span className="text-sm">This product has been amazing for our business...</span>
                       </div>
                     </div>
 
@@ -1442,6 +1227,72 @@ export const Demo: React.FC = () => {
 
   return (
     <div ref={demoContainerRef} className="min-h-screen bg-white">
+      {/* Demo Controls */}
+      <div className="fixed top-4 left-4 z-50 bg-white rounded-lg shadow-lg border border-gray-200 p-4 max-w-sm">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="font-semibold text-gray-900">Demo Controls</h3>
+          <div className="flex space-x-2">
+            <button
+              onClick={() => setIsPlaying(!isPlaying)}
+              className="bg-primary-950 text-white px-3 py-1 rounded text-sm hover:bg-primary-900 transition-colors"
+            >
+              {isPlaying ? 'Pause' : 'Play'}
+            </button>
+            <button
+              onClick={() => {
+                setCurrentStep(0);
+                setProgress(0);
+                resetAllAnimations();
+              }}
+              className="bg-gray-500 text-white px-3 py-1 rounded text-sm hover:bg-gray-600 transition-colors"
+            >
+              Restart
+            </button>
+          </div>
+        </div>
+        
+        <div className="space-y-2">
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-gray-600">Step {currentStep + 1} of {demoSteps.length}</span>
+            <span className="font-medium text-gray-900">{demoSteps[currentStep].title}</span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-2">
+            <div 
+              className="bg-primary-950 h-2 rounded-full transition-all duration-100"
+              style={{ width: `${progress}%` }}
+            ></div>
+          </div>
+          <p className="text-xs text-gray-500">{demoSteps[currentStep].description}</p>
+        </div>
+
+        <div className="mt-4 flex space-x-1">
+          <button
+            onClick={() => {
+              if (currentStep > 0) {
+                setCurrentStep(currentStep - 1);
+                setProgress(0);
+              }
+            }}
+            disabled={currentStep === 0}
+            className="flex-1 bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Previous
+          </button>
+          <button
+            onClick={() => {
+              if (currentStep < demoSteps.length - 1) {
+                setCurrentStep(currentStep + 1);
+                setProgress(0);
+              }
+            }}
+            disabled={currentStep === demoSteps.length - 1}
+            className="flex-1 bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+
       {/* Fake Header */}
       <nav className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1453,11 +1304,11 @@ export const Demo: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex items-center space-x-4">
+            <div className="hidden md:flex items-center space-x-4">
               <button
                 className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  getActiveTab() === 'dashboard' 
-                    ? 'text-primary-950 bg-primary-50' 
+                  getActiveTab() === 'dashboard'
+                    ? 'text-primary-950 bg-primary-50'
                     : 'text-gray-700 hover:text-primary-950'
                 }`}
               >
@@ -1466,8 +1317,8 @@ export const Demo: React.FC = () => {
               </button>
               <button
                 className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  getActiveTab() === 'forms' 
-                    ? 'text-primary-950 bg-primary-50' 
+                  getActiveTab() === 'forms'
+                    ? 'text-primary-950 bg-primary-50'
                     : 'text-gray-700 hover:text-primary-950'
                 }`}
               >
@@ -1475,21 +1326,21 @@ export const Demo: React.FC = () => {
               </button>
               <button
                 className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  getActiveTab() === 'branding' 
-                    ? 'text-primary-950 bg-primary-50' 
-                    : 'text-gray-700 hover:text-primary-950'
-                }`}
-              >
-                Branding
-              </button>
-              <button
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  getActiveTab() === 'testimonials' 
-                    ? 'text-primary-950 bg-primary-50' 
+                  getActiveTab() === 'testimonials'
+                    ? 'text-primary-950 bg-primary-50'
                     : 'text-gray-700 hover:text-primary-950'
                 }`}
               >
                 Testimonials
+              </button>
+              <button
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  getActiveTab() === 'branding'
+                    ? 'text-primary-950 bg-primary-50'
+                    : 'text-gray-700 hover:text-primary-950'
+                }`}
+              >
+                Branding
               </button>
               <button className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-950 transition-colors">
                 Settings
