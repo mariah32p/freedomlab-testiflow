@@ -634,7 +634,7 @@ export const Demo: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Demo Header - Mimics logged-in navbar */}
+      {/* Header - Mimics logged-in navbar */}
       <nav className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
@@ -642,9 +642,6 @@ export const Demo: React.FC = () => {
               <div className="flex items-center space-x-2">
                 <TestiFlowIcon className="h-8 w-8 text-navy" />
                 <span className="text-xl font-bold text-primary-950">TestiFlow</span>
-                <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium ml-2">
-                  DEMO
-                </span>
               </div>
             </div>
 
@@ -688,14 +685,14 @@ export const Demo: React.FC = () => {
                 <div className="w-8 h-8 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
                   <User className="h-4 w-4 text-primary-950" />
                 </div>
-                <span>demo@testiflow.com</span>
+                <span>sarah@techcorp.com</span>
               </div>
             </div>
           </div>
         </div>
       </nav>
 
-      {/* Demo Content */}
+      {/* Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 min-h-[600px]">
           {renderCurrentStep()}

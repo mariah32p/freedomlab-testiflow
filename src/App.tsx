@@ -27,13 +27,15 @@ const AppContent: React.FC = () => {
       {/* Public form submission - no navbar */}
       <Route path="/submit/:formId" element={<SubmitTestimonial />} />
       
+      {/* Demo route - custom header */}
+      <Route path="/demo" element={<Demo />} />
+      
       {/* All other routes with navbar */}
       <Route path="/*" element={
         <div className="min-h-screen bg-gray-50">
           <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/demo" element={<Demo />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
