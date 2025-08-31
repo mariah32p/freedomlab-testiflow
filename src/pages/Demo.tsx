@@ -367,7 +367,44 @@ export const Demo: React.FC = () => {
                     </button>
                   </div>
                   <form className="space-y-4">
-                    {/* Form fields... */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Form Title</label>
+                      <input
+                        type="text"
+                        value={formData.title}
+                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                        placeholder="Enter form title..."
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                      <textarea
+                        value={formData.description}
+                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                        rows={2}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                        placeholder="Describe what this form is for..."
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Thank You Message</label>
+                      <input
+                        type="text"
+                        value={formData.thank_you_message}
+                        onChange={(e) => setFormData({ ...formData, thank_you_message: e.target.value })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                        placeholder="Message shown after submission..."
+                      />
+                    </div>
+                    <div className="flex space-x-3 pt-4">
+                      <button type="button" className="flex-1 bg-primary-950 text-white py-2 px-4 rounded-md hover:bg-primary-900 transition-colors font-medium">
+                        Create Form
+                      </button>
+                      <button type="button" className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 transition-colors font-medium">
+                        Cancel
+                      </button>
+                    </div>
                   </form>
                 </div>
               </div>
@@ -402,17 +439,74 @@ export const Demo: React.FC = () => {
                     <span>Add Field</span>
                   </button>
                 </div>
+
                 <div className="space-y-3">
                   {customFields.map((field) => (
                     <div key={field.id} className="bg-gray-50 border border-gray-200 rounded-lg p-4 animate-slide-in">
-                      {/* Field details... */}
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="font-medium text-gray-900">
+                            {field.label}
+                            {field.is_required && <span className="text-red-500 ml-1">*</span>}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            {field.field_type === 'select' ? 'Dropdown Menu' : field.field_type}
+                            {field.options && ` • ${field.options.length} options`}
+                          </div>
+                        </div>
+                        <div className="flex space-x-2">
+                          <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
+                            <Settings className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   ))}
                 </div>
+
                 {showAddField && (
                   <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-slide-in">
                     <div className="bg-white rounded-lg p-6 w-full max-w-2xl mx-4">
-                        {/* Add field form... */}
+                      <h2 className="text-xl font-bold text-gray-900 mb-4">Add Custom Field</h2>
+                      <form className="space-y-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Question/Label</label>
+                          <input
+                            type="text"
+                            value={newField.label}
+                            onChange={(e) => setNewField({ ...newField, label: e.target.value })}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                            placeholder="What would you like to ask?"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Options</label>
+                          <div className="space-y-2">
+                            {newField.options.map((option, index) => (
+                              <input
+                                key={index}
+                                type="text"
+                                value={option}
+                                onChange={(e) => {
+                                  const newOptions = [...newField.options];
+                                  newOptions[index] = e.target.value;
+                                  setNewField({ ...newField, options: newOptions });
+                                }}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                                placeholder={`Option ${index + 1}`}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                        <div className="flex space-x-3 pt-4">
+                          <button type="button" className="flex-1 bg-primary-950 text-white py-2 px-4 rounded-md hover:bg-primary-900 transition-colors">
+                            Add Field
+                          </button>
+                          <button type="button" className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 transition-colors">
+                            Cancel
+                          </button>
+                        </div>
+                      </form>
                     </div>
                   </div>
                 )}
@@ -441,7 +535,6 @@ export const Demo: React.FC = () => {
 
           <div className="p-6">
             <form className="space-y-6">
-              {/* Form fields are dynamically filled via state */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-3">
                   How would you rate your experience? *
@@ -456,13 +549,59 @@ export const Demo: React.FC = () => {
                   ))}
                 </div>
               </div>
-               <div>
+              <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Your Name *</label>
-                <input type="text" value={customerFormData.name} className="w-full px-3 py-2 border border-gray-300 rounded-md" readOnly/>
+                <input
+                  type="text"
+                  value={customerFormData.name}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  readOnly
+                />
               </div>
-               <div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Email Address *</label>
+                <input
+                  type="email"
+                  value={customerFormData.email}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  readOnly
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Company (Optional)</label>
+                <input
+                  type="text"
+                  value={customerFormData.company}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  readOnly
+                />
+              </div>
+              {customFields.map((field) => (
+                <div key={field.id}>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    {field.label}
+                    {field.is_required && <span className="text-red-500 ml-1">*</span>}
+                  </label>
+                  <select
+                    value={field.id === '1' ? customerFormData.role : customerFormData.industry}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                    readOnly
+                  >
+                    <option value="">Select an option...</option>
+                    {field.options.map((option: string, index: number) => (
+                      <option key={index} value={option}>{option}</option>
+                    ))}
+                  </select>
+                </div>
+              ))}
+              <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Your Testimonial *</label>
-                <textarea rows={4} value={customerFormData.message} className="w-full px-3 py-2 border border-gray-300 rounded-md" readOnly/>
+                <textarea
+                  rows={4}
+                  value={customerFormData.message}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  readOnly
+                />
               </div>
               <button
                 ref={submitButtonRef}
@@ -484,23 +623,69 @@ export const Demo: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white shadow rounded-lg">
           <div className="px-4 py-5 sm:p-6">
-             <div className="flex items-center justify-between mb-8">
-                <div>
-                    <h1 className="text-3xl font-bold text-gray-900">Testimonials</h1>
-                    <p className="text-gray-600 mt-2">Review, approve, and manage customer testimonials</p>
-                </div>
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">Testimonials</h1>
+                <p className="text-gray-600 mt-2">Review, approve, and manage customer testimonials</p>
+              </div>
             </div>
-             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {testimonials.map((testimonial) => (
                 <div key={testimonial.id} className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-all duration-200 relative animate-slide-in">
-                  {/* Testimonial card content... */}
+                  <div className="absolute top-4 right-4">
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${testimonial.status === 'approved' ? 'bg-secondary-100 text-secondary-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                      {testimonial.status}
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
+                      <User className="h-6 w-6 text-primary-950" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="font-semibold text-gray-900">{testimonial.name}</div>
+                      <div className="text-sm text-gray-500">{testimonial.company}</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2 mb-4">
+                    <div className="flex">
+                      {[...Array(testimonial.rating)].map((_, i) => (
+                        <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
+                      ))}
+                    </div>
+                    <span className="text-sm text-gray-500">({testimonial.rating}/5)</span>
+                  </div>
+                  <p className="text-gray-700 text-sm leading-relaxed line-clamp-3 mb-4">
+                    "{testimonial.message}"
+                  </p>
+                  <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                    <button className="text-primary-950 hover:text-primary-800 text-sm font-medium flex items-center space-x-1 transition-colors">
+                      <Eye className="h-4 w-4" />
+                      <span>View Full</span>
+                    </button>
+                    {testimonial.status === 'pending' && (
+                      <div className="flex space-x-2">
+                        <button className="bg-secondary-100 text-secondary-800 hover:bg-secondary-200 px-3 py-1 rounded-md text-xs font-medium transition-colors">Approve</button>
+                        <button className="bg-red-100 text-red-800 hover:bg-red-200 px-3 py-1 rounded-md text-xs font-medium transition-colors">Reject</button>
+                      </div>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
+
             {viewingTestimonial && (
               <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 animate-slide-in">
-                 <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-hidden">
-                    {/* Testimonial details modal... */}
+                <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-hidden">
+                  <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                    <h2 className="text-xl font-bold text-gray-900">Testimonial Details</h2>
+                    <button onClick={() => setViewingTestimonial(null)} className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
+                      <X className="h-5 w-5" />
+                    </button>
+                  </div>
+                  <div className="p-6 overflow-y-auto">
+                    {/* Modal content */}
+                  </div>
                 </div>
               </div>
             )}
@@ -533,26 +718,60 @@ export const Demo: React.FC = () => {
             </div>
             {showExportModal && (
               <div className="space-y-6 animate-slide-in">
-                 {/* Format Selection... */}
+                <div>
+                  <h4 className="text-sm font-medium text-gray-700 mb-3">Choose Export Format</h4>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <button onClick={() => setSelectedExportFormat('csv')} className={`p-3 border rounded-lg text-left transition-colors ${selectedExportFormat === 'csv' ? 'border-primary-500 bg-primary-50' : 'border-gray-200 hover:bg-gray-50'}`}>
+                      <div className="flex items-center space-x-2">
+                        <FileText className="h-5 w-5 text-green-600" />
+                        <span className="font-medium">CSV</span>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1">For spreadsheets</p>
+                    </button>
+                    <button onClick={() => setSelectedExportFormat('json')} className={`p-3 border rounded-lg text-left transition-colors ${selectedExportFormat === 'json' ? 'border-primary-500 bg-primary-50' : 'border-gray-200 hover:bg-gray-50'}`}>
+                      <div className="flex items-center space-x-2">
+                        <Code className="h-5 w-5 text-blue-600" />
+                        <span className="font-medium">JSON</span>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1">For developers</p>
+                    </button>
+                    <button onClick={() => setSelectedExportFormat('widget')} className={`p-3 border rounded-lg text-left transition-colors ${selectedExportFormat === 'widget' ? 'border-primary-500 bg-primary-50' : 'border-gray-200 hover:bg-gray-50'}`}>
+                      <div className="flex items-center space-x-2">
+                        <Code className="h-5 w-5 text-indigo-600" />
+                        <span className="font-medium">Widget</span>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1">HTML embed</p>
+                    </button>
+                  </div>
+                </div>
                 <div className="text-center">
-                  <button
-                    onClick={handleExportDemo}
-                    className="bg-secondary-500 text-white px-6 py-3 rounded-lg hover:bg-secondary-600 transition-colors flex items-center space-x-2 mx-auto"
-                  >
+                  <button onClick={handleExportDemo} className="bg-secondary-500 text-white px-6 py-3 rounded-lg hover:bg-secondary-600 transition-colors flex items-center space-x-2 mx-auto">
                     <Download className="h-5 w-5" />
                     <span>Generate {selectedExportFormat.toUpperCase()}</span>
                   </button>
                 </div>
                 {generatedContent && (
                   <div className="space-y-4 animate-slide-in">
-                    {/* Generated Content and Preview... */}
+                    <div className="flex items-center justify-between">
+                      <h4 className="text-sm font-medium text-gray-700">Generated {selectedExportFormat.toUpperCase()} Content</h4>
+                      <button onClick={() => navigator.clipboard.writeText(generatedContent)} className="bg-blue-100 text-blue-800 px-3 py-1 rounded-md text-sm hover:bg-blue-200 transition-colors flex items-center space-x-1">
+                        <Copy className="h-3 w-3" />
+                        <span>Copy</span>
+                      </button>
+                    </div>
+                    <div className="bg-gray-900 text-white rounded-lg p-4 border border-gray-200">
+                      <pre className="text-sm whitespace-pre-wrap font-mono max-h-64 overflow-y-auto">{generatedContent}</pre>
+                    </div>
                     {selectedExportFormat === 'widget' && (
                       <div ref={livePreviewRef} className="space-y-3">
-                         <h4 className="text-sm font-medium text-gray-700">Live Preview</h4>
+                        <h4 className="text-sm font-medium text-gray-700">Live Preview</h4>
                         <div className="border border-gray-200 rounded-lg overflow-hidden bg-white">
-                            <div className="p-6">
-                                {/* Live widget preview HTML is rendered here */}
-                            </div>
+                          <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
+                            <span className="text-sm text-gray-600">How this will look on your website:</span>
+                          </div>
+                          <div className="p-6">
+                            <div dangerouslySetInnerHTML={{ __html: demoGenerateWebsiteWidget() }} />
+                          </div>
                         </div>
                       </div>
                     )}
@@ -579,7 +798,6 @@ export const Demo: React.FC = () => {
 
   return (
     <div ref={demoContainerRef} className="min-h-screen bg-white">
-      {/* Fake Header */}
       <nav className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
