@@ -1,7 +1,5 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { products } from '../stripe-config.js';
-import { APP_CONFIG } from '../config/app';
 
 export const useStripe = () => {
   const [loading, setLoading] = useState(false);
@@ -12,17 +10,18 @@ export const useStripe = () => {
     setError(null);
 
     try {
-      if (!APP_CONFIG.ENABLE_REAL_AUTH) {
-        // Mock checkout - simulate redirect to success page
-        setTimeout(() => {
-          window.location.href = `${window.location.origin}/success`;
-        }, 1000);
-        return;
-      }
-
+      // Get authenticated user
+      let userEmail: string;
+      let userId: string;
+      
+      // Get user session
       const { data: { session } } = await supabase.auth.getSession();
       
-      if (!session) {
+      if (session?.user?.email) {
+        // Use authenticated user data
+        userEmail = session.user.email;
+        userId = session.user.id;
+      } else {
         throw new Error('You must be logged in to make a purchase');
       }
 
@@ -31,29 +30,24 @@ export const useStripe = () => {
         throw new Error('Product not found');
       }
 
-      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/stripe-checkout`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      const { data, error: functionError } = await supabase.functions.invoke('stripe-checkout', {
+        body: {
           price_id: priceId,
           mode: product.mode,
+          customer_email: userEmail,
+          client_reference_id: userId,
           success_url: `${window.location.origin}/success`,
-          cancel_url: `${window.location.origin}/pricing`,
-        }),
+          cancel_url: `${window.location.origin}/get-started`,
+        },
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to create checkout session');
+      if (functionError) {
+        throw new Error(functionError.message);
       }
 
       // Redirect to Stripe Checkout
-      if (data.url) {
-        window.location.href = data.url;
+      if (data?.url) {
+        window.open(data.url, '_blank');
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');

@@ -18,7 +18,7 @@ export const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <Link to="/" className="flex items-center space-x-2">
+            <Link to={user ? "/dashboard" : "/"} className="flex items-center space-x-2">
               <TestiFlowIcon className="h-8 w-8 text-navy" />
               <span className="text-xl font-bold text-primary-950">TestiFlow</span>
             </Link>
@@ -33,6 +33,30 @@ export const Navbar: React.FC = () => {
                 >
                   <User className="h-4 w-4" />
                   <span>Dashboard</span>
+                </Link>
+                <Link
+                  to="/forms"
+                  className="flex items-center space-x-1 text-gray-700 hover:text-primary-950 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  <span>Forms</span>
+                </Link>
+                <Link
+                  to="/branding"
+                  className="flex items-center space-x-1 text-gray-700 hover:text-primary-950 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  <span>Branding</span>
+                </Link>
+                <Link
+                  to="/testimonials"
+                  className="flex items-center space-x-1 text-gray-700 hover:text-primary-950 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  <span>Testimonials</span>
+                </Link>
+                <Link
+                  to="/settings"
+                  className="flex items-center space-x-1 text-gray-700 hover:text-primary-950 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  <span>Settings</span>
                 </Link>
                 <button
                   onClick={handleSignOut}
