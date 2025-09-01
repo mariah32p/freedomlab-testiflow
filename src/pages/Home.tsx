@@ -55,44 +55,6 @@ export const Home: React.FC = () => {
     setIsAnimating(false);
   };
 
-  const startDemoAnimation = () => {
-    // Reset state
-    setCurrentStep(0);
-    setShowCreateForm(false);
-    setShowTestimonials(false);
-    setShowExport(false);
-
-    // Step 1: Create Form
-    setTimeout(() => {
-      setCurrentStep(1);
-      setShowCreateForm(true);
-    }, 500);
-
-    // Step 2: Show Testimonials
-    setTimeout(() => {
-      setCurrentStep(2);
-      setShowCreateForm(false);
-      setShowTestimonials(true);
-    }, 3000);
-
-    // Step 3: Export
-    setTimeout(() => {
-      setCurrentStep(3);
-      setShowExport(true);
-    }, 6000);
-
-    // Reset and loop
-    setTimeout(() => {
-      setCurrentStep(0);
-      setShowCreateForm(false);
-      setShowTestimonials(false);
-      setShowExport(false);
-      if (demoInView) {
-        startDemoAnimation();
-      }
-    }, 9000);
-  };
-
   const handleGetStarted = () => {
     navigate('/signup');
   };
