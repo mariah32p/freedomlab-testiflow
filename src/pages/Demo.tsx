@@ -639,7 +639,7 @@ export const Demo: React.FC = () => {
               </button>
             </div>
             {showExportModal && (
-              <div className="space-y-6 animate-slide-in">
+              <div className="space-y-6 animate-slide-in relative">
                 <div>
                   <h4 className="text-sm font-medium text-gray-700 mb-3">Choose Export Format</h4>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
