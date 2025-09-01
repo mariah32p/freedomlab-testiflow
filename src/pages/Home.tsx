@@ -351,7 +351,7 @@ export const Home: React.FC = () => {
                 </div>
                 <p className="ml-16 text-lg leading-6 font-medium text-gray-900">Powerful Exports</p>
                 <p className="mt-2 ml-16 text-base text-gray-500">
-                  Export testimonials as CSV, JSON, or generate ready-to-use website widgets and social media posts.
+                  Export testimonials as CSV, JSON, or generate ready-to-use website widgets for your marketing.
                 </p>
               </div>
 
