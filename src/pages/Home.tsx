@@ -583,93 +583,77 @@ export const Home: React.FC = () => {
       <section className="relative bg-gradient-to-br from-primary-950 via-primary-900 to-secondary-500 text-white overflow-hidden">
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            {/* Left Column - Content */}
-            <div className="text-center lg:text-left">
-              <div className="flex justify-center lg:justify-start mb-8">
-                <div className="flex items-center space-x-2 bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm">
-                  <TestiFlowIcon className="h-6 w-6 text-white" />
-                  <span className="text-white font-semibold">TestiFlow by Freedom Lab</span>
-                </div>
-              </div>
-              
-              <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-                Turn Customer Love Into
-                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-secondary-100 to-white">
-                  Marketing Gold
-                </span>
+          <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[80vh]">
+            {/* Left Content */}
+            <div className="text-center lg:text-left max-w-2xl">
+              <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-8 leading-tight">
+                Turn Customer 
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-950 to-secondary-500"> Feedback</span> into 
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary-500 to-accent-500"> Marketing Gold</span>
               </h1>
-              
-              <p className="text-xl text-white/90 mb-8 leading-relaxed max-w-2xl mx-auto lg:mx-0">
-                Stop losing potential customers because they can't find social proof. TestiFlow makes it effortless to collect, manage, and showcase authentic testimonials that drive conversions.
+              <p className="text-2xl text-gray-600 mb-10 leading-relaxed">
+                Stop losing potential testimonials. TestiFlow automates collection, approval, and helps you use customer feedback to grow your business.
               </p>
-              
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <button
-                  onClick={handleSignupClick}
-                  className="bg-white text-primary-950 hover:bg-gray-100 px-8 py-4 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center space-x-2"
-                >
-                  <span>Start Free Trial</span>
-                  <ArrowRight className="h-5 w-5" />
-                </button>
-              </div>
-              
-              <p className="text-white/70 text-sm mt-4">
-                7-day free trial • Cancel anytime
-              </p>
+              <button
+                onClick={handleSignupClick}
+                className="bg-primary-950 text-white px-10 py-5 rounded-lg text-xl font-semibold hover:bg-primary-900 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+              >
+                Start Free Trial
+              </button>
             </div>
 
-            {/* Right Column - Mobile Mockup */}
-            <div className="flex justify-center lg:justify-end">
-              <div className="relative">
-                <div className="w-80 h-[600px] bg-gray-900 rounded-[3rem] p-2 shadow-2xl">
-                  <div className="w-full h-full bg-white rounded-[2.5rem] overflow-hidden">
-                    {/* Mobile Status Bar */}
-                    <div className="bg-gray-900 h-8 flex items-center justify-center">
-                      <div className="w-20 h-1 bg-gray-600 rounded-full"></div>
+            {/* Right Content - Phone Mockup */}
+            <div className="flex justify-center lg:justify-end mt-8 lg:mt-0">
+              <div className="relative max-w-md lg:max-w-lg">
+                {/* Phone Frame */}
+                <div className="bg-gray-900 rounded-[3rem] p-3 shadow-2xl">
+                  <div className="bg-white rounded-[2.5rem] overflow-hidden" style={{ width: '350px', height: '720px' }}>
+                    {/* Phone Header */}
+                    <div className="bg-primary-950 px-6 py-8 text-center text-white">
+                      <div className="flex justify-center mb-3">
+                        <TestiFlowIcon className="h-8 w-8 text-white" />
+                      </div>
+                      <h3 className="text-xl font-bold mb-2">Share Your Experience</h3>
+                      <p className="text-white/90">We'd love to hear about your experience!</p>
                     </div>
                     
-                    {/* Mobile Content */}
-                    <div className="h-full bg-gray-50 overflow-hidden">
-                      <div className="bg-primary-950 text-white p-4 text-center">
-                        <div className="flex justify-center mb-2">
-                          <TestiFlowIcon className="h-5 w-5 text-white" />
+                    {/* Form Content */}
+                    <div className="p-6 space-y-6">
+                      {/* Rating */}
+                      <div>
+                        <label className="block font-medium text-gray-700 mb-3">
+                          How would you rate your experience? *
+                        </label>
+                        <div className="flex space-x-1">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star key={star} className="h-7 w-7 text-yellow-400 fill-current" />
+                          ))}
                         </div>
-                        <h2 className="font-bold text-sm">Share Your Experience</h2>
-                        <p className="text-xs text-white/80 mt-1">We'd love your feedback!</p>
                       </div>
                       
-                      <div className="p-4 space-y-3">
-                        <div>
-                          <div className="text-xs text-gray-600 mb-1">Rating</div>
-                          <div className="flex space-x-1">
-                            {[1, 2, 3, 4, 5].map((star) => (
-                              <Star key={star} className="h-4 w-4 text-yellow-400 fill-current" />
-                            ))}
-                          </div>
+                      {/* Name Field */}
+                      <div>
+                        <label className="block font-medium text-gray-700 mb-2">Your Name *</label>
+                        <div className="w-full px-4 py-3 border border-gray-300 rounded-md bg-gray-50 text-gray-500">
+                          John Smith
                         </div>
-                        
-                        <div>
-                          <div className="text-xs text-gray-600 mb-1">Name</div>
-                          <div className="bg-white border border-gray-200 rounded p-2 text-xs">Sarah Johnson</div>
-                        </div>
-                        
-                        <div>
-                          <div className="text-xs text-gray-600 mb-1">Company</div>
-                          <div className="bg-white border border-gray-200 rounded p-2 text-xs">TechCorp</div>
-                        </div>
-                        
-                        <div>
-                          <div className="text-xs text-gray-600 mb-1">Testimonial</div>
-                          <div className="bg-white border border-gray-200 rounded p-2 h-16 text-xs text-gray-500">
-                            Amazing product! Has saved us...
-                          </div>
-                        </div>
-                        
-                        <button className="w-full bg-secondary-500 text-white py-2 rounded text-sm font-medium">
-                          Submit
-                        </button>
                       </div>
+                      
+                      {/* Message Field */}
+                      <div>
+                        <label className="block font-medium text-gray-700 mb-2">Your Testimonial *</label>
+                        <div className="w-full px-4 py-3 border border-gray-300 rounded-md bg-gray-50 text-gray-500 h-24 flex items-start">
+                          <span>This product has been amazing...</span>
+                        </div>
+                      </div>
+                      
+                      {/* Submit Button */}
+                      <button
+                        type="button"
+                        className="w-full bg-secondary-500 text-white py-4 px-6 rounded-lg font-semibold hover:bg-secondary-600 transition-colors text-lg"
+                      >
+                        Submit Testimonial
+                      </button>
                     </div>
                   </div>
                 </div>
