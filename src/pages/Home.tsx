@@ -16,77 +16,135 @@ export const Home: React.FC = () => {
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-br from-primary-50 via-white to-accent-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32">
-          <div className="text-center">
-            <div className="flex justify-center mb-8">
-              <div className="flex items-center space-x-2 bg-primary-100 px-4 py-2 rounded-full">
-                <TestiFlowIcon className="h-6 w-6 text-teal" />
-                <span className="text-primary-950 font-semibold">TestiFlow</span>
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Left Side - Content */}
+            <div>
+              <div className="mb-8">
+                <div className="inline-flex items-center space-x-2 bg-secondary-100 text-secondary-800 px-4 py-2 rounded-full font-semibold text-sm mb-8">
+                  <span>🎉</span>
+                  <span>7-Day Free Trial Available</span>
+                </div>
+                
+                <h1 className="text-5xl md:text-6xl font-bold text-primary-950 mb-6 leading-tight">
+                  Transform Customer
+                  <span className="text-secondary-500"> Testimonials</span>
+                  <br />
+                  Into Marketing Gold
+                </h1>
+                
+                <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+                  Complete testimonial collection and management platform with legal rights tracking 
+                  and automatic ad-ready export formats for marketing teams.
+                </p>
+                
+                <div className="mb-6">
+                  <button
+                    onClick={handleSignupClick}
+                    className="bg-primary-950 text-white px-8 py-4 rounded-lg font-semibold hover:bg-primary-900 transition-all duration-200 flex items-center space-x-2 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-lg"
+                  >
+                    <span>Start Free Trial</span>
+                    <ArrowRight className="h-5 w-5" />
+                  </button>
+                </div>
+                
+                <p className="text-gray-500 text-sm">
+                  <strong>7-day free trial</strong> • Cancel anytime
+                </p>
               </div>
             </div>
-            
-            <h1 className="text-5xl md:text-7xl font-bold text-primary-950 mb-6 leading-tight">
-              Transform Customer
-              <span className="text-secondary-500"> Testimonials</span>
-              <br />
-              Into Marketing Gold
-            </h1>
-            
-            <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
-              Complete testimonial collection and management platform with legal rights tracking 
-              and automatic ad-ready export formats for marketing teams.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-              <button
-                onClick={handleSignupClick}
-                className="bg-primary-950 text-white px-8 py-4 rounded-lg font-semibold hover:bg-primary-900 transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-              >
-                <span>Start Free Trial</span>
-                <ArrowRight className="h-5 w-5" />
-              </button>
-            </div>
 
-            {/* Hero Mockup */}
-            <div className="relative max-w-5xl mx-auto">
+            {/* Right Side - Mockup */}
+            <div className="relative">
               <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
-                <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 flex items-center space-x-3">
-                  <div className="flex space-x-2">
+                {/* Browser Header */}
+                <div className="bg-gray-100 px-4 py-3 border-b border-gray-200 flex items-center space-x-3">
+                  <div className="flex space-x-1.5">
                     <div className="w-3 h-3 bg-red-400 rounded-full"></div>
                     <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
                     <div className="w-3 h-3 bg-green-400 rounded-full"></div>
                   </div>
-                  <div className="text-sm text-gray-500">TestiFlow Dashboard</div>
+                  <div className="flex-1 bg-white rounded-md px-3 py-1 text-sm text-gray-500 text-center">
+                    testiflow.com/dashboard
+                  </div>
                 </div>
-                <div className="p-8">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-100">
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="font-semibold text-gray-900">Total Testimonials</h3>
-                        <MessageSquare className="h-5 w-5 text-primary-950" />
-                      </div>
-                      <div className="text-3xl font-bold text-primary-950">247</div>
-                      <div className="text-sm text-gray-600 mt-1">+23 this month</div>
+                
+                {/* Dashboard Content */}
+                <div className="p-6">
+                  {/* Header */}
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-xl font-bold text-gray-900">Recent Testimonials</h2>
+                    <div className="bg-secondary-100 text-secondary-800 px-3 py-1 rounded-full text-sm font-medium">
+                      +12 this week
                     </div>
-                    <div className="bg-gradient-to-br from-secondary-50 to-secondary-100 p-6 rounded-xl border border-secondary-200">
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="font-semibold text-gray-900">Approved</h3>
-                        <CheckCircle className="h-5 w-5 text-secondary-500" />
+                  </div>
+                  
+                  {/* Testimonial Cards */}
+                  <div className="space-y-4">
+                    {[
+                      { name: 'Sarah Johnson', company: 'TechCorp', rating: 5, status: 'approved' },
+                      { name: 'Mike Chen', company: 'StartupXYZ', rating: 5, status: 'pending' },
+                      { name: 'Emily Davis', company: 'GrowthCo', rating: 4, status: 'approved' }
+                    ].map((testimonial, index) => (
+                      <div key={index} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
+                              <User className="h-4 w-4 text-primary-950" />
+                            </div>
+                            <div>
+                              <div className="font-medium text-gray-900 text-sm">{testimonial.name}</div>
+                              <div className="text-xs text-gray-500">{testimonial.company}</div>
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <div className="flex">
+                              {[...Array(testimonial.rating)].map((_, i) => (
+                                <Star key={i} className="h-3 w-3 text-yellow-400 fill-current" />
+                              ))}
+                            </div>
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                              testimonial.status === 'approved' 
+                                ? 'bg-secondary-100 text-secondary-800' 
+                                : 'bg-yellow-100 text-yellow-800'
+                            }`}>
+                              {testimonial.status}
+                            </span>
+                          </div>
+                        </div>
+                        <p className="text-xs text-gray-600 line-clamp-2">
+                          "Amazing product! Has completely transformed our workflow and saved us countless hours..."
+                        </p>
                       </div>
-                      <div className="text-3xl font-bold text-secondary-500">189</div>
-                      <div className="text-sm text-gray-600 mt-1">76% approval rate</div>
+                    ))}
+                  </div>
+                  
+                  {/* Quick Stats */}
+                  <div className="grid grid-cols-3 gap-3 mt-6 pt-4 border-t border-gray-200">
+                    <div className="text-center">
+                      <div className="text-lg font-bold text-primary-950">247</div>
+                      <div className="text-xs text-gray-500">Total</div>
                     </div>
-                    <div className="bg-gradient-to-br from-accent-50 to-accent-100 p-6 rounded-xl border border-accent-200">
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="font-semibold text-gray-900">Exported</h3>
-                        <Download className="h-5 w-5 text-accent-600" />
-                      </div>
-                      <div className="text-3xl font-bold text-accent-600">156</div>
-                      <div className="text-sm text-gray-600 mt-1">Ready for ads</div>
+                    <div className="text-center">
+                      <div className="text-lg font-bold text-secondary-500">189</div>
+                      <div className="text-xs text-gray-500">Approved</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-lg font-bold text-accent-600">156</div>
+                      <div className="text-xs text-gray-500">Exported</div>
                     </div>
                   </div>
                 </div>
               </div>
+              
+              {/* Floating Elements */}
+              <div className="absolute -top-4 -right-4 bg-secondary-500 text-white px-4 py-2 rounded-lg shadow-lg transform rotate-3">
+                <div className="text-sm font-semibold">Live Updates!</div>
+              </div>
+              <div className="absolute -bottom-4 -left-4 bg-accent-500 text-white px-4 py-2 rounded-lg shadow-lg transform -rotate-2">
+                <div className="text-sm font-semibold">Export Ready</div>
+              </div>
             </div>
+          </div>
           </div>
         </div>
       </div>
