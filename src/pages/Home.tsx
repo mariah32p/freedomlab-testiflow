@@ -45,7 +45,7 @@ export const Home: React.FC = () => {
         setTimeout(() => setIsAnimating(false), 500);
         return nextStep;
       });
-    }, 4000); // Change step every 4 seconds
+    }, 3000); // Change step every 3 seconds
 
     return () => clearTimeout(timer);
   }, [currentStep, demoInView, isAnimating]);
@@ -180,7 +180,7 @@ export const Home: React.FC = () => {
 
       {/* 2. Demo Video Section */}
       <section ref={demoRef} className="py-24 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-6">See TestiFlow in Action</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -217,7 +217,7 @@ export const Home: React.FC = () => {
 
           {/* Desktop Demo */}
           <div className="hidden lg:block">
-            <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200 min-h-[600px]">
+            <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200 min-h-[600px] mx-2">
               {/* Demo Navbar */}
               <div className="bg-white border-b border-gray-200 px-6 py-4">
                 <div className="flex items-center justify-between">
@@ -537,10 +537,10 @@ export const Home: React.FC = () => {
           </div>
           
           {/* Mobile Demo */}
-          <div className="lg:hidden">
+          <div className="lg:hidden px-2">
             <div className="space-y-8">
               {/* Step Cards */}
-              <div className="grid gap-6">
+              <div className="grid gap-4">
                 {/* Create Forms */}
                 <div className={`bg-white rounded-xl p-6 border-2 transition-all duration-500 ${
                   currentStep === 0 ? 'border-primary-500 shadow-lg' : 'border-gray-200'
@@ -559,21 +559,21 @@ export const Home: React.FC = () => {
                   
                   {currentStep === 0 && (
                     <div className="animate-slide-in">
-                      <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                      <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
                         <div className="space-y-3">
                           <div>
                             <div className="text-xs font-medium text-gray-700 mb-1">Form Title</div>
-                            <div className="w-full px-3 py-2 bg-white border border-gray-300 rounded text-sm">
+                            <div className="w-full px-2 py-2 bg-white border border-gray-300 rounded text-xs">
                               Share Your Experience
                             </div>
                           </div>
                           <div>
                             <div className="text-xs font-medium text-gray-700 mb-1">Description</div>
-                            <div className="w-full px-3 py-2 bg-white border border-gray-300 rounded text-sm">
+                            <div className="w-full px-2 py-2 bg-white border border-gray-300 rounded text-xs">
                               We'd love your feedback!
                             </div>
                           </div>
-                          <button className="w-full bg-primary-950 text-white py-2 rounded font-medium text-sm">
+                          <button className="w-full bg-primary-950 text-white py-2 rounded font-medium text-xs">
                             Create Form
                           </button>
                         </div>
@@ -600,36 +600,36 @@ export const Home: React.FC = () => {
                   
                   {currentStep === 1 && (
                     <div className="animate-slide-in space-y-3">
-                      <div className="bg-yellow-50 rounded-lg p-4 border border-yellow-200">
+                      <div className="bg-yellow-50 rounded-lg p-3 border border-yellow-200">
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center space-x-2">
-                            <div className="w-6 h-6 bg-yellow-100 rounded-full flex items-center justify-center">
+                            <div className="w-5 h-5 bg-yellow-100 rounded-full flex items-center justify-center">
                               <span className="text-yellow-600 text-xs font-bold">SJ</span>
                             </div>
-                            <span className="text-sm font-medium">Sarah Johnson</span>
+                            <span className="text-xs font-medium">Sarah Johnson</span>
                           </div>
                           <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs">Pending</span>
                         </div>
                         <div className="flex mb-2">
                           {[...Array(5)].map((_, i) => (
-                            <Star key={i} className="h-3 w-3 text-yellow-400 fill-current" />
+                            <Star key={i} className="h-2.5 w-2.5 text-yellow-400 fill-current" />
                           ))}
                         </div>
                         <p className="text-xs text-gray-700">"Amazing platform! Saves us hours..."</p>
                       </div>
-                      <div className="bg-green-50 rounded-lg p-4 border border-green-200">
+                      <div className="bg-green-50 rounded-lg p-3 border border-green-200">
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center space-x-2">
-                            <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
+                            <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center">
                               <span className="text-green-600 text-xs font-bold">MC</span>
                             </div>
-                            <span className="text-sm font-medium">Mike Chen</span>
+                            <span className="text-xs font-medium">Mike Chen</span>
                           </div>
                           <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">Approved</span>
                         </div>
                         <div className="flex mb-2">
                           {[...Array(5)].map((_, i) => (
-                            <Star key={i} className="h-3 w-3 text-yellow-400 fill-current" />
+                            <Star key={i} className="h-2.5 w-2.5 text-yellow-400 fill-current" />
                           ))}
                         </div>
                         <p className="text-xs text-gray-700">"Perfect for marketing campaigns."</p>
@@ -656,21 +656,21 @@ export const Home: React.FC = () => {
                   
                   {currentStep === 2 && (
                     <div className="animate-slide-in">
-                      <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                        <div className="grid grid-cols-2 gap-3">
-                          <div className="bg-white rounded p-3 border text-center">
+                      <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                        <div className="grid grid-cols-2 gap-2">
+                          <div className="bg-white rounded p-2 border text-center">
                             <div className="text-green-600 mb-1">📊</div>
                             <div className="text-xs font-medium">CSV Export</div>
                           </div>
-                          <div className="bg-white rounded p-3 border text-center">
+                          <div className="bg-white rounded p-2 border text-center">
                             <div className="text-blue-600 mb-1">💻</div>
                             <div className="text-xs font-medium">Website Widget</div>
                           </div>
-                          <div className="bg-white rounded p-3 border text-center">
+                          <div className="bg-white rounded p-2 border text-center">
                             <div className="text-orange-600 mb-1">📱</div>
                             <div className="text-xs font-medium">Social Posts</div>
                           </div>
-                          <div className="bg-white rounded p-3 border text-center">
+                          <div className="bg-white rounded p-2 border text-center">
                             <div className="text-purple-600 mb-1">📧</div>
                             <div className="text-xs font-medium">Email Ready</div>
                           </div>
