@@ -419,7 +419,7 @@ export const Home: React.FC = () => {
                   "The video testimonial feature has been incredible for our insurance business. Clients love sharing their stories, and it builds so much trust."
                 </p>
                 <div className="text-sm text-gray-600">
-                  - Amber I., Insurance & Design
+                  - Amber I., Insurance
                 </div>
               </div>
             </div>
