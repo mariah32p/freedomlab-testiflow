@@ -4,7 +4,7 @@ import { Menu, X, User, LogOut } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { TestiFlowIcon } from './TestiFlowIcon';
 
-const Navbar = () => {
+export const Navbar = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -220,5 +220,3 @@ const Navbar = () => {
     </nav>
   );
 };
-
-export default Navbar;
