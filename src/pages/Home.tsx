@@ -296,7 +296,7 @@ export const Home: React.FC = () => {
           
           <div className="text-center mt-8">
             <p className="text-gray-500">
-              All plans include a 7-day free trial. No credit card required to start.
+              All plans include a 7-day free trial.
             </p>
           </div>
         </div>
@@ -428,7 +428,7 @@ export const Home: React.FC = () => {
             Start Your Free Trial Today
           </button>
           <p className="text-white/80 text-sm mt-4">
-            7-day free trial • No credit card required • Cancel anytime
+            7-day free trial • Cancel anytime
           </p>
         </div>
       </div>
