@@ -1,64 +1,25 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Star, MessageSquare, Settings, Download, CheckCircle, User, Shield, Plus, Eye, Copy, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
+import { ArrowRight, Star, MessageSquare, Download, Settings, CheckCircle, Play, Users, TrendingUp, Clock } from 'lucide-react';
 import { TestiFlowIcon } from '../components/TestiFlowIcon';
-
-interface DemoStep {
-  id: string;
-  title: string;
-  description: string;
-  duration: number;
-}
-
-const demoSteps: DemoStep[] = [
-  { id: 'create-form', title: 'Create Forms', description: 'Setting up testimonial collection forms', duration: 6000 },
-  { id: 'custom-fields', title: 'Add Custom Fields', description: 'Adding custom questions to the form', duration: 7000 },
-  { id: 'customer-submission', title: 'Customer Fills Form', description: 'Customer submitting their testimonial', duration: 6000 },
-  { id: 'testimonials-approval', title: 'Review & Approve', description: 'Managing testimonials in the dashboard', duration: 6000 },
-  { id: 'export-use', title: 'Export & Use', description: 'Using testimonials in your marketing', duration: 7000 },
-];
 
 export const Home: React.FC = () => {
   const navigate = useNavigate();
   const demoRef = useRef<HTMLDivElement>(null);
-  const [isDemoVisible, setIsDemoVisible] = useState(false);
+  const [demoInView, setDemoInView] = useState(false);
+
+  // Demo animation state
   const [currentStep, setCurrentStep] = useState(0);
-  const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [showTestimonials, setShowTestimonials] = useState(false);
+  const [showExport, setShowExport] = useState(false);
 
-  // Demo state
-  const [showCreatePanel, setShowCreatePanel] = useState(false);
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    thank_you_message: ''
-  });
-  const [createdForm, setCreatedForm] = useState<any>(null);
-  const [showCustomFieldsPanel, setShowCustomFieldsPanel] = useState(false);
-  const [customFields, setCustomFields] = useState<any[]>([]);
-  const [showAddFieldPanel, setShowAddFieldPanel] = useState(false);
-  const [newField, setNewField] = useState({ field_type: 'select', label: '', options: [''] });
-  const [customerFormData, setCustomerFormData] = useState({
-    name: '',
-    email: '',
-    company: '',
-    message: '',
-    rating: 0,
-    role: '',
-    industry: ''
-  });
-  const [testimonials, setTestimonials] = useState<any[]>([]);
-  const [showExportPanel, setShowExportPanel] = useState(false);
-  const [selectedExportFormat, setSelectedExportFormat] = useState<'csv' | 'json' | 'widget'>('csv');
-  const [generatedContent, setGeneratedContent] = useState('');
-  const [highlightedTestimonial, setHighlightedTestimonial] = useState<string | null>(null);
-
-  // Intersection Observer for demo
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !isDemoVisible) {
-          setIsDemoVisible(true);
-          setCurrentStep(0);
+        if (entry.isIntersecting && !demoInView) {
+          setDemoInView(true);
+          startDemoAnimation();
         }
       },
       { threshold: 0.3 }
@@ -69,640 +30,164 @@ export const Home: React.FC = () => {
     }
 
     return () => observer.disconnect();
-  }, [isDemoVisible]);
+  }, [demoInView]);
 
-  // Auto-advance timer for demo
-  useEffect(() => {
-    if (!isDemoVisible) return;
+  const startDemoAnimation = () => {
+    // Reset state
+    setCurrentStep(0);
+    setShowCreateForm(false);
+    setShowTestimonials(false);
+    setShowExport(false);
 
-    const timer = setTimeout(() => {
-      if (currentStep < demoSteps.length - 1) {
-        setCurrentStep(prev => prev + 1);
-      } else {
-        setCurrentStep(0);
-        resetAllAnimations();
+    // Step 1: Create Form
+    setTimeout(() => {
+      setCurrentStep(1);
+      setShowCreateForm(true);
+    }, 500);
+
+    // Step 2: Show Testimonials
+    setTimeout(() => {
+      setCurrentStep(2);
+      setShowCreateForm(false);
+      setShowTestimonials(true);
+    }, 3000);
+
+    // Step 3: Export
+    setTimeout(() => {
+      setCurrentStep(3);
+      setShowExport(true);
+    }, 6000);
+
+    // Reset and loop
+    setTimeout(() => {
+      setCurrentStep(0);
+      setShowCreateForm(false);
+      setShowTestimonials(false);
+      setShowExport(false);
+      if (demoInView) {
+        startDemoAnimation();
       }
-    }, demoSteps[currentStep].duration);
-
-    return () => clearTimeout(timer);
-  }, [currentStep, isDemoVisible]);
-
-  const resetAllAnimations = () => {
-    setShowCreatePanel(false);
-    setFormData({ title: '', description: '', thank_you_message: '' });
-    setCreatedForm(null);
-    setShowCustomFieldsPanel(false);
-    setCustomFields([]);
-    setShowAddFieldPanel(false);
-    setNewField({ field_type: 'select', label: '', options: [''] });
-    setCustomerFormData({ name: '', email: '', company: '', message: '', rating: 0, role: '', industry: '' });
-    setTestimonials([]);
-    setShowExportPanel(false);
-    setGeneratedContent('');
-    setHighlightedTestimonial(null);
+    }, 9000);
   };
 
-  // Step-specific animations
-  useEffect(() => {
-    if (!isDemoVisible) return;
-    
-    resetAllAnimations();
-
-    if (currentStep === 0) { // Create Forms
-      setTimeout(() => setShowCreatePanel(true), 500);
-      setTimeout(() => setFormData({
-        title: 'Share Your Experience with TechCorp',
-        description: "We'd love to hear about your experience with our software solutions!",
-        thank_you_message: 'Thank you for taking the time to share your feedback!'
-      }), 1500);
-      setTimeout(() => {
-        setShowCreatePanel(false);
-        setCreatedForm({
-          id: '1',
-          title: 'Share Your Experience with TechCorp',
-          description: "We'd love to hear about your experience with our software solutions!",
-          is_active: true,
-          created_at: new Date().toISOString()
-        });
-      }, 4500);
-
-    } else if (currentStep === 1) { // Custom Fields
-      setCreatedForm({
-        id: '1',
-        title: 'Share Your Experience with TechCorp',
-        description: "We'd love to hear about your experience with our software solutions!",
-        is_active: true,
-        created_at: new Date().toISOString()
-      });
-      setTimeout(() => setShowCustomFieldsPanel(true), 500);
-      setTimeout(() => setShowAddFieldPanel(true), 1000);
-      setTimeout(() => setNewField({
-        field_type: 'select',
-        label: 'What is your role?',
-        options: ['CEO/Founder', 'CTO', 'Marketing Manager', 'Operations Manager']
-      }), 2000);
-      setTimeout(() => {
-        setShowAddFieldPanel(false);
-        setCustomFields([{
-          id: '1',
-          field_type: 'select',
-          label: 'What is your role?',
-          options: ['CEO/Founder', 'CTO', 'Marketing Manager', 'Operations Manager'],
-          is_required: true
-        }]);
-      }, 3500);
-
-    } else if (currentStep === 2) { // Customer Submission
-      setCustomFields([
-        { id: '1', field_type: 'select', label: 'What is your role?', options: ['CEO/Founder', 'CTO', 'Marketing Manager', 'Operations Manager'], is_required: true }
-      ]);
-      setTimeout(() => setCustomerFormData(prev => ({ ...prev, rating: 5 })), 500);
-      setTimeout(() => setCustomerFormData(prev => ({ ...prev, name: 'Sarah Johnson' })), 1000);
-      setTimeout(() => setCustomerFormData(prev => ({ ...prev, email: 'sarah@techcorp.com' })), 1500);
-      setTimeout(() => setCustomerFormData(prev => ({ ...prev, company: 'TechCorp Solutions' })), 2000);
-      setTimeout(() => setCustomerFormData(prev => ({ ...prev, role: 'CTO' })), 2500);
-      setTimeout(() => setCustomerFormData(prev => ({
-        ...prev,
-        message: 'TestiFlow has completely transformed how we collect and manage customer feedback. The automated workflows save us hours every week!'
-      })), 3000);
-
-    } else if (currentStep === 3) { // Testimonials Approval
-      const testimonialsData = [
-        {
-          id: '1', name: 'Sarah Johnson', email: 'sarah@techcorp.com', company: 'TechCorp Solutions',
-          message: 'TestiFlow has completely transformed how we collect and manage customer feedback.',
-          rating: 5, status: 'pending', submitted_at: new Date().toISOString(), form_id: '1'
-        },
-        {
-          id: '2', name: 'Mike Chen', email: 'mike@startupxyz.com', company: 'StartupXYZ',
-          message: 'Amazing product! The testimonial management features are exactly what we needed.',
-          rating: 5, status: 'approved', submitted_at: new Date(Date.now() - 86400000).toISOString(), form_id: '1'
-        }
-      ];
-      setTestimonials(testimonialsData);
-      
-      setTimeout(() => {
-        setHighlightedTestimonial('1');
-      }, 1000);
-      setTimeout(() => {
-        setTestimonials(prev => prev.map(t => 
-          t.id === '1' ? { ...t, status: 'approved' } : t
-        ));
-        setHighlightedTestimonial(null);
-      }, 2500);
-
-    } else if (currentStep === 4) { // Export
-      setTestimonials([
-        { id: '1', name: 'Sarah Johnson', company: 'TechCorp', message: 'TestiFlow has completely transformed our workflow.', rating: 5, status: 'approved' },
-        { id: '2', name: 'Mike Chen', company: 'StartupXYZ', message: 'Amazing product! Exactly what we needed.', rating: 5, status: 'approved' }
-      ]);
-      setTimeout(() => setShowExportPanel(true), 1000);
-      setTimeout(() => {
-        setSelectedExportFormat('widget');
-      }, 2500);
-      setTimeout(() => {
-        setGeneratedContent('<div class="testimonials-widget">...</div>');
-      }, 4000);
-    }
-  }, [currentStep, isDemoVisible]);
-
-  const handleSignupClick = () => {
+  const handleGetStarted = () => {
     navigate('/signup');
-    window.scrollTo(0, 0);
-  };
-
-  const getActiveTab = () => {
-    switch (currentStep) {
-      case 0:
-      case 1:
-        return 'forms';
-      case 2:
-        return 'submit';
-      case 3:
-      case 4:
-        return 'testimonials';
-      default:
-        return 'dashboard';
-    }
-  };
-
-  const renderDemoContent = () => {
-    if (currentStep === 2) {
-      // Customer submission view
-      return (
-        <div className="bg-gray-50 py-6">
-          <div className="max-w-2xl mx-auto px-4">
-            <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-              <div className="px-6 py-6 text-center text-white bg-primary-950">
-                <div className="flex justify-center mb-3">
-                  <TestiFlowIcon className="h-6 w-6 text-white" />
-                </div>
-                <h1 className="text-xl font-bold mb-2">Share Your Experience with TechCorp</h1>
-                <p className="text-white/90 text-sm">We'd love to hear about your experience with our software solutions!</p>
-              </div>
-              <div className="p-6">
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">How would you rate your experience? *</label>
-                    <div className="flex space-x-1">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star key={star} className={`h-6 w-6 ${star <= customerFormData.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} />
-                      ))}
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Your Name *</label>
-                    <input type="text" value={customerFormData.name} className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm" readOnly />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Email Address *</label>
-                    <input type="email" value={customerFormData.email} className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm" readOnly />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Company (Optional)</label>
-                    <input type="text" value={customerFormData.company} className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm" readOnly />
-                  </div>
-                  {customFields.map((field) => (
-                    <div key={field.id}>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">{field.label}{field.is_required && <span className="text-red-500 ml-1">*</span>}</label>
-                      <select value={field.id === '1' ? customerFormData.role : customerFormData.industry} className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm" disabled>
-                        <option value="">Select an option...</option>
-                        {field.options.map((option: string, index: number) => (<option key={index} value={option}>{option}</option>))}
-                      </select>
-                    </div>
-                  ))}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Your Testimonial *</label>
-                    <textarea rows={3} value={customerFormData.message} className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm" readOnly />
-                  </div>
-                  <button type="submit" className="w-full bg-secondary-500 text-white py-3 px-6 rounded-lg font-semibold hover:bg-secondary-600 transition-colors flex items-center justify-center space-x-2">
-                    <CheckCircle className="h-4 w-4" />
-                    <span>Submit Testimonial</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    // Default dashboard views
-    return (
-      <div className="bg-gray-50 py-6">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="bg-white shadow rounded-lg">
-            <div className="px-6 py-4">
-              {/* Header */}
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h1 className="text-2xl font-bold text-gray-900">
-                    {getActiveTab() === 'forms' ? 'Forms' : 'Testimonials'}
-                  </h1>
-                  <p className="text-gray-600 text-sm mt-1">
-                    {getActiveTab() === 'forms' 
-                      ? 'Create and manage testimonial collection forms'
-                      : 'Review, approve, and manage customer testimonials'
-                    }
-                  </p>
-                </div>
-                {getActiveTab() === 'forms' && (
-                  <button
-                    onClick={() => setShowCreatePanel(true)}
-                    className={`bg-primary-950 text-white px-4 py-2 rounded-lg hover:bg-primary-900 transition-all duration-200 flex items-center space-x-2 font-medium shadow-lg ${
-                      currentStep === 0 ? 'ring-4 ring-primary-200 animate-pulse' : ''
-                    }`}
-                  >
-                    <Plus className="h-4 w-4" />
-                    <span>New Form</span>
-                  </button>
-                )}
-                {getActiveTab() === 'testimonials' && (
-                  <button
-                    onClick={() => setShowExportPanel(true)}
-                    className={`border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors flex items-center space-x-2 ${
-                      currentStep === 4 ? 'ring-4 ring-blue-200 animate-pulse' : ''
-                    }`}
-                  >
-                    <Download className="h-4 w-4" />
-                    <span>Export</span>
-                  </button>
-                )}
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Main Content */}
-                <div className="lg:col-span-2">
-                  {getActiveTab() === 'forms' ? (
-                    <>
-                      {createdForm ? (
-                        <div className="space-y-4">
-                          <div className="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-lg transition-all duration-200 animate-slide-in">
-                            <div className="mb-3">
-                              <h3 className="text-lg font-semibold text-gray-900 mb-1 leading-tight">{createdForm.title}</h3>
-                              <p className="text-gray-600 text-sm leading-relaxed">{createdForm.description}</p>
-                            </div>
-                            <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-                              <button 
-                                onClick={() => setShowCustomFieldsPanel(true)}
-                                className={`text-primary-950 hover:text-primary-800 text-sm font-medium flex items-center space-x-1 transition-colors ${
-                                  currentStep === 1 ? 'ring-2 ring-primary-200 rounded px-2 py-1' : ''
-                                }`}
-                              >
-                                <Settings className="h-4 w-4" />
-                                <span>Custom Fields</span>
-                              </button>
-                              <div className="flex space-x-2">
-                                <button className="bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-1 rounded-md text-sm font-medium transition-colors flex items-center space-x-1">
-                                  <Copy className="h-3 w-3" />
-                                  <span>Copy</span>
-                                </button>
-                                <button className="bg-gray-50 text-gray-600 hover:bg-gray-100 px-3 py-1 rounded-md text-sm font-medium transition-colors flex items-center space-x-1">
-                                  <ExternalLink className="h-3 w-3" />
-                                  <span>Preview</span>
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="text-center py-12">
-                          <div className="w-16 h-16 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <Settings className="h-8 w-8 text-primary-950" />
-                          </div>
-                          <h3 className="text-xl font-semibold text-gray-900 mb-2">Create Your First Form</h3>
-                          <p className="text-gray-500 text-sm max-w-md mx-auto">
-                            Start gathering customer testimonials by creating a customized form.
-                          </p>
-                        </div>
-                      )}
-                    </>
-                  ) : (
-                    <div className="space-y-4">
-                      {testimonials.map((testimonial) => (
-                        <div 
-                          key={testimonial.id} 
-                          className={`bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-all duration-200 ${
-                            highlightedTestimonial === testimonial.id ? 'ring-4 ring-secondary-200 shadow-lg scale-105' : ''
-                          }`}
-                        >
-                          <div className="flex items-center justify-between mb-3">
-                            <div className="flex items-center space-x-3">
-                              <div className="w-8 h-8 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
-                                <User className="h-4 w-4 text-primary-950" />
-                              </div>
-                              <div>
-                                <div className="font-semibold text-gray-900 text-sm">{testimonial.name}</div>
-                                <div className="text-xs text-gray-500">{testimonial.company}</div>
-                              </div>
-                            </div>
-                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                              testimonial.status === 'approved' 
-                                ? 'bg-secondary-100 text-secondary-800' 
-                                : 'bg-yellow-100 text-yellow-800'
-                            }`}>
-                              {testimonial.status}
-                            </span>
-                          </div>
-                          <div className="flex items-center space-x-2 mb-3">
-                            <div className="flex">
-                              {[...Array(testimonial.rating)].map((_, i) => (
-                                <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
-                              ))}
-                            </div>
-                            <span className="text-xs text-gray-500">({testimonial.rating}/5)</span>
-                          </div>
-                          <p className="text-gray-700 text-sm leading-relaxed mb-3">"{testimonial.message}"</p>
-                          <div className="flex items-center justify-end">
-                            {testimonial.status === 'pending' && (
-                              <div className="flex space-x-2">
-                                <button className="bg-secondary-100 text-secondary-800 hover:bg-secondary-200 px-3 py-1 rounded-md text-xs font-medium transition-colors">
-                                  Approve
-                                </button>
-                                <button className="bg-red-100 text-red-800 hover:bg-red-200 px-3 py-1 rounded-md text-xs font-medium transition-colors">
-                                  Reject
-                                </button>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                {/* Side Panel */}
-                <div className="lg:col-span-1">
-                  {/* Create Form Panel */}
-                  {showCreatePanel && (
-                    <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-lg animate-slide-in">
-                      <h3 className="text-lg font-bold text-gray-900 mb-4">Create New Form</h3>
-                      <div className="space-y-3">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Form Title</label>
-                          <input
-                            type="text"
-                            value={formData.title}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                            readOnly
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                          <textarea
-                            value={formData.description}
-                            rows={2}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                            readOnly
-                          />
-                        </div>
-                        <div className="flex space-x-2 pt-3">
-                          <button className="flex-1 bg-primary-950 text-white py-2 px-3 rounded-md font-medium text-sm">
-                            Create Form
-                          </button>
-                          <button className="flex-1 bg-gray-300 text-gray-700 py-2 px-3 rounded-md font-medium text-sm">
-                            Cancel
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Custom Fields Panel */}
-                  {showCustomFieldsPanel && (
-                    <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-lg animate-slide-in">
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-lg font-bold text-gray-900">Custom Fields</h3>
-                        <button className="bg-primary-950 text-white px-3 py-1 rounded-md text-sm flex items-center space-x-1">
-                          <Plus className="h-3 w-3" />
-                          <span>Add</span>
-                        </button>
-                      </div>
-                      
-                      {/* Add Field Panel */}
-                      {showAddFieldPanel && (
-                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4 animate-slide-in">
-                          <h4 className="text-sm font-medium text-blue-900 mb-2">Adding New Field</h4>
-                          <div className="space-y-2">
-                            <input
-                              type="text"
-                              value={newField.label}
-                              className="w-full px-2 py-1 border border-blue-300 rounded text-sm"
-                              readOnly
-                            />
-                            <div className="text-xs text-blue-700">Type: {newField.field_type}</div>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Existing Fields */}
-                      <div className="space-y-2">
-                        {customFields.map((field) => (
-                          <div key={field.id} className="bg-gray-50 border border-gray-200 rounded-lg p-3 animate-slide-in">
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <div className="font-medium text-gray-900 text-sm">
-                                  {field.label}
-                                  {field.is_required && <span className="text-red-500 ml-1">*</span>}
-                                </div>
-                                <div className="text-xs text-gray-500">
-                                  {field.field_type === 'select' ? 'Dropdown' : field.field_type}
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Export Panel */}
-                  {showExportPanel && (
-                    <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-lg animate-slide-in">
-                      <h3 className="text-lg font-bold text-gray-900 mb-4">Export Options</h3>
-                      <div className="space-y-3">
-                        <div>
-                          <h4 className="text-sm font-medium text-gray-700 mb-2">Choose Format</h4>
-                          <div className="space-y-2">
-                            {[
-                              { value: 'csv', label: 'CSV', color: 'text-green-600' },
-                              { value: 'json', label: 'JSON', color: 'text-blue-600' },
-                              { value: 'widget', label: 'Widget', color: 'text-purple-600' }
-                            ].map((format) => (
-                              <button
-                                key={format.value}
-                                onClick={() => setSelectedExportFormat(format.value as any)}
-                                className={`w-full p-2 border rounded-lg text-left transition-colors ${
-                                  selectedExportFormat === format.value
-                                    ? 'border-primary-500 bg-primary-50'
-                                    : 'border-gray-200 hover:bg-gray-50'
-                                }`}
-                              >
-                                <span className="text-sm font-medium">{format.label}</span>
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                        
-                        <button
-                          onClick={() => setGeneratedContent('<div>Generated code...</div>')}
-                          className="w-full bg-secondary-500 text-white py-2 px-3 rounded-lg hover:bg-secondary-600 transition-colors flex items-center justify-center space-x-2 text-sm"
-                        >
-                          <Download className="h-4 w-4" />
-                          <span>Generate</span>
-                        </button>
-
-                        {generatedContent && (
-                          <div className="bg-gray-900 text-white rounded-lg p-3 animate-slide-in">
-                            <div className="flex items-center justify-between mb-2">
-                              <span className="text-xs text-gray-300">Generated Code</span>
-                              <button className="bg-blue-600 text-white px-2 py-1 rounded text-xs">
-                                Copy
-                              </button>
-                            </div>
-                            <pre className="text-xs font-mono">
-                              &lt;div class="testimonials-widget"&gt;...
-                            </pre>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
   };
 
   return (
     <div className="bg-white">
-      {/* 1. Hero Section - Hook them with the problem/solution */}
-      <section className="relative bg-gradient-to-br from-primary-950 via-primary-900 to-secondary-500 text-white overflow-hidden">
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-          <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[80vh]">
-            {/* Left Content */}
-            <div className="text-center lg:text-left max-w-2xl">
-              <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-8 leading-tight">
-                Turn Customer 
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-950 to-secondary-500"> Feedback</span> into 
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary-500 to-accent-500"> Marketing Gold</span>
+      {/* 1. Hero Section */}
+      <section className="relative bg-white overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Left: Content */}
+            <div className="text-center lg:text-left">
+              <h1 className="text-5xl lg:text-7xl font-bold text-gray-900 mb-8 leading-tight">
+                Stop Losing
+                <span className="block bg-gradient-to-r from-primary-950 to-secondary-500 bg-clip-text text-transparent">
+                  Customer Feedback
+                </span>
               </h1>
-              <p className="text-xl text-white/90 mb-8 leading-relaxed">
-                Collect, manage, and showcase authentic customer testimonials that convert visitors into buyers. 
-                <span className="font-semibold text-white">Increase conversions by up to 34%.</span>
+              
+              <p className="text-xl lg:text-2xl text-gray-600 mb-10 leading-relaxed max-w-2xl">
+                Collect testimonials in one organized place. Export them ready for your website, ads, and social media.
               </p>
-              
-              {/* Social Proof Numbers */}
-              <div className="flex flex-wrap justify-center lg:justify-start gap-8 mb-10">
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-white">10,000+</div>
-                  <div className="text-sm text-white/70">Testimonials Collected</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-white">34%</div>
-                  <div className="text-sm text-white/70">Avg. Conversion Boost</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-white">2 min</div>
-                  <div className="text-sm text-white/70">Setup Time</div>
-                </div>
-              </div>
-              
-              {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-12">
                 <button
-                  onClick={handleSignupClick}
-                  className="group bg-white text-primary-950 hover:bg-gray-100 px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 transform hover:-translate-y-1 flex items-center justify-center space-x-2"
+                  onClick={handleGetStarted}
+                  className="bg-primary-950 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-primary-900 transition-all duration-200 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 flex items-center justify-center space-x-3"
                 >
                   <span>Start Free Trial</span>
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="h-6 w-6" />
                 </button>
-                <button
-                  onClick={() => document.getElementById('demo-section')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="border-2 border-white/30 text-white px-8 py-4 rounded-xl font-bold text-lg hover:border-white hover:bg-white/10 transition-all duration-300 flex items-center justify-center space-x-2"
-                >
-                  <Eye className="w-5 h-5" />
+                <button className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-xl font-semibold text-lg hover:border-primary-950 hover:text-primary-950 transition-all duration-200 flex items-center justify-center space-x-3">
+                  <Play className="h-6 w-6" />
                   <span>Watch Demo</span>
                 </button>
               </div>
-              
-              {/* Trust Indicators */}
-              <div className="mt-12 pt-8 border-t border-white/20">
-                <p className="text-sm text-white/70 mb-4">Trusted by teams at</p>
-                <div className="flex flex-wrap justify-center lg:justify-start items-center gap-8 opacity-60">
-                  <div className="text-lg font-bold text-white/60">TechCorp</div>
-                  <div className="text-lg font-bold text-white/60">StartupXYZ</div>
-                  <div className="text-lg font-bold text-white/60">GrowthCo</div>
-                  <div className="text-lg font-bold text-white/60">InnovateLab</div>
+
+              {/* Trust indicators */}
+              <div className="flex items-center justify-center lg:justify-start space-x-8 text-sm text-gray-500">
+                <div className="flex items-center space-x-2">
+                  <Users className="h-5 w-5 text-secondary-500" />
+                  <span>500+ businesses</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <TrendingUp className="h-5 w-5 text-secondary-500" />
+                  <span>34% conversion boost</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Clock className="h-5 w-5 text-secondary-500" />
+                  <span>2min setup</span>
                 </div>
               </div>
             </div>
-            
-            {/* Right Content - Phone Mockup */}
+
+            {/* Right: Phone Mockup */}
             <div className="flex justify-center lg:justify-end">
               <div className="relative">
-                <div className="w-[300px] h-[600px] sm:w-[350px] sm:h-[700px] bg-gray-900 rounded-[3rem] p-2 shadow-2xl transform rotate-3 hover:rotate-0 transition-transform duration-500">
+                {/* Phone Frame */}
+                <div className="w-80 h-[640px] bg-gray-900 rounded-[3rem] p-3 shadow-2xl">
                   <div className="w-full h-full bg-white rounded-[2.5rem] overflow-hidden relative">
-                    {/* Phone Status Bar */}
-                    <div className="bg-gray-900 h-6 rounded-t-[2.5rem] flex items-center justify-center">
-                      <div className="w-16 h-1 bg-gray-600 rounded-full"></div>
-                    </div>
-                    
-                    {/* Form Header */}
-                    <div className="bg-gradient-to-r from-primary-950 to-secondary-500 px-6 py-8 text-center text-white">
-                      <div className="flex justify-center mb-3">
-                        <TestiFlowIcon className="h-8 w-8 text-white" />
+                    {/* Status Bar */}
+                    <div className="bg-gray-50 h-8 flex items-center justify-center">
+                      <div className="flex space-x-1">
+                        <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                        <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                        <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
                       </div>
-                      <h2 className="text-xl font-bold mb-2">Share Your Experience</h2>
-                      <p className="text-white/90 text-sm">We'd love to hear your feedback!</p>
                     </div>
-                    
+
+                    {/* Form Header */}
+                    <div className="bg-primary-950 px-6 py-8 text-center text-white">
+                      <TestiFlowIcon className="h-8 w-8 text-white mx-auto mb-3" />
+                      <h2 className="text-lg font-bold mb-2">Share Your Experience</h2>
+                      <p className="text-white/80 text-sm">We'd love your feedback!</p>
+                    </div>
+
                     {/* Form Content */}
-                    <div className="p-6 space-y-4">
+                    <div className="p-6 space-y-6">
+                      {/* Rating */}
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Rating *</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-3">Rate your experience</label>
                         <div className="flex space-x-1">
                           {[1, 2, 3, 4, 5].map((star) => (
-                            <Star key={star} className="h-6 w-6 text-yellow-400 fill-current" />
+                            <Star key={star} className="h-7 w-7 text-yellow-400 fill-current" />
                           ))}
                         </div>
                       </div>
+
+                      {/* Name Field */}
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Name *</label>
-                        <div className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-600 text-sm">
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                        <div className="w-full px-3 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-600 text-sm">
                           Sarah Johnson
                         </div>
                       </div>
+
+                      {/* Testimonial */}
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Testimonial *</label>
-                        <div className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-600 text-xs h-20 flex items-start pt-2">
-                          <span>This product has transformed our workflow...</span>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Your testimonial</label>
+                        <div className="w-full px-3 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-600 text-sm h-20 flex items-start">
+                          <span>This platform is amazing for collecting...</span>
                         </div>
                       </div>
-                      <button className="w-full bg-gradient-to-r from-secondary-500 to-accent-500 text-white py-3 px-6 rounded-lg font-semibold shadow-lg">
+
+                      {/* Submit Button */}
+                      <button className="w-full bg-secondary-500 text-white py-4 rounded-lg font-semibold text-lg shadow-lg">
                         Submit Testimonial
                       </button>
                     </div>
                   </div>
                 </div>
-                
+
                 {/* Floating Elements */}
-                <div className="absolute -top-4 -left-4 bg-white rounded-lg shadow-lg p-3 animate-bounce">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span className="text-xs font-medium text-gray-700">Live Form</span>
-                  </div>
+                <div className="absolute -top-4 -right-4 bg-white rounded-full p-3 shadow-lg">
+                  <CheckCircle className="h-6 w-6 text-green-500" />
                 </div>
-                
-                <div className="absolute -bottom-4 -right-4 bg-white rounded-lg shadow-lg p-3 animate-pulse">
-                  <div className="flex items-center space-x-2">
-                    <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                    <span className="text-xs font-medium text-gray-700">5-Star Review</span>
-                  </div>
+                <div className="absolute -bottom-4 -left-4 bg-white rounded-full p-3 shadow-lg">
+                  <Star className="h-6 w-6 text-yellow-400 fill-current" />
                 </div>
               </div>
             </div>
@@ -710,189 +195,288 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* 2. Demo Video Section - Scroll-triggered animation */}
-      <section id="demo-section" ref={demoRef} className="py-24 bg-gray-50">
+      {/* 2. Demo Video Section */}
+      <section ref={demoRef} className="py-24 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              See TestiFlow in Action
-            </h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-6">See TestiFlow in Action</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Watch how easy it is to collect, manage, and use customer testimonials with our intuitive platform.
+              Watch how easy it is to collect, organize, and use customer testimonials
             </p>
           </div>
 
-          {/* Step Progress */}
-          <div className="bg-white rounded-lg shadow-lg border border-gray-200 mb-8 p-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="w-3 h-3 bg-secondary-500 rounded-full animate-pulse"></div>
-                <span className="text-lg font-semibold text-gray-900">
-                  Step {currentStep + 1}: {demoSteps[currentStep].title}
-                </span>
-              </div>
-              <div className="text-sm text-gray-600">
-                {demoSteps[currentStep].description}
-              </div>
-            </div>
-            
-            {/* Progress Bar */}
-            <div className="mt-4 bg-gray-200 rounded-full h-2">
-              <div 
-                className="bg-gradient-to-r from-secondary-500 to-primary-950 h-2 rounded-full transition-all duration-300"
-                style={{ width: `${((currentStep + 1) / demoSteps.length) * 100}%` }}
-              ></div>
-            </div>
-          </div>
-
-          {/* Demo Interface */}
-          <div className="bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden">
-            {/* Demo Navbar */}
-            <div className="bg-white border-b border-gray-200 px-6 py-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <TestiFlowIcon className="h-6 w-6 text-primary-950" />
-                  <span className="text-lg font-bold text-primary-950">TestiFlow</span>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <button className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${getActiveTab() === 'forms' ? 'text-primary-950 bg-primary-50' : 'text-gray-700 hover:text-primary-950'}`}>
-                    Forms
-                  </button>
-                  <button className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${getActiveTab() === 'testimonials' ? 'text-primary-950 bg-primary-50' : 'text-gray-700 hover:text-primary-950'}`}>
-                    Testimonials
-                  </button>
-                  <div className="flex items-center space-x-2 pl-4 border-l border-gray-200">
-                    <div className="w-6 h-6 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
-                      <User className="h-3 w-3 text-primary-950" />
-                    </div>
-                    <span className="text-sm text-gray-700">sarah@techcorp.com</span>
+          {/* Demo Container - Hidden on mobile */}
+          <div className="hidden lg:block">
+            <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200">
+              {/* Demo Navbar */}
+              <div className="bg-white border-b border-gray-200 px-6 py-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <TestiFlowIcon className="h-6 w-6 text-primary-950" />
+                    <span className="font-bold text-primary-950">TestiFlow</span>
+                  </div>
+                  <div className="flex items-center space-x-6">
+                    <span className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                      currentStep === 1 ? 'bg-primary-100 text-primary-950' : 'text-gray-600'
+                    }`}>
+                      Forms
+                    </span>
+                    <span className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                      currentStep >= 2 ? 'bg-primary-100 text-primary-950' : 'text-gray-600'
+                    }`}>
+                      Testimonials
+                    </span>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Demo Content */}
-            {renderDemoContent()}
+              {/* Demo Content */}
+              <div className="p-8 min-h-[400px] relative">
+                {/* Step 1: Create Form */}
+                {showCreateForm && (
+                  <div className="animate-slide-in">
+                    <div className="flex items-center justify-between mb-6">
+                      <h3 className="text-2xl font-bold text-gray-900">Create Collection Form</h3>
+                      <button className="bg-primary-950 text-white px-4 py-2 rounded-lg flex items-center space-x-2">
+                        <Plus className="h-4 w-4" />
+                        <span>New Form</span>
+                      </button>
+                    </div>
+                    <div className="bg-gray-50 rounded-xl p-6">
+                      <div className="space-y-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Form Title</label>
+                          <div className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900">
+                            Customer Experience Survey
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                          <div className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900">
+                            Tell us about your experience with our service
+                          </div>
+                        </div>
+                        <button className="bg-primary-950 text-white px-6 py-2 rounded-lg font-medium">
+                          Create Form
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Step 2: Testimonials */}
+                {showTestimonials && (
+                  <div className="animate-slide-in">
+                    <div className="flex items-center justify-between mb-6">
+                      <h3 className="text-2xl font-bold text-gray-900">Manage Testimonials</h3>
+                      <div className="flex space-x-2">
+                        <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm">3 Pending</span>
+                        <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">12 Approved</span>
+                      </div>
+                    </div>
+                    <div className="space-y-4">
+                      {[
+                        { name: 'Sarah Johnson', company: 'TechCorp', rating: 5, message: 'Amazing platform! Saves us hours every week.', status: 'pending' },
+                        { name: 'Mike Chen', company: 'StartupXYZ', rating: 5, message: 'Perfect for our marketing campaigns.', status: 'approved' },
+                        { name: 'Emily Davis', company: 'GrowthCo', rating: 4, message: 'Great export features and easy to use.', status: 'approved' }
+                      ].map((testimonial, index) => (
+                        <div key={index} className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-all">
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center space-x-3">
+                              <div className="w-10 h-10 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
+                                <span className="text-primary-950 font-semibold text-sm">
+                                  {testimonial.name.split(' ').map(n => n[0]).join('')}
+                                </span>
+                              </div>
+                              <div>
+                                <div className="font-semibold text-gray-900">{testimonial.name}</div>
+                                <div className="text-sm text-gray-500">{testimonial.company}</div>
+                              </div>
+                            </div>
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                              testimonial.status === 'approved' 
+                                ? 'bg-green-100 text-green-800' 
+                                : 'bg-yellow-100 text-yellow-800'
+                            }`}>
+                              {testimonial.status}
+                            </span>
+                          </div>
+                          <div className="flex items-center space-x-2 mb-2">
+                            <div className="flex">
+                              {[...Array(testimonial.rating)].map((_, i) => (
+                                <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
+                              ))}
+                            </div>
+                          </div>
+                          <p className="text-gray-700 text-sm">"{testimonial.message}"</p>
+                          {testimonial.status === 'pending' && (
+                            <div className="flex space-x-2 mt-3">
+                              <button className="bg-green-100 text-green-800 px-3 py-1 rounded-md text-xs font-medium">
+                                Approve
+                              </button>
+                              <button className="bg-red-100 text-red-800 px-3 py-1 rounded-md text-xs font-medium">
+                                Reject
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Step 3: Export */}
+                {showExport && (
+                  <div className="animate-slide-in">
+                    <div className="flex items-center justify-between mb-6">
+                      <h3 className="text-2xl font-bold text-gray-900">Export & Use</h3>
+                      <button className="bg-secondary-500 text-white px-4 py-2 rounded-lg flex items-center space-x-2">
+                        <Download className="h-4 w-4" />
+                        <span>Export</span>
+                      </button>
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="bg-blue-50 rounded-xl p-6 border border-blue-200">
+                        <h4 className="font-semibold text-blue-900 mb-3">Website Widget</h4>
+                        <div className="bg-white rounded-lg p-4 border">
+                          <div className="text-center mb-3">
+                            <h5 className="font-semibold text-gray-900 text-sm">Customer Reviews</h5>
+                          </div>
+                          <div className="space-y-2">
+                            <div className="bg-gray-50 rounded p-2">
+                              <div className="flex mb-1">
+                                {[...Array(5)].map((_, i) => (
+                                  <Star key={i} className="h-3 w-3 text-yellow-400 fill-current" />
+                                ))}
+                              </div>
+                              <p className="text-xs text-gray-700">"Amazing platform!"</p>
+                              <div className="text-xs text-gray-500">- Sarah J.</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="bg-green-50 rounded-xl p-6 border border-green-200">
+                        <h4 className="font-semibold text-green-900 mb-3">Social Media</h4>
+                        <div className="bg-white rounded-lg p-4 border">
+                          <div className="text-xs text-gray-700 space-y-1">
+                            <div>⭐⭐⭐⭐⭐ Customer Love!</div>
+                            <div>"Amazing platform! Saves us hours..."</div>
+                            <div>- Sarah Johnson, TechCorp</div>
+                            <div className="text-blue-600">#CustomerSuccess</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Default state */}
+                {currentStep === 0 && (
+                  <div className="text-center py-16">
+                    <div className="w-20 h-20 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                      <MessageSquare className="h-10 w-10 text-primary-950" />
+                    </div>
+                    <h3 className="text-2xl font-semibold text-gray-900 mb-4">Ready to see the magic?</h3>
+                    <p className="text-gray-600">Scroll down to watch the demo</p>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* 3. Key Features - Detailed breakdown */}
+      {/* 3. Key Features */}
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Everything You Need to Manage Testimonials
-            </h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-6">Everything You Need</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              From collection to conversion, TestiFlow provides all the tools you need to turn customer feedback into powerful marketing assets.
+              From collection to conversion, TestiFlow handles your entire testimonial workflow
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {
-                icon: MessageSquare,
-                title: 'Smart Collection Forms',
-                description: 'Create beautiful, branded forms that make it easy for customers to share their experiences.',
-                color: 'text-blue-600',
-                bgColor: 'bg-blue-50'
-              },
-              {
-                icon: Settings,
-                title: 'Custom Fields & Logic',
-                description: 'Add custom questions, conditional logic, and rich media uploads to gather detailed feedback.',
-                color: 'text-purple-600',
-                bgColor: 'bg-purple-50'
-              },
-              {
-                icon: CheckCircle,
-                title: 'Approval Workflow',
-                description: 'Review and approve testimonials before they go live. Maintain quality and brand consistency.',
-                color: 'text-secondary-500',
-                bgColor: 'bg-secondary-50'
-              },
-              {
-                icon: Download,
-                title: 'Export & Integration',
-                description: 'Export testimonials as CSV, JSON, or embed widgets directly on your website.',
-                color: 'text-green-600',
-                bgColor: 'bg-green-50'
-              },
-              {
-                icon: Star,
-                title: 'Rich Media Support',
-                description: 'Collect video testimonials, photos, and detailed ratings for more engaging social proof.',
-                color: 'text-yellow-600',
-                bgColor: 'bg-yellow-50'
-              },
-              {
-                icon: Shield,
-                title: 'Privacy & Compliance',
-                description: 'Built-in consent management and data protection features to keep you compliant.',
-                color: 'text-red-600',
-                bgColor: 'bg-red-50'
-              }
-            ].map((feature, index) => (
-              <div key={index} className="group hover:shadow-lg transition-all duration-300 bg-white border border-gray-200 rounded-xl p-6">
-                <div className={`w-12 h-12 ${feature.bgColor} rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                  <feature.icon className={`h-6 w-6 ${feature.color}`} />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">{feature.title}</h3>
-                <p className="text-gray-600 leading-relaxed">{feature.description}</p>
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center mx-auto mb-6">
+                <Settings className="h-8 w-8 text-blue-600" />
               </div>
-            ))}
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">Smart Collection</h3>
+              <p className="text-gray-600">
+                Create branded forms that customers actually want to fill out. Custom fields, media uploads, and mobile-optimized design.
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-16 h-16 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center mx-auto mb-6">
+                <CheckCircle className="h-8 w-8 text-green-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">Easy Management</h3>
+              <p className="text-gray-600">
+                Review, approve, and organize testimonials with tags. Approval workflow ensures only your best reviews go live.
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-100 to-purple-200 rounded-xl flex items-center justify-center mx-auto mb-6">
+                <Download className="h-8 w-8 text-purple-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">Ready to Use</h3>
+              <p className="text-gray-600">
+                Export as website widgets, social media posts, or CSV data. Your testimonials are ready for any marketing channel.
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* 4. Social Proof - Build trust */}
+      {/* 4. Social Proof */}
       <section className="py-24 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Trusted by Growing Businesses
-            </h2>
-            <p className="text-xl text-gray-600">
-              Join thousands of companies using TestiFlow to showcase their customer success
-            </p>
+            <h2 className="text-4xl font-bold text-gray-900 mb-6">Loved by Growing Businesses</h2>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
-                quote: "TestiFlow has completely transformed how we collect customer feedback. The automated workflows save us hours every week!",
-                author: "Sarah Johnson",
-                role: "CTO, TechCorp",
+                name: "Sarah Chen",
+                role: "Marketing Director",
+                company: "TechFlow",
+                message: "TestiFlow transformed how we collect customer feedback. We went from scattered emails to organized testimonials in days.",
                 rating: 5
               },
               {
-                quote: "The export features are incredible. We can now easily use testimonials across all our marketing channels.",
-                author: "Mike Chen",
-                role: "Marketing Director, StartupXYZ",
+                name: "Mike Rodriguez",
+                role: "Agency Owner",
+                company: "Growth Partners",
+                message: "Our clients love the branded forms. We've increased testimonial collection by 300% since switching to TestiFlow.",
                 rating: 5
               },
               {
-                quote: "Amazing product! The testimonial management features are exactly what we needed for our campaigns.",
-                author: "Emily Davis",
-                role: "Growth Manager, ScaleCo",
+                name: "Emily Watson",
+                role: "SaaS Founder",
+                company: "DataSync",
+                message: "The export features are incredible. We use testimonials everywhere now - website, ads, social media. Game changer.",
                 rating: 5
               }
             ].map((testimonial, index) => (
-              <div key={index} className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+              <div key={index} className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
                 <div className="flex mb-4">
                   {[...Array(testimonial.rating)].map((_, i) => (
                     <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
                   ))}
                 </div>
-                <p className="text-gray-700 mb-4 italic">"{testimonial.quote}"</p>
+                <p className="text-gray-700 mb-6 leading-relaxed">"{testimonial.message}"</p>
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
-                    <User className="h-5 w-5 text-primary-950" />
+                  <div className="w-12 h-12 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
+                    <span className="text-primary-950 font-semibold">
+                      {testimonial.name.split(' ').map(n => n[0]).join('')}
+                    </span>
                   </div>
                   <div>
-                    <div className="font-semibold text-gray-900">{testimonial.author}</div>
-                    <div className="text-sm text-gray-600">{testimonial.role}</div>
+                    <div className="font-semibold text-gray-900">{testimonial.name}</div>
+                    <div className="text-sm text-gray-600">{testimonial.role}, {testimonial.company}</div>
                   </div>
                 </div>
               </div>
@@ -901,174 +485,137 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* 5. Pricing - Convert when they're convinced */}
+      {/* 5. Pricing */}
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Simple, Transparent Pricing
-            </h2>
-            <p className="text-xl text-gray-600">
-              Choose the plan that fits your testimonial management needs
-            </p>
+            <h2 className="text-4xl font-bold text-gray-900 mb-6">Simple Pricing</h2>
+            <p className="text-xl text-gray-600">Start free, upgrade when you're ready</p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {/* Basic Plan */}
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-all duration-300">
-              <div className="bg-gray-50 px-6 py-8 text-center border-b border-gray-200">
-                <h3 className="text-2xl font-bold text-primary-950">Basic</h3>
-                <div className="mt-4 flex items-baseline justify-center">
-                  <span className="text-5xl font-bold text-primary-950">$29</span>
-                  <span className="text-xl text-gray-500 ml-1">/month</span>
-                </div>
-                <p className="mt-2 text-gray-600">Perfect for small businesses</p>
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <div className="bg-white border-2 border-gray-200 rounded-2xl p-8 hover:shadow-xl transition-all duration-300">
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Basic</h3>
+              <div className="mb-6">
+                <span className="text-5xl font-bold text-gray-900">$29</span>
+                <span className="text-xl text-gray-500">/month</span>
               </div>
-              
-              <div className="px-6 py-8">
-                <ul className="space-y-4">
-                  {[
-                    'Up to 50 testimonials',
-                    'Email collection forms',
-                    'Basic organization',
-                    'Export to CSV',
-                    'Simple branding',
-                  ].map((feature, index) => (
-                    <li key={index} className="flex items-center">
-                      <CheckCircle className="h-5 w-5 text-secondary-500 mr-3 flex-shrink-0" />
-                      <span className="text-gray-700">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <ul className="space-y-3 mb-8">
+                <li className="flex items-center">
+                  <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
+                  <span>Up to 50 testimonials</span>
+                </li>
+                <li className="flex items-center">
+                  <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
+                  <span>Custom forms</span>
+                </li>
+                <li className="flex items-center">
+                  <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
+                  <span>Basic exports</span>
+                </li>
+              </ul>
             </div>
 
-            {/* Pro Plan */}
-            <div className="bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-secondary-500 relative">
+            <div className="bg-gradient-to-br from-primary-950 to-secondary-500 text-white rounded-2xl p-8 hover:shadow-xl transition-all duration-300 relative">
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                <span className="bg-gradient-to-r from-accent-500 to-accent-600 text-white px-4 py-1 rounded-full text-sm font-semibold shadow-lg">
+                <span className="bg-accent-500 text-white px-4 py-1 rounded-full text-sm font-semibold">
                   MOST POPULAR
                 </span>
               </div>
-              <div className="bg-gradient-to-r from-primary-950 to-secondary-500 px-6 py-8 text-center">
-                <h3 className="text-2xl font-bold text-white">Pro</h3>
-                <div className="mt-4 flex items-baseline justify-center">
-                  <span className="text-5xl font-bold text-white">$49</span>
-                  <span className="text-xl text-white/80 ml-1">/month</span>
-                </div>
-                <p className="mt-2 text-white/90">Perfect for agencies and growing businesses</p>
+              <h3 className="text-2xl font-bold mb-4">Pro</h3>
+              <div className="mb-6">
+                <span className="text-5xl font-bold">$49</span>
+                <span className="text-xl text-white/80">/month</span>
               </div>
-              
-              <div className="px-6 py-8">
-                <ul className="space-y-4">
-                  {[
-                    'Everything in Basic, plus:',
-                    'Unlimited testimonials',
-                    'Approval workflow',
-                    'Rich media support',
-                    'Integration tools',
-                  ].map((feature, index) => (
-                    <li key={index} className="flex items-center">
-                      <CheckCircle className="h-5 w-5 text-secondary-500 mr-3 flex-shrink-0" />
-                      <span className="text-gray-700">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <ul className="space-y-3 mb-8">
+                <li className="flex items-center">
+                  <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
+                  <span>Unlimited testimonials</span>
+                </li>
+                <li className="flex items-center">
+                  <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
+                  <span>Advanced exports & widgets</span>
+                </li>
+                <li className="flex items-center">
+                  <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
+                  <span>Video testimonials</span>
+                </li>
+                <li className="flex items-center">
+                  <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
+                  <span>Priority support</span>
+                </li>
+              </ul>
             </div>
           </div>
 
           <div className="text-center mt-12">
             <button
-              onClick={handleSignupClick}
-              className="bg-primary-950 text-white px-8 py-4 rounded-lg font-semibold hover:bg-primary-900 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center space-x-2 mx-auto"
+              onClick={handleGetStarted}
+              className="bg-primary-950 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-primary-900 transition-all duration-200 shadow-xl hover:shadow-2xl transform hover:-translate-y-1"
             >
-              <span>Start Free Trial</span>
-              <ArrowRight className="h-5 w-5" />
+              Start Your Free Trial
             </button>
-            <p className="text-gray-500 text-sm mt-3">7-day free trial</p>
+            <p className="text-sm text-gray-500 mt-3">7-day free trial • Cancel anytime</p>
           </div>
         </div>
       </section>
 
-      {/* 6. FAQ - Handle objections */}
+      {/* 6. FAQ */}
       <section className="py-24 bg-gray-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Frequently Asked Questions
-            </h2>
-            <p className="text-xl text-gray-600">
-              Everything you need to know about TestiFlow
-            </p>
+            <h2 className="text-4xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
           </div>
 
           <div className="space-y-4">
             {[
               {
                 question: "How quickly can I start collecting testimonials?",
-                answer: "You can create your first form and start collecting testimonials within minutes. Our intuitive setup process guides you through creating branded forms that you can share immediately."
+                answer: "You can create your first form and start collecting testimonials in under 2 minutes. No technical setup required."
               },
               {
-                question: "Can I customize the look and feel of my forms?",
-                answer: "Absolutely! TestiFlow includes comprehensive branding options including custom logos, colors, fonts, and thank you messages to match your brand perfectly."
+                question: "Can I customize the look of my forms?",
+                answer: "Yes! Add your logo, brand colors, and custom questions. Forms automatically match your brand identity."
               },
               {
-                question: "What happens to my testimonials if I cancel?",
-                answer: "You can export all your testimonials as CSV or JSON before canceling. We also provide a 30-day grace period to download your data after cancellation."
+                question: "What export options do you offer?",
+                answer: "Export as CSV for analysis, JSON for developers, website widgets for embedding, or formatted social media posts."
               },
               {
-                question: "Do you offer integrations with other tools?",
-                answer: "Yes! TestiFlow provides export options and embeddable widgets that work with most marketing tools, websites, and CRM systems. We're constantly adding new integrations."
-              },
-              {
-                question: "Is there a limit on form responses?",
-                answer: "The Basic plan includes up to 50 testimonials, while the Pro plan offers unlimited testimonials. You can upgrade anytime as your needs grow."
+                question: "Is there a limit on testimonials?",
+                answer: "Basic plan includes 50 testimonials. Pro plan has unlimited testimonials and advanced features."
               }
             ].map((faq, index) => (
-              <div key={index} className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                <button
-                  onClick={() => setExpandedFaq(expandedFaq === index ? null : index)}
-                  className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
-                >
-                  <span className="font-semibold text-gray-900">{faq.question}</span>
-                  {expandedFaq === index ? (
-                    <ChevronUp className="h-5 w-5 text-gray-500" />
-                  ) : (
-                    <ChevronDown className="h-5 w-5 text-gray-500" />
-                  )}
-                </button>
-                {expandedFaq === index && (
-                  <div className="px-6 pb-4">
-                    <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
-                  </div>
-                )}
-              </div>
+              <details key={index} className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-all">
+                <summary className="font-semibold text-gray-900 cursor-pointer text-lg">
+                  {faq.question}
+                </summary>
+                <p className="text-gray-600 mt-4 leading-relaxed">{faq.answer}</p>
+              </details>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 7. Final CTA - Last chance conversion */}
-      <section className="py-24 bg-gradient-to-r from-primary-950 to-secondary-500">
+      {/* 7. Final CTA */}
+      <section className="py-24 bg-primary-950">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold text-white mb-6">
-            Ready to Transform Your Customer Feedback?
+            Ready to Turn Feedback Into Marketing Gold?
           </h2>
-          <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-            Join thousands of businesses using TestiFlow to collect and showcase authentic customer testimonials that drive real results.
+          <p className="text-xl text-white/80 mb-10 max-w-2xl mx-auto">
+            Join hundreds of businesses using TestiFlow to collect, organize, and leverage customer testimonials.
           </p>
           
           <button
-            onClick={handleSignupClick}
-            className="bg-white text-primary-950 hover:bg-gray-100 px-8 py-4 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center space-x-2 mx-auto"
+            onClick={handleGetStarted}
+            className="bg-secondary-500 text-white px-10 py-5 rounded-xl font-bold text-xl hover:bg-secondary-600 transition-all duration-200 shadow-2xl hover:shadow-3xl transform hover:-translate-y-1"
           >
-            <span>Start Your Free Trial</span>
-            <ArrowRight className="h-5 w-5" />
+            Start Your Free Trial Today
           </button>
           
-          <p className="text-white/70 text-sm mt-4">
-            7-day free trial • Cancel anytime
+          <p className="text-white/60 mt-6">
+            7-day free trial • Full access • Cancel anytime
           </p>
         </div>
       </section>
