@@ -13,279 +13,13 @@ export const Home: React.FC = () => {
   };
 
   const getMobileActiveTab = () => {
-    switch (currentStep) {
-      case 0:
-      case 1:
-        return 'forms';
-      case 2:
-        return 'forms'; // Customer submission happens from forms page
-      case 3:
-      case 4:
-        return 'testimonials';
-      default:
-        return 'dashboard';
-    }
+    return 'dashboard';
   };
 
   const renderMobileContent = () => {
-    if (currentStep === 0) { // Create Forms
-      return (
-        <div className="p-3">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold text-gray-900">Forms</h2>
-            <button className="bg-primary-950 text-white px-3 py-1 rounded-md text-xs flex items-center space-x-1">
-              <Plus className="h-3 w-3" />
-              <span>New</span>
-            </button>
-          </div>
-          
-          {showCreatePanel ? (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-3 animate-slide-in">
-              <h3 className="text-sm font-bold text-blue-900 mb-2">Creating Form...</h3>
-              <div className="space-y-2">
-                <input type="text" value={formData.title} className="w-full px-2 py-1 border rounded text-xs" readOnly />
-                <textarea value={formData.description} rows={2} className="w-full px-2 py-1 border rounded text-xs" readOnly />
-              </div>
-            </div>
-          ) : createdForm ? (
-            <div className="bg-white border border-gray-200 rounded-lg p-3 animate-slide-in">
-              <h3 className="text-sm font-semibold text-gray-900 mb-1">{createdForm.title}</h3>
-              <p className="text-xs text-gray-600 mb-2">{createdForm.description}</p>
-              <div className="flex justify-between items-center">
-                <span className="text-xs bg-secondary-100 text-secondary-800 px-2 py-1 rounded-full">Active</span>
-                <div className="flex space-x-1">
-                  <button className="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs">Copy</button>
-                  <button className="bg-gray-50 text-gray-600 px-2 py-1 rounded text-xs">Preview</button>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="text-center py-8">
-              <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Settings className="h-6 w-6 text-primary-950" />
-              </div>
-              <h3 className="text-sm font-semibold text-gray-900 mb-1">Create Your First Form</h3>
-              <p className="text-xs text-gray-500">Start gathering testimonials</p>
-            </div>
-          )}
-        </div>
-      );
-    }
-
-    if (currentStep === 1) { // Custom Fields
-      return (
-        <div className="p-3">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold text-gray-900">Custom Fields</h2>
-            <button className="bg-primary-950 text-white px-3 py-1 rounded-md text-xs flex items-center space-x-1">
-              <Plus className="h-3 w-3" />
-              <span>Add</span>
-            </button>
-          </div>
-          
-          {showAddFieldPanel && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-3 animate-slide-in">
-              <h4 className="text-xs font-medium text-blue-900 mb-2">Adding Field</h4>
-              <input type="text" value={newField.label} className="w-full px-2 py-1 border rounded text-xs mb-1" readOnly />
-              <div className="text-xs text-blue-700">Type: {newField.field_type}</div>
-            </div>
-          )}
-
-          <div className="space-y-2">
-            {customFields.map((field) => (
-              <div key={field.id} className="bg-gray-50 border border-gray-200 rounded-lg p-3 animate-slide-in">
-                <div className="font-medium text-gray-900 text-xs">
-                  {field.label}
-                  {field.is_required && <span className="text-red-500 ml-1">*</span>}
-                </div>
-                <div className="text-xs text-gray-500">Dropdown</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      );
-    }
-
-    if (currentStep === 2) { // Customer Submission
-      return (
-        <div className="p-3">
-          <div className="bg-primary-950 text-white text-center py-4 mb-4 rounded-lg">
-            <h2 className="text-sm font-bold mb-1">Share Your Experience</h2>
-            <p className="text-xs text-white/90">Customer filling out form</p>
-          </div>
-          
-          <div className="space-y-3">
-            <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">Rating *</label>
-              <div className="flex space-x-1">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <Star key={star} className={`h-4 w-4 ${star <= customerFormData.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} />
-                ))}
-              </div>
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">Name *</label>
-              <input type="text" value={customerFormData.name} className="w-full px-2 py-1 border rounded text-xs" readOnly />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">Email *</label>
-              <input type="email" value={customerFormData.email} className="w-full px-2 py-1 border rounded text-xs" readOnly />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">Company</label>
-              <input type="text" value={customerFormData.company} className="w-full px-2 py-1 border rounded text-xs" readOnly />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">Testimonial *</label>
-              <textarea rows={2} value={customerFormData.message} className="w-full px-2 py-1 border rounded text-xs" readOnly />
-            </div>
-            <button className="w-full bg-secondary-500 text-white py-2 rounded-md text-xs font-medium">
-              Submit Testimonial
-            </button>
-          </div>
-        </div>
-      );
-    }
-
-    if (currentStep === 3) { // Review & Approve
-      return (
-        <div className="p-3">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold text-gray-900">Testimonials</h2>
-            <button className="border border-gray-300 text-gray-700 px-3 py-1 rounded-md text-xs">Export</button>
-          </div>
-          
-          <div className="space-y-3">
-            {testimonials.slice(0, 2).map((testimonial) => (
-              <div 
-                key={testimonial.id} 
-                className={`bg-white border border-gray-200 rounded-lg p-3 transition-all duration-200 ${
-                  highlightedTestimonial === testimonial.id ? 'ring-2 ring-secondary-200 shadow-lg' : ''
-                }`}
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-6 h-6 bg-primary-100 rounded-full flex items-center justify-center">
-                      <User className="h-3 w-3 text-primary-950" />
-                    </div>
-                    <div>
-                      <div className="font-semibold text-gray-900 text-xs">{testimonial.name}</div>
-                      <div className="text-xs text-gray-500">{testimonial.company}</div>
-                    </div>
-                  </div>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    testimonial.status === 'approved' 
-                      ? 'bg-secondary-100 text-secondary-800' 
-                      : 'bg-yellow-100 text-yellow-800'
-                  }`}>
-                    {testimonial.status}
-                  </span>
-                </div>
-                <div className="flex mb-2">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="h-3 w-3 text-yellow-400 fill-current" />
-                  ))}
-                </div>
-                <p className="text-xs text-gray-700 mb-2">"{testimonial.message.substring(0, 80)}..."</p>
-                {testimonial.status === 'pending' && (
-                  <div className="flex space-x-1">
-                    <button className="bg-secondary-100 text-secondary-800 px-2 py-1 rounded text-xs">Approve</button>
-                    <button className="bg-red-100 text-red-800 px-2 py-1 rounded text-xs">Reject</button>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      );
-    }
-
-    if (currentStep === 4) { // Export & Use
-      return (
-        <div className="p-3">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold text-gray-900">Export</h2>
-            <button className="text-gray-500 text-xs">Close</button>
-          </div>
-          
-          {showExportPanel ? (
-            <div className="space-y-3">
-              <div>
-                <h4 className="text-sm font-medium text-gray-700 mb-2">Format</h4>
-                <div className="space-y-1">
-                  {[
-                    { value: 'csv', label: 'CSV', icon: FileText },
-                    { value: 'widget', label: 'Widget', icon: Code }
-                  ].map((format) => (
-                    <button
-                      key={format.value}
-                      className={`w-full p-2 border rounded-lg text-left transition-colors flex items-center space-x-2 ${
-                        selectedExportFormat === format.value
-                          ? 'border-primary-500 bg-primary-50'
-                          : 'border-gray-200'
-                      }`}
-                    >
-                      <format.icon className="h-3 w-3 text-gray-600" />
-                      <span className="text-xs">{format.label}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-              
-              {generatedContent && (
-                <div className="bg-gray-900 text-white rounded-lg p-3 animate-slide-in">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-gray-300">Generated Code</span>
-                    <button className="bg-blue-600 text-white px-2 py-1 rounded text-xs flex items-center space-x-1">
-                      <Copy className="h-2 w-2" />
-                      <span>Copy</span>
-                    </button>
-                  </div>
-                  <pre className="text-xs font-mono max-h-20 overflow-hidden">
-                    {generatedContent.substring(0, 150)}...
-                  </pre>
-                </div>
-              )}
-              
-              <button className="w-full bg-secondary-500 text-white py-2 rounded-lg text-xs font-medium">
-                Generate Widget
-              </button>
-            </div>
-          ) : (
-            <div className="text-center py-8">
-              <div className="w-12 h-12 bg-secondary-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Download className="h-6 w-6 text-secondary-500" />
-              </div>
-              <h3 className="text-sm font-semibold text-gray-900 mb-1">Export Testimonials</h3>
-              <p className="text-xs text-gray-500">Download or generate widgets</p>
-            </div>
-          )}
-        </div>
-      );
-    }
-
-    // Default dashboard
-    return (
-      <div className="p-3">
-        <h2 className="text-lg font-bold text-gray-900 mb-4">Dashboard</h2>
-        <div className="grid grid-cols-2 gap-3 mb-4">
-          <div className="bg-blue-50 p-3 rounded-lg">
-            <div className="text-xl font-bold text-primary-950">12</div>
-            <div className="text-xs text-gray-600">Total</div>
-          </div>
-          <div className="bg-secondary-50 p-3 rounded-lg">
-            <div className="text-xl font-bold text-secondary-500">8</div>
-            <div className="text-xs text-gray-600">Approved</div>
-          </div>
-        </div>
-        <div className="text-center">
-          <button className="bg-primary-950 text-white px-4 py-2 rounded-lg text-xs font-medium">
-            Create Form
-          </button>
-        </div>
-      </div>
-    );
+    return null;
   };
+
   return (
     <>
       {/* Hero Section */}
@@ -655,8 +389,9 @@ export const Home: React.FC = () => {
                         <div className="bg-accent-50 p-2 rounded-lg text-center">
                           <div className="text-lg font-bold text-accent-600">+12</div>
                           <div className="text-xs text-gray-500">This Week</div>
-                        {renderMobileContent()}
+                        </div>
                       </div>
+                      {renderMobileContent()}
                       
                       {/* Mobile Testimonial Cards */}
                       <div className="space-y-2">
@@ -703,20 +438,20 @@ export const Home: React.FC = () => {
                     {/* Mobile Bottom Navigation */}
                     <div className="bg-white border-t border-gray-200 px-4 py-2">
                       <div className="grid grid-cols-4 gap-1">
-                        <button className="flex flex-col items-center py-1 text-primary-950">
-                          <div className="w-5 h-5 bg-primary-100 rounded-full flex items-center justify-center mb-1">
+                        <button className={`flex flex-col items-center py-1 ${getMobileActiveTab() === 'dashboard' ? 'text-primary-950' : 'text-gray-500'}`}>
+                          <div className={`w-5 h-5 rounded-full flex items-center justify-center mb-1 ${getMobileActiveTab() === 'dashboard' ? 'bg-primary-100' : 'bg-gray-100'}`}>
                             <BarChart3 className="h-2 w-2" />
                           </div>
                           <span className="text-xs">Dashboard</span>
                         </button>
-                        <button className="flex flex-col items-center py-1 text-gray-500">
-                          <div className="w-5 h-5 bg-gray-100 rounded-full flex items-center justify-center mb-1">
+                        <button className={`flex flex-col items-center py-1 ${getMobileActiveTab() === 'forms' ? 'text-primary-950' : 'text-gray-500'}`}>
+                          <div className={`w-5 h-5 rounded-full flex items-center justify-center mb-1 ${getMobileActiveTab() === 'forms' ? 'bg-primary-100' : 'bg-gray-100'}`}>
                             <Settings className="h-2 w-2" />
                           </div>
                           <span className="text-xs">Forms</span>
                         </button>
-                        <button className="flex flex-col items-center py-1 text-gray-500">
-                          <div className="w-5 h-5 bg-gray-100 rounded-full flex items-center justify-center mb-1">
+                        <button className={`flex flex-col items-center py-1 ${getMobileActiveTab() === 'testimonials' ? 'text-primary-950' : 'text-gray-500'}`}>
+                          <div className={`w-5 h-5 rounded-full flex items-center justify-center mb-1 ${getMobileActiveTab() === 'testimonials' ? 'bg-primary-100' : 'bg-gray-100'}`}>
                             <Star className="h-2 w-2" />
                           </div>
                           <span className="text-xs">Reviews</span>
@@ -862,15 +597,15 @@ export const Home: React.FC = () => {
                         <div className="flex items-center justify-between">
                           <div className="flex items-center space-x-2">
                             <Shield className={`h-4 w-4 ${testimonial.consent ? 'text-secondary-500' : 'text-gray-400'}`} />
-                          <button className={`p-2 rounded-lg ${getMobileActiveTab() === 'dashboard' ? 'bg-primary-100 text-primary-950' : 'text-gray-400'}`}>
+                            <span className={`text-xs ${testimonial.consent ? 'text-secondary-700' : 'text-gray-500'}`}>
                               {testimonial.consent ? 'Marketing consent given' : 'No marketing consent'}
                             </span>
                           </div>
-                          <button className={`p-2 rounded-lg ${getMobileActiveTab() === 'forms' ? 'bg-primary-100 text-primary-950' : 'text-gray-400'}`}>
+                          <div className="flex items-center space-x-2">
                             <button className="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full transition-colors">
                               Edit
                             </button>
-                          <button className={`p-2 rounded-lg ${getMobileActiveTab() === 'testimonials' ? 'bg-primary-100 text-primary-950' : 'text-gray-400'}`}>
+                            <button className="text-xs bg-primary-100 hover:bg-primary-200 text-primary-950 px-3 py-1 rounded-full transition-colors">
                               Export
                             </button>
                           </div>
