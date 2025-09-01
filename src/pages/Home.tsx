@@ -53,24 +53,19 @@ export const Home: React.FC = () => {
           </div>
         </div>
         <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2 lg:pt-16">
-          <div className="h-64 w-full sm:h-80 md:h-[500px] lg:w-full lg:h-full flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 relative overflow-hidden py-8 lg:py-16">
-            {/* Background Elements */}
-            <div className="absolute inset-0 bg-gradient-to-br from-primary-50/30 to-secondary-50/30"></div>
-            <div className="absolute top-10 left-10 w-32 h-32 bg-gradient-to-br from-primary-200/20 to-secondary-200/20 rounded-full blur-xl animate-float"></div>
-            <div className="absolute bottom-20 right-20 w-24 h-24 bg-gradient-to-br from-accent-200/20 to-primary-200/20 rounded-full blur-xl animate-float" style={{ animationDelay: '1s' }}></div>
-            
+          <div className="h-64 w-full sm:h-80 md:h-96 lg:w-full lg:h-full flex items-center justify-center py-4 sm:py-8">
             {/* Main Dashboard Mockup */}
-            <div className="relative z-10 max-w-3xl w-full mx-auto px-6 lg:px-8">
+            <div className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl xl:max-w-3xl mx-auto px-2 sm:px-4">
               {/* Browser Window */}
-              <div className="bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden transform hover:scale-105 transition-all duration-500 hover:shadow-3xl max-w-full">
+              <div className="bg-white rounded-lg sm:rounded-xl shadow-xl border border-gray-200 overflow-hidden transform hover:scale-105 transition-all duration-500 hover:shadow-2xl w-full">
                 {/* Browser Header */}
-                <div className="bg-gray-100 px-4 py-3 flex items-center space-x-2 border-b border-gray-200">
+                <div className="bg-gray-100 px-2 sm:px-4 py-2 sm:py-3 flex items-center space-x-2 border-b border-gray-200">
                   <div className="flex space-x-2">
-                    <div className="w-3 h-3 bg-red-400 rounded-full"></div>
-                    <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
-                    <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+                    <div className="w-2 h-2 sm:w-3 sm:h-3 bg-red-400 rounded-full"></div>
+                    <div className="w-2 h-2 sm:w-3 sm:h-3 bg-yellow-400 rounded-full"></div>
+                    <div className="w-2 h-2 sm:w-3 sm:h-3 bg-green-400 rounded-full"></div>
                   </div>
-                  <div className="flex-1 bg-white rounded-md px-3 py-1 text-xs text-gray-500 font-mono">
+                  <div className="flex-1 bg-white rounded-md px-2 sm:px-3 py-1 text-xs text-gray-500 font-mono">
                     <span className="hidden sm:inline">testiflow.com/dashboard</span>
                     <span className="sm:hidden">dashboard</span>
                   </div>
@@ -79,101 +74,101 @@ export const Home: React.FC = () => {
                 {/* Dashboard Content */}
                 <div className="bg-white">
                   {/* Top Navigation */}
-                  <div className="bg-white border-b border-gray-100 px-6 py-3">
+                  <div className="bg-white border-b border-gray-100 px-3 sm:px-6 py-2 sm:py-3">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-1 sm:space-x-2">
-                        <TestiFlowIcon className="h-6 w-6 text-primary-950" />
-                        <span className="font-bold text-primary-950">TestiFlow</span>
+                        <TestiFlowIcon className="h-4 w-4 sm:h-6 sm:w-6 text-primary-950" />
+                        <span className="text-sm sm:text-base font-bold text-primary-950">TestiFlow</span>
                       </div>
-                      <div className="flex items-center space-x-4 text-sm">
+                      <div className="flex items-center space-x-2 sm:space-x-4 text-xs sm:text-sm">
                         <span className="text-primary-950 font-medium">Dashboard</span>
-                        <span className="text-gray-500">Forms</span>
-                        <span className="text-gray-500">Testimonials</span>
+                        <span className="text-gray-500 hidden sm:inline">Forms</span>
+                        <span className="text-gray-500 hidden sm:inline">Testimonials</span>
                       </div>
                     </div>
                   </div>
                   
                   {/* Dashboard Stats */}
-                  <div className="p-6">
-                    <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-6">
-                      <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-100 animate-slide-up">
+                  <div className="p-3 sm:p-6">
+                    <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-4 sm:mb-6">
+                      <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-2 sm:p-4 rounded-lg border border-blue-100 animate-slide-up">
                         <div className="flex items-center justify-between mb-1 sm:mb-2">
-                          <span className="text-xs sm:text-sm font-medium text-gray-700">Total</span>
-                          <MessageSquare className="h-4 w-4 text-primary-950" />
+                          <span className="text-xs font-medium text-gray-700">Total</span>
+                          <MessageSquare className="h-3 w-3 sm:h-4 sm:w-4 text-primary-950" />
                         </div>
-                        <div className="text-xl sm:text-2xl font-bold text-primary-950 animate-count-up">47</div>
+                        <div className="text-lg sm:text-2xl font-bold text-primary-950 animate-count-up">47</div>
                         <div className="text-xs text-gray-500 hidden sm:block">testimonials</div>
                       </div>
-                      <div className="bg-gradient-to-br from-secondary-50 to-secondary-100 p-4 rounded-lg border border-secondary-200 animate-slide-up" style={{ animationDelay: '0.1s' }}>
+                      <div className="bg-gradient-to-br from-secondary-50 to-secondary-100 p-2 sm:p-4 rounded-lg border border-secondary-200 animate-slide-up" style={{ animationDelay: '0.1s' }}>
                         <div className="flex items-center justify-between mb-1 sm:mb-2">
-                          <span className="text-xs sm:text-sm font-medium text-gray-700">Approved</span>
-                          <CheckCircle className="h-4 w-4 text-secondary-500" />
+                          <span className="text-xs font-medium text-gray-700">Approved</span>
+                          <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-secondary-500" />
                         </div>
-                        <div className="text-xl sm:text-2xl font-bold text-secondary-500 animate-count-up">42</div>
+                        <div className="text-lg sm:text-2xl font-bold text-secondary-500 animate-count-up">42</div>
                         <div className="text-xs text-gray-500 hidden sm:block">ready to use</div>
                       </div>
-                      <div className="bg-gradient-to-br from-accent-50 to-accent-100 p-4 rounded-lg border border-accent-200 animate-slide-up" style={{ animationDelay: '0.2s' }}>
+                      <div className="bg-gradient-to-br from-accent-50 to-accent-100 p-2 sm:p-4 rounded-lg border border-accent-200 animate-slide-up" style={{ animationDelay: '0.2s' }}>
                         <div className="flex items-center justify-between mb-1 sm:mb-2">
-                          <span className="text-xs sm:text-sm font-medium text-gray-700">This Month</span>
-                          <Star className="h-4 w-4 text-accent-600" />
+                          <span className="text-xs font-medium text-gray-700">This Month</span>
+                          <Star className="h-3 w-3 sm:h-4 sm:w-4 text-accent-600" />
                         </div>
-                        <div className="text-xl sm:text-2xl font-bold text-accent-600 animate-count-up">12</div>
+                        <div className="text-lg sm:text-2xl font-bold text-accent-600 animate-count-up">12</div>
                         <div className="text-xs text-gray-500 hidden sm:block">new reviews</div>
                       </div>
                     </div>
                     
                     {/* Recent Testimonials Preview */}
-                    <div className="space-y-3">
-                      <h3 className="text-lg font-semibold text-gray-900">Recent Testimonials</h3>
+                    <div className="space-y-2 sm:space-y-3">
+                      <h3 className="text-sm sm:text-lg font-semibold text-gray-900">Recent Testimonials</h3>
                       
                       {/* Testimonial Cards */}
-                      <div className="space-y-3">
-                        <div className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-all duration-200 animate-slide-up" style={{ animationDelay: '0.3s' }}>
+                      <div className="space-y-2 sm:space-y-3">
+                        <div className="bg-white border border-gray-200 rounded-lg p-2 sm:p-4 hover:shadow-md transition-all duration-200 animate-slide-up" style={{ animationDelay: '0.3s' }}>
                           <div className="flex items-center justify-between mb-1 sm:mb-2">
                             <div className="flex items-center space-x-2">
-                              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
-                                <Users className="h-4 w-4 text-primary-950" />
+                              <div className="w-4 h-4 sm:w-8 sm:h-8 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
+                                <Users className="h-2 w-2 sm:h-4 sm:w-4 text-primary-950" />
                               </div>
                               <div>
-                                <div className="font-medium text-gray-900 text-xs sm:text-sm">Sarah Johnson</div>
+                                <div className="font-medium text-gray-900 text-xs">Sarah Johnson</div>
                                 <div className="text-xs text-gray-500">TechCorp Solutions</div>
                               </div>
                             </div>
-                            <span className="px-2 py-1 bg-secondary-100 text-secondary-800 rounded-full text-xs font-medium">
+                            <span className="px-1 sm:px-2 py-1 bg-secondary-100 text-secondary-800 rounded-full text-xs font-medium">
                               approved
                             </span>
                           </div>
-                          <div className="flex items-center space-x-1 mb-2">
+                          <div className="flex items-center space-x-1 mb-1 sm:mb-2">
                             {[1, 2, 3, 4, 5].map((star) => (
-                              <Star key={star} className="h-2 w-2 sm:h-3 sm:w-3 text-yellow-400 fill-current" />
+                              <Star key={star} className="h-2 w-2 text-yellow-400 fill-current" />
                             ))}
                           </div>
-                          <p className="text-gray-700 text-xs sm:text-sm leading-relaxed">
+                          <p className="text-gray-700 text-xs leading-relaxed">
                             "TestiFlow has completely transformed how we collect customer feedback..."
                           </p>
                         </div>
                         
-                        <div className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-all duration-200 animate-slide-up" style={{ animationDelay: '0.4s' }}>
+                        <div className="bg-white border border-gray-200 rounded-lg p-2 sm:p-4 hover:shadow-md transition-all duration-200 animate-slide-up" style={{ animationDelay: '0.4s' }}>
                           <div className="flex items-center justify-between mb-1 sm:mb-2">
                             <div className="flex items-center space-x-2">
-                              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
-                                <Users className="h-4 w-4 text-primary-950" />
+                              <div className="w-4 h-4 sm:w-8 sm:h-8 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
+                                <Users className="h-2 w-2 sm:h-4 sm:w-4 text-primary-950" />
                               </div>
                               <div>
-                                <div className="font-medium text-gray-900 text-xs sm:text-sm">Mike Chen</div>
+                                <div className="font-medium text-gray-900 text-xs">Mike Chen</div>
                                 <div className="text-xs text-gray-500">StartupXYZ</div>
                               </div>
                             </div>
-                            <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">
+                            <span className="px-1 sm:px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">
                               pending
                             </span>
                           </div>
-                          <div className="flex items-center space-x-1 mb-2">
+                          <div className="flex items-center space-x-1 mb-1 sm:mb-2">
                             {[1, 2, 3, 4, 5].map((star) => (
-                              <Star key={star} className="h-2 w-2 sm:h-3 sm:w-3 text-yellow-400 fill-current" />
+                              <Star key={star} className="h-2 w-2 text-yellow-400 fill-current" />
                             ))}
                           </div>
-                          <p className="text-gray-700 text-xs sm:text-sm leading-relaxed">
+                          <p className="text-gray-700 text-xs leading-relaxed">
                             "Amazing product! The testimonial management features are exactly..."
                           </p>
                         </div>
@@ -184,12 +179,12 @@ export const Home: React.FC = () => {
               </div>
               
               {/* Floating Action Buttons */}
-              <div className="absolute -bottom-2 -right-2 sm:-bottom-4 sm:-right-4 space-y-2 animate-slide-up" style={{ animationDelay: '0.6s' }}>
-                <div className="bg-secondary-500 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 animate-pulse">
-                  <Zap className="h-4 w-4 sm:h-5 sm:w-5" />
+              <div className="absolute -bottom-1 -right-1 sm:-bottom-2 sm:-right-2 space-y-1 sm:space-y-2 animate-slide-up" style={{ animationDelay: '0.6s' }}>
+                <div className="bg-secondary-500 text-white p-2 sm:p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 animate-pulse">
+                  <Zap className="h-3 w-3 sm:h-4 sm:w-4" />
                 </div>
-                <div className="bg-accent-500 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 animate-pulse" style={{ animationDelay: '0.5s' }}>
-                  <Shield className="h-4 w-4 sm:h-5 sm:w-5" />
+                <div className="bg-accent-500 text-white p-2 sm:p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 animate-pulse" style={{ animationDelay: '0.5s' }}>
+                  <Shield className="h-3 w-3 sm:h-4 sm:w-4" />
                 </div>
               </div>
             </div>
