@@ -166,7 +166,7 @@ export const Home: React.FC = () => {
           </div>
           
           {/* Browser Window */}
-          <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden max-w-4xl mx-auto">
+          <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden max-w-7xl mx-auto">
             {/* Browser Header */}
             <div className="bg-gray-100 px-3 sm:px-4 py-2 sm:py-3 border-b border-gray-200 flex items-center space-x-2 sm:space-x-3">
               <div className="flex space-x-1.5">
@@ -174,7 +174,7 @@ export const Home: React.FC = () => {
                 <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
                 <div className="w-3 h-3 bg-green-400 rounded-full"></div>
               </div>
-              <div className="flex-1 bg-white rounded-md px-2 sm:px-3 py-1 text-xs sm:text-sm text-gray-500 text-center max-w-xs sm:max-w-md">
+              <div className="flex-1 bg-white rounded-md px-2 sm:px-3 py-1 text-xs sm:text-sm text-gray-500 text-center max-w-sm sm:max-w-lg">
                 testiflow.com/dashboard
               </div>
               <div className="text-xs text-gray-400 hidden sm:block">
