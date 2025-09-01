@@ -384,10 +384,10 @@ export const Home: React.FC = () => {
                   </div>
                 </div>
                 <p className="text-gray-700 mb-4 italic">
-                  "TestiFlow has completely transformed how we collect customer feedback. The automated workflows save us hours every week!"
+                  "TestiFlow has streamlined our client feedback process incredibly. The professional forms and approval workflow have elevated our service quality."
                 </p>
                 <div className="text-sm text-gray-600">
-                  - Sarah Johnson, TechCorp Solutions
+                  - Mariah W., Technology Solutions
                 </div>
               </div>
 
@@ -400,10 +400,10 @@ export const Home: React.FC = () => {
                   </div>
                 </div>
                 <p className="text-gray-700 mb-4 italic">
-                  "The export features are incredible. We can now easily use testimonials across all our marketing channels."
+                  "The custom branding and export features are game-changers. We can now showcase client testimonials professionally across all our platforms."
                 </p>
                 <div className="text-sm text-gray-600">
-                  - Mike Chen, StartupXYZ
+                  - Nathan R., IT & Legal Services
                 </div>
               </div>
 
@@ -416,10 +416,10 @@ export const Home: React.FC = () => {
                   </div>
                 </div>
                 <p className="text-gray-700 mb-4 italic">
-                  "Amazing product! The testimonial management features are exactly what we needed for our marketing campaigns."
+                  "The video testimonial feature has been incredible for our insurance business. Clients love sharing their stories, and it builds so much trust."
                 </p>
                 <div className="text-sm text-gray-600">
-                  - Emily Davis, GrowthCo
+                  - Amber I., Insurance & Design
                 </div>
               </div>
             </div>
