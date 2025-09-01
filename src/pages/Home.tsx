@@ -14,10 +14,10 @@ export const Home: React.FC = () => {
   return (
     <div className="bg-white">
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-primary-50 via-white to-secondary-50 pt-8">
+      <div className="relative overflow-hidden bg-gradient-to-br from-primary-50 via-white to-secondary-50 pt-8 pb-16 lg:pb-0">
         <div className="max-w-7xl mx-auto">
-          <div className="relative z-10 pb-16 bg-transparent sm:pb-20 md:pb-24 lg:max-w-2xl lg:w-full lg:pb-32 xl:pb-40">
-            <main className="mt-8 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-16 lg:px-8 xl:mt-20">
+          <div className="relative z-10 pb-8 bg-transparent sm:pb-12 md:pb-16 lg:max-w-2xl lg:w-full lg:pb-20 xl:pb-24">
+            <main className="mt-8 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-12 lg:px-8 xl:mt-16">
               <div className="sm:text-center lg:text-left">
                 <h1 className="text-4xl tracking-tight font-bold text-gray-900 sm:text-5xl md:text-6xl">
                   <span className="block xl:inline">Turn Customer</span>{' '}
@@ -29,7 +29,7 @@ export const Home: React.FC = () => {
                 <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
                   Collect, manage, and showcase customer testimonials with beautiful forms, automated workflows, and powerful export tools. Build trust and drive conversions with authentic customer stories.
                 </p>
-                <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
+                <div className="mt-6 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
                   <div className="rounded-md shadow">
                     <button
                       onClick={handleGetStarted}
@@ -52,20 +52,20 @@ export const Home: React.FC = () => {
             </main>
           </div>
         </div>
-        <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2 lg:pt-16">
-          <div className="h-64 w-full sm:h-80 md:h-96 lg:w-full lg:h-full flex items-center justify-center py-4 sm:py-8">
+        <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2 lg:pt-20 xl:pt-24">
+          <div className="h-80 w-full sm:h-96 md:h-[28rem] lg:w-full lg:h-full flex items-center justify-center py-4 sm:py-8 lg:py-12">
             {/* Main Dashboard Mockup */}
-            <div className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl xl:max-w-3xl mx-auto px-2 sm:px-4">
+            <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto px-2 sm:px-4 lg:px-2">
               {/* Browser Window */}
               <div className="bg-white rounded-lg sm:rounded-xl shadow-xl border border-gray-200 overflow-hidden transform hover:scale-105 transition-all duration-500 hover:shadow-2xl w-full">
                 {/* Browser Header */}
-                <div className="bg-gray-100 px-2 sm:px-4 py-2 sm:py-3 flex items-center space-x-2 border-b border-gray-200">
+                <div className="bg-gray-100 px-2 sm:px-3 py-1.5 sm:py-2 flex items-center space-x-2 border-b border-gray-200">
                   <div className="flex space-x-2">
-                    <div className="w-2 h-2 sm:w-3 sm:h-3 bg-red-400 rounded-full"></div>
-                    <div className="w-2 h-2 sm:w-3 sm:h-3 bg-yellow-400 rounded-full"></div>
-                    <div className="w-2 h-2 sm:w-3 sm:h-3 bg-green-400 rounded-full"></div>
+                    <div className="w-2 h-2 bg-red-400 rounded-full"></div>
+                    <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
+                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
                   </div>
-                  <div className="flex-1 bg-white rounded-md px-2 sm:px-3 py-1 text-xs text-gray-500 font-mono">
+                  <div className="flex-1 bg-white rounded-md px-2 py-0.5 text-xs text-gray-500 font-mono">
                     <span className="hidden sm:inline">testiflow.com/dashboard</span>
                     <span className="sm:hidden">dashboard</span>
                   </div>
@@ -74,13 +74,13 @@ export const Home: React.FC = () => {
                 {/* Dashboard Content */}
                 <div className="bg-white">
                   {/* Top Navigation */}
-                  <div className="bg-white border-b border-gray-100 px-3 sm:px-6 py-2 sm:py-3">
+                  <div className="bg-white border-b border-gray-100 px-2 sm:px-4 py-1.5 sm:py-2">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-1 sm:space-x-2">
-                        <TestiFlowIcon className="h-4 w-4 sm:h-6 sm:w-6 text-primary-950" />
-                        <span className="text-sm sm:text-base font-bold text-primary-950">TestiFlow</span>
+                        <TestiFlowIcon className="h-3 w-3 sm:h-5 sm:w-5 text-primary-950" />
+                        <span className="text-xs sm:text-sm font-bold text-primary-950">TestiFlow</span>
                       </div>
-                      <div className="flex items-center space-x-2 sm:space-x-4 text-xs sm:text-sm">
+                      <div className="flex items-center space-x-1 sm:space-x-3 text-xs">
                         <span className="text-primary-950 font-medium">Dashboard</span>
                         <span className="text-gray-500 hidden sm:inline">Forms</span>
                         <span className="text-gray-500 hidden sm:inline">Testimonials</span>
@@ -89,102 +89,92 @@ export const Home: React.FC = () => {
                   </div>
                   
                   {/* Dashboard Stats */}
-                  <div className="p-3 sm:p-6">
-                    <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-4 sm:mb-6">
-                      <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-2 sm:p-4 rounded-lg border border-blue-100 animate-slide-up">
-                        <div className="flex items-center justify-between mb-1 sm:mb-2">
+                  <div className="p-2 sm:p-4">
+                    <div className="grid grid-cols-3 gap-1 sm:gap-3 mb-3 sm:mb-4">
+                      <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-1.5 sm:p-3 rounded-lg border border-blue-100 animate-slide-up">
+                        <div className="flex items-center justify-between mb-1">
                           <span className="text-xs font-medium text-gray-700">Total</span>
-                          <MessageSquare className="h-3 w-3 sm:h-4 sm:w-4 text-primary-950" />
+                          <MessageSquare className="h-2 w-2 sm:h-3 sm:w-3 text-primary-950" />
                         </div>
-                        <div className="text-lg sm:text-2xl font-bold text-primary-950 animate-count-up">47</div>
-                        <div className="text-xs text-gray-500 hidden sm:block">testimonials</div>
+                        <div className="text-sm sm:text-xl font-bold text-primary-950 animate-count-up">47</div>
+                        <div className="text-xs text-gray-500 hidden md:block">testimonials</div>
                       </div>
-                      <div className="bg-gradient-to-br from-secondary-50 to-secondary-100 p-2 sm:p-4 rounded-lg border border-secondary-200 animate-slide-up" style={{ animationDelay: '0.1s' }}>
-                        <div className="flex items-center justify-between mb-1 sm:mb-2">
+                      <div className="bg-gradient-to-br from-secondary-50 to-secondary-100 p-1.5 sm:p-3 rounded-lg border border-secondary-200 animate-slide-up" style={{ animationDelay: '0.1s' }}>
+                        <div className="flex items-center justify-between mb-1">
                           <span className="text-xs font-medium text-gray-700">Approved</span>
-                          <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-secondary-500" />
+                          <CheckCircle className="h-2 w-2 sm:h-3 sm:w-3 text-secondary-500" />
                         </div>
-                        <div className="text-lg sm:text-2xl font-bold text-secondary-500 animate-count-up">42</div>
-                        <div className="text-xs text-gray-500 hidden sm:block">ready to use</div>
+                        <div className="text-sm sm:text-xl font-bold text-secondary-500 animate-count-up">42</div>
+                        <div className="text-xs text-gray-500 hidden md:block">ready to use</div>
                       </div>
-                      <div className="bg-gradient-to-br from-accent-50 to-accent-100 p-2 sm:p-4 rounded-lg border border-accent-200 animate-slide-up" style={{ animationDelay: '0.2s' }}>
-                        <div className="flex items-center justify-between mb-1 sm:mb-2">
+                      <div className="bg-gradient-to-br from-accent-50 to-accent-100 p-1.5 sm:p-3 rounded-lg border border-accent-200 animate-slide-up" style={{ animationDelay: '0.2s' }}>
+                        <div className="flex items-center justify-between mb-1">
                           <span className="text-xs font-medium text-gray-700">This Month</span>
-                          <Star className="h-3 w-3 sm:h-4 sm:w-4 text-accent-600" />
+                          <Star className="h-2 w-2 sm:h-3 sm:w-3 text-accent-600" />
                         </div>
-                        <div className="text-lg sm:text-2xl font-bold text-accent-600 animate-count-up">12</div>
-                        <div className="text-xs text-gray-500 hidden sm:block">new reviews</div>
+                        <div className="text-sm sm:text-xl font-bold text-accent-600 animate-count-up">12</div>
+                        <div className="text-xs text-gray-500 hidden md:block">new reviews</div>
                       </div>
                     </div>
                     
                     {/* Recent Testimonials Preview */}
-                    <div className="space-y-2 sm:space-y-3">
-                      <h3 className="text-sm sm:text-lg font-semibold text-gray-900">Recent Testimonials</h3>
+                    <div className="space-y-1 sm:space-y-2">
+                      <h3 className="text-xs sm:text-sm font-semibold text-gray-900">Recent Testimonials</h3>
                       
                       {/* Testimonial Cards */}
-                      <div className="space-y-2 sm:space-y-3">
-                        <div className="bg-white border border-gray-200 rounded-lg p-2 sm:p-4 hover:shadow-md transition-all duration-200 animate-slide-up" style={{ animationDelay: '0.3s' }}>
-                          <div className="flex items-center justify-between mb-1 sm:mb-2">
+                      <div className="space-y-1 sm:space-y-2">
+                        <div className="bg-white border border-gray-200 rounded-lg p-1.5 sm:p-3 hover:shadow-md transition-all duration-200 animate-slide-up" style={{ animationDelay: '0.3s' }}>
+                          <div className="flex items-center justify-between mb-1">
                             <div className="flex items-center space-x-2">
-                              <div className="w-4 h-4 sm:w-8 sm:h-8 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
-                                <Users className="h-2 w-2 sm:h-4 sm:w-4 text-primary-950" />
+                              <div className="w-3 h-3 sm:w-6 sm:h-6 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
+                                <Users className="h-1.5 w-1.5 sm:h-3 sm:w-3 text-primary-950" />
                               </div>
                               <div>
-                                <div className="font-medium text-gray-900 text-xs">Sarah Johnson</div>
-                                <div className="text-xs text-gray-500">TechCorp Solutions</div>
+                                <div className="font-medium text-gray-900 text-xs sm:text-sm">Sarah Johnson</div>
+                                <div className="text-xs text-gray-500 hidden sm:block">TechCorp Solutions</div>
                               </div>
                             </div>
-                            <span className="px-1 sm:px-2 py-1 bg-secondary-100 text-secondary-800 rounded-full text-xs font-medium">
+                            <span className="px-1 py-0.5 bg-secondary-100 text-secondary-800 rounded-full text-xs font-medium">
                               approved
                             </span>
                           </div>
-                          <div className="flex items-center space-x-1 mb-1 sm:mb-2">
+                          <div className="flex items-center space-x-0.5 mb-1">
                             {[1, 2, 3, 4, 5].map((star) => (
-                              <Star key={star} className="h-2 w-2 text-yellow-400 fill-current" />
+                              <Star key={star} className="h-1.5 w-1.5 sm:h-2 sm:w-2 text-yellow-400 fill-current" />
                             ))}
                           </div>
-                          <p className="text-gray-700 text-xs leading-relaxed">
+                          <p className="text-gray-700 text-xs leading-tight">
                             "TestiFlow has completely transformed how we collect customer feedback..."
                           </p>
                         </div>
                         
-                        <div className="bg-white border border-gray-200 rounded-lg p-2 sm:p-4 hover:shadow-md transition-all duration-200 animate-slide-up" style={{ animationDelay: '0.4s' }}>
-                          <div className="flex items-center justify-between mb-1 sm:mb-2">
+                        <div className="bg-white border border-gray-200 rounded-lg p-1.5 sm:p-3 hover:shadow-md transition-all duration-200 animate-slide-up" style={{ animationDelay: '0.4s' }}>
+                          <div className="flex items-center justify-between mb-1">
                             <div className="flex items-center space-x-2">
-                              <div className="w-4 h-4 sm:w-8 sm:h-8 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
-                                <Users className="h-2 w-2 sm:h-4 sm:w-4 text-primary-950" />
+                              <div className="w-3 h-3 sm:w-6 sm:h-6 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
+                                <Users className="h-1.5 w-1.5 sm:h-3 sm:w-3 text-primary-950" />
                               </div>
                               <div>
-                                <div className="font-medium text-gray-900 text-xs">Mike Chen</div>
-                                <div className="text-xs text-gray-500">StartupXYZ</div>
+                                <div className="font-medium text-gray-900 text-xs sm:text-sm">Mike Chen</div>
+                                <div className="text-xs text-gray-500 hidden sm:block">StartupXYZ</div>
                               </div>
                             </div>
-                            <span className="px-1 sm:px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">
+                            <span className="px-1 py-0.5 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">
                               pending
                             </span>
                           </div>
-                          <div className="flex items-center space-x-1 mb-1 sm:mb-2">
+                          <div className="flex items-center space-x-0.5 mb-1">
                             {[1, 2, 3, 4, 5].map((star) => (
-                              <Star key={star} className="h-2 w-2 text-yellow-400 fill-current" />
+                              <Star key={star} className="h-1.5 w-1.5 sm:h-2 sm:w-2 text-yellow-400 fill-current" />
                             ))}
                           </div>
-                          <p className="text-gray-700 text-xs leading-relaxed">
+                          <p className="text-gray-700 text-xs leading-tight">
                             "Amazing product! The testimonial management features are exactly..."
                           </p>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
-              
-              {/* Floating Action Buttons */}
-              <div className="absolute -bottom-1 -right-1 sm:-bottom-2 sm:-right-2 space-y-1 sm:space-y-2 animate-slide-up" style={{ animationDelay: '0.6s' }}>
-                <div className="bg-secondary-500 text-white p-2 sm:p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 animate-pulse">
-                  <Zap className="h-3 w-3 sm:h-4 sm:w-4" />
-                </div>
-                <div className="bg-accent-500 text-white p-2 sm:p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 animate-pulse" style={{ animationDelay: '0.5s' }}>
-                  <Shield className="h-3 w-3 sm:h-4 sm:w-4" />
                 </div>
               </div>
             </div>
