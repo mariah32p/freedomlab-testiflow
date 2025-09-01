@@ -569,7 +569,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                     </div>
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
                       <p className="text-sm text-blue-700">
-                        ✨ This preview shows exactly how the widget will appear on your website. Videos show as clickable thumbnails that open in a modal.
+                        This preview shows exactly how the widget will appear on your website. Videos show as clickable thumbnails that open in a modal.
                       </p>
                     </div>
                   </div>
