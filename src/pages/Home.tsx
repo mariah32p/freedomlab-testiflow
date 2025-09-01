@@ -220,7 +220,7 @@ export const Home: React.FC = () => {
               </div>
             ))}
           </div>
-        </div>
+        <section className="py-24 bg-white hidden lg:block">
       );
     }
 
