@@ -12,7 +12,7 @@ export const Home: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <>
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-br from-primary-50 via-white to-accent-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32">
@@ -587,6 +587,6 @@ export const Home: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
