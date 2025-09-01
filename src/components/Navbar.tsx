@@ -29,6 +29,7 @@ export const Navbar = () => {
             {/* FIX 1: Wrapped the logo icon in a Link to make it navigable */}
             <Link to="/" className="flex items-center space-x-2">
               <TestiFlowIcon className="h-8 w-8 text-primary-950" />
+              <span className="text-xl font-bold text-primary-950">TestiFlow</span>
             </Link>
           </div>
 
