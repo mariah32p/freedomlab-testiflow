@@ -55,28 +55,28 @@ export const Home: React.FC = () => {
         <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
           <div className="h-56 w-full bg-gradient-to-br from-primary-100 to-secondary-100 sm:h-72 md:h-96 lg:w-full lg:h-full flex items-center justify-center">
             {/* Phone Mockup */}
-            <div className="relative">
-              <div className="w-64 h-96 bg-gray-900 rounded-3xl p-2 shadow-2xl">
+            <div className="relative animate-pulse">
+              <div className="w-64 h-96 bg-gray-900 rounded-3xl p-2 shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:scale-105 hover:rotate-1">
                 <div className="w-full h-full bg-white rounded-2xl overflow-hidden">
                   {/* Phone Screen Content */}
-                  <div className="bg-primary-950 text-white p-4 text-center">
+                  <div className="bg-primary-950 text-white p-4 text-center animate-pulse">
                     <TestiFlowIcon className="h-6 w-6 text-white mx-auto mb-2" />
                     <h3 className="font-bold text-sm">Share Your Experience</h3>
                     <p className="text-xs text-white/80">Rate your experience with us</p>
                   </div>
                   <div className="p-4 space-y-3">
-                    <div className="flex justify-center space-x-1">
+                    <div className="flex justify-center space-x-1 animate-bounce">
                       {[1, 2, 3, 4, 5].map((star) => (
                         <Star key={star} className="h-4 w-4 text-yellow-400 fill-current" />
                       ))}
                     </div>
                     <div className="space-y-2">
-                      <div className="h-3 bg-gray-200 rounded w-3/4"></div>
-                      <div className="h-3 bg-gray-200 rounded w-full"></div>
-                      <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+                      <div className="h-3 bg-gray-200 rounded w-3/4 animate-pulse"></div>
+                      <div className="h-3 bg-gray-200 rounded w-full animate-pulse" style={{ animationDelay: '0.1s' }}></div>
+                      <div className="h-3 bg-gray-200 rounded w-2/3 animate-pulse" style={{ animationDelay: '0.2s' }}></div>
                     </div>
-                    <div className="h-16 bg-gray-100 rounded border-2 border-dashed border-gray-300"></div>
-                    <button className="w-full bg-secondary-500 text-white py-2 rounded-lg text-sm font-medium">
+                    <div className="h-16 bg-gray-100 rounded border-2 border-dashed border-gray-300 animate-pulse" style={{ animationDelay: '0.3s' }}></div>
+                    <button className="w-full bg-secondary-500 text-white py-2 rounded-lg text-sm font-medium hover:bg-secondary-600 transition-colors transform hover:scale-105">
                       Submit Testimonial
                     </button>
                   </div>
@@ -92,7 +92,7 @@ export const Home: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-base text-primary-950 font-semibold tracking-wide uppercase">How It Works</h2>
-            <p className="mt-2 text-3xl leading-8 font-bold tracking-tight text-gray-900 sm:text-4xl">
+            <p className="mt-2 text-3xl leading-8 font-bold tracking-tight text-gray-900 sm:text-4xl animate-pulse">
               See TestiFlow in Action
             </p>
             <p className="mt-4 max-w-2xl text-xl text-gray-500 mx-auto">
@@ -102,10 +102,10 @@ export const Home: React.FC = () => {
 
           <div className="grid md:grid-cols-3 gap-8">
             {/* Step 1: Create Forms */}
-            <div className="text-center">
-              <div className="bg-gradient-to-br from-primary-50 to-secondary-50 rounded-2xl p-6 mb-6 border border-gray-100 shadow-lg">
+            <div className="text-center group">
+              <div className="bg-gradient-to-br from-primary-50 to-secondary-50 rounded-2xl p-6 mb-6 border border-gray-100 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
                 {/* Form Builder Mockup */}
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-300">
                   <div className="bg-primary-950 text-white p-3 text-center">
                     <div className="flex items-center justify-center space-x-2">
                       <TestiFlowIcon className="h-4 w-4" />
@@ -141,10 +141,10 @@ export const Home: React.FC = () => {
             </div>
 
             {/* Step 2: Collect Feedback */}
-            <div className="text-center">
-              <div className="bg-gradient-to-br from-secondary-50 to-accent-50 rounded-2xl p-6 mb-6 border border-gray-100 shadow-lg">
+            <div className="text-center group">
+              <div className="bg-gradient-to-br from-secondary-50 to-accent-50 rounded-2xl p-6 mb-6 border border-gray-100 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animation-delay-150">
                 {/* Customer Form Mockup */}
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-300">
                   <div className="bg-secondary-500 text-white p-3 text-center">
                     <span className="text-sm font-semibold">Customer Experience</span>
                   </div>
@@ -174,10 +174,10 @@ export const Home: React.FC = () => {
             </div>
 
             {/* Step 3: Export & Use */}
-            <div className="text-center">
-              <div className="bg-gradient-to-br from-accent-50 to-primary-50 rounded-2xl p-6 mb-6 border border-gray-100 shadow-lg">
+            <div className="text-center group">
+              <div className="bg-gradient-to-br from-accent-50 to-primary-50 rounded-2xl p-6 mb-6 border border-gray-100 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animation-delay-300">
                 {/* Export Dashboard Mockup */}
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-300">
                   <div className="bg-accent-600 text-white p-3 text-center">
                     <span className="text-sm font-semibold">Export Dashboard</span>
                   </div>
