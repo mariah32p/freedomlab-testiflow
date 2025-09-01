@@ -466,12 +466,6 @@ export const Home: React.FC = () => {
                     </li>
                   ))}
                 </ul>
-                <button
-                  onClick={handleGetStarted}
-                  className="w-full bg-primary-950 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-900 transition-colors"
-                >
-                  Start Free Trial
-                </button>
               </div>
             </div>
 
@@ -502,14 +496,18 @@ export const Home: React.FC = () => {
                     </li>
                   ))}
                 </ul>
-                <button
-                  onClick={handleGetStarted}
-                  className="w-full bg-secondary-500 text-white py-3 px-6 rounded-lg font-semibold hover:bg-secondary-600 transition-colors"
-                >
-                  Start Free Trial
-                </button>
               </div>
             </div>
+          </div>
+          
+          {/* Single CTA Button */}
+          <div className="text-center mt-12">
+            <button
+              onClick={handleGetStarted}
+              className="bg-primary-950 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-primary-900 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+            >
+              Start Your Free Trial
+            </button>
           </div>
           
           <div className="text-center mt-8">
