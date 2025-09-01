@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Star, Shield, Zap, ArrowRight, MessageSquare, Download, BarChart3, CheckCircle, Globe, User } from 'lucide-react';
-import { TestiFlowIcon } from '../components/TestiFlowIcon';
+import { Star, Shield, Zap, ArrowRight, BarChart3, CheckCircle, Globe, User } from 'lucide-react';
 
 export const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -104,7 +103,7 @@ export const Home: React.FC = () => {
                             </div>
                             <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                               testimonial.status === 'approved' 
-                                ? 'bg-secondary-100 text-secondary-800' 
+                                ? 'bg-secondary-100 text-secondary-800'
                                 : 'bg-yellow-100 text-yellow-800'
                             }`}>
                               {testimonial.status}
@@ -584,6 +583,13 @@ export const Home: React.FC = () => {
             Join thousands of marketing teams who trust TestiFlow to manage their customer testimonials.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button
+              onClick={handleSignupClick}
+              className="bg-white text-primary-950 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-lg"
+            >
+              <span>Start Your Free Trial Now</span>
+              <ArrowRight className="h-5 w-5" />
+            </button>
           </div>
         </div>
       </div>
