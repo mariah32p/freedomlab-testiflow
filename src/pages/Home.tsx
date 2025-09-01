@@ -183,7 +183,7 @@ export const Home: React.FC = () => {
             </div>
             
             {/* Demo Content */}
-            <div className="relative h-[500px] sm:h-[600px] overflow-hidden">
+            <div className="relative h-[600px] sm:h-[700px] lg:h-[800px] overflow-hidden">
               <Demo />
               
               {/* Demo Overlay Indicator */}
