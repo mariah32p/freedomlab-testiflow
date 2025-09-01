@@ -888,7 +888,7 @@ export const Home: React.FC = () => {
                             <Shield className={`h-4 w-4 ${testimonial.consent ? 'text-secondary-500' : 'text-gray-400'}`} />
                             <span className={`text-xs ${testimonial.consent ? 'text-secondary-700' : 'text-gray-500'}`}>
                               {testimonial.consent ? 'Marketing consent given' : 'No marketing consent'}
-                            </span>
+                            </button>
                           </div>
                           <div className="flex space-x-2">
                             <button className="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full transition-colors">
