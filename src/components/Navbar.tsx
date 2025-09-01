@@ -17,6 +17,7 @@ export const Navbar = () => {
   const handleSignupClick = () => {
     navigate('/signup');
     window.scrollTo(0, 0);
+    setMobileMenuOpen(false); // Close menu on navigation
   };
 
   return (
@@ -25,7 +26,10 @@ export const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo - Left aligned */}
           <div className="flex items-center">
+            {/* FIX 1: Wrapped the logo icon in a Link to make it navigable */}
+            <Link to="/" className="flex items-center space-x-2">
               <TestiFlowIcon className="h-8 w-8 text-primary-950" />
+            </Link>
           </div>
 
           {/* Desktop Navigation - Hidden on mobile */}
@@ -175,6 +179,13 @@ export const Navbar = () => {
                   >
                     Login
                   </Link>
+                  {/* FIX 2: Added the "Try Free" button for consistency */}
+                  <button
+                    onClick={handleSignupClick}
+                    className="block w-full text-left bg-primary-950 text-white hover:bg-primary-900 px-3 py-2 rounded-md text-base font-medium transition-colors mt-2"
+                  >
+                    Try Free
+                  </button>
                 </>
               )}
             </div>
