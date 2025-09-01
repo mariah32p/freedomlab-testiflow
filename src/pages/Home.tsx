@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Star, MessageSquare, CheckCircle, Users, Zap, Shield, Check, FileText } from 'lucide-react';
+import { ArrowRight, Star, MessageSquare, CheckCircle, Users, Zap, Shield, Check, FileText, Code } from 'lucide-react';
 import { TestiFlowIcon } from '../components/TestiFlowIcon';
 
 export const Home: React.FC = () => {
@@ -87,7 +87,151 @@ export const Home: React.FC = () => {
         </div>
       </div>
 
+      {/* Demo Section */}
+      <div className="py-16 bg-white" id="demo">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-base text-primary-950 font-semibold tracking-wide uppercase">How It Works</h2>
+            <p className="mt-2 text-3xl leading-8 font-bold tracking-tight text-gray-900 sm:text-4xl">
+              See TestiFlow in Action
+            </p>
+            <p className="mt-4 max-w-2xl text-xl text-gray-500 mx-auto">
+              From creation to showcase - watch how easy it is to manage testimonials
+            </p>
+          </div>
 
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Step 1: Create Forms */}
+            <div className="text-center">
+              <div className="bg-gradient-to-br from-primary-50 to-secondary-50 rounded-2xl p-6 mb-6 border border-gray-100 shadow-lg">
+                {/* Form Builder Mockup */}
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                  <div className="bg-primary-950 text-white p-3 text-center">
+                    <div className="flex items-center justify-center space-x-2">
+                      <TestiFlowIcon className="h-4 w-4" />
+                      <span className="text-sm font-semibold">Form Builder</span>
+                    </div>
+                  </div>
+                  <div className="p-4 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-medium text-gray-700">Form Title</span>
+                      <div className="w-2 h-2 bg-secondary-500 rounded-full"></div>
+                    </div>
+                    <div className="h-2 bg-gray-200 rounded w-full"></div>
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-3 h-3 bg-blue-100 rounded border border-blue-300"></div>
+                        <span className="text-xs text-gray-600">Custom Field</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-3 h-3 bg-green-100 rounded border border-green-300"></div>
+                        <span className="text-xs text-gray-600">Rating Field</span>
+                      </div>
+                    </div>
+                    <button className="w-full bg-primary-950 text-white py-1 rounded text-xs font-medium">
+                      Create Form
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">1. Create Forms</h3>
+              <p className="text-gray-600">
+                Build custom testimonial collection forms with your branding, custom fields, and media upload options.
+              </p>
+            </div>
+
+            {/* Step 2: Collect Feedback */}
+            <div className="text-center">
+              <div className="bg-gradient-to-br from-secondary-50 to-accent-50 rounded-2xl p-6 mb-6 border border-gray-100 shadow-lg">
+                {/* Customer Form Mockup */}
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                  <div className="bg-secondary-500 text-white p-3 text-center">
+                    <span className="text-sm font-semibold">Customer Experience</span>
+                  </div>
+                  <div className="p-4 space-y-3">
+                    <div className="flex justify-center space-x-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star key={star} className="h-3 w-3 text-yellow-400 fill-current" />
+                      ))}
+                    </div>
+                    <div className="space-y-2">
+                      <div className="h-2 bg-gray-200 rounded w-3/4"></div>
+                      <div className="h-2 bg-gray-200 rounded w-full"></div>
+                    </div>
+                    <div className="h-8 bg-gray-100 rounded border-2 border-dashed border-gray-300 flex items-center justify-center">
+                      <span className="text-xs text-gray-500">📸 Upload</span>
+                    </div>
+                    <button className="w-full bg-secondary-500 text-white py-1 rounded text-xs font-medium">
+                      Submit
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">2. Collect Feedback</h3>
+              <p className="text-gray-600">
+                Customers fill out your branded forms with ratings, testimonials, and optional media uploads.
+              </p>
+            </div>
+
+            {/* Step 3: Export & Use */}
+            <div className="text-center">
+              <div className="bg-gradient-to-br from-accent-50 to-primary-50 rounded-2xl p-6 mb-6 border border-gray-100 shadow-lg">
+                {/* Export Dashboard Mockup */}
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                  <div className="bg-accent-600 text-white p-3 text-center">
+                    <span className="text-sm font-semibold">Export Dashboard</span>
+                  </div>
+                  <div className="p-4 space-y-3">
+                    <div className="grid grid-cols-3 gap-1">
+                      <div className="bg-green-100 text-green-800 p-1 rounded text-center">
+                        <FileText className="h-3 w-3 mx-auto mb-1" />
+                        <span className="text-xs">CSV</span>
+                      </div>
+                      <div className="bg-blue-100 text-blue-800 p-1 rounded text-center">
+                        <Code className="h-3 w-3 mx-auto mb-1" />
+                        <span className="text-xs">Widget</span>
+                      </div>
+                      <div className="bg-purple-100 text-purple-800 p-1 rounded text-center">
+                        <MessageSquare className="h-3 w-3 mx-auto mb-1" />
+                        <span className="text-xs">Social</span>
+                      </div>
+                    </div>
+                    <div className="bg-gray-50 rounded p-2">
+                      <div className="flex items-center space-x-1 mb-1">
+                        <Star className="h-2 w-2 text-yellow-400 fill-current" />
+                        <Star className="h-2 w-2 text-yellow-400 fill-current" />
+                        <Star className="h-2 w-2 text-yellow-400 fill-current" />
+                        <Star className="h-2 w-2 text-yellow-400 fill-current" />
+                        <Star className="h-2 w-2 text-yellow-400 fill-current" />
+                      </div>
+                      <div className="h-1 bg-gray-200 rounded w-full mb-1"></div>
+                      <div className="h-1 bg-gray-200 rounded w-2/3"></div>
+                    </div>
+                    <button className="w-full bg-accent-600 text-white py-1 rounded text-xs font-medium">
+                      Export
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">3. Export & Use</h3>
+              <p className="text-gray-600">
+                Export testimonials as CSV, generate website widgets, or create social media posts ready for marketing.
+              </p>
+            </div>
+          </div>
+
+          {/* Demo CTA */}
+          <div className="text-center mt-12">
+            <a
+              href="/demo"
+              className="inline-flex items-center px-6 py-3 border border-primary-950 text-base font-medium rounded-md text-primary-950 bg-white hover:bg-primary-50 transition-colors"
+            >
+              Try Interactive Demo
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </a>
+          </div>
+        </div>
+      </div>
 
       {/* Features Section */}
       <div className="py-12 bg-white" id="features">
