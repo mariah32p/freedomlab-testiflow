@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Star, Shield, Zap, ArrowRight, BarChart3, CheckCircle, Globe, User } from 'lucide-react';
+import { Star, Shield, Zap, ArrowRight, BarChart3, CheckCircle, Globe, User, Settings } from 'lucide-react';
 import { Demo } from './Demo';
 // The unused TestiFlowIcon import was removed
 
