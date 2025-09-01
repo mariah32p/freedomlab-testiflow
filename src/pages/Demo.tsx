@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { TestiFlowIcon } from '../components/TestiFlowIcon';
-import { User, LogOut, Plus, Settings, Eye, Copy, ExternalLink, Star, Download, FileText, Code, Send } from 'lucide-react';
+import { User, LogOut, Plus, Settings, Eye, Copy, ExternalLink, Star, Download, FileText, Code, Send, CheckCircle, X, ArrowUp, ArrowDown } from 'lucide-react';
 
 interface DemoStep {
   id: string;
@@ -10,11 +10,11 @@ interface DemoStep {
 }
 
 const demoSteps: DemoStep[] = [
-  { id: 'create-form', title: 'Create Forms', description: 'Setting up testimonial collection forms', duration: 7000 },
-  { id: 'custom-fields', title: 'Add Custom Fields', description: 'Adding custom questions to the form', duration: 8000 },
-  { id: 'customer-submission', title: 'Customer Fills Form', description: 'Customer submitting their testimonial', duration: 5000 },
+  { id: 'create-form', title: 'Create Forms', description: 'Setting up testimonial collection forms', duration: 6000 },
+  { id: 'custom-fields', title: 'Add Custom Fields', description: 'Adding custom questions to the form', duration: 7000 },
+  { id: 'customer-submission', title: 'Customer Fills Form', description: 'Customer submitting their testimonial', duration: 6000 },
   { id: 'testimonials-approval', title: 'Review & Approve', description: 'Managing testimonials in the dashboard', duration: 6000 },
-  { id: 'export-use', title: 'Export & Use', description: 'Using testimonials in your marketing', duration: 8000 },
+  { id: 'export-use', title: 'Export & Use', description: 'Using testimonials in your marketing', duration: 7000 },
 ];
 
 // Mock testimonials for export demo
@@ -55,24 +55,20 @@ const mockTestimonials = [
 ];
 
 export const Demo: React.FC = () => {
-  const demoContainerRef = useRef<HTMLDivElement>(null);
-  const submitButtonRef = useRef<HTMLButtonElement>(null);
-  const livePreviewRef = useRef<HTMLDivElement>(null);
-
   const [currentStep, setCurrentStep] = useState(0);
 
   // Demo state
-  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [showCreatePanel, setShowCreatePanel] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     thank_you_message: ''
   });
   const [createdForm, setCreatedForm] = useState<any>(null);
-  const [showCustomFields, setShowCustomFields] = useState(false);
+  const [showCustomFieldsPanel, setShowCustomFieldsPanel] = useState(false);
   const [customFields, setCustomFields] = useState<any[]>([]);
-  const [, setShowAddField] = useState(false);
-  const [, setNewField] = useState({ field_type: 'select', label: '', options: [''] });
+  const [showAddFieldPanel, setShowAddFieldPanel] = useState(false);
+  const [newField, setNewField] = useState({ field_type: 'select', label: '', options: [''] });
   const [customerFormData, setCustomerFormData] = useState({
     name: '',
     email: '',
@@ -83,26 +79,10 @@ export const Demo: React.FC = () => {
     industry: ''
   });
   const [testimonials, setTestimonials] = useState<any[]>([]);
-  const [showExportModal, setShowExportModal] = useState(false);
+  const [showExportPanel, setShowExportPanel] = useState(false);
   const [selectedExportFormat, setSelectedExportFormat] = useState<'csv' | 'json' | 'widget'>('csv');
   const [generatedContent, setGeneratedContent] = useState('');
-
-  // Auto-scroll effect for the whole component
-  useEffect(() => {
-    if (demoContainerRef.current) {
-      demoContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }, [currentStep]);
-
-  // Auto-scroll for export widget preview
-  useEffect(() => {
-    if (generatedContent && selectedExportFormat === 'widget' && livePreviewRef.current) {
-      const timer = setTimeout(() => {
-        livePreviewRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }, 200);
-      return () => clearTimeout(timer);
-    }
-  }, [generatedContent, selectedExportFormat]);
+  const [highlightedTestimonial, setHighlightedTestimonial] = useState<string | null>(null);
 
   // Auto-advance timer
   useEffect(() => {
@@ -120,17 +100,18 @@ export const Demo: React.FC = () => {
   }, [currentStep]);
 
   const resetAllAnimations = () => {
-    setShowCreateForm(false);
+    setShowCreatePanel(false);
     setFormData({ title: '', description: '', thank_you_message: '' });
     setCreatedForm(null);
-    setShowCustomFields(false);
+    setShowCustomFieldsPanel(false);
     setCustomFields([]);
-    setShowAddField(false);
+    setShowAddFieldPanel(false);
     setNewField({ field_type: 'select', label: '', options: [''] });
     setCustomerFormData({ name: '', email: '', company: '', message: '', rating: 0, role: '', industry: '' });
     setTestimonials([]);
-    setShowExportModal(false);
+    setShowExportPanel(false);
     setGeneratedContent('');
+    setHighlightedTestimonial(null);
   };
 
   const demoGenerateWebsiteWidget = () => {
@@ -151,36 +132,19 @@ export const Demo: React.FC = () => {
 </div>`;
   };
 
-  const handleExportDemo = () => {
-    switch (selectedExportFormat) {
-      case 'widget':
-        setGeneratedContent(demoGenerateWebsiteWidget());
-        break;
-      case 'csv':
-        setGeneratedContent(`Name,Email,Company,Rating,Testimonial,Status,Date,Form
-"Sarah Johnson","sarah@techcorp.com","TechCorp",5,"TestiFlow has completely transformed how we collect customer feedback. The automated workflows save us hours every week!","approved","2025-01-15","Customer Experience Survey"
-"Mike Chen","mike@startup.com","StartupXYZ",5,"Amazing product! The testimonial management features are exactly what we needed for our marketing campaigns.","approved","2025-01-14","Customer Experience Survey"
-"Emily Davis","emily@growth.com","GrowthCo",4,"The export features are incredible. We can now easily use testimonials across all our marketing channels.","approved","2025-01-13","Customer Experience Survey"`);
-        break;
-      case 'json':
-        setGeneratedContent(JSON.stringify(mockTestimonials, null, 2));
-        break;
-    }
-  };
-
   // Step-specific animations
   useEffect(() => {
     resetAllAnimations();
 
-    if (currentStep === 0) { // Total Duration: 7000ms
-      setTimeout(() => setShowCreateForm(true), 500);
+    if (currentStep === 0) { // Create Forms
+      setTimeout(() => setShowCreatePanel(true), 500);
       setTimeout(() => setFormData({
         title: 'Share Your Experience with TechCorp',
         description: "We'd love to hear about your experience with our software solutions!",
         thank_you_message: 'Thank you for taking the time to share your feedback!'
       }), 1500);
       setTimeout(() => {
-        setShowCreateForm(false);
+        setShowCreatePanel(false);
         setCreatedForm({
           id: '1',
           title: 'Share Your Experience with TechCorp',
@@ -188,9 +152,9 @@ export const Demo: React.FC = () => {
           is_active: true,
           created_at: new Date().toISOString()
         });
-      }, 5000);
+      }, 4500);
 
-    } else if (currentStep === 1) { // Total Duration: 8000ms
+    } else if (currentStep === 1) { // Custom Fields
       setCreatedForm({
         id: '1',
         title: 'Share Your Experience with TechCorp',
@@ -198,15 +162,15 @@ export const Demo: React.FC = () => {
         is_active: true,
         created_at: new Date().toISOString()
       });
-      setTimeout(() => setShowCustomFields(true), 500);
-      setTimeout(() => setShowAddField(true), 1000);
+      setTimeout(() => setShowCustomFieldsPanel(true), 500);
+      setTimeout(() => setShowAddFieldPanel(true), 1000);
       setTimeout(() => setNewField({
         field_type: 'select',
         label: 'What is your role?',
         options: ['CEO/Founder', 'CTO', 'Marketing Manager', 'Operations Manager']
       }), 2000);
       setTimeout(() => {
-        setShowAddField(false);
+        setShowAddFieldPanel(false);
         setCustomFields([{
           id: '1',
           field_type: 'select',
@@ -214,33 +178,15 @@ export const Demo: React.FC = () => {
           options: ['CEO/Founder', 'CTO', 'Marketing Manager', 'Operations Manager'],
           is_required: true
         }]);
-      }, 3000);
-      setTimeout(() => {
-        submitButtonRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 3200);
-      
-      // Add a subtle "submit" animation
-      setTimeout(() => {
-        if (submitButtonRef.current) {
-          submitButtonRef.current.style.transform = 'scale(1.05)';
-          submitButtonRef.current.style.boxShadow = '0 8px 25px rgba(1, 183, 158, 0.3)';
-        }
-      }, 4000);
-      
-      setTimeout(() => {
-        if (submitButtonRef.current) {
-          submitButtonRef.current.style.transform = 'scale(1)';
-          submitButtonRef.current.style.boxShadow = '';
-        }
-      }, 4500);
-      setTimeout(() => setShowAddField(true), 4000);
+      }, 3500);
+      setTimeout(() => setShowAddFieldPanel(true), 4000);
       setTimeout(() => setNewField({
         field_type: 'select',
         label: 'What industry are you in?',
         options: ['Technology', 'Healthcare', 'Finance', 'E-commerce', 'Consulting']
       }), 4500);
       setTimeout(() => {
-        setShowAddField(false);
+        setShowAddFieldPanel(false);
         setCustomFields(prev => [...prev, {
           id: '2',
           field_type: 'select',
@@ -250,23 +196,23 @@ export const Demo: React.FC = () => {
         }]);
       }, 6000);
 
-    } else if (currentStep === 2) { // Total Duration: 10000ms
+    } else if (currentStep === 2) { // Customer Submission
       setCustomFields([
         { id: '1', field_type: 'select', label: 'What is your role?', options: ['CEO/Founder', 'CTO', 'Marketing Manager', 'Operations Manager'], is_required: true },
         { id: '2', field_type: 'select', label: 'What industry are you in?', options: ['Technology', 'Healthcare', 'Finance', 'E-commerce', 'Consulting'], is_required: false }
       ]);
       setTimeout(() => setCustomerFormData(prev => ({ ...prev, rating: 5 })), 500);
-      setTimeout(() => setCustomerFormData(prev => ({ ...prev, name: 'Sarah Johnson' })), 800);
-      setTimeout(() => setCustomerFormData(prev => ({ ...prev, email: 'sarah@techcorp.com' })), 1200);
-      setTimeout(() => setCustomerFormData(prev => ({ ...prev, company: 'TechCorp Solutions' })), 1600);
-      setTimeout(() => setCustomerFormData(prev => ({ ...prev, role: 'CTO' })), 2000);
-      setTimeout(() => setCustomerFormData(prev => ({ ...prev, industry: 'Technology' })), 2400);
+      setTimeout(() => setCustomerFormData(prev => ({ ...prev, name: 'Sarah Johnson' })), 1000);
+      setTimeout(() => setCustomerFormData(prev => ({ ...prev, email: 'sarah@techcorp.com' })), 1500);
+      setTimeout(() => setCustomerFormData(prev => ({ ...prev, company: 'TechCorp Solutions' })), 2000);
+      setTimeout(() => setCustomerFormData(prev => ({ ...prev, role: 'CTO' })), 2500);
+      setTimeout(() => setCustomerFormData(prev => ({ ...prev, industry: 'Technology' })), 3000);
       setTimeout(() => setCustomerFormData(prev => ({
         ...prev,
         message: 'TestiFlow has completely transformed how we collect and manage customer feedback. The automated workflows save us hours every week and the interface is so intuitive!'
-      })), 2800);
+      })), 3500);
 
-    } else if (currentStep === 3) { // Total Duration: 7000ms
+    } else if (currentStep === 3) { // Testimonials Approval
       const testimonialsData = [
         {
           id: '1', name: 'Sarah Johnson', email: 'sarah@techcorp.com', company: 'TechCorp Solutions',
@@ -287,23 +233,30 @@ export const Demo: React.FC = () => {
       ];
       setTestimonials(testimonialsData);
       
-      // Show approval animation
+      // Highlight and approve testimonials
       setTimeout(() => {
-        // Auto-approve the first testimonial
+        setHighlightedTestimonial('1');
+      }, 1000);
+      setTimeout(() => {
         setTestimonials(prev => prev.map(t => 
           t.id === '1' ? { ...t, status: 'approved' } : t
         ));
-      }, 2000);
+        setHighlightedTestimonial(null);
+      }, 2500);
       
       setTimeout(() => {
-        // Auto-approve the third testimonial
+        setHighlightedTestimonial('3');
+      }, 3500);
+      setTimeout(() => {
         setTestimonials(prev => prev.map(t => 
           t.id === '3' ? { ...t, status: 'approved' } : t
         ));
-      }, 4000);
-    } else if (currentStep === 4) { // Total Duration: 8000ms
+        setHighlightedTestimonial(null);
+      }, 5000);
+
+    } else if (currentStep === 4) { // Export
       setTestimonials(mockTestimonials);
-      setTimeout(() => setShowExportModal(true), 1000);
+      setTimeout(() => setShowExportPanel(true), 1000);
       setTimeout(() => {
         setSelectedExportFormat('widget');
       }, 2500);
@@ -328,422 +281,474 @@ export const Demo: React.FC = () => {
     }
   };
 
-  const renderCreateFormsStep = () => (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white shadow rounded-lg">
-          <div className="px-4 py-5 sm:p-6">
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900">Forms</h1>
-                <p className="text-gray-600 mt-2">Create and manage testimonial collection forms</p>
-              </div>
-              <button
-                onClick={() => setShowCreateForm(true)}
-                className="bg-primary-950 text-white px-6 py-3 rounded-lg hover:bg-primary-900 transition-all duration-200 flex items-center space-x-2 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-              >
-                <Plus className="h-5 w-5" />
-                <span>New Form</span>
-              </button>
-            </div>
-
-            {/* Create Form Modal */}
-            {showCreateForm && (
-              <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                <div className="bg-white rounded-lg p-6 w-full max-w-2xl mx-4">
-                  <h2 className="text-xl font-bold text-gray-900 mb-4">Create New Form</h2>
-                  
-                  <form className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Form Title
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.title}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                        readOnly
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Description
-                      </label>
-                      <textarea
-                        value={formData.description}
-                        rows={2}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                        readOnly
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Thank You Message
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.thank_you_message}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                        readOnly
-                      />
-                    </div>
-
-                    <div className="flex space-x-3 pt-4">
-                      <button
-                        type="button"
-                        className="flex-1 bg-primary-950 text-white py-2 px-4 rounded-md font-medium"
-                      >
-                        Create Form
-                      </button>
-                      <button
-                        type="button"
-                        className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md font-medium"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </form>
+  const renderMainContent = () => {
+    if (currentStep === 2) {
+      // Customer submission view
+      return (
+        <div className="bg-gray-50 py-8">
+          <div className="max-w-2xl mx-auto px-4">
+            <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+              <div className="px-6 py-6 text-center text-white bg-primary-950">
+                <div className="flex justify-center mb-3">
+                  <TestiFlowIcon className="h-6 w-6 text-white" />
                 </div>
+                <h1 className="text-xl font-bold mb-2">Share Your Experience with TechCorp</h1>
+                <p className="text-white/90 text-sm">We'd love to hear about your experience with our software solutions!</p>
               </div>
-            )}
-
-            {createdForm ? (
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-200 group animate-slide-in">
-                  <div className="mb-4">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2 leading-tight">{createdForm.title}</h3>
-                    <p className="text-gray-600 text-sm leading-relaxed">{createdForm.description}</p>
-                  </div>
-
-                  <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                    <button className="text-primary-950 hover:text-primary-800 text-sm font-medium flex items-center space-x-1 transition-colors">
-                      <Eye className="h-4 w-4" />
-                      <span>View Details</span>
-                    </button>
-
-                    <div className="flex space-x-2">
-                      <button className="bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-1 rounded-md text-sm font-medium transition-colors flex items-center space-x-1">
-                        <Copy className="h-3 w-3" />
-                        <span>Copy</span>
-                      </button>
-                      <button className="bg-gray-50 text-gray-600 hover:bg-gray-100 px-3 py-1 rounded-md text-sm font-medium transition-colors flex items-center space-x-1">
-                        <ExternalLink className="h-3 w-3" />
-                        <span>Preview</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="text-center py-16">
-                <div className="w-24 h-24 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Settings className="h-12 w-12 text-primary-950" />
-                </div>
-                <h3 className="text-2xl font-semibold text-gray-900 mb-3">Create Your First Form</h3>
-                <p className="text-gray-500 mb-8 max-w-md mx-auto text-lg">
-                  Start gathering customer testimonials by creating a customized form that you can share with your customers.
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderCustomFieldsStep = () => (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white shadow rounded-lg">
-          <div className="px-4 py-5 sm:p-6">
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900">Customize Form: {createdForm?.title}</h1>
-                <p className="text-gray-600 mt-2">Add custom questions beyond the standard fields</p>
-              </div>
-            </div>
-
-            {showCustomFields && (
-              <div className="space-y-6 animate-slide-in">
-                <div className="flex items-center justify-between">
+              <div className="p-6">
+                <div className="space-y-4">
                   <div>
-                    <h3 className="text-lg font-medium text-gray-900">Custom Fields</h3>
-                    <p className="text-sm text-gray-600">Add custom questions beyond the standard fields (name, email, company, rating, testimonial)</p>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">How would you rate your experience? *</label>
+                    <div className="flex space-x-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star key={star} className={`h-6 w-6 ${star <= customerFormData.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} />
+                      ))}
+                    </div>
                   </div>
-                  <button className="bg-primary-950 text-white px-4 py-2 rounded-lg hover:bg-primary-900 transition-colors flex items-center space-x-2">
-                    <Plus className="h-4 w-4" />
-                    <span>Add Field</span>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Your Name *</label>
+                    <input type="text" value={customerFormData.name} className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm" readOnly />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Email Address *</label>
+                    <input type="email" value={customerFormData.email} className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm" readOnly />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Company (Optional)</label>
+                    <input type="text" value={customerFormData.company} className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm" readOnly />
+                  </div>
+                  {customFields.map((field) => (
+                    <div key={field.id}>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">{field.label}{field.is_required && <span className="text-red-500 ml-1">*</span>}</label>
+                      <select value={field.id === '1' ? customerFormData.role : customerFormData.industry} className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm" disabled>
+                        <option value="">Select an option...</option>
+                        {field.options.map((option: string, index: number) => (<option key={index} value={option}>{option}</option>))}
+                      </select>
+                    </div>
+                  ))}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Your Testimonial *</label>
+                    <textarea rows={3} value={customerFormData.message} className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm" readOnly />
+                  </div>
+                  <button type="submit" className="w-full bg-secondary-500 text-white py-3 px-6 rounded-lg font-semibold hover:bg-secondary-600 transition-colors flex items-center justify-center space-x-2">
+                    <Send className="h-4 w-4" />
+                    <span>Submit Testimonial</span>
                   </button>
                 </div>
-                <div className="space-y-3">
-                  {customFields.map((field) => (
-                    <div key={field.id} className="bg-gray-50 border border-gray-200 rounded-lg p-4 animate-slide-in">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <div className="font-medium text-gray-900">
-                            {field.label}
-                            {field.is_required && <span className="text-red-500 ml-1">*</span>}
-                          </div>
-                          <div className="text-sm text-gray-500">
-                            {field.field_type === 'select' ? 'Dropdown Menu' : field.field_type}
-                            {field.options && ` • ${field.options.length} options`}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Default dashboard views
+    return (
+      <div className="bg-gray-50 py-6">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="bg-white shadow rounded-lg">
+            <div className="px-6 py-4">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h1 className="text-2xl font-bold text-gray-900">
+                    {getActiveTab() === 'forms' ? 'Forms' : 'Testimonials'}
+                  </h1>
+                  <p className="text-gray-600 text-sm mt-1">
+                    {getActiveTab() === 'forms' 
+                      ? 'Create and manage testimonial collection forms'
+                      : 'Review, approve, and manage customer testimonials'
+                    }
+                  </p>
+                </div>
+                {getActiveTab() === 'forms' && (
+                  <button
+                    onClick={() => setShowCreatePanel(true)}
+                    className={`bg-primary-950 text-white px-4 py-2 rounded-lg hover:bg-primary-900 transition-all duration-200 flex items-center space-x-2 font-medium shadow-lg ${
+                      currentStep === 0 ? 'ring-4 ring-primary-200 animate-pulse' : ''
+                    }`}
+                  >
+                    <Plus className="h-4 w-4" />
+                    <span>New Form</span>
+                  </button>
+                )}
+                {getActiveTab() === 'testimonials' && (
+                  <button
+                    onClick={() => setShowExportPanel(true)}
+                    className={`border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors flex items-center space-x-2 ${
+                      currentStep === 4 ? 'ring-4 ring-blue-200 animate-pulse' : ''
+                    }`}
+                  >
+                    <Download className="h-4 w-4" />
+                    <span>Export</span>
+                  </button>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Main Content */}
+                <div className="lg:col-span-2">
+                  {getActiveTab() === 'forms' ? (
+                    <>
+                      {createdForm ? (
+                        <div className="space-y-4">
+                          <div className="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-lg transition-all duration-200 animate-slide-in">
+                            <div className="mb-3">
+                              <h3 className="text-lg font-semibold text-gray-900 mb-1 leading-tight">{createdForm.title}</h3>
+                              <p className="text-gray-600 text-sm leading-relaxed">{createdForm.description}</p>
+                            </div>
+                            <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                              <button 
+                                onClick={() => setShowCustomFieldsPanel(true)}
+                                className={`text-primary-950 hover:text-primary-800 text-sm font-medium flex items-center space-x-1 transition-colors ${
+                                  currentStep === 1 ? 'ring-2 ring-primary-200 rounded px-2 py-1' : ''
+                                }`}
+                              >
+                                <Settings className="h-4 w-4" />
+                                <span>Custom Fields</span>
+                              </button>
+                              <div className="flex space-x-2">
+                                <button className="bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-1 rounded-md text-sm font-medium transition-colors flex items-center space-x-1">
+                                  <Copy className="h-3 w-3" />
+                                  <span>Copy</span>
+                                </button>
+                                <button className="bg-gray-50 text-gray-600 hover:bg-gray-100 px-3 py-1 rounded-md text-sm font-medium transition-colors flex items-center space-x-1">
+                                  <ExternalLink className="h-3 w-3" />
+                                  <span>Preview</span>
+                                </button>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                        <div className="flex space-x-2">
-                          <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
-                            <Settings className="h-4 w-4" />
+                      ) : (
+                        <div className="text-center py-12">
+                          <div className="w-16 h-16 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <Settings className="h-8 w-8 text-primary-950" />
+                          </div>
+                          <h3 className="text-xl font-semibold text-gray-900 mb-2">Create Your First Form</h3>
+                          <p className="text-gray-500 text-sm max-w-md mx-auto">
+                            Start gathering customer testimonials by creating a customized form.
+                          </p>
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <div className="space-y-4">
+                      {testimonials.map((testimonial) => (
+                        <div 
+                          key={testimonial.id} 
+                          className={`bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-all duration-200 ${
+                            highlightedTestimonial === testimonial.id ? 'ring-4 ring-secondary-200 shadow-lg scale-105' : ''
+                          }`}
+                        >
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center space-x-3">
+                              <div className="w-8 h-8 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
+                                <User className="h-4 w-4 text-primary-950" />
+                              </div>
+                              <div>
+                                <div className="font-semibold text-gray-900 text-sm">{testimonial.name}</div>
+                                <div className="text-xs text-gray-500">{testimonial.company}</div>
+                              </div>
+                            </div>
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                              testimonial.status === 'approved' 
+                                ? 'bg-secondary-100 text-secondary-800' 
+                                : 'bg-yellow-100 text-yellow-800'
+                            }`}>
+                              {testimonial.status}
+                            </span>
+                          </div>
+                          <div className="flex items-center space-x-2 mb-3">
+                            <div className="flex">
+                              {[...Array(testimonial.rating)].map((_, i) => (
+                                <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
+                              ))}
+                            </div>
+                            <span className="text-xs text-gray-500">({testimonial.rating}/5)</span>
+                          </div>
+                          <p className="text-gray-700 text-sm leading-relaxed mb-3">"{testimonial.message}"</p>
+                          <div className="flex items-center justify-end">
+                            {testimonial.status === 'pending' && (
+                              <div className="flex space-x-2">
+                                <button className="bg-secondary-100 text-secondary-800 hover:bg-secondary-200 px-3 py-1 rounded-md text-xs font-medium transition-colors">
+                                  Approve
+                                </button>
+                                <button className="bg-red-100 text-red-800 hover:bg-red-200 px-3 py-1 rounded-md text-xs font-medium transition-colors">
+                                  Reject
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Side Panel */}
+                <div className="lg:col-span-1">
+                  {/* Create Form Panel */}
+                  {showCreatePanel && (
+                    <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-lg animate-slide-in">
+                      <h3 className="text-lg font-bold text-gray-900 mb-4">Create New Form</h3>
+                      <div className="space-y-3">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Form Title</label>
+                          <input
+                            type="text"
+                            value={formData.title}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                            readOnly
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                          <textarea
+                            value={formData.description}
+                            rows={2}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                            readOnly
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Thank You Message</label>
+                          <input
+                            type="text"
+                            value={formData.thank_you_message}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                            readOnly
+                          />
+                        </div>
+                        <div className="flex space-x-2 pt-3">
+                          <button className="flex-1 bg-primary-950 text-white py-2 px-3 rounded-md font-medium text-sm">
+                            Create Form
+                          </button>
+                          <button className="flex-1 bg-gray-300 text-gray-700 py-2 px-3 rounded-md font-medium text-sm">
+                            Cancel
                           </button>
                         </div>
                       </div>
                     </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+                  )}
 
-  const renderCustomerSubmissionStep = () => (
-    <div className="min-h-screen bg-gray-50 py-12" style={{ fontFamily: 'Montserrat' }}>
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-          <div
-            className="px-6 py-8 text-center text-white"
-            style={{ backgroundColor: '#01004d' }}
-          >
-            <div className="flex justify-center mb-4">
-              <TestiFlowIcon className="h-8 w-8 text-white" />
-            </div>
-            <h1 className="text-2xl font-bold mb-2">Share Your Experience with TechCorp</h1>
-            <p className="text-white/90">We'd love to hear about your experience with our software solutions!</p>
-          </div>
-          <div className="p-6">
-            <form className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">How would you rate your experience? *</label>
-                <div className="flex space-x-1">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <div key={star} className="w-8 h-8 flex items-center justify-center">
-                      <Star className={`h-6 w-6 ${star <= customerFormData.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} />
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Your Name *</label>
-                <input type="text" value={customerFormData.name} className="w-full px-3 py-2 border border-gray-300 rounded-md" readOnly />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Email Address *</label>
-                <input type="email" value={customerFormData.email} className="w-full px-3 py-2 border border-gray-300 rounded-md" readOnly />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Company (Optional)</label>
-                <input type="text" value={customerFormData.company} className="w-full px-3 py-2 border border-gray-300 rounded-md" readOnly />
-              </div>
-              {customFields.map((field) => (
-                <div key={field.id}>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">{field.label}{field.is_required && <span className="text-red-500 ml-1">*</span>}</label>
-                  <select value={field.id === '1' ? customerFormData.role : customerFormData.industry} className="w-full px-3 py-2 border border-gray-300 rounded-md" disabled>
-                    <option value="">Select an option...</option>
-                    {field.options.map((option: string, index: number) => (<option key={index} value={option}>{option}</option>))}
-                  </select>
-                </div>
-              ))}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Your Testimonial *</label>
-                <textarea rows={4} value={customerFormData.message} className="w-full px-3 py-2 border border-gray-300 rounded-md" readOnly />
-              </div>
-              <button ref={submitButtonRef} type="submit" className="w-full bg-secondary-500 text-white py-3 px-6 rounded-lg font-semibold hover:bg-secondary-600 transition-colors flex items-center justify-center space-x-2">
-                <Send className="h-4 w-4" />
-                <span>Submit Testimonial</span>
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderTestimonialsApprovalStep = () => (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white shadow rounded-lg">
-          <div className="px-4 py-5 sm:p-6">
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900">Testimonials</h1>
-                <p className="text-gray-600 mt-2">Review, approve, and manage customer testimonials</p>
-              </div>
-            </div>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {testimonials.map((testimonial) => (
-                <div key={testimonial.id} className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-all duration-200 relative animate-slide-in">
-                  <div className="absolute top-4 right-4">
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${testimonial.status === 'approved' ? 'bg-secondary-100 text-secondary-800' : 'bg-yellow-100 text-yellow-800'}`}>
-                      {testimonial.status}
-                    </span>
-                  </div>
-                  <div className="flex items-center space-x-3 mb-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
-                      <User className="h-6 w-6 text-primary-950" />
-                    </div>
-                    <div className="flex-1">
-                      <div className="font-semibold text-gray-900">{testimonial.name}</div>
-                      <div className="text-sm text-gray-500">{testimonial.company}</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-2 mb-4">
-                    <div className="flex">
-                      {[...Array(testimonial.rating)].map((_, i) => (<Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />))}
-                    </div>
-                    <span className="text-sm text-gray-500">({testimonial.rating}/5)</span>
-                  </div>
-                  <p className="text-gray-700 text-sm leading-relaxed line-clamp-3 mb-4">"{testimonial.message}"</p>
-                  <div className="flex items-center justify-end pt-4 border-t border-gray-100">
-                    {testimonial.status === 'pending' && (
-                      <div className="flex space-x-2">
-                        <button className="bg-secondary-100 text-secondary-800 hover:bg-secondary-200 px-3 py-1 rounded-md text-xs font-medium transition-colors">Approve</button>
-                        <button className="bg-red-100 text-red-800 hover:bg-red-200 px-3 py-1 rounded-md text-xs font-medium transition-colors">Reject</button>
+                  {/* Custom Fields Panel */}
+                  {showCustomFieldsPanel && (
+                    <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-lg animate-slide-in">
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-lg font-bold text-gray-900">Custom Fields</h3>
+                        <button className="bg-primary-950 text-white px-3 py-1 rounded-md text-sm flex items-center space-x-1">
+                          <Plus className="h-3 w-3" />
+                          <span>Add</span>
+                        </button>
                       </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderExportStep = () => (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="space-y-8">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Export & Use Your Testimonials</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">Export your approved testimonials in multiple formats for use across your marketing channels</p>
-          </div>
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-gray-900">Export Testimonials</h3>
-              <button onClick={() => setShowExportModal(!showExportModal)} className="bg-primary-950 text-white px-4 py-2 rounded-lg hover:bg-primary-900 transition-colors flex items-center space-x-2">
-                <Download className="h-4 w-4" />
-                <span>Export Options</span>
-              </button>
-            </div>
-            {showExportModal && (
-              <div className="space-y-6 animate-slide-in relative">
-                <div>
-                  <h4 className="text-sm font-medium text-gray-700 mb-3">Choose Export Format</h4>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    <button onClick={() => setSelectedExportFormat('csv')} className={`p-3 border rounded-lg text-left transition-colors ${selectedExportFormat === 'csv' ? 'border-primary-500 bg-primary-50' : 'border-gray-200 hover:bg-gray-50'}`}>
-                      <div className="flex items-center space-x-2"><FileText className="h-5 w-5 text-green-600" /><span className="font-medium">CSV</span></div>
-                      <p className="text-xs text-gray-500 mt-1">For spreadsheets</p>
-                    </button>
-                    <button onClick={() => setSelectedExportFormat('json')} className={`p-3 border rounded-lg text-left transition-colors ${selectedExportFormat === 'json' ? 'border-primary-500 bg-primary-50' : 'border-gray-200 hover:bg-gray-50'}`}>
-                      <div className="flex items-center space-x-2"><Code className="h-5 w-5 text-blue-600" /><span className="font-medium">JSON</span></div>
-                      <p className="text-xs text-gray-500 mt-1">For developers</p>
-                    </button>
-                    <button onClick={() => setSelectedExportFormat('widget')} className={`p-3 border rounded-lg text-left transition-colors ${selectedExportFormat === 'widget' ? 'border-primary-500 bg-primary-50' : 'border-gray-200 hover:bg-gray-50'}`}>
-                      <div className="flex items-center space-x-2"><Code className="h-5 w-5 text-indigo-600" /><span className="font-medium">Widget</span></div>
-                      <p className="text-xs text-gray-500 mt-1">HTML embed</p>
-                    </button>
-                  </div>
-                </div>
-                <div className="text-center">
-                  <button onClick={handleExportDemo} className="bg-secondary-500 text-white px-6 py-3 rounded-lg hover:bg-secondary-600 transition-colors flex items-center space-x-2 mx-auto">
-                    <Download className="h-5 w-5" />
-                    <span>Generate {selectedExportFormat.toUpperCase()}</span>
-                  </button>
-                </div>
-                {generatedContent && (
-                  <div className="space-y-4 animate-slide-in">
-                    <div className="flex items-center justify-between">
-                      <h4 className="text-sm font-medium text-gray-700">Generated {selectedExportFormat.toUpperCase()} Content</h4>
-                      <button onClick={() => navigator.clipboard.writeText(generatedContent)} className="bg-blue-100 text-blue-800 px-3 py-1 rounded-md text-sm hover:bg-blue-200 transition-colors flex items-center space-x-1">
-                        <Copy className="h-3 w-3" />
-                        <span>Copy</span>
-                      </button>
-                    </div>
-                    <div className="bg-gray-900 text-white rounded-lg p-4 border border-gray-200">
-                      <pre className="text-sm whitespace-pre-wrap font-mono max-h-64 overflow-y-auto">{generatedContent}</pre>
-                    </div>
-                    {selectedExportFormat === 'widget' && (
-                      <div ref={livePreviewRef} className="space-y-3">
-                        <h4 className="text-sm font-medium text-gray-700">Live Preview</h4>
-                        <div className="border border-gray-200 rounded-lg overflow-hidden bg-white">
-                          <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
-                            <span className="text-sm text-gray-600">How this will look on your website:</span>
-                          </div>
-                          <div className="p-6">
-                            <div dangerouslySetInnerHTML={{ __html: demoGenerateWebsiteWidget() }} />
+                      
+                      {/* Add Field Panel */}
+                      {showAddFieldPanel && (
+                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4 animate-slide-in">
+                          <h4 className="text-sm font-medium text-blue-900 mb-2">Adding New Field</h4>
+                          <div className="space-y-2">
+                            <input
+                              type="text"
+                              value={newField.label}
+                              className="w-full px-2 py-1 border border-blue-300 rounded text-sm"
+                              readOnly
+                            />
+                            <div className="text-xs text-blue-700">Type: {newField.field_type}</div>
                           </div>
                         </div>
+                      )}
+
+                      {/* Existing Fields */}
+                      <div className="space-y-2">
+                        {customFields.map((field) => (
+                          <div key={field.id} className="bg-gray-50 border border-gray-200 rounded-lg p-3 animate-slide-in">
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <div className="font-medium text-gray-900 text-sm">
+                                  {field.label}
+                                  {field.is_required && <span className="text-red-500 ml-1">*</span>}
+                                </div>
+                                <div className="text-xs text-gray-500">
+                                  {field.field_type === 'select' ? 'Dropdown' : field.field_type}
+                                </div>
+                              </div>
+                              <div className="flex space-x-1">
+                                <button className="p-1 text-gray-400 hover:text-gray-600">
+                                  <ArrowUp className="h-3 w-3" />
+                                </button>
+                                <button className="p-1 text-gray-400 hover:text-gray-600">
+                                  <ArrowDown className="h-3 w-3" />
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                    )}
+                    </div>
+                  )}
+
+                  {/* Export Panel */}
+                  {showExportPanel && (
+                    <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-lg animate-slide-in">
+                      <h3 className="text-lg font-bold text-gray-900 mb-4">Export Options</h3>
+                      <div className="space-y-3">
+                        <div>
+                          <h4 className="text-sm font-medium text-gray-700 mb-2">Choose Format</h4>
+                          <div className="space-y-2">
+                            {[
+                              { value: 'csv', label: 'CSV', icon: FileText, color: 'text-green-600' },
+                              { value: 'json', label: 'JSON', icon: Code, color: 'text-blue-600' },
+                              { value: 'widget', label: 'Widget', icon: Code, color: 'text-purple-600' }
+                            ].map((format) => (
+                              <button
+                                key={format.value}
+                                onClick={() => setSelectedExportFormat(format.value as any)}
+                                className={`w-full p-2 border rounded-lg text-left transition-colors flex items-center space-x-2 ${
+                                  selectedExportFormat === format.value
+                                    ? 'border-primary-500 bg-primary-50'
+                                    : 'border-gray-200 hover:bg-gray-50'
+                                }`}
+                              >
+                                <format.icon className={`h-4 w-4 ${format.color}`} />
+                                <span className="text-sm font-medium">{format.label}</span>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                        
+                        <button
+                          onClick={() => setGeneratedContent(demoGenerateWebsiteWidget())}
+                          className="w-full bg-secondary-500 text-white py-2 px-3 rounded-lg hover:bg-secondary-600 transition-colors flex items-center justify-center space-x-2 text-sm"
+                        >
+                          <Download className="h-4 w-4" />
+                          <span>Generate</span>
+                        </button>
+
+                        {generatedContent && (
+                          <div className="space-y-3 animate-slide-in">
+                            <div className="bg-gray-900 text-white rounded-lg p-3">
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="text-xs text-gray-300">Generated Code</span>
+                                <button className="bg-blue-600 text-white px-2 py-1 rounded text-xs flex items-center space-x-1">
+                                  <Copy className="h-3 w-3" />
+                                  <span>Copy</span>
+                                </button>
+                              </div>
+                              <pre className="text-xs whitespace-pre-wrap font-mono max-h-32 overflow-y-auto">
+                                {generatedContent.substring(0, 200)}...
+                              </pre>
+                            </div>
+                            
+                            {selectedExportFormat === 'widget' && (
+                              <div className="border border-gray-200 rounded-lg overflow-hidden">
+                                <div className="bg-gray-50 px-3 py-2 border-b">
+                                  <span className="text-xs text-gray-600">Live Preview</span>
+                                </div>
+                                <div className="p-3 bg-white">
+                                  <div className="text-center mb-3">
+                                    <h4 className="font-semibold text-gray-900 text-sm">What Our Customers Say</h4>
+                                  </div>
+                                  <div className="space-y-2">
+                                    {mockTestimonials.slice(0, 2).map(testimonial => (
+                                      <div key={testimonial.id} className="bg-gray-50 rounded-lg p-2 border-l-2 border-secondary-500">
+                                        <div className="flex mb-1">
+                                          {[...Array(testimonial.rating)].map((_, i) => (
+                                            <Star key={i} className="h-3 w-3 text-yellow-400 fill-current" />
+                                          ))}
+                                        </div>
+                                        <p className="text-xs text-gray-700 mb-1 italic">"{testimonial.message.substring(0, 60)}..."</p>
+                                        <div className="text-xs text-gray-500">- {testimonial.name}</div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Empty state for testimonials */}
+                {getActiveTab() === 'testimonials' && testimonials.length === 0 && (
+                  <div className="lg:col-span-2">
+                    <div className="text-center py-12">
+                      <div className="w-16 h-16 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Star className="h-8 w-8 text-primary-950" />
+                      </div>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2">No testimonials yet</h3>
+                      <p className="text-gray-500 text-sm">
+                        Testimonials will appear here once customers submit them.
+                      </p>
+                    </div>
                   </div>
                 )}
               </div>
-            )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
-
-  const renderCurrentStep = () => {
-    switch (currentStep) {
-      case 0: return renderCreateFormsStep();
-      case 1: return renderCustomFieldsStep();
-      case 2: return renderCustomerSubmissionStep();
-      case 3: return renderTestimonialsApprovalStep();
-      case 4: return renderExportStep();
-      default: return renderCreateFormsStep();
-    }
+    );
   };
 
   return (
-    <div ref={demoContainerRef} className="min-h-screen bg-white">
+    <div className="bg-white">
+      {/* Demo Navbar */}
       <nav className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="flex justify-between h-12">
             <div className="flex items-center">
               <div className="flex items-center space-x-2">
-                <TestiFlowIcon className="h-8 w-8 text-primary-950" />
-                <span className="text-xl font-bold text-primary-950">TestiFlow</span>
+                <TestiFlowIcon className="h-6 w-6 text-primary-950" />
+                <span className="text-lg font-bold text-primary-950">TestiFlow</span>
               </div>
             </div>
-            <div className="hidden md:flex items-center space-x-4">
-              <button className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${getActiveTab() === 'forms' ? 'text-primary-950 bg-primary-50' : 'text-gray-700 hover:text-primary-950'}`}>
+            <div className="flex items-center space-x-3">
+              <button className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${getActiveTab() === 'forms' ? 'text-primary-950 bg-primary-50' : 'text-gray-700 hover:text-primary-950'}`}>
                 Forms
               </button>
-              <button className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${getActiveTab() === 'testimonials' ? 'text-primary-950 bg-primary-50' : 'text-gray-700 hover:text-primary-950'}`}>
+              <button className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${getActiveTab() === 'testimonials' ? 'text-primary-950 bg-primary-50' : 'text-gray-700 hover:text-primary-950'}`}>
                 Testimonials
               </button>
-              <div className="flex items-center space-x-3 pl-4 border-l border-gray-200">
-                <div className="flex items-center space-x-2">
-                  <div className="w-8 h-8 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
-                    <User className="h-4 w-4 text-primary-950" />
+              <div className="flex items-center space-x-2 pl-3 border-l border-gray-200">
+                <div className="flex items-center space-x-1">
+                  <div className="w-6 h-6 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
+                    <User className="h-3 w-3 text-primary-950" />
                   </div>
-                  <span className="text-sm text-gray-700">sarah@techcorp.com</span>
+                  <span className="text-xs text-gray-700 hidden sm:block">sarah@techcorp.com</span>
                 </div>
-                <button className="flex items-center space-x-1 text-gray-700 hover:text-red-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                  <LogOut className="h-4 w-4" />
-                  <span>Sign Out</span>
+                <button className="flex items-center space-x-1 text-gray-700 hover:text-red-600 text-xs transition-colors">
+                  <LogOut className="h-3 w-3" />
+                  <span className="hidden sm:block">Sign Out</span>
                 </button>
               </div>
             </div>
           </div>
         </div>
       </nav>
-      {renderCurrentStep()}
+
+      {/* Step Progress Indicator */}
+      <div className="bg-blue-50 border-b border-blue-200 py-2">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+              <span className="text-sm font-medium text-blue-800">
+                Step {currentStep + 1}: {demoSteps[currentStep].title}
+              </span>
+            </div>
+            <div className="text-xs text-blue-600">
+              {demoSteps[currentStep].description}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Demo Content */}
+      {renderMainContent()}
     </div>
   );
 };

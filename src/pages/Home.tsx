@@ -168,32 +168,32 @@ export const Home: React.FC = () => {
           {/* Browser Window */}
           <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden max-w-4xl mx-auto">
             {/* Browser Header */}
-            <div className="bg-gray-100 px-4 py-3 border-b border-gray-200 flex items-center space-x-3">
+            <div className="bg-gray-100 px-3 sm:px-4 py-2 sm:py-3 border-b border-gray-200 flex items-center space-x-2 sm:space-x-3">
               <div className="flex space-x-1.5">
                 <div className="w-3 h-3 bg-red-400 rounded-full"></div>
                 <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
                 <div className="w-3 h-3 bg-green-400 rounded-full"></div>
               </div>
-              <div className="flex-1 bg-white rounded-md px-3 py-1.5 text-xs sm:text-sm text-gray-500 text-center max-w-md">
+              <div className="flex-1 bg-white rounded-md px-2 sm:px-3 py-1 text-xs sm:text-sm text-gray-500 text-center max-w-xs sm:max-w-md">
                 testiflow.com/dashboard
               </div>
-              <div className="text-xs text-gray-400 hidden md:block">
+              <div className="text-xs text-gray-400 hidden sm:block">
                 Live Demo
               </div>
             </div>
             
             {/* Demo Content */}
-            <div className="relative">
+            <div className="relative h-96 sm:h-[500px] overflow-hidden">
               <Demo />
               
               {/* Demo Overlay Indicator */}
-              <div className="absolute top-2 right-2 sm:top-4 sm:right-4 bg-blue-600 text-white px-2 py-1 sm:px-3 sm:py-1 rounded-full text-xs font-medium shadow-lg">
+              <div className="absolute top-2 right-2 bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-medium shadow-lg">
                 Interactive Demo
               </div>
             </div>
           </div>
           
-          <div className="text-center mt-6">
+          <div className="text-center mt-4 sm:mt-6">
             <p className="text-gray-500 text-xs sm:text-sm">
               👆 This demo automatically cycles through the complete TestiFlow workflow
             </p>
