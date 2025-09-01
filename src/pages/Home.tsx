@@ -56,7 +56,8 @@ export const Home: React.FC = () => {
 
             {/* Right Side - Mockup */}
             <div className="relative mt-8 lg:mt-0">
-              <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
+              {/* Desktop Demo - Hidden on mobile */}
+              <div className="hidden sm:block bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
                 {/* Browser Header */}
                 <div className="bg-gray-100 px-3 sm:px-4 py-2 sm:py-3 border-b border-gray-200 flex items-center space-x-2 sm:space-x-3">
                   <div className="flex space-x-1.5">
@@ -132,6 +133,272 @@ export const Home: React.FC = () => {
                     <div className="text-center">
                       <div className="text-base sm:text-lg font-bold text-accent-600">156</div>
                       <div className="text-xs text-gray-500">Exported</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Mobile Demo - Only visible on mobile */}
+              <div className="sm:hidden bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden max-w-sm mx-auto">
+                {/* Mobile Header */}
+                <div className="bg-gray-900 px-4 py-3 flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-1 h-4 bg-white rounded-full"></div>
+                    <div className="w-1 h-4 bg-white rounded-full"></div>
+                    <div className="w-1 h-4 bg-white rounded-full"></div>
+                  </div>
+                  <div className="text-white text-sm font-medium">9:41</div>
+                  <div className="flex items-center space-x-1">
+                    <div className="flex space-x-1">
+                      <div className="w-1 h-1 bg-white rounded-full"></div>
+                      <div className="w-1 h-1 bg-white rounded-full"></div>
+                      <div className="w-1 h-1 bg-white rounded-full"></div>
+                      <div className="w-1 h-1 bg-white rounded-full"></div>
+                    </div>
+                    <div className="w-6 h-3 border border-white rounded-sm">
+                      <div className="w-4 h-1.5 bg-white rounded-sm m-0.5"></div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Mobile Browser Bar */}
+                <div className="bg-gray-100 px-4 py-2 border-b border-gray-200">
+                  <div className="bg-white rounded-full px-3 py-1.5 text-xs text-gray-600 flex items-center">
+                    <span className="text-green-600 mr-2">🔒</span>
+                    app.testiflow.com
+                  </div>
+                </div>
+                
+                {/* Mobile App Content */}
+                <div className="p-4">
+                  {/* Mobile Header */}
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <h2 className="text-lg font-bold text-gray-900">Dashboard</h2>
+                      <p className="text-xs text-gray-500">Welcome back, Sarah</p>
+                    </div>
+                    <div className="w-8 h-8 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
+                      <User className="h-4 w-4 text-primary-950" />
+                    </div>
+                  </div>
+                  
+                  {/* Mobile Stats Cards */}
+                  <div className="grid grid-cols-3 gap-2 mb-4">
+                    <div className="bg-blue-50 p-3 rounded-lg text-center">
+                      <div className="text-lg font-bold text-primary-950">247</div>
+                      <div className="text-xs text-gray-500">Total</div>
+                    </div>
+                    <div className="bg-secondary-50 p-3 rounded-lg text-center">
+                      <div className="text-lg font-bold text-secondary-500">189</div>
+                      <div className="text-xs text-gray-500">Approved</div>
+                    </div>
+                    <div className="bg-accent-50 p-3 rounded-lg text-center">
+                      <div className="text-lg font-bold text-accent-600">+12</div>
+                      <div className="text-xs text-gray-500">This Week</div>
+                    </div>
+                  </div>
+                  
+                  {/* Mobile Testimonial List */}
+                  <div className="space-y-3">
+                    <h3 className="text-sm font-medium text-gray-900">Recent Testimonials</h3>
+                    {[
+                      { name: 'Sarah J.', rating: 5, status: 'approved' },
+                      { name: 'Mike C.', rating: 5, status: 'pending' },
+                      { name: 'Emily D.', rating: 4, status: 'approved' }
+                    ].map((testimonial, index) => (
+                      <div key={index} className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-2">
+                            <div className="w-6 h-6 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
+                              <User className="h-3 w-3 text-primary-950" />
+                            </div>
+                            <span className="font-medium text-gray-900 text-sm">{testimonial.name}</span>
+                          </div>
+                          <div className="flex items-center space-x-1">
+                            <div className="flex">
+                              {[...Array(testimonial.rating)].map((_, i) => (
+                                <Star key={i} className="h-3 w-3 text-yellow-400 fill-current" />
+                              ))}
+                            </div>
+                            <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                              testimonial.status === 'approved'
+                                ? 'bg-secondary-100 text-secondary-800'
+                                : 'bg-yellow-100 text-yellow-800'
+                            }`}>
+                              {testimonial.status}
+                            </span>
+                          </div>
+                        </div>
+                        <p className="text-xs text-gray-600">
+                          "Amazing product! Has transformed our workflow..."
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  {/* Mobile Bottom Navigation */}
+                  <div className="mt-6 pt-4 border-t border-gray-200">
+                    <div className="grid grid-cols-4 gap-1">
+                      <button className="flex flex-col items-center py-2 text-primary-950">
+                        <div className="w-6 h-6 bg-primary-100 rounded-full flex items-center justify-center mb-1">
+                          <BarChart3 className="h-3 w-3" />
+                        </div>
+                        <span className="text-xs">Dashboard</span>
+                      </button>
+                      <button className="flex flex-col items-center py-2 text-gray-500">
+                        <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center mb-1">
+                          <Settings className="h-3 w-3" />
+                        </div>
+                        <span className="text-xs">Forms</span>
+                      </button>
+                      <button className="flex flex-col items-center py-2 text-gray-500">
+                        <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center mb-1">
+                          <Star className="h-3 w-3" />
+                        </div>
+                        <span className="text-xs">Reviews</span>
+                      </button>
+                      <button className="flex flex-col items-center py-2 text-gray-500">
+                        <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center mb-1">
+                          <User className="h-3 w-3" />
+                        </div>
+                        <span className="text-xs">Profile</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Mobile Demo - Only visible on mobile */}
+              <div className="sm:hidden bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden max-w-sm mx-auto">
+                {/* Mobile Status Bar */}
+                <div className="bg-gray-900 px-4 py-2 flex items-center justify-between">
+                  <div className="flex items-center space-x-1">
+                    <div className="w-1 h-3 bg-white rounded-full"></div>
+                    <div className="w-1 h-3 bg-white rounded-full"></div>
+                    <div className="w-1 h-3 bg-white rounded-full"></div>
+                  </div>
+                  <div className="text-white text-sm font-medium">9:41</div>
+                  <div className="flex items-center space-x-1">
+                    <div className="flex space-x-0.5">
+                      <div className="w-1 h-1 bg-white rounded-full"></div>
+                      <div className="w-1 h-1 bg-white rounded-full"></div>
+                      <div className="w-1 h-1 bg-white rounded-full"></div>
+                      <div className="w-1 h-1 bg-white rounded-full"></div>
+                    </div>
+                    <div className="w-5 h-2.5 border border-white rounded-sm">
+                      <div className="w-3 h-1 bg-white rounded-sm m-0.5"></div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Mobile Browser Bar */}
+                <div className="bg-gray-100 px-3 py-2">
+                  <div className="bg-white rounded-full px-3 py-1.5 text-xs text-gray-600 flex items-center">
+                    <span className="text-green-600 mr-1">🔒</span>
+                    <span className="truncate">app.testiflow.com</span>
+                  </div>
+                </div>
+                
+                {/* Mobile App Content */}
+                <div className="p-4 bg-gray-50">
+                  {/* Mobile Header */}
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <h2 className="text-lg font-bold text-gray-900">Dashboard</h2>
+                      <p className="text-xs text-gray-500">Welcome back, Sarah</p>
+                    </div>
+                    <div className="w-8 h-8 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
+                      <User className="h-4 w-4 text-primary-950" />
+                    </div>
+                  </div>
+                  
+                  {/* Mobile Stats Cards */}
+                  <div className="grid grid-cols-3 gap-2 mb-4">
+                    <div className="bg-white p-3 rounded-lg text-center shadow-sm">
+                      <div className="text-lg font-bold text-primary-950">247</div>
+                      <div className="text-xs text-gray-500">Total</div>
+                    </div>
+                    <div className="bg-white p-3 rounded-lg text-center shadow-sm">
+                      <div className="text-lg font-bold text-secondary-500">189</div>
+                      <div className="text-xs text-gray-500">Approved</div>
+                    </div>
+                    <div className="bg-white p-3 rounded-lg text-center shadow-sm">
+                      <div className="text-lg font-bold text-accent-600">+12</div>
+                      <div className="text-xs text-gray-500">This Week</div>
+                    </div>
+                  </div>
+                  
+                  {/* Mobile Testimonial List */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-sm font-medium text-gray-900">Recent</h3>
+                      <button className="text-xs text-primary-950 font-medium">View All</button>
+                    </div>
+                    {[
+                      { name: 'Sarah J.', company: 'TechCorp', rating: 5, status: 'approved' },
+                      { name: 'Mike C.', company: 'StartupXYZ', rating: 5, status: 'pending' }
+                    ].map((testimonial, index) => (
+                      <div key={index} className="bg-white rounded-lg p-3 border border-gray-200 shadow-sm">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-2">
+                            <div className="w-6 h-6 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
+                              <User className="h-3 w-3 text-primary-950" />
+                            </div>
+                            <div>
+                              <div className="font-medium text-gray-900 text-sm">{testimonial.name}</div>
+                              <div className="text-xs text-gray-500">{testimonial.company}</div>
+                            </div>
+                          </div>
+                          <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                            testimonial.status === 'approved'
+                              ? 'bg-secondary-100 text-secondary-800'
+                              : 'bg-yellow-100 text-yellow-800'
+                          }`}>
+                            {testimonial.status}
+                          </span>
+                        </div>
+                        <div className="flex items-center space-x-2 mb-2">
+                          <div className="flex">
+                            {[...Array(testimonial.rating)].map((_, i) => (
+                              <Star key={i} className="h-3 w-3 text-yellow-400 fill-current" />
+                            ))}
+                          </div>
+                          <span className="text-xs text-gray-500">({testimonial.rating}/5)</span>
+                        </div>
+                        <p className="text-xs text-gray-600 line-clamp-2">
+                          "Amazing product! Has completely transformed our workflow and saved us countless hours..."
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  {/* Mobile Bottom Navigation */}
+                  <div className="mt-6 pt-4 border-t border-gray-200">
+                    <div className="grid grid-cols-4 gap-1">
+                      <button className="flex flex-col items-center py-2 text-primary-950">
+                        <div className="w-6 h-6 bg-primary-100 rounded-full flex items-center justify-center mb-1">
+                          <BarChart3 className="h-3 w-3" />
+                        </div>
+                        <span className="text-xs">Dashboard</span>
+                      </button>
+                      <button className="flex flex-col items-center py-2 text-gray-500">
+                        <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center mb-1">
+                          <Settings className="h-3 w-3" />
+                        </div>
+                        <span className="text-xs">Forms</span>
+                      </button>
+                      <button className="flex flex-col items-center py-2 text-gray-500">
+                        <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center mb-1">
+                          <Star className="h-3 w-3" />
+                        </div>
+                        <span className="text-xs">Reviews</span>
+                      </button>
+                      <button className="flex flex-col items-center py-2 text-gray-500">
+                        <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center mb-1">
+                          <User className="h-3 w-3" />
+                        </div>
+                        <span className="text-xs">Profile</span>
+                      </button>
                     </div>
                   </div>
                 </div>
