@@ -1091,7 +1091,7 @@ export const Home: React.FC = () => {
                           )}
                         </div>
 
-                        <p className="text-gray-700 text-sm mb-2">
+                        </div>
                           "Amazing product! Has completely transformed our workflow and saved us countless hours..."
                         </p>
                         <div className="flex items-center justify-between">
