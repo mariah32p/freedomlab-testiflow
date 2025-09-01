@@ -936,6 +936,88 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
+      {/* Customer Testimonials */}
+      <div className="py-24 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Trusted by Industry Leaders
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              See how businesses across different industries use TestiFlow to transform their customer feedback
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Mariah W. */}
+            <div className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
+              <div className="flex items-center mb-6">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center mr-4">
+                  <span className="text-blue-800 font-bold text-lg">M</span>
+                </div>
+                <div>
+                  <div className="font-semibold text-gray-900">Mariah W.</div>
+                  <div className="text-sm text-gray-600">Technology Director</div>
+                  <div className="text-xs text-gray-500">Software Solutions Inc</div>
+                </div>
+              </div>
+              <div className="flex mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
+                ))}
+              </div>
+              <p className="text-gray-700 leading-relaxed italic">
+                "TestiFlow increased our conversion rates by 40%. The automated collection and approval workflow saves our team 10+ hours per week."
+              </p>
+            </div>
+
+            {/* Diane R. */}
+            <div className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
+              <div className="flex items-center mb-6">
+                <div className="w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-full flex items-center justify-center mr-4">
+                  <span className="text-green-800 font-bold text-lg">D</span>
+                </div>
+                <div>
+                  <div className="font-semibold text-gray-900">Diane R.</div>
+                  <div className="text-sm text-gray-600">Professional Services Manager</div>
+                  <div className="text-xs text-gray-500">AgriTech Solutions</div>
+                </div>
+              </div>
+              <div className="flex mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
+                ))}
+              </div>
+              <p className="text-gray-700 leading-relaxed italic">
+                "The custom branding and export features are game-changers. We can now seamlessly integrate testimonials into all our marketing materials."
+              </p>
+            </div>
+
+            {/* Nathan R. */}
+            <div className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
+              <div className="flex items-center mb-6">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-100 to-purple-200 rounded-full flex items-center justify-center mr-4">
+                  <span className="text-purple-800 font-bold text-lg">N</span>
+                </div>
+                <div>
+                  <div className="font-semibold text-gray-900">Nathan R.</div>
+                  <div className="text-sm text-gray-600">IT Consultant</div>
+                  <div className="text-xs text-gray-500">Legal & Real Estate Services</div>
+                </div>
+              </div>
+              <div className="flex mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
+                ))}
+              </div>
+              <p className="text-gray-700 leading-relaxed italic">
+                "Managing client testimonials across multiple service areas was chaos before TestiFlow. Now everything is organized and professional."
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* 5. Pricing */}
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
