@@ -53,33 +53,142 @@ export const Home: React.FC = () => {
           </div>
         </div>
         <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
-          <div className="h-56 w-full bg-gradient-to-br from-primary-100 to-secondary-100 sm:h-72 md:h-96 lg:w-full lg:h-full flex items-center justify-center">
-            {/* Phone Mockup */}
-            <div className="relative animate-pulse">
-              <div className="w-64 h-96 bg-gray-900 rounded-3xl p-2 shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:scale-105 hover:rotate-1">
-                <div className="w-full h-full bg-white rounded-2xl overflow-hidden">
-                  {/* Phone Screen Content */}
-                  <div className="bg-primary-950 text-white p-4 text-center animate-pulse">
-                    <TestiFlowIcon className="h-6 w-6 text-white mx-auto mb-2" />
-                    <h3 className="font-bold text-sm">Share Your Experience</h3>
-                    <p className="text-xs text-white/80">Rate your experience with us</p>
+          <div className="h-56 w-full sm:h-72 md:h-96 lg:w-full lg:h-full flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 relative overflow-hidden">
+            {/* Background Elements */}
+            <div className="absolute inset-0 bg-gradient-to-br from-primary-50/30 to-secondary-50/30"></div>
+            <div className="absolute top-10 left-10 w-32 h-32 bg-gradient-to-br from-primary-200/20 to-secondary-200/20 rounded-full blur-xl animate-float"></div>
+            <div className="absolute bottom-20 right-20 w-24 h-24 bg-gradient-to-br from-accent-200/20 to-primary-200/20 rounded-full blur-xl animate-float" style={{ animationDelay: '1s' }}></div>
+            
+            {/* Main Dashboard Mockup */}
+            <div className="relative z-10 max-w-4xl w-full mx-auto px-4">
+              {/* Browser Window */}
+              <div className="bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden transform hover:scale-105 transition-all duration-500 hover:shadow-3xl">
+                {/* Browser Header */}
+                <div className="bg-gray-100 px-4 py-3 flex items-center space-x-2 border-b border-gray-200">
+                  <div className="flex space-x-2">
+                    <div className="w-3 h-3 bg-red-400 rounded-full"></div>
+                    <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                    <div className="w-3 h-3 bg-green-400 rounded-full"></div>
                   </div>
-                  <div className="p-4 space-y-3">
-                    <div className="flex justify-center space-x-1 animate-bounce">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star key={star} className="h-4 w-4 text-yellow-400 fill-current" />
-                      ))}
-                    </div>
-                    <div className="space-y-2">
-                      <div className="h-3 bg-gray-200 rounded w-3/4 animate-pulse"></div>
-                      <div className="h-3 bg-gray-200 rounded w-full animate-pulse" style={{ animationDelay: '0.1s' }}></div>
-                      <div className="h-3 bg-gray-200 rounded w-2/3 animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-                    </div>
-                    <div className="h-16 bg-gray-100 rounded border-2 border-dashed border-gray-300 animate-pulse" style={{ animationDelay: '0.3s' }}></div>
-                    <button className="w-full bg-secondary-500 text-white py-2 rounded-lg text-sm font-medium hover:bg-secondary-600 transition-colors transform hover:scale-105">
-                      Submit Testimonial
-                    </button>
+                  <div className="flex-1 bg-white rounded-md px-3 py-1 text-xs text-gray-500 font-mono">
+                    testiflow.com/dashboard
                   </div>
+                </div>
+                
+                {/* Dashboard Content */}
+                <div className="bg-white">
+                  {/* Top Navigation */}
+                  <div className="bg-white border-b border-gray-100 px-6 py-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <TestiFlowIcon className="h-6 w-6 text-primary-950" />
+                        <span className="font-bold text-primary-950">TestiFlow</span>
+                      </div>
+                      <div className="flex items-center space-x-4 text-sm">
+                        <span className="text-primary-950 font-medium">Dashboard</span>
+                        <span className="text-gray-500">Forms</span>
+                        <span className="text-gray-500">Testimonials</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Dashboard Stats */}
+                  <div className="p-6">
+                    <div className="grid grid-cols-3 gap-4 mb-6">
+                      <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-100 animate-slide-up">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm font-medium text-gray-700">Total</span>
+                          <MessageSquare className="h-4 w-4 text-primary-950" />
+                        </div>
+                        <div className="text-2xl font-bold text-primary-950 animate-count-up">47</div>
+                        <div className="text-xs text-gray-500">testimonials</div>
+                      </div>
+                      <div className="bg-gradient-to-br from-secondary-50 to-secondary-100 p-4 rounded-lg border border-secondary-200 animate-slide-up" style={{ animationDelay: '0.1s' }}>
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm font-medium text-gray-700">Approved</span>
+                          <CheckCircle className="h-4 w-4 text-secondary-500" />
+                        </div>
+                        <div className="text-2xl font-bold text-secondary-500 animate-count-up">42</div>
+                        <div className="text-xs text-gray-500">ready to use</div>
+                      </div>
+                      <div className="bg-gradient-to-br from-accent-50 to-accent-100 p-4 rounded-lg border border-accent-200 animate-slide-up" style={{ animationDelay: '0.2s' }}>
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm font-medium text-gray-700">This Month</span>
+                          <Star className="h-4 w-4 text-accent-600" />
+                        </div>
+                        <div className="text-2xl font-bold text-accent-600 animate-count-up">12</div>
+                        <div className="text-xs text-gray-500">new reviews</div>
+                      </div>
+                    </div>
+                    
+                    {/* Recent Testimonials Preview */}
+                    <div className="space-y-3">
+                      <h3 className="text-lg font-semibold text-gray-900">Recent Testimonials</h3>
+                      
+                      {/* Testimonial Cards */}
+                      <div className="space-y-3">
+                        <div className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-all duration-200 animate-slide-up" style={{ animationDelay: '0.3s' }}>
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center space-x-2">
+                              <div className="w-8 h-8 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
+                                <Users className="h-4 w-4 text-primary-950" />
+                              </div>
+                              <div>
+                                <div className="font-medium text-gray-900 text-sm">Sarah Johnson</div>
+                                <div className="text-xs text-gray-500">TechCorp Solutions</div>
+                              </div>
+                            </div>
+                            <span className="px-2 py-1 bg-secondary-100 text-secondary-800 rounded-full text-xs font-medium">
+                              approved
+                            </span>
+                          </div>
+                          <div className="flex items-center space-x-1 mb-2">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <Star key={star} className="h-3 w-3 text-yellow-400 fill-current" />
+                            ))}
+                          </div>
+                          <p className="text-gray-700 text-sm leading-relaxed">
+                            "TestiFlow has completely transformed how we collect customer feedback..."
+                          </p>
+                        </div>
+                        
+                        <div className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-all duration-200 animate-slide-up" style={{ animationDelay: '0.4s' }}>
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center space-x-2">
+                              <div className="w-8 h-8 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
+                                <Users className="h-4 w-4 text-primary-950" />
+                              </div>
+                              <div>
+                                <div className="font-medium text-gray-900 text-sm">Mike Chen</div>
+                                <div className="text-xs text-gray-500">StartupXYZ</div>
+                              </div>
+                            </div>
+                            <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">
+                              pending
+                            </span>
+                          </div>
+                          <div className="flex items-center space-x-1 mb-2">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <Star key={star} className="h-3 w-3 text-yellow-400 fill-current" />
+                            ))}
+                          </div>
+                          <p className="text-gray-700 text-sm leading-relaxed">
+                            "Amazing product! The testimonial management features are exactly..."
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Floating Action Buttons */}
+              <div className="absolute -bottom-4 -right-4 space-y-2 animate-slide-up" style={{ animationDelay: '0.6s' }}>
+                <div className="bg-secondary-500 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 animate-pulse">
+                  <Zap className="h-5 w-5" />
+                </div>
+                <div className="bg-accent-500 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 animate-pulse" style={{ animationDelay: '0.5s' }}>
+                  <Shield className="h-5 w-5" />
                 </div>
               </div>
             </div>
