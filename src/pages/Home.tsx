@@ -10,6 +10,7 @@ export const Home: React.FC = () => {
 
   // Demo animation state
   const [currentStep, setCurrentStep] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [showTestimonials, setShowTestimonials] = useState(false);
   const [showExport, setShowExport] = useState(false);
@@ -19,6 +20,7 @@ export const Home: React.FC = () => {
       ([entry]) => {
         if (entry.isIntersecting && !demoInView) {
           setDemoInView(true);
+          startDemoAnimation();
           startDemoAnimation();
         }
       },
@@ -31,6 +33,27 @@ export const Home: React.FC = () => {
 
     return () => observer.disconnect();
   }, [demoInView]);
+
+  // Auto-advance through steps when demo is in view
+  useEffect(() => {
+    if (!demoInView || isAnimating) return;
+
+    const timer = setTimeout(() => {
+      setIsAnimating(true);
+      setCurrentStep(prev => {
+        const nextStep = prev >= 2 ? 0 : prev + 1;
+        setTimeout(() => setIsAnimating(false), 500);
+        return nextStep;
+      });
+    }, 4000); // Change step every 4 seconds
+
+    return () => clearTimeout(timer);
+  }, [currentStep, demoInView, isAnimating]);
+
+  const startDemoAnimation = () => {
+    setCurrentStep(0);
+    setIsAnimating(false);
+  };
 
   const startDemoAnimation = () => {
     // Reset state
