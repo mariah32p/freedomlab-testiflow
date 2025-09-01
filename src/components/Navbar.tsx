@@ -26,71 +26,67 @@ export const Navbar = () => {
           {/* Logo - Left aligned */}
           <div className="flex items-center">
               <TestiFlowIcon className="h-8 w-8 text-primary-950" />
-        {/* Mobile Menu - Only visible when open */}
-        {mobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-200 bg-white">
-            <div className="px-2 pt-2 pb-3 space-y-1">
-              {user ? (
-                <>
-                  <Link
-                    to="/dashboard"
-                    className="flex items-center space-x-2 text-gray-700 hover:text-primary-950 hover:bg-gray-50 px-3 py-3 rounded-md text-base font-medium transition-colors"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    <User className="h-5 w-5" />
-                    <span>Dashboard</span>
-                  </Link>
-                  <Link
-                    to="/forms"
-                    className="block text-gray-700 hover:text-primary-950 hover:bg-gray-50 px-3 py-3 rounded-md text-base font-medium transition-colors"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Forms
-                  </Link>
-                  <Link
-                    to="/branding"
-                    className="block text-gray-700 hover:text-primary-950 hover:bg-gray-50 px-3 py-3 rounded-md text-base font-medium transition-colors"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Branding
-                  </Link>
-                  <Link
-                    to="/testimonials"
-                    className="block text-gray-700 hover:text-primary-950 hover:bg-gray-50 px-3 py-3 rounded-md text-base font-medium transition-colors"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Testimonials
-                  </Link>
-                  <Link
-                    to="/settings"
-                    className="block text-gray-700 hover:text-primary-950 hover:bg-gray-50 px-3 py-3 rounded-md text-base font-medium transition-colors"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Settings
-                  </Link>
-                  <button
-                    onClick={() => {
-                      handleSignOut();
-                      setMobileMenuOpen(false);
-                    }}
-                    className="flex items-center space-x-2 text-gray-700 hover:text-red-600 hover:bg-gray-50 px-3 py-3 rounded-md text-base font-medium transition-colors w-full text-left"
-                  >
-                    <LogOut className="h-5 w-5" />
-                    <span>Sign Out</span>
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link
-                    to="/login"
-                    className="block text-gray-700 hover:text-primary-950 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium transition-colors"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Login
-                  </Link>
-                </>
-              )}
-            </div>
+          </div>
+
+          {/* Desktop Navigation - Hidden on mobile */}
+          <div className="hidden md:flex items-center space-x-8">
+            {user ? (
+              <>
+                <Link
+                  to="/dashboard"
+                  className="flex items-center space-x-2 text-gray-700 hover:text-primary-950 transition-colors"
+                >
+                  <User className="h-5 w-5" />
+                  <span>Dashboard</span>
+                </Link>
+                <Link
+                  to="/forms"
+                  className="text-gray-700 hover:text-primary-950 transition-colors"
+                >
+                  Forms
+                </Link>
+                <Link
+                  to="/branding"
+                  className="text-gray-700 hover:text-primary-950 transition-colors"
+                >
+                  Branding
+                </Link>
+                <Link
+                  to="/testimonials"
+                  className="text-gray-700 hover:text-primary-950 transition-colors"
+                >
+                  Testimonials
+                </Link>
+                <Link
+                  to="/settings"
+                  className="text-gray-700 hover:text-primary-950 transition-colors"
+                >
+                  Settings
+                </Link>
+                <button
+                  onClick={handleSignOut}
+                  className="flex items-center space-x-2 text-gray-700 hover:text-red-600 transition-colors"
+                >
+                  <LogOut className="h-5 w-5" />
+                  <span>Sign Out</span>
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="text-gray-700 hover:text-primary-950 transition-colors"
+                >
+                  Login
+                </Link>
+                <button
+                  onClick={handleSignupClick}
+                  className="bg-primary-950 text-white hover:bg-primary-900 px-6 py-2 rounded-md font-semibold transition-colors"
+                >
+                  Try Free
+                </button>
+              </>
+            )}
           </div>
 
           {/* Mobile Controls - Only visible on mobile */}
@@ -115,8 +111,8 @@ export const Navbar = () => {
               </button>
             )}
           </div>
-        )}
-      </div>
+        </div>
+
         {/* Mobile Menu - Only visible when open */}
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-gray-200 bg-white">
