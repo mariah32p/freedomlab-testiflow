@@ -591,39 +591,24 @@ export const Home: React.FC = () => {
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-950 to-secondary-500"> Feedback</span> into 
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary-500 to-accent-500"> Marketing Gold</span>
               </h1>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            {/* Left Content */}
-            <div className="text-center lg:text-left">
-              <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-primary-50 to-secondary-50 border border-primary-200 mb-8">
-                <span className="text-sm font-semibold text-primary-950">🚀 Trusted by 500+ businesses</span>
-              </div>
-              
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-gray-900 leading-tight mb-6">
-                Turn Customer
-                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary-950 to-secondary-500">
-                  Love Into Sales
-                </span>
-              </h1>
-              
-              <p className="text-xl sm:text-2xl text-gray-600 mb-8 leading-relaxed max-w-2xl">
+              <p className="text-xl text-white/90 mb-8 leading-relaxed">
                 Collect, manage, and showcase authentic customer testimonials that convert visitors into buyers. 
-                <span className="font-semibold text-gray-900">Increase conversions by up to 34%.</span>
+                <span className="font-semibold text-white">Increase conversions by up to 34%.</span>
               </p>
               
               {/* Social Proof Numbers */}
               <div className="flex flex-wrap justify-center lg:justify-start gap-8 mb-10">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-primary-950">10,000+</div>
-                  <div className="text-sm text-gray-600">Testimonials Collected</div>
+                  <div className="text-3xl font-bold text-white">10,000+</div>
+                  <div className="text-sm text-white/70">Testimonials Collected</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-secondary-500">34%</div>
-                  <div className="text-sm text-gray-600">Avg. Conversion Boost</div>
+                  <div className="text-3xl font-bold text-white">34%</div>
+                  <div className="text-sm text-white/70">Avg. Conversion Boost</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-accent-600">2 min</div>
-                  <div className="text-sm text-gray-600">Setup Time</div>
+                  <div className="text-3xl font-bold text-white">2 min</div>
+                  <div className="text-sm text-white/70">Setup Time</div>
                 </div>
               </div>
               
@@ -631,32 +616,28 @@ export const Home: React.FC = () => {
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                 <button
                   onClick={handleSignupClick}
-                  className="group bg-gradient-to-r from-primary-950 to-secondary-500 text-white px-8 py-4 rounded-xl font-bold text-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 flex items-center justify-center space-x-2"
+                  className="group bg-white text-primary-950 hover:bg-gray-100 px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 transform hover:-translate-y-1 flex items-center justify-center space-x-2"
                 >
                   <span>Start Free Trial</span>
-                  <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                  </svg>
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </button>
                 <button
                   onClick={() => document.getElementById('demo-section')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-xl font-bold text-lg hover:border-primary-500 hover:text-primary-950 transition-all duration-300 flex items-center justify-center space-x-2"
+                  className="border-2 border-white/30 text-white px-8 py-4 rounded-xl font-bold text-lg hover:border-white hover:bg-white/10 transition-all duration-300 flex items-center justify-center space-x-2"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+                  <Eye className="w-5 h-5" />
                   <span>Watch Demo</span>
                 </button>
               </div>
               
               {/* Trust Indicators */}
-              <div className="mt-12 pt-8 border-t border-gray-200">
-                <p className="text-sm text-gray-500 mb-4">Trusted by teams at</p>
+              <div className="mt-12 pt-8 border-t border-white/20">
+                <p className="text-sm text-white/70 mb-4">Trusted by teams at</p>
                 <div className="flex flex-wrap justify-center lg:justify-start items-center gap-8 opacity-60">
-                  <div className="text-lg font-bold text-gray-400">TechCorp</div>
-                  <div className="text-lg font-bold text-gray-400">StartupXYZ</div>
-                  <div className="text-lg font-bold text-gray-400">GrowthCo</div>
-                  <div className="text-lg font-bold text-gray-400">InnovateLab</div>
+                  <div className="text-lg font-bold text-white/60">TechCorp</div>
+                  <div className="text-lg font-bold text-white/60">StartupXYZ</div>
+                  <div className="text-lg font-bold text-white/60">GrowthCo</div>
+                  <div className="text-lg font-bold text-white/60">InnovateLab</div>
                 </div>
               </div>
             </div>
@@ -730,7 +711,7 @@ export const Home: React.FC = () => {
       </section>
 
       {/* 2. Demo Video Section - Scroll-triggered animation */}
-      <section ref={demoRef} className="py-24 bg-gray-50">
+      <section id="demo-section" ref={demoRef} className="py-24 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">
