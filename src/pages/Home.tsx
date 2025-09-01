@@ -196,7 +196,7 @@ export const Home: React.FC = () => {
           
           <div className="text-center mt-4 sm:mt-6">
             <p className="text-gray-500 text-xs sm:text-sm">
-              👆 This demo automatically cycles through the complete TestiFlow workflow
+              ↗️ Watch the complete TestiFlow workflow in action
             </p>
           </div>
         </div>
