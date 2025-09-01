@@ -1091,18 +1091,28 @@ export const Home: React.FC = () => {
                           )}
                         </div>
 
+                        <p className="text-gray-700 text-sm mb-2">
+                          "Amazing product! Has completely transformed our workflow and saved us countless hours..."
                         </p>
                         <div className="flex items-center justify-between">
                           <div className="flex items-center space-x-2">
                             <button className={`p-1 rounded-lg ${getMobileActiveTab() === 'dashboard' ? 'bg-primary-100 text-primary-950' : 'text-gray-400'}`}>
+                              <BarChart3 className="h-3 w-3" />
+                            </button>
                             <span className={`text-xs ${testimonial.consent ? 'text-secondary-700' : 'text-gray-500'}`}>
                               {testimonial.consent ? 'Marketing consent given' : 'No marketing consent'}
                             </span>
                             <button className={`p-1 rounded-lg ${getMobileActiveTab() === 'forms' ? 'bg-primary-100 text-primary-950' : 'text-gray-400'}`}>
+                              <Settings className="h-3 w-3" />
+                            </button>
+                          </div>
                           <div className="flex space-x-2">
                             <button className="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full transition-colors">
                               Edit
+                            </button>
                             <button className={`p-1 rounded-lg ${getMobileActiveTab() === 'testimonials' ? 'bg-primary-100 text-primary-950' : 'text-gray-400'}`}>
+                              <Star className="h-3 w-3" />
+                            </button>
                             <button className="text-xs bg-primary-100 hover:bg-primary-200 text-primary-800 px-3 py-1 rounded-full transition-colors">
                               Export
                             </button>
