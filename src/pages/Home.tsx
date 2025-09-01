@@ -591,70 +591,136 @@ export const Home: React.FC = () => {
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-950 to-secondary-500"> Feedback</span> into 
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary-500 to-accent-500"> Marketing Gold</span>
               </h1>
-              <p className="text-2xl text-gray-600 mb-10 leading-relaxed">
-                Stop losing potential testimonials. TestiFlow automates collection, approval, and helps you use customer feedback to grow your business.
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Left Content */}
+            <div className="text-center lg:text-left">
+              <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-primary-50 to-secondary-50 border border-primary-200 mb-8">
+                <span className="text-sm font-semibold text-primary-950">🚀 Trusted by 500+ businesses</span>
+              </div>
+              
+              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-gray-900 leading-tight mb-6">
+                Turn Customer
+                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary-950 to-secondary-500">
+                  Love Into Sales
+                </span>
+              </h1>
+              
+              <p className="text-xl sm:text-2xl text-gray-600 mb-8 leading-relaxed max-w-2xl">
+                Collect, manage, and showcase authentic customer testimonials that convert visitors into buyers. 
+                <span className="font-semibold text-gray-900">Increase conversions by up to 34%.</span>
               </p>
-              <button
-                onClick={handleSignupClick}
-                className="bg-primary-950 text-white px-10 py-5 rounded-lg text-xl font-semibold hover:bg-primary-900 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-              >
-                Start Free Trial
-              </button>
+              
+              {/* Social Proof Numbers */}
+              <div className="flex flex-wrap justify-center lg:justify-start gap-8 mb-10">
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-primary-950">10,000+</div>
+                  <div className="text-sm text-gray-600">Testimonials Collected</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-secondary-500">34%</div>
+                  <div className="text-sm text-gray-600">Avg. Conversion Boost</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-accent-600">2 min</div>
+                  <div className="text-sm text-gray-600">Setup Time</div>
+                </div>
+              </div>
+              
+              {/* CTA Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                <button
+                  onClick={handleSignupClick}
+                  className="group bg-gradient-to-r from-primary-950 to-secondary-500 text-white px-8 py-4 rounded-xl font-bold text-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 flex items-center justify-center space-x-2"
+                >
+                  <span>Start Free Trial</span>
+                  <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </button>
+                <button
+                  onClick={() => document.getElementById('demo-section')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-xl font-bold text-lg hover:border-primary-500 hover:text-primary-950 transition-all duration-300 flex items-center justify-center space-x-2"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span>Watch Demo</span>
+                </button>
+              </div>
+              
+              {/* Trust Indicators */}
+              <div className="mt-12 pt-8 border-t border-gray-200">
+                <p className="text-sm text-gray-500 mb-4">Trusted by teams at</p>
+                <div className="flex flex-wrap justify-center lg:justify-start items-center gap-8 opacity-60">
+                  <div className="text-lg font-bold text-gray-400">TechCorp</div>
+                  <div className="text-lg font-bold text-gray-400">StartupXYZ</div>
+                  <div className="text-lg font-bold text-gray-400">GrowthCo</div>
+                  <div className="text-lg font-bold text-gray-400">InnovateLab</div>
+                </div>
+              </div>
             </div>
-
+            
             {/* Right Content - Phone Mockup */}
-            <div className="flex justify-center lg:justify-end mt-8 lg:mt-0">
-              <div className="relative max-w-md lg:max-w-lg">
-                {/* Phone Frame */}
-                <div className="bg-gray-900 rounded-[3rem] p-3 shadow-2xl">
-                  <div className="bg-white rounded-[2.5rem] overflow-hidden" style={{ width: '350px', height: '720px' }}>
-                    {/* Phone Header */}
-                    <div className="bg-primary-950 px-6 py-8 text-center text-white">
+            <div className="flex justify-center lg:justify-end">
+              <div className="relative">
+                <div className="w-[300px] h-[600px] sm:w-[350px] sm:h-[700px] bg-gray-900 rounded-[3rem] p-2 shadow-2xl transform rotate-3 hover:rotate-0 transition-transform duration-500">
+                  <div className="w-full h-full bg-white rounded-[2.5rem] overflow-hidden relative">
+                    {/* Phone Status Bar */}
+                    <div className="bg-gray-900 h-6 rounded-t-[2.5rem] flex items-center justify-center">
+                      <div className="w-16 h-1 bg-gray-600 rounded-full"></div>
+                    </div>
+                    
+                    {/* Form Header */}
+                    <div className="bg-gradient-to-r from-primary-950 to-secondary-500 px-6 py-8 text-center text-white">
                       <div className="flex justify-center mb-3">
                         <TestiFlowIcon className="h-8 w-8 text-white" />
                       </div>
-                      <h3 className="text-xl font-bold mb-2">Share Your Experience</h3>
-                      <p className="text-white/90">We'd love to hear about your experience!</p>
+                      <h2 className="text-xl font-bold mb-2">Share Your Experience</h2>
+                      <p className="text-white/90 text-sm">We'd love to hear your feedback!</p>
                     </div>
                     
                     {/* Form Content */}
-                    <div className="p-6 space-y-6">
-                      {/* Rating */}
+                    <div className="p-6 space-y-4">
                       <div>
-                        <label className="block font-medium text-gray-700 mb-3">
-                          How would you rate your experience? *
-                        </label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Rating *</label>
                         <div className="flex space-x-1">
                           {[1, 2, 3, 4, 5].map((star) => (
-                            <Star key={star} className="h-7 w-7 text-yellow-400 fill-current" />
+                            <Star key={star} className="h-6 w-6 text-yellow-400 fill-current" />
                           ))}
                         </div>
                       </div>
-                      
-                      {/* Name Field */}
                       <div>
-                        <label className="block font-medium text-gray-700 mb-2">Your Name *</label>
-                        <div className="w-full px-4 py-3 border border-gray-300 rounded-md bg-gray-50 text-gray-500">
-                          John Smith
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Name *</label>
+                        <div className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-600 text-sm">
+                          Sarah Johnson
                         </div>
                       </div>
-                      
-                      {/* Message Field */}
                       <div>
-                        <label className="block font-medium text-gray-700 mb-2">Your Testimonial *</label>
-                        <div className="w-full px-4 py-3 border border-gray-300 rounded-md bg-gray-50 text-gray-500 h-24 flex items-start">
-                          <span>This product has been amazing...</span>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Testimonial *</label>
+                        <div className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-600 text-xs h-20 flex items-start pt-2">
+                          <span>This product has transformed our workflow...</span>
                         </div>
                       </div>
-                      
-                      {/* Submit Button */}
-                      <button
-                        type="button"
-                        className="w-full bg-secondary-500 text-white py-4 px-6 rounded-lg font-semibold hover:bg-secondary-600 transition-colors text-lg"
-                      >
+                      <button className="w-full bg-gradient-to-r from-secondary-500 to-accent-500 text-white py-3 px-6 rounded-lg font-semibold shadow-lg">
                         Submit Testimonial
                       </button>
                     </div>
+                  </div>
+                </div>
+                
+                {/* Floating Elements */}
+                <div className="absolute -top-4 -left-4 bg-white rounded-lg shadow-lg p-3 animate-bounce">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span className="text-xs font-medium text-gray-700">Live Form</span>
+                  </div>
+                </div>
+                
+                <div className="absolute -bottom-4 -right-4 bg-white rounded-lg shadow-lg p-3 animate-pulse">
+                  <div className="flex items-center space-x-2">
+                    <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                    <span className="text-xs font-medium text-gray-700">5-Star Review</span>
                   </div>
                 </div>
               </div>
