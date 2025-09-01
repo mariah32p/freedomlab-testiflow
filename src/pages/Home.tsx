@@ -428,7 +428,7 @@ export const Home: React.FC = () => {
       </div>
 
       {/* Pricing Section */}
-      <div className="bg-white py-16" id="pricing">
+      <div className="bg-white py-16 pt-20" id="pricing">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
@@ -439,7 +439,7 @@ export const Home: React.FC = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto mt-8">
             {/* Standard Plan */}
             <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-all duration-300">
               <div className="bg-gray-50 px-6 py-8 text-center border-b border-gray-200">
@@ -477,7 +477,7 @@ export const Home: React.FC = () => {
 
             {/* Premium Plan */}
             <div className="bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-secondary-500 relative">
-              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
                 <span className="bg-gradient-to-r from-accent-500 to-accent-600 text-white px-4 py-1 rounded-full text-sm font-semibold shadow-lg">
                   MOST POPULAR
                 </span>
