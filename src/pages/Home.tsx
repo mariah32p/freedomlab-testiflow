@@ -554,14 +554,6 @@ export const Home: React.FC = () => {
               </p>
             </div>
 
-            <div className="bg-gray-50 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                What happens to my data if I cancel?
-              </h3>
-              <p className="text-gray-600">
-                Your data remains accessible for 30 days after cancellation. You can export all your testimonials before the account is permanently deleted.
-              </p>
-            </div>
 
           </div>
         </div>
