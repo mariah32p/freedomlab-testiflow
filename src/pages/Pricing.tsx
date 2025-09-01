@@ -33,12 +33,12 @@ export const Pricing: React.FC = () => {
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          {/* Starter Plan */}
+          {/* Basic Plan */}
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-all duration-300">
             <div className="bg-gray-50 px-6 py-8 text-center border-b border-gray-200">
-              <h3 className="text-2xl font-bold text-navy">Starter</h3>
+              <h3 className="text-2xl font-bold text-primary-950">Basic</h3>
               <div className="mt-4 flex items-baseline justify-center">
-                <span className="text-5xl font-bold text-navy">$19</span>
+                <span className="text-5xl font-bold text-primary-950">$29</span>
                 <span className="text-xl text-gray-500 ml-1">/month</span>
               </div>
               <p className="mt-2 text-gray-600">Perfect for small businesses getting started</p>
@@ -54,7 +54,7 @@ export const Pricing: React.FC = () => {
                   'Email notifications - Get notified of new submissions',
                 ].map((feature, index) => (
                   <li key={index} className="flex items-center">
-                    <Check className="h-5 w-5 text-teal mr-3 flex-shrink-0" />
+                    <Check className="h-5 w-5 text-secondary-500 mr-3 flex-shrink-0" />
                     <span className="text-gray-700">{feature}</span>
                   </li>
                 ))}
@@ -76,7 +76,7 @@ export const Pricing: React.FC = () => {
             <div className="px-6 py-8">
               <ul className="space-y-4 mb-8">
                 {[
-                  'Everything in Starter, plus:',
+                  'Everything in Basic, plus:',
                   'Unlimited testimonials & forms - No limits on collection',
                   'Custom fields & branding - Tailor forms to your brand',
                   'Image + video testimonials - Rich media collection',
@@ -85,7 +85,7 @@ export const Pricing: React.FC = () => {
                   'Tag organization - Categorize by product, campaign, etc.',
                 ].map((feature, index) => (
                   <li key={index} className="flex items-center">
-                    <Check className="h-5 w-5 text-teal mr-3 flex-shrink-0" />
+                    <Check className="h-5 w-5 text-secondary-500 mr-3 flex-shrink-0" />
                     <span className="text-gray-700">{feature}</span>
                   </li>
                 ))}

@@ -49,32 +49,32 @@ export const GetStarted: React.FC = () => {
         )}
 
         <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto mb-12">
-          {/* Starter Plan */}
+          {/* Basic Plan */}
           <div 
             className={`bg-white rounded-2xl shadow-lg overflow-hidden border-2 cursor-pointer transition-all duration-300 hover:shadow-xl ${
-              selectedPlan === 'starter' 
+              selectedPlan === 'basic' 
                 ? 'border-primary-500 ring-4 ring-primary-100 transform scale-105' 
                 : 'border-gray-200 hover:border-primary-300'
             }`}
-            onClick={() => setSelectedPlan('starter')}
+            onClick={() => setSelectedPlan('basic')}
           >
             <div className={`px-6 py-8 text-center border-b border-gray-200 ${
-              selectedPlan === 'starter' ? 'bg-primary-50' : 'bg-gray-50'
+              selectedPlan === 'basic' ? 'bg-primary-50' : 'bg-gray-50'
             }`}>
               <div className="flex items-center justify-center mb-4">
                 <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                  selectedPlan === 'starter' 
+                  selectedPlan === 'basic' 
                     ? 'border-primary-500 bg-primary-500' 
                     : 'border-gray-300'
                 }`}>
-                  {selectedPlan === 'starter' && (
+                  {selectedPlan === 'basic' && (
                     <Check className="h-4 w-4 text-white" />
                   )}
                 </div>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900">Starter</h3>
+              <h3 className="text-2xl font-bold text-gray-900">Basic</h3>
               <div className="mt-4 flex items-baseline justify-center">
-                <span className="text-5xl font-bold text-gray-900">$19</span>
+                <span className="text-5xl font-bold text-gray-900">$29</span>
                 <span className="text-xl text-gray-500 ml-1">/mo</span>
               </div>
               <p className="mt-2 text-gray-600">Perfect for small businesses getting started</p>
@@ -167,7 +167,7 @@ export const GetStarted: React.FC = () => {
               </h3>
               <div className="text-lg text-gray-600 mb-2">
                 <span className="font-semibold text-primary-950">
-                  {selectedPlan === 'starter' ? 'Starter Plan' : 'Professional Plan'}
+                  {selectedPlan === 'basic' ? 'Basic Plan' : 'Professional Plan'}
                 </span> selected
               </div>
             </div>
@@ -190,7 +190,7 @@ export const GetStarted: React.FC = () => {
             </div>
             
             <p className="text-gray-600 mb-6 text-center">
-              After your trial, you'll be charged {selectedPlan === 'starter' ? '$19' : '$49'}/month. 
+              After your trial, you'll be charged {selectedPlan === 'basic' ? '$29' : '$49'}/month. 
               You can change or cancel your plan anytime.
             </p>
             

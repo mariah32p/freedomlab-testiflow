@@ -8,9 +8,9 @@ export interface Product {
 
 export const products: Product[] = [
   {
-    id: 'starter',
+    id: 'basic',
     priceId: 'price_1Rznb5Dn6VTzl81bjqFfCagv',
-    name: 'Starter Plan',
+    name: 'Basic Plan',
     description: 'Perfect for small businesses getting started with testimonial collection.',
     mode: 'subscription'
   },
