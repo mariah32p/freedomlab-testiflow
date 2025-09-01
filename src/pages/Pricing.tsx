@@ -33,10 +33,10 @@ export const Pricing: React.FC = () => {
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          {/* Basic Plan */}
+          {/* Standard Plan */}
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-all duration-300">
             <div className="bg-gray-50 px-6 py-8 text-center border-b border-gray-200">
-              <h3 className="text-2xl font-bold text-primary-950">Basic</h3>
+              <h3 className="text-2xl font-bold text-primary-950">Standard</h3>
               <div className="mt-4 flex items-baseline justify-center">
                 <span className="text-5xl font-bold text-primary-950">$29</span>
                 <span className="text-xl text-gray-500 ml-1">/month</span>
@@ -47,10 +47,10 @@ export const Pricing: React.FC = () => {
             <div className="px-6 py-8">
               <ul className="space-y-4 mb-8">
                 {[
-                  'Up to 25 testimonials - Collect and organize customer feedback',
+                  'Up to 25 testimonials',
                   '1 collection form - Simple form to request testimonials',
                   'Basic approval workflow - Review before testimonials go live',
-                  'Export to CSV - Download testimonials for your marketing',
+                  'CSV export',
                   'Email notifications - Get notified of new submissions',
                 ].map((feature, index) => (
                   <li key={index} className="flex items-center">
@@ -62,10 +62,10 @@ export const Pricing: React.FC = () => {
             </div>
           </div>
 
-          {/* Professional Plan */}
+          {/* Premium Plan */}
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-secondary-500">
             <div className="bg-gradient-to-r from-primary-950 to-secondary-500 px-6 py-8 text-center">
-              <h3 className="text-2xl font-bold text-white">Professional</h3>
+              <h3 className="text-2xl font-bold text-white">Premium</h3>
               <div className="mt-4 flex items-baseline justify-center">
                 <span className="text-5xl font-bold text-white">$49</span>
                 <span className="text-xl text-white/80 ml-1">/month</span>
@@ -76,13 +76,12 @@ export const Pricing: React.FC = () => {
             <div className="px-6 py-8">
               <ul className="space-y-4 mb-8">
                 {[
-                  'Everything in Basic, plus:',
-                  'Unlimited testimonials & forms - No limits on collection',
-                  'Custom fields & branding - Tailor forms to your brand',
+                  'Unlimited testimonials & forms',
+                  'Custom fields & branding',
                   'Image + video testimonials - Rich media collection',
-                  'Website widget generator - Professional embeds for your site',
-                  'Advanced exports - JSON, social media posts, widgets',
-                  'Tag organization - Categorize by product, campaign, etc.',
+                  'Website widget generator',
+                  'Advanced exports (JSON, social media posts)',
+                  'Tag organization',
                 ].map((feature, index) => (
                   <li key={index} className="flex items-center">
                     <Check className="h-5 w-5 text-secondary-500 mr-3 flex-shrink-0" />

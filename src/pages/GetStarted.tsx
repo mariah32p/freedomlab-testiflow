@@ -8,6 +8,7 @@ import { Alert } from '../components/Alert';
 export const GetStarted: React.FC = () => {
   const { createCheckoutSession, loading, error } = useStripe();
   const [selectedPlan, setSelectedPlan] = useState<string>('professional');
+  const [selectedPlan, setSelectedPlan] = useState<string>('premium');
 
   const handleStartTrial = async () => {
     const product = products.find(p => p.id === selectedPlan);
@@ -49,30 +50,30 @@ export const GetStarted: React.FC = () => {
         )}
 
         <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto mb-12">
-          {/* Basic Plan */}
+          {/* Standard Plan */}
           <div 
             className={`bg-white rounded-2xl shadow-lg overflow-hidden border-2 cursor-pointer transition-all duration-300 hover:shadow-xl ${
-              selectedPlan === 'basic' 
+              selectedPlan === 'standard' 
                 ? 'border-primary-500 ring-4 ring-primary-100 transform scale-105' 
                 : 'border-gray-200 hover:border-primary-300'
             }`}
-            onClick={() => setSelectedPlan('basic')}
+            onClick={() => setSelectedPlan('standard')}
           >
             <div className={`px-6 py-8 text-center border-b border-gray-200 ${
-              selectedPlan === 'basic' ? 'bg-primary-50' : 'bg-gray-50'
+              selectedPlan === 'standard' ? 'bg-primary-50' : 'bg-gray-50'
             }`}>
               <div className="flex items-center justify-center mb-4">
                 <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                  selectedPlan === 'basic' 
+                  selectedPlan === 'standard' 
                     ? 'border-primary-500 bg-primary-500' 
                     : 'border-gray-300'
                 }`}>
-                  {selectedPlan === 'basic' && (
+                  {selectedPlan === 'standard' && (
                     <Check className="h-4 w-4 text-white" />
                   )}
                 </div>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900">Basic</h3>
+              <h3 className="text-2xl font-bold text-gray-900">Standard</h3>
               <div className="mt-4 flex items-baseline justify-center">
                 <span className="text-5xl font-bold text-gray-900">$29</span>
                 <span className="text-xl text-gray-500 ml-1">/mo</span>
@@ -83,10 +84,10 @@ export const GetStarted: React.FC = () => {
             <div className="px-6 py-8">
               <ul className="space-y-4">
                 {[
-                  'Up to 25 testimonials - Collect and organize customer feedback',
+                  'Up to 25 testimonials',
                   '1 collection form - Simple form to request testimonials',
                   'Basic approval workflow - Review before testimonials go live',
-                  'Export to CSV - Download testimonials for your marketing',
+                  'CSV export',
                   'Email notifications - Get notified of new submissions',
                 ].map((feature, index) => (
                   <li key={index} className="flex items-center">
@@ -98,14 +99,14 @@ export const GetStarted: React.FC = () => {
             </div>
           </div>
 
-          {/* Professional Plan */}
+          {/* Premium Plan */}
           <div 
             className={`bg-white rounded-2xl shadow-xl overflow-hidden border-2 cursor-pointer transition-all duration-300 hover:shadow-2xl relative ${
-              selectedPlan === 'professional' 
+              selectedPlan === 'premium' 
                 ? 'border-secondary-500 ring-4 ring-secondary-100 transform scale-105' 
                 : 'border-secondary-300 hover:border-secondary-400'
             }`}
-            onClick={() => setSelectedPlan('professional')}
+            onClick={() => setSelectedPlan('premium')}
           >
             <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
               <span className="bg-gradient-to-r from-accent-500 to-accent-600 text-white px-4 py-1 rounded-full text-sm font-semibold shadow-lg">
@@ -115,16 +116,16 @@ export const GetStarted: React.FC = () => {
             <div className="bg-gradient-to-r from-primary-950 to-secondary-500 px-6 py-8 text-center relative">
               <div className="flex items-center justify-center mb-4">
                 <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                  selectedPlan === 'professional' 
+                  selectedPlan === 'premium' 
                     ? 'border-white bg-white' 
                     : 'border-white/50'
                 }`}>
-                  {selectedPlan === 'professional' && (
+                  {selectedPlan === 'premium' && (
                     <Check className="h-4 w-4 text-primary-950" />
                   )}
                 </div>
               </div>
-              <h3 className="text-2xl font-bold text-white">Professional</h3>
+              <h3 className="text-2xl font-bold text-white">Premium</h3>
               <div className="mt-4 flex items-baseline justify-center">
                 <span className="text-5xl font-bold text-white">$49</span>
                 <span className="text-xl text-white/80 ml-1">/mo</span>
@@ -135,13 +136,12 @@ export const GetStarted: React.FC = () => {
             <div className="px-6 py-8">
               <ul className="space-y-4">
                 {[
-                  'Everything in Starter, plus:',
-                  'Unlimited testimonials & forms - No limits on collection',
-                  'Custom fields & branding - Tailor forms to your brand',
+                  'Unlimited testimonials & forms',
+                  'Custom fields & branding',
                   'Image + video testimonials - Rich media collection',
-                  'Website widget generator - Professional embeds for your site',
-                  'Advanced exports - JSON, social media posts, widgets',
-                  'Tag organization - Categorize by product, campaign, etc.',
+                  'Website widget generator',
+                  'Advanced exports (JSON, social media posts)',
+                  'Tag organization',
                 ].map((feature, index) => (
                   <li key={index} className="flex items-center">
                     <Check className="h-5 w-5 text-secondary-500 mr-3 flex-shrink-0" />
@@ -167,7 +167,7 @@ export const GetStarted: React.FC = () => {
               </h3>
               <div className="text-lg text-gray-600 mb-2">
                 <span className="font-semibold text-primary-950">
-                  {selectedPlan === 'basic' ? 'Basic Plan' : 'Professional Plan'}
+                  {selectedPlan === 'standard' ? 'Standard Plan' : 'Premium Plan'}
                 </span> selected
               </div>
             </div>
@@ -190,7 +190,7 @@ export const GetStarted: React.FC = () => {
             </div>
             
             <p className="text-gray-600 mb-6 text-center">
-              After your trial, you'll be charged {selectedPlan === 'basic' ? '$29' : '$49'}/month. 
+              After your trial, you'll be charged {selectedPlan === 'standard' ? '$29' : '$49'}/month. 
               You can change or cancel your plan anytime.
             </p>
             
