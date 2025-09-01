@@ -18,7 +18,6 @@ const Navigation = () => {
   return (
     <nav className="bg-white shadow-sm border-b sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
         {/* Mobile Right Side - Hamburger + CTA Button */}
         <div className="md:hidden flex items-center space-x-2">
           <button
@@ -43,7 +42,6 @@ const Navigation = () => {
               )}
             </button>
           </div>
-        </div>
 
           {/* Logo - Left aligned */}
           <div className="flex items-center">
@@ -112,12 +110,25 @@ const Navigation = () => {
                 </Link>
                 <button
                   onClick={handleSignupClick}
-                  className="bg-primary-950 text-white hover:bg-primary-900 px-6 py-3 rounded-md text-sm font-semibold transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 bg-primary-950 text-white hover:bg-primary-900 px-4 py-2 rounded-md text-sm font-semibold transition-colors"
-                  style={{ minHeight: '44px' }}
+                  className="bg-primary-950 text-white hover:bg-primary-900 px-6 py-3 rounded-md text-sm font-semibold transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                  style={{ width: '160px', height: '48px' }}
                 >
-                  Try Free
+                  Start Free Trial
                 </button>
               </>
+            )}
+          </div>
+
+          {/* Mobile CTA Button - Only visible on mobile */}
+          <div className="md:hidden">
+            {!user && (
+              <button
+                onClick={handleSignupClick}
+                className="bg-primary-950 text-white hover:bg-primary-900 px-4 py-2 rounded-md text-sm font-semibold transition-colors"
+                style={{ minHeight: '44px' }}
+              >
+                Try Free
+              </button>
             )}
           </div>
         </div>
@@ -205,5 +216,3 @@ const Navigation = () => {
     </nav>
   );
 };
-
-export default Navigation;
