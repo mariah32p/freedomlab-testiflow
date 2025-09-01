@@ -431,6 +431,44 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                                       <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
                                     ))}
                                   </div>
+                                  {/* Video thumbnail preview */}
+                                  {testimonial.video_url && (
+                                    <div style={{ marginBottom: '12px', position: 'relative', cursor: 'pointer' }}>
+                                      <div style={{ 
+                                        width: '100%', 
+                                        height: '80px', 
+                                        background: `linear-gradient(135deg, ${branding?.primary_color || '#01004d'}, ${branding?.secondary_color || '#01b79e'})`, 
+                                        borderRadius: '8px', 
+                                        display: 'flex', 
+                                        alignItems: 'center', 
+                                        justifyContent: 'center' 
+                                      }}>
+                                        <div style={{ 
+                                          background: 'rgba(255,255,255,0.9)', 
+                                          borderRadius: '50%', 
+                                          width: '30px', 
+                                          height: '30px', 
+                                          display: 'flex', 
+                                          alignItems: 'center', 
+                                          justifyContent: 'center' 
+                                        }}>
+                                          <span style={{ color: branding?.primary_color || '#01004d', fontSize: '12px' }}>▶</span>
+                                        </div>
+                                      </div>
+                                      <div style={{ 
+                                        position: 'absolute', 
+                                        bottom: '4px', 
+                                        left: '4px', 
+                                        background: 'rgba(0,0,0,0.7)', 
+                                        color: 'white', 
+                                        padding: '2px 4px', 
+                                        borderRadius: '4px', 
+                                        fontSize: '8px' 
+                                      }}>
+                                        Video
+                                      </div>
+                                    </div>
+                                  )}
                                 </div>
                                 <p className="text-sm text-gray-600 truncate">"{testimonial.message}"</p>
                               </div>
@@ -440,7 +478,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                       </div>
                     )}
                   </div>
-                )}
+                          ✨ This preview shows exactly how the widget will appear on your website. Videos show as clickable thumbnails that open in a modal.
 
                 {/* Export Summary */}
                 <div className="bg-gray-50 rounded-lg p-4">

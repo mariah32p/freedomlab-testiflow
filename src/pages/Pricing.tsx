@@ -33,25 +33,25 @@ export const Pricing: React.FC = () => {
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          {/* Basic Plan */}
+          {/* Starter Plan */}
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-all duration-300">
             <div className="bg-gray-50 px-6 py-8 text-center border-b border-gray-200">
-              <h3 className="text-2xl font-bold text-navy">Basic</h3>
+              <h3 className="text-2xl font-bold text-navy">Starter</h3>
               <div className="mt-4 flex items-baseline justify-center">
-                <span className="text-5xl font-bold text-navy">$29</span>
+                <span className="text-5xl font-bold text-navy">$19</span>
                 <span className="text-xl text-gray-500 ml-1">/month</span>
               </div>
-              <p className="mt-2 text-gray-600">Perfect for small businesses and consultants</p>
+              <p className="mt-2 text-gray-600">Perfect for small businesses getting started</p>
             </div>
             
             <div className="px-6 py-8">
               <ul className="space-y-4 mb-8">
                 {[
-                  'Up to 50 testimonials - Collect and organize customer feedback',
-                  'Email collection forms - Simple forms to request testimonials',
-                  'Basic organization - Tag and categorize testimonials',
+                  'Up to 25 testimonials - Collect and organize customer feedback',
+                  '1 collection form - Simple form to request testimonials',
+                  'Basic approval workflow - Review before testimonials go live',
                   'Export to CSV - Download testimonials for your marketing',
-                  'Simple branding - Add your logo and colors',
+                  'Email notifications - Get notified of new submissions',
                 ].map((feature, index) => (
                   <li key={index} className="flex items-center">
                     <Check className="h-5 w-5 text-teal mr-3 flex-shrink-0" />
@@ -62,25 +62,27 @@ export const Pricing: React.FC = () => {
             </div>
           </div>
 
-          {/* Pro Plan */}
+          {/* Professional Plan */}
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-secondary-500">
             <div className="bg-gradient-to-r from-primary-950 to-secondary-500 px-6 py-8 text-center">
-              <h3 className="text-2xl font-bold text-white">Pro</h3>
+              <h3 className="text-2xl font-bold text-white">Professional</h3>
               <div className="mt-4 flex items-baseline justify-center">
                 <span className="text-5xl font-bold text-white">$49</span>
                 <span className="text-xl text-white/80 ml-1">/month</span>
               </div>
-              <p className="mt-2 text-white/90">Perfect for agencies and growing businesses</p>
+              <p className="mt-2 text-white/90">Complete solution for growing businesses</p>
             </div>
             
             <div className="px-6 py-8">
               <ul className="space-y-4 mb-8">
                 {[
-                  'Everything in Basic, plus:',
-                  'Unlimited testimonials - No limits on collection',
-                  'Approval workflow - Review before testimonials go live',
-                  'Rich media support - Collect video and image testimonials',
-                  'Integration tools - Embed testimonials directly on your site',
+                  'Everything in Starter, plus:',
+                  'Unlimited testimonials & forms - No limits on collection',
+                  'Custom fields & branding - Tailor forms to your brand',
+                  'Image + video testimonials - Rich media collection',
+                  'Website widget generator - Professional embeds for your site',
+                  'Advanced exports - JSON, social media posts, widgets',
+                  'Tag organization - Categorize by product, campaign, etc.',
                 ].map((feature, index) => (
                   <li key={index} className="flex items-center">
                     <Check className="h-5 w-5 text-teal mr-3 flex-shrink-0" />

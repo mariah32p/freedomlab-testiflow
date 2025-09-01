@@ -8,17 +8,17 @@ export interface Product {
 
 export const products: Product[] = [
   {
-    id: 'basic',
+    id: 'starter',
     priceId: 'price_1Rznb5Dn6VTzl81bjqFfCagv',
-    name: 'Basic Plan',
-    description: 'Perfect for small teams getting started with testimonial management.',
+    name: 'Starter Plan',
+    description: 'Perfect for small businesses getting started with testimonial collection.',
     mode: 'subscription'
   },
   {
-    id: 'pro',
+    id: 'professional',
     priceId: 'price_1Rznb5Dn6VTzl81b8Hx5UQt6',
-    name: 'Pro Plan',
-    description: 'Everything you need to scale your testimonial collection and management.',
+    name: 'Professional Plan',
+    description: 'Complete testimonial management with rich media and advanced features.',
     mode: 'subscription'
   }
 ];

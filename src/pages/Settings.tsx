@@ -100,8 +100,8 @@ export const Settings: React.FC = () => {
                     <div className="flex items-center justify-between">
                       <span className="text-gray-600">Plan:</span>
                       <span className="px-3 py-1 rounded-full text-sm font-medium bg-primary-100 text-primary-950">
-                        {subscription.price_id === 'price_1Rznb5Dn6VTzl81bjqFfCagv' ? 'Basic' : 
-                         subscription.price_id === 'price_1Rznb5Dn6VTzl81b8Hx5UQt6' ? 'Pro' : 'Unknown'}
+                        {subscription.price_id === 'price_1Rznb5Dn6VTzl81bjqFfCagv' ? 'Starter' : 
+                         subscription.price_id === 'price_1Rznb5Dn6VTzl81b8Hx5UQt6' ? 'Professional' : 'Unknown'}
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
