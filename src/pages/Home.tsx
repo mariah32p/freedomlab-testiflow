@@ -563,23 +563,6 @@ export const Home: React.FC = () => {
               </p>
             </div>
 
-            <div className="bg-gray-50 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Do you offer annual discounts?
-              </h3>
-              <p className="text-gray-600">
-                Currently we offer monthly billing. Annual billing options with discounts are coming soon!
-              </p>
-            </div>
-
-            <div className="bg-gray-50 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                What payment methods do you accept?
-              </h3>
-              <p className="text-gray-600">
-                We accept all major credit cards (Visa, MasterCard, American Express) and debit cards through our secure Stripe integration.
-              </p>
-            </div>
           </div>
         </div>
       </div>
