@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Star, Shield, Zap, ArrowRight, BarChart3, CheckCircle, Globe, User } from 'lucide-react';
+import { Demo } from './Demo';
 // The unused TestiFlowIcon import was removed
 
 export const Home: React.FC = () => {
@@ -147,6 +148,9 @@ export const Home: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Demo Section */}
+      <Demo />
 
       <div className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
