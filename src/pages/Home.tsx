@@ -315,8 +315,149 @@ export const Home: React.FC = () => {
             </div>
             
             {/* Demo Content */}
-            <div className="relative h-[600px] sm:h-[700px] lg:h-[800px] overflow-hidden">
+            <div className="relative h-[600px] sm:h-[700px] lg:h-[800px] overflow-hidden hidden md:block">
               <Demo />
+            </div>
+            
+            {/* Mobile Demo Content */}
+            <div className="md:hidden">
+              {/* Mobile Phone Frame */}
+              <div className="bg-gray-900 rounded-2xl p-2 mx-auto max-w-sm">
+                <div className="bg-white rounded-xl overflow-hidden">
+                  {/* Mobile Status Bar */}
+                  <div className="bg-gray-900 px-4 py-2 flex items-center justify-between text-white text-xs">
+                    <div className="flex items-center space-x-1">
+                      <div className="flex space-x-1">
+                        <div className="w-1 h-3 bg-white rounded-full"></div>
+                        <div className="w-1 h-3 bg-white rounded-full"></div>
+                        <div className="w-1 h-3 bg-white rounded-full"></div>
+                        <div className="w-1 h-3 bg-white/60 rounded-full"></div>
+                      </div>
+                      <span className="ml-1">Verizon</span>
+                    </div>
+                    <span className="font-medium">9:41 AM</span>
+                    <div className="flex items-center space-x-1">
+                      <span>100%</span>
+                      <div className="w-6 h-3 border border-white rounded-sm">
+                        <div className="w-5 h-2 bg-green-400 rounded-sm m-0.5"></div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Mobile Browser Bar */}
+                  <div className="bg-gray-100 px-3 py-2 border-b border-gray-200">
+                    <div className="bg-white rounded-full px-3 py-1 text-xs text-gray-600 flex items-center">
+                      <span className="text-green-600 mr-1">🔒</span>
+                      <span>app.testiflow.com</span>
+                    </div>
+                  </div>
+                  
+                  {/* Mobile App Content - Compact */}
+                  <div className="h-96 overflow-hidden">
+                    {/* Mobile Header */}
+                    <div className="bg-primary-950 px-4 py-3 text-white">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h2 className="font-bold text-sm">TestiFlow</h2>
+                          <p className="text-xs text-white/80">Dashboard</p>
+                        </div>
+                        <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center">
+                          <User className="h-3 w-3" />
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Mobile Stats */}
+                    <div className="p-3 bg-white">
+                      <div className="grid grid-cols-3 gap-2 mb-3">
+                        <div className="bg-blue-50 p-2 rounded-lg text-center">
+                          <div className="text-lg font-bold text-primary-950">247</div>
+                          <div className="text-xs text-gray-500">Total</div>
+                        </div>
+                        <div className="bg-secondary-50 p-2 rounded-lg text-center">
+                          <div className="text-lg font-bold text-secondary-500">189</div>
+                          <div className="text-xs text-gray-500">Approved</div>
+                        </div>
+                        <div className="bg-accent-50 p-2 rounded-lg text-center">
+                          <div className="text-lg font-bold text-accent-600">+12</div>
+                          <div className="text-xs text-gray-500">This Week</div>
+                        </div>
+                      </div>
+                      
+                      {/* Mobile Testimonial Cards */}
+                      <div className="space-y-2">
+                        <h3 className="text-sm font-medium text-gray-900 mb-2">Recent Testimonials</h3>
+                        {[
+                          { name: 'Sarah J.', company: 'TechCorp', rating: 5, status: 'approved' },
+                          { name: 'Mike C.', company: 'StartupXYZ', rating: 4, status: 'pending' },
+                          { name: 'Emily D.', company: 'GrowthCo', rating: 5, status: 'approved' }
+                        ].map((testimonial, index) => (
+                          <div key={index} className="bg-gray-50 rounded-lg p-2 border border-gray-200">
+                            <div className="flex items-center justify-between mb-1">
+                              <div className="flex items-center space-x-2">
+                                <div className="w-5 h-5 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
+                                  <User className="h-2 w-2 text-primary-950" />
+                                </div>
+                                <div>
+                                  <div className="font-medium text-gray-900 text-xs">{testimonial.name}</div>
+                                  <div className="text-xs text-gray-500">{testimonial.company}</div>
+                                </div>
+                              </div>
+                              <div className="flex items-center space-x-1">
+                                <div className="flex">
+                                  {[...Array(testimonial.rating)].map((_, i) => (
+                                    <Star key={i} className="h-2 w-2 text-yellow-400 fill-current" />
+                                  ))}
+                                </div>
+                                <span className={`px-1 py-0.5 rounded-full text-xs font-medium ${
+                                  testimonial.status === 'approved'
+                                    ? 'bg-secondary-100 text-secondary-800'
+                                    : 'bg-yellow-100 text-yellow-800'
+                                }`}>
+                                  {testimonial.status}
+                                </span>
+                              </div>
+                            </div>
+                            <p className="text-xs text-gray-600 truncate">
+                              "Amazing product! Has transformed our workflow..."
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {/* Mobile Bottom Navigation */}
+                    <div className="bg-white border-t border-gray-200 px-4 py-2">
+                      <div className="grid grid-cols-4 gap-1">
+                        <button className="flex flex-col items-center py-1 text-primary-950">
+                          <div className="w-5 h-5 bg-primary-100 rounded-full flex items-center justify-center mb-1">
+                            <BarChart3 className="h-2 w-2" />
+                          </div>
+                          <span className="text-xs">Dashboard</span>
+                        </button>
+                        <button className="flex flex-col items-center py-1 text-gray-500">
+                          <div className="w-5 h-5 bg-gray-100 rounded-full flex items-center justify-center mb-1">
+                            <Settings className="h-2 w-2" />
+                          </div>
+                          <span className="text-xs">Forms</span>
+                        </button>
+                        <button className="flex flex-col items-center py-1 text-gray-500">
+                          <div className="w-5 h-5 bg-gray-100 rounded-full flex items-center justify-center mb-1">
+                            <Star className="h-2 w-2" />
+                          </div>
+                          <span className="text-xs">Reviews</span>
+                        </button>
+                        <button className="flex flex-col items-center py-1 text-gray-500">
+                          <div className="w-5 h-5 bg-gray-100 rounded-full flex items-center justify-center mb-1">
+                            <User className="h-2 w-2" />
+                          </div>
+                          <span className="text-xs">Settings</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           
