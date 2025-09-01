@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Star, MessageSquare, CheckCircle, Users, Zap, Shield, Check } from 'lucide-react';
+import { ArrowRight, Star, MessageSquare, CheckCircle, Users, Zap, Shield, Check, FileText } from 'lucide-react';
 import { TestiFlowIcon } from '../components/TestiFlowIcon';
 
 export const Home: React.FC = () => {
