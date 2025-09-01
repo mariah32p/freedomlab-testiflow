@@ -116,7 +116,6 @@ export const Navbar = () => {
             )}
           </div>
         </div>
-      </div>
 
         {/* Mobile Menu - Only visible when open */}
         {mobileMenuOpen && (
