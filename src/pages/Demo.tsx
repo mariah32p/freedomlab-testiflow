@@ -349,7 +349,7 @@ export const Demo: React.FC = () => {
 
             {/* Create Form Modal */}
             {showCreateForm && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+              <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                 <div className="bg-white rounded-lg p-6 w-full max-w-2xl mx-4">
                   <h2 className="text-xl font-bold text-gray-900 mb-4">Create New Form</h2>
                   
