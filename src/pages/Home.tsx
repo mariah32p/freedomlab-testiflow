@@ -174,11 +174,12 @@ export const Home: React.FC = () => {
                 <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
                 <div className="w-3 h-3 bg-green-400 rounded-full"></div>
               </div>
-              <div className="flex-1 bg-white rounded-md px-2 sm:px-3 py-1 text-xs sm:text-sm text-gray-500 text-center max-w-sm sm:max-w-lg">
-                testiflow.com/dashboard
+              <div className="flex-1 bg-white rounded-md px-3 py-1.5 text-sm text-gray-700 border border-gray-200">
+                <span className="text-gray-400">🔒</span> https://app.testiflow.com/dashboard
               </div>
-              <div className="text-xs text-gray-400 hidden sm:block">
-                Live Demo
+              <div className="hidden sm:flex items-center space-x-2">
+                <div className="w-6 h-6 bg-gray-200 rounded border border-gray-300"></div>
+                <div className="w-6 h-6 bg-gray-200 rounded border border-gray-300"></div>
               </div>
             </div>
             
