@@ -1,1101 +1,437 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Star, MessageSquare, Download, Settings, CheckCircle, Play, Users, TrendingUp, Clock, Plus, X } from 'lucide-react';
+import { ArrowRight, Star, MessageSquare, CheckCircle, Users, Zap, Shield, Check } from 'lucide-react';
 import { TestiFlowIcon } from '../components/TestiFlowIcon';
 
 export const Home: React.FC = () => {
   const navigate = useNavigate();
-  const demoRef = useRef<HTMLDivElement>(null);
-  const [demoInView, setDemoInView] = useState(false);
-
-  // Demo animation state
-  const [currentStep, setCurrentStep] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [showCreateForm, setShowCreateForm] = useState(false);
-  const [showTestimonials, setShowTestimonials] = useState(false);
-  const [showExport, setShowExport] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !demoInView) {
-          setDemoInView(true);
-          startDemoAnimation();
-          startDemoAnimation();
-        }
-      },
-      { threshold: 0.3 }
-    );
-
-    if (demoRef.current) {
-      observer.observe(demoRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, [demoInView]);
-
-  // Auto-advance through steps when demo is in view
-  useEffect(() => {
-    if (!demoInView || isAnimating) return;
-
-    const timer = setTimeout(() => {
-      setIsAnimating(true);
-      setCurrentStep(prev => {
-        const nextStep = prev >= 2 ? 0 : prev + 1;
-        setTimeout(() => setIsAnimating(false), 500);
-        return nextStep;
-      });
-    }, 3000); // Change step every 3 seconds
-
-    return () => clearTimeout(timer);
-  }, [currentStep, demoInView, isAnimating]);
-
-  const startDemoAnimation = () => {
-    setCurrentStep(0);
-    setIsAnimating(false);
-  };
 
   const handleGetStarted = () => {
     navigate('/signup');
+    window.scrollTo(0, 0);
   };
 
   return (
     <div className="bg-white">
-      {/* 1. Hero Section */}
-      <section className="relative bg-white overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-20 lg:pt-12 lg:pb-32">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            {/* Left: Content */}
-            <div className="text-center lg:text-left">
-              {/* Badge */}
-              <div className="inline-flex items-center px-4 py-2 rounded-full bg-green-100 text-green-800 text-sm font-medium mb-8">
-                <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                7-Day Free Trial Available
+      {/* Hero Section */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-primary-50 via-white to-secondary-50">
+        <div className="max-w-7xl mx-auto">
+          <div className="relative z-10 pb-8 bg-transparent sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32">
+            <main className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
+              <div className="sm:text-center lg:text-left">
+                <h1 className="text-4xl tracking-tight font-bold text-gray-900 sm:text-5xl md:text-6xl">
+                  <span className="block xl:inline">Turn Customer</span>{' '}
+                  <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-secondary-500 xl:inline">
+                    Feedback into
+                  </span>{' '}
+                  <span className="block xl:inline">Marketing Gold</span>
+                </h1>
+                <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
+                  Collect, manage, and showcase customer testimonials with beautiful forms, automated workflows, and powerful export tools. Build trust and drive conversions with authentic customer stories.
+                </p>
+                <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
+                  <div className="rounded-md shadow">
+                    <button
+                      onClick={handleGetStarted}
+                      className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary-950 hover:bg-primary-900 md:py-4 md:text-lg md:px-10 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                    >
+                      Start Free Trial
+                      <ArrowRight className="ml-2 h-5 w-5" />
+                    </button>
+                  </div>
+                  <div className="mt-3 sm:mt-0 sm:ml-3">
+                    <button
+                      onClick={() => document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth' })}
+                      className="w-full flex items-center justify-center px-8 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 md:py-4 md:text-lg md:px-10 transition-colors"
+                    >
+                      Watch Demo
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </main>
+          </div>
+        </div>
+        <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
+          <div className="h-56 w-full bg-gradient-to-br from-primary-100 to-secondary-100 sm:h-72 md:h-96 lg:w-full lg:h-full flex items-center justify-center">
+            {/* Phone Mockup */}
+            <div className="relative">
+              <div className="w-64 h-96 bg-gray-900 rounded-3xl p-2 shadow-2xl">
+                <div className="w-full h-full bg-white rounded-2xl overflow-hidden">
+                  {/* Phone Screen Content */}
+                  <div className="bg-primary-950 text-white p-4 text-center">
+                    <TestiFlowIcon className="h-6 w-6 text-white mx-auto mb-2" />
+                    <h3 className="font-bold text-sm">Share Your Experience</h3>
+                    <p className="text-xs text-white/80">Rate your experience with us</p>
+                  </div>
+                  <div className="p-4 space-y-3">
+                    <div className="flex justify-center space-x-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star key={star} className="h-4 w-4 text-yellow-400 fill-current" />
+                      ))}
+                    </div>
+                    <div className="space-y-2">
+                      <div className="h-3 bg-gray-200 rounded w-3/4"></div>
+                      <div className="h-3 bg-gray-200 rounded w-full"></div>
+                      <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+                    </div>
+                    <div className="h-16 bg-gray-100 rounded border-2 border-dashed border-gray-300"></div>
+                    <button className="w-full bg-secondary-500 text-white py-2 rounded-lg text-sm font-medium">
+                      Submit Testimonial
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Features Section */}
+      <div className="py-12 bg-white" id="features">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="lg:text-center">
+            <h2 className="text-base text-primary-950 font-semibold tracking-wide uppercase">Features</h2>
+            <p className="mt-2 text-3xl leading-8 font-bold tracking-tight text-gray-900 sm:text-4xl">
+              Everything you need to manage testimonials
+            </p>
+            <p className="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
+              From collection to showcase, TestiFlow handles every step of your testimonial workflow.
+            </p>
+          </div>
+
+          <div className="mt-10">
+            <div className="space-y-10 md:space-y-0 md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-10">
+              <div className="relative">
+                <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-primary-950 text-white">
+                  <MessageSquare className="h-6 w-6" />
+                </div>
+                <p className="ml-16 text-lg leading-6 font-medium text-gray-900">Smart Collection Forms</p>
+                <p className="mt-2 ml-16 text-base text-gray-500">
+                  Create beautiful, branded forms that make it easy for customers to share their experiences. Customize fields, colors, and messaging.
+                </p>
+              </div>
+
+              <div className="relative">
+                <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-secondary-500 text-white">
+                  <CheckCircle className="h-6 w-6" />
+                </div>
+                <p className="ml-16 text-lg leading-6 font-medium text-gray-900">Approval Workflow</p>
+                <p className="mt-2 ml-16 text-base text-gray-500">
+                  Review testimonials before they go live. Approve, reject, or request changes with a simple click.
+                </p>
+              </div>
+
+              <div className="relative">
+                <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-accent-500 text-white">
+                  <Zap className="h-6 w-6" />
+                </div>
+                <p className="ml-16 text-lg leading-6 font-medium text-gray-900">Powerful Exports</p>
+                <p className="mt-2 ml-16 text-base text-gray-500">
+                  Export testimonials as CSV, JSON, or generate ready-to-use website widgets and social media posts.
+                </p>
+              </div>
+
+              <div className="relative">
+                <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-primary-600 text-white">
+                  <Shield className="h-6 w-6" />
+                </div>
+                <p className="ml-16 text-lg leading-6 font-medium text-gray-900">Rich Media Support</p>
+                <p className="mt-2 ml-16 text-base text-gray-500">
+                  Collect not just text testimonials, but also images and videos for more engaging customer stories.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Social Proof Section */}
+      <div className="bg-gray-50 py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold text-gray-900 mb-8">Trusted by Growing Businesses</h2>
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="bg-white p-6 rounded-xl shadow-lg">
+                <div className="flex items-center mb-4">
+                  <div className="flex">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star key={star} className="h-5 w-5 text-yellow-400 fill-current" />
+                    ))}
+                  </div>
+                </div>
+                <p className="text-gray-700 mb-4 italic">
+                  "TestiFlow has completely transformed how we collect customer feedback. The automated workflows save us hours every week!"
+                </p>
+                <div className="text-sm text-gray-600">
+                  - Sarah Johnson, TechCorp Solutions
+                </div>
+              </div>
+
+              <div className="bg-white p-6 rounded-xl shadow-lg">
+                <div className="flex items-center mb-4">
+                  <div className="flex">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star key={star} className="h-5 w-5 text-yellow-400 fill-current" />
+                    ))}
+                  </div>
+                </div>
+                <p className="text-gray-700 mb-4 italic">
+                  "The export features are incredible. We can now easily use testimonials across all our marketing channels."
+                </p>
+                <div className="text-sm text-gray-600">
+                  - Mike Chen, StartupXYZ
+                </div>
+              </div>
+
+              <div className="bg-white p-6 rounded-xl shadow-lg">
+                <div className="flex items-center mb-4">
+                  <div className="flex">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star key={star} className="h-5 w-5 text-yellow-400 fill-current" />
+                    ))}
+                  </div>
+                </div>
+                <p className="text-gray-700 mb-4 italic">
+                  "Amazing product! The testimonial management features are exactly what we needed for our marketing campaigns."
+                </p>
+                <div className="text-sm text-gray-600">
+                  - Emily Davis, GrowthCo
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Pricing Section */}
+      <div className="bg-white py-16" id="pricing">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Simple, Transparent Pricing
+            </h2>
+            <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto">
+              Choose the plan that fits your testimonial management needs
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            {/* Standard Plan */}
+            <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-all duration-300">
+              <div className="bg-gray-50 px-6 py-8 text-center border-b border-gray-200">
+                <h3 className="text-2xl font-bold text-primary-950">Standard</h3>
+                <div className="mt-4 flex items-baseline justify-center">
+                  <span className="text-5xl font-bold text-primary-950">$29</span>
+                  <span className="text-xl text-gray-500 ml-1">/month</span>
+                </div>
+                <p className="mt-2 text-gray-600">Perfect for small businesses getting started</p>
               </div>
               
-              <h1 className="text-5xl lg:text-7xl font-bold text-gray-900 mb-8 leading-tight">
-                Stop Losing
-                <span className="block bg-gradient-to-r from-primary-950 to-secondary-500 bg-clip-text text-transparent">
-                  Customer Feedback
-                </span>
-              </h1>
-              
-              <p className="text-xl lg:text-2xl text-gray-600 mb-10 leading-relaxed max-w-2xl">
-                Collect testimonials in one organized place. Export them ready for your website, ads, and social media.
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-12">
+              <div className="px-6 py-8">
+                <ul className="space-y-4 mb-8">
+                  {[
+                    'Up to 25 testimonials',
+                    '1 collection form',
+                    'Basic approval workflow',
+                    'CSV export',
+                    'Email notifications',
+                  ].map((feature, index) => (
+                    <li key={index} className="flex items-center">
+                      <Check className="h-5 w-5 text-secondary-500 mr-3 flex-shrink-0" />
+                      <span className="text-gray-700">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
                 <button
                   onClick={handleGetStarted}
-                  className="bg-primary-950 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-primary-900 transition-all duration-200 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 flex items-center justify-center space-x-3"
+                  className="w-full bg-primary-950 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-900 transition-colors"
                 >
-                  <span>Start Free Trial</span>
-                  <ArrowRight className="h-6 w-6" />
+                  Start Free Trial
                 </button>
               </div>
-
-              {/* Trust indicators */}
-              <div className="flex items-center justify-center lg:justify-start space-x-8 text-sm text-gray-500">
-                <div className="flex items-center space-x-2">
-                  <Clock className="h-5 w-5 text-secondary-500" />
-                  <span>7-day free trial</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <CheckCircle className="h-5 w-5 text-secondary-500" />
-                  <span>Cancel anytime</span>
-                </div>
-              </div>
             </div>
 
-            {/* Right: Phone Mockup */}
-            <div className="flex justify-center lg:justify-end">
-              <div className="relative">
-                {/* Phone Frame */}
-                <div className="w-80 h-[640px] bg-gray-900 rounded-[3rem] p-3 shadow-2xl">
-                  <div className="w-full h-full bg-white rounded-[2.5rem] overflow-hidden relative">
-                    {/* Status Bar */}
-                    <div className="bg-gray-50 h-8 flex items-center justify-center">
-                      <div className="flex space-x-1">
-                        <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
-                        <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
-                        <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
-                      </div>
-                    </div>
-
-                    {/* Form Header */}
-                    <div className="bg-primary-950 px-6 py-8 text-center text-white">
-                      <TestiFlowIcon className="h-8 w-8 text-white mx-auto mb-3" />
-                      <h2 className="text-lg font-bold mb-2">Share Your Experience</h2>
-                      <p className="text-white/80 text-sm">We'd love your feedback!</p>
-                    </div>
-
-                    {/* Form Content */}
-                    <div className="p-6 space-y-6">
-                      {/* Rating */}
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-3">Rate your experience</label>
-                        <div className="flex space-x-1">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <Star key={star} className="h-7 w-7 text-yellow-400 fill-current" />
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Name Field */}
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                        <div className="w-full px-3 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-600 text-sm">
-                          Sarah Johnson
-                        </div>
-                      </div>
-
-                      {/* Testimonial */}
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Your testimonial</label>
-                        <div className="w-full px-3 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-600 text-sm h-20 flex items-start">
-                          <span>This platform is amazing for collecting...</span>
-                        </div>
-                      </div>
-
-                      {/* Submit Button */}
-                      <button className="w-full bg-secondary-500 text-white py-4 rounded-lg font-semibold text-lg shadow-lg">
-                        Submit Testimonial
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Floating Elements */}
-                <div className="absolute -top-4 -right-4 bg-white rounded-full p-3 shadow-lg">
-                  <CheckCircle className="h-6 w-6 text-green-500" />
-                </div>
-                <div className="absolute -bottom-4 -left-4 bg-white rounded-full p-3 shadow-lg">
-                  <Star className="h-6 w-6 text-yellow-400 fill-current" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 2. Demo Video Section */}
-      <section ref={demoRef} className="py-24 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">See TestiFlow in Action</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              See how easy it is to collect, organize, and use customer testimonials
-            </p>
-          </div>
-
-          {/* Step Progress */}
-          <div className="flex justify-center mb-8">
-            <div className="flex items-center space-x-4 bg-white rounded-full px-6 py-3 shadow-lg border border-gray-200">
-              {['Create Form', 'Collect Reviews', 'Export & Use'].map((step, index) => (
-                <div key={index} className="flex items-center space-x-2">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-500 ${
-                    index <= currentStep 
-                      ? 'bg-secondary-500 text-white' 
-                      : 'bg-gray-200 text-gray-500'
-                  }`}>
-                    {index + 1}
-                  </div>
-                  <span className={`text-sm font-medium transition-colors duration-500 ${
-                    index <= currentStep ? 'text-gray-900' : 'text-gray-500'
-                  }`}>
-                    {step}
-                  </span>
-                  {index < 2 && (
-                    <div className={`w-8 h-0.5 transition-colors duration-500 ${
-                      index < currentStep ? 'bg-secondary-500' : 'bg-gray-200'
-                    }`}></div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Desktop Demo */}
-          <div className="hidden lg:block">
-            <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200 min-h-[600px] mx-2">
-              {/* Demo Navbar */}
-              <div className="bg-white border-b border-gray-200 px-6 py-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <TestiFlowIcon className="h-6 w-6 text-primary-950" />
-                    <span className="font-bold text-primary-950">TestiFlow</span>
-                  </div>
-                  <div className="flex items-center space-x-6">
-                    <span className={`px-3 py-1 rounded-md text-sm font-medium transition-all duration-300 ${
-                      currentStep === 0 ? 'bg-primary-100 text-primary-950' : 'text-gray-600'
-                    }`}>
-                      Forms
-                    </span>
-                    <span className={`px-3 py-1 rounded-md text-sm font-medium transition-all duration-300 ${
-                      currentStep >= 1 ? 'bg-primary-100 text-primary-950' : 'text-gray-600'
-                    }`}>
-                      Testimonials
-                    </span>
-                    <span className={`px-3 py-1 rounded-md text-sm font-medium transition-all duration-300 ${
-                      currentStep >= 2 ? 'bg-primary-100 text-primary-950' : 'text-gray-600'
-                    }`}>
-                      Export
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Demo Content */}
-              <div className="p-8 min-h-[500px] relative">
-                {/* Step 0: Create Form */}
-                {currentStep === 0 && (
-                  <div className="animate-slide-in">
-                    <div className="flex items-center justify-between mb-8">
-                      <div>
-                        <h3 className="text-2xl font-bold text-gray-900 mb-2">Create Collection Forms</h3>
-                        <p className="text-gray-600">Set up branded forms to collect customer testimonials</p>
-                      </div>
-                      <button className="bg-primary-950 text-white px-6 py-3 rounded-lg flex items-center space-x-2 shadow-lg">
-                        <Plus className="h-5 w-5" />
-                        <span>New Form</span>
-                      </button>
-                    </div>
-                    
-                    <div className="grid lg:grid-cols-2 gap-8">
-                      <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
-                        <h4 className="font-semibold text-gray-900 mb-4">Form Builder</h4>
-                        <div className="space-y-4">
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Form Title</label>
-                            <div className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white text-gray-900 font-medium">
-                              Share Your Experience
-                            </div>
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
-                            <div className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white text-gray-700">
-                              We'd love to hear about your experience with us!
-                            </div>
-                          </div>
-                          <div className="flex items-center space-x-3">
-                            <input type="checkbox" checked className="rounded border-gray-300 text-primary-950" readOnly />
-                            <span className="text-sm text-gray-700">Allow image uploads</span>
-                          </div>
-                          <button className="w-full bg-primary-950 text-white py-3 rounded-lg font-semibold">
-                            Create Form
-                          </button>
-                        </div>
-                      </div>
-                      
-                      <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-lg">
-                        <h4 className="font-semibold text-gray-900 mb-4">Live Preview</h4>
-                        <div className="border border-gray-200 rounded-lg overflow-hidden">
-                          <div className="bg-primary-950 px-4 py-6 text-center text-white">
-                            <TestiFlowIcon className="h-6 w-6 text-white mx-auto mb-2" />
-                            <h5 className="font-bold">Share Your Experience</h5>
-                            <p className="text-white/80 text-sm">We'd love to hear about your experience!</p>
-                          </div>
-                          <div className="p-4 space-y-3">
-                            <div>
-                              <label className="block text-xs font-medium text-gray-700 mb-1">Rating *</label>
-                              <div className="flex space-x-1">
-                                {[1, 2, 3, 4, 5].map((star) => (
-                                  <Star key={star} className="h-4 w-4 text-yellow-400 fill-current" />
-                                ))}
-                              </div>
-                            </div>
-                            <div>
-                              <label className="block text-xs font-medium text-gray-700 mb-1">Name *</label>
-                              <div className="w-full px-2 py-2 border border-gray-300 rounded bg-gray-50 text-xs text-gray-500">
-                                Your name here...
-                              </div>
-                            </div>
-                            <div>
-                              <label className="block text-xs font-medium text-gray-700 mb-1">Testimonial *</label>
-                              <div className="w-full px-2 py-2 border border-gray-300 rounded bg-gray-50 text-xs text-gray-500 h-16">
-                                Share your experience...
-                              </div>
-                            </div>
-                            <button className="w-full bg-secondary-500 text-white py-2 rounded font-medium text-sm">
-                              Submit Testimonial
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Step 1: Collect Reviews */}
-                {currentStep === 1 && (
-                  <div className="animate-slide-in">
-                    <div className="flex items-center justify-between mb-8">
-                      <div>
-                        <h3 className="text-2xl font-bold text-gray-900 mb-2">Collect & Manage Reviews</h3>
-                        <p className="text-gray-600">Customers submit testimonials through your branded forms</p>
-                      </div>
-                      <div className="flex space-x-3">
-                        <span className="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full text-sm font-medium">
-                          2 Pending Review
-                        </span>
-                        <span className="bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium">
-                          8 Approved
-                        </span>
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-4">
-                      {[
-                        { 
-                          name: 'Sarah Johnson', 
-                          company: 'TechCorp Solutions', 
-                          rating: 5, 
-                          message: 'TestiFlow has completely transformed how we collect customer feedback. The automated workflows save us hours every week!', 
-                          status: 'pending',
-                          highlight: true
-                        },
-                        { 
-                          name: 'Mike Chen', 
-                          company: 'StartupXYZ', 
-                          rating: 5, 
-                          message: 'Amazing product! The testimonial management features are exactly what we needed for our marketing campaigns.', 
-                          status: 'approved',
-                          highlight: false
-                        },
-                        { 
-                          name: 'Emily Davis', 
-                          company: 'GrowthCo', 
-                          rating: 4, 
-                          message: 'The export features are incredible. We can now easily use testimonials across all our marketing channels.', 
-                          status: 'pending',
-                          highlight: false
-                        }
-                      ].map((testimonial, index) => (
-                        <div key={index} className={`bg-white border rounded-xl p-6 transition-all duration-500 ${
-                          testimonial.highlight ? 'border-secondary-300 shadow-lg ring-4 ring-secondary-100' : 'border-gray-200 hover:shadow-md'
-                        }`}>
-                          <div className="flex items-center justify-between mb-4">
-                            <div className="flex items-center space-x-4">
-                              <div className="w-12 h-12 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
-                                <span className="text-primary-950 font-bold">
-                                  {testimonial.name.split(' ').map(n => n[0]).join('')}
-                                </span>
-                              </div>
-                              <div>
-                                <div className="font-semibold text-gray-900">{testimonial.name}</div>
-                                <div className="text-sm text-gray-600">{testimonial.company}</div>
-                              </div>
-                            </div>
-                            <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                              testimonial.status === 'approved' 
-                                ? 'bg-green-100 text-green-800' 
-                                : 'bg-yellow-100 text-yellow-800'
-                            }`}>
-                              {testimonial.status}
-                            </span>
-                          </div>
-                          
-                          <div className="flex items-center space-x-2 mb-3">
-                            <div className="flex">
-                              {[...Array(testimonial.rating)].map((_, i) => (
-                                <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
-                              ))}
-                            </div>
-                            <span className="text-sm text-gray-500">({testimonial.rating}/5)</span>
-                          </div>
-                          
-                          <p className="text-gray-700 leading-relaxed mb-4">"{testimonial.message}"</p>
-                          
-                          {testimonial.status === 'pending' && (
-                            <div className="flex space-x-3">
-                              <button className="bg-green-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-600 transition-colors flex items-center space-x-2">
-                                <CheckCircle className="h-4 w-4" />
-                                <span>Approve</span>
-                              </button>
-                              <button className="bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-600 transition-colors flex items-center space-x-2">
-                                <X className="h-4 w-4" />
-                                <span>Reject</span>
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Step 2: Export & Use */}
-                {currentStep === 2 && (
-                  <div className="animate-slide-in">
-                    <div className="flex items-center justify-between mb-8">
-                      <div>
-                        <h3 className="text-2xl font-bold text-gray-900 mb-2">Export & Use Everywhere</h3>
-                        <p className="text-gray-600">Turn testimonials into marketing assets for any channel</p>
-                      </div>
-                      <button className="bg-secondary-500 text-white px-6 py-3 rounded-lg flex items-center space-x-2 shadow-lg">
-                        <Download className="h-5 w-5" />
-                        <span>Export</span>
-                      </button>
-                    </div>
-                    
-                    <div className="grid md:grid-cols-2 gap-8">
-                      <div className="space-y-6">
-                        <div className="bg-blue-50 rounded-xl p-6 border border-blue-200">
-                          <div className="flex items-center space-x-3 mb-4">
-                            <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
-                              <MessageSquare className="h-5 w-5 text-white" />
-                            </div>
-                            <h4 className="font-semibold text-blue-900">Website Widget</h4>
-                          </div>
-                          <div className="bg-white rounded-lg p-4 border border-blue-200">
-                            <div className="text-center mb-3">
-                              <h5 className="font-semibold text-gray-900 text-sm">What Our Customers Say</h5>
-                            </div>
-                            <div className="space-y-3">
-                              <div className="bg-gray-50 rounded-lg p-3 border-l-4 border-secondary-500">
-                                <div className="flex mb-1">
-                                  {[...Array(5)].map((_, i) => (
-                                    <Star key={i} className="h-3 w-3 text-yellow-400 fill-current" />
-                                  ))}
-                                </div>
-                                <p className="text-xs text-gray-700 italic">"Amazing platform! Saves us hours..."</p>
-                                <div className="text-xs text-gray-500 mt-1">- Sarah J., TechCorp</div>
-                              </div>
-                              <div className="bg-gray-50 rounded-lg p-3 border-l-4 border-secondary-500">
-                                <div className="flex mb-1">
-                                  {[...Array(5)].map((_, i) => (
-                                    <Star key={i} className="h-3 w-3 text-yellow-400 fill-current" />
-                                  ))}
-                                </div>
-                                <p className="text-xs text-gray-700 italic">"Perfect for our marketing campaigns."</p>
-                                <div className="text-xs text-gray-500 mt-1">- Mike C., StartupXYZ</div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        
-                        <div className="bg-green-50 rounded-xl p-6 border border-green-200">
-                          <div className="flex items-center space-x-3 mb-4">
-                            <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
-                              <TrendingUp className="h-5 w-5 text-white" />
-                            </div>
-                            <h4 className="font-semibold text-green-900">Social Media Post</h4>
-                          </div>
-                          <div className="bg-white rounded-lg p-4 border border-green-200">
-                            <div className="text-sm text-gray-700 space-y-1">
-                              <div className="font-medium">⭐⭐⭐⭐⭐ Customer Love!</div>
-                              <div className="italic">"Amazing platform! Saves us hours every week and the interface is so intuitive!"</div>
-                              <div className="text-gray-600">- Sarah Johnson, TechCorp Solutions</div>
-                              <div className="text-blue-600 font-medium">#CustomerSuccess #Testimonial</div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="bg-purple-50 rounded-xl p-6 border border-purple-200">
-                        <div className="flex items-center space-x-3 mb-4">
-                          <div className="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center">
-                            <Download className="h-5 w-5 text-white" />
-                          </div>
-                          <h4 className="font-semibold text-purple-900">Export Options</h4>
-                        </div>
-                        <div className="space-y-3">
-                          <div className="bg-white rounded-lg p-4 border border-purple-200 flex items-center justify-between">
-                            <div className="flex items-center space-x-3">
-                              <div className="w-6 h-6 bg-green-100 rounded flex items-center justify-center">
-                                <span className="text-green-600 text-xs">📊</span>
-                              </div>
-                              <span className="text-sm font-medium text-gray-900">CSV Spreadsheet</span>
-                            </div>
-                            <button className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">Export</button>
-                          </div>
-                          <div className="bg-white rounded-lg p-4 border border-purple-200 flex items-center justify-between">
-                            <div className="flex items-center space-x-3">
-                              <div className="w-6 h-6 bg-blue-100 rounded flex items-center justify-center">
-                                <span className="text-blue-600 text-xs">💻</span>
-                              </div>
-                              <span className="text-sm font-medium text-gray-900">Website Code</span>
-                            </div>
-                            <button className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">Generate</button>
-                          </div>
-                          <div className="bg-white rounded-lg p-4 border border-purple-200 flex items-center justify-between">
-                            <div className="flex items-center space-x-3">
-                              <div className="w-6 h-6 bg-orange-100 rounded flex items-center justify-center">
-                                <span className="text-orange-600 text-xs">📱</span>
-                              </div>
-                              <span className="text-sm font-medium text-gray-900">Social Posts</span>
-                            </div>
-                            <button className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">Create</button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-          
-          {/* Mobile Demo */}
-          <div className="lg:hidden px-2">
-            <div className="space-y-8">
-              {/* Step Cards */}
-              <div className="grid gap-4">
-                {/* Create Forms */}
-                <div className={`bg-white rounded-xl p-6 border-2 transition-all duration-500 ${
-                  currentStep === 0 ? 'border-primary-500 shadow-lg' : 'border-gray-200'
-                }`}>
-                  <div className="flex items-center space-x-3 mb-4">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 ${
-                      currentStep === 0 ? 'bg-primary-950 text-white' : 'bg-gray-100 text-gray-600'
-                    }`}>
-                      <Settings className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-bold text-gray-900">Create Forms</h3>
-                      <p className="text-sm text-gray-600">Build branded collection forms</p>
-                    </div>
-                  </div>
-                  
-                  {currentStep === 0 && (
-                    <div className="animate-slide-in">
-                      <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
-                        <div className="space-y-3">
-                          <div>
-                            <div className="text-xs font-medium text-gray-700 mb-1">Form Title</div>
-                            <div className="w-full px-2 py-2 bg-white border border-gray-300 rounded text-xs">
-                              Share Your Experience
-                            </div>
-                          </div>
-                          <div>
-                            <div className="text-xs font-medium text-gray-700 mb-1">Description</div>
-                            <div className="w-full px-2 py-2 bg-white border border-gray-300 rounded text-xs">
-                              We'd love your feedback!
-                            </div>
-                          </div>
-                          <button className="w-full bg-primary-950 text-white py-2 rounded font-medium text-xs">
-                            Create Form
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-                
-                {/* Collect Reviews */}
-                <div className={`bg-white rounded-xl p-6 border-2 transition-all duration-500 ${
-                  currentStep === 1 ? 'border-secondary-500 shadow-lg' : 'border-gray-200'
-                }`}>
-                  <div className="flex items-center space-x-3 mb-4">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 ${
-                      currentStep === 1 ? 'bg-secondary-500 text-white' : 'bg-gray-100 text-gray-600'
-                    }`}>
-                      <MessageSquare className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-bold text-gray-900">Collect Reviews</h3>
-                      <p className="text-sm text-gray-600">Customers submit testimonials</p>
-                    </div>
-                  </div>
-                  
-                  {currentStep === 1 && (
-                    <div className="animate-slide-in space-y-3">
-                      <div className="bg-yellow-50 rounded-lg p-3 border border-yellow-200">
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="flex items-center space-x-2">
-                            <div className="w-5 h-5 bg-yellow-100 rounded-full flex items-center justify-center">
-                              <span className="text-yellow-600 text-xs font-bold">SJ</span>
-                            </div>
-                            <span className="text-xs font-medium">Sarah Johnson</span>
-                          </div>
-                          <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs">Pending</span>
-                        </div>
-                        <div className="flex mb-2">
-                          {[...Array(5)].map((_, i) => (
-                            <Star key={i} className="h-2.5 w-2.5 text-yellow-400 fill-current" />
-                          ))}
-                        </div>
-                        <p className="text-xs text-gray-700">"Amazing platform! Saves us hours..."</p>
-                      </div>
-                      <div className="bg-green-50 rounded-lg p-3 border border-green-200">
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="flex items-center space-x-2">
-                            <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center">
-                              <span className="text-green-600 text-xs font-bold">MC</span>
-                            </div>
-                            <span className="text-xs font-medium">Mike Chen</span>
-                          </div>
-                          <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">Approved</span>
-                        </div>
-                        <div className="flex mb-2">
-                          {[...Array(5)].map((_, i) => (
-                            <Star key={i} className="h-2.5 w-2.5 text-yellow-400 fill-current" />
-                          ))}
-                        </div>
-                        <p className="text-xs text-gray-700">"Perfect for marketing campaigns."</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-                
-                {/* Export & Use */}
-                <div className={`bg-white rounded-xl p-6 border-2 transition-all duration-500 ${
-                  currentStep === 2 ? 'border-purple-500 shadow-lg' : 'border-gray-200'
-                }`}>
-                  <div className="flex items-center space-x-3 mb-4">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 ${
-                      currentStep === 2 ? 'bg-purple-500 text-white' : 'bg-gray-100 text-gray-600'
-                    }`}>
-                      <Download className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-bold text-gray-900">Export & Use</h3>
-                      <p className="text-sm text-gray-600">Ready for any marketing channel</p>
-                    </div>
-                  </div>
-                  
-                  {currentStep === 2 && (
-                    <div className="animate-slide-in">
-                      <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
-                        <div className="grid grid-cols-2 gap-2">
-                          <div className="bg-white rounded p-2 border text-center">
-                            <div className="text-green-600 mb-1">📊</div>
-                            <div className="text-xs font-medium">CSV Export</div>
-                          </div>
-                          <div className="bg-white rounded p-2 border text-center">
-                            <div className="text-blue-600 mb-1">💻</div>
-                            <div className="text-xs font-medium">Website Widget</div>
-                          </div>
-                          <div className="bg-white rounded p-2 border text-center">
-                            <div className="text-orange-600 mb-1">📱</div>
-                            <div className="text-xs font-medium">Social Posts</div>
-                          </div>
-                          <div className="bg-white rounded p-2 border text-center">
-                            <div className="text-purple-600 mb-1">📧</div>
-                            <div className="text-xs font-medium">Email Ready</div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 3. Key Features */}
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">Everything You Need</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              From collection to conversion, TestiFlow handles your entire testimonial workflow
-            </p>
-          </div>
-
-          <div className="grid lg:grid-cols-3 gap-8">
-            {/* Feature 1: Form Builder */}
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-8 border border-blue-100">
-              <div className="text-center mb-6">
-                <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center mx-auto mb-4">
-                  <Settings className="h-6 w-6 text-white" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Smart Form Builder</h3>
-                <p className="text-gray-600 text-sm">Create branded forms in minutes</p>
-              </div>
-              
-              {/* Form Builder Mockup */}
-              <div className="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
-                <div className="bg-gray-50 px-4 py-2 border-b border-gray-200 flex items-center justify-between">
-                  <span className="text-xs font-medium text-gray-600">Form Builder</span>
-                  <div className="flex space-x-1">
-                    <div className="w-2 h-2 bg-red-400 rounded-full"></div>
-                    <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
-                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                  </div>
-                </div>
-                <div className="p-4 space-y-3">
-                  <div>
-                    <div className="text-xs font-medium text-gray-700 mb-1">Form Title</div>
-                    <div className="w-full px-2 py-2 bg-blue-50 border border-blue-200 rounded text-xs font-medium text-blue-900">
-                      Share Your Experience
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-xs font-medium text-gray-700 mb-1">Description</div>
-                    <div className="w-full px-2 py-1 bg-gray-50 border border-gray-200 rounded text-xs text-gray-600">
-                      We'd love your feedback!
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <input type="checkbox" checked className="w-3 h-3 text-blue-500" readOnly />
-                    <span className="text-xs text-gray-600">Custom branding</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <input type="checkbox" checked className="w-3 h-3 text-blue-500" readOnly />
-                    <span className="text-xs text-gray-600">Media uploads</span>
-                  </div>
-                  <button className="w-full bg-blue-500 text-white py-2 rounded text-xs font-medium">
-                    Create Form
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Feature 2: Testimonial Management */}
-            <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-8 border border-green-100">
-              <div className="text-center mb-6">
-                <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle className="h-6 w-6 text-white" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Review & Approve</h3>
-                <p className="text-gray-600 text-sm">Manage testimonials with ease</p>
-              </div>
-              
-              {/* Testimonial Management Mockup */}
-              <div className="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
-                <div className="bg-gray-50 px-4 py-2 border-b border-gray-200 flex items-center justify-between">
-                  <span className="text-xs font-medium text-gray-600">Testimonials</span>
-                  <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium">
-                    3 Pending
-                  </span>
-                </div>
-                <div className="p-4 space-y-3">
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center space-x-2">
-                        <div className="w-4 h-4 bg-yellow-100 rounded-full flex items-center justify-center">
-                          <span className="text-yellow-600 text-xs font-bold">S</span>
-                        </div>
-                        <span className="text-xs font-medium">Sarah J.</span>
-                      </div>
-                      <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs">Pending</span>
-                    </div>
-                    <div className="flex mb-1">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="h-2.5 w-2.5 text-yellow-400 fill-current" />
-                      ))}
-                    </div>
-                    <p className="text-xs text-gray-700 mb-2">"Amazing platform! Saves us hours..."</p>
-                    <div className="flex space-x-1">
-                      <button className="bg-green-500 text-white px-2 py-1 rounded text-xs font-medium">
-                        Approve
-                      </button>
-                      <button className="bg-red-500 text-white px-2 py-1 rounded text-xs font-medium">
-                        Reject
-                      </button>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center space-x-2">
-                        <div className="w-4 h-4 bg-green-100 rounded-full flex items-center justify-center">
-                          <span className="text-green-600 text-xs font-bold">M</span>
-                        </div>
-                        <span className="text-xs font-medium">Mike C.</span>
-                      </div>
-                      <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">Approved</span>
-                    </div>
-                    <div className="flex mb-1">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="h-2.5 w-2.5 text-yellow-400 fill-current" />
-                      ))}
-                    </div>
-                    <p className="text-xs text-gray-700">"Perfect for marketing campaigns."</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Feature 3: Export Tools */}
-            <div className="bg-gradient-to-br from-purple-50 to-violet-50 rounded-2xl p-8 border border-purple-100">
-              <div className="text-center mb-6">
-                <div className="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center mx-auto mb-4">
-                  <Download className="h-6 w-6 text-white" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Export Anywhere</h3>
-                <p className="text-gray-600 text-sm">Ready for any marketing channel</p>
-              </div>
-              
-              {/* Export Tools Mockup */}
-              <div className="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
-                <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
-                  <span className="text-xs font-medium text-gray-600">Export Options</span>
-                </div>
-                <div className="p-4 space-y-3">
-                  <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-lg p-2">
-                    <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 bg-green-500 rounded flex items-center justify-center">
-                        <span className="text-white text-xs">📊</span>
-                      </div>
-                      <span className="text-xs font-medium">CSV Export</span>
-                    </div>
-                    <button className="bg-green-500 text-white px-2 py-1 rounded text-xs">Ready</button>
-                  </div>
-                  
-                  <div className="flex items-center justify-between bg-blue-50 border border-blue-200 rounded-lg p-2">
-                    <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 bg-blue-500 rounded flex items-center justify-center">
-                        <span className="text-white text-xs">💻</span>
-                      </div>
-                      <span className="text-xs font-medium">Website Widget</span>
-                    </div>
-                    <button className="bg-blue-500 text-white px-2 py-1 rounded text-xs">Generate</button>
-                  </div>
-                  
-                  <div className="flex items-center justify-between bg-orange-50 border border-orange-200 rounded-lg p-2">
-                    <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 bg-orange-500 rounded flex items-center justify-center">
-                        <span className="text-white text-xs">📱</span>
-                      </div>
-                      <span className="text-xs font-medium">Social Posts</span>
-                    </div>
-                    <button className="bg-orange-500 text-white px-2 py-1 rounded text-xs">Create</button>
-                  </div>
-                  
-                  {/* Mini Preview */}
-                  <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
-                    <div className="text-xs font-medium text-gray-700 mb-2">Widget Preview</div>
-                    <div className="bg-white rounded p-2 border">
-                      <div className="text-xs font-medium text-center mb-1">Customer Reviews</div>
-                      <div className="space-y-1">
-                        <div className="bg-gray-50 rounded p-1 border-l-2 border-purple-500">
-                          <div className="flex mb-1">
-                            {[...Array(5)].map((_, i) => (
-                              <Star key={i} className="h-2 w-2 text-yellow-400 fill-current" />
-                            ))}
-                          </div>
-                          <p className="text-xs text-gray-600">"Great product!"</p>
-                          <div className="text-xs text-gray-500">- Customer</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 4. Social Proof */}
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Loved by Growing Businesses
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              See how companies are using TestiFlow to build trust and grow their business
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-white p-8 rounded-xl shadow-lg border border-gray-100">
-              <div className="flex items-center mb-6">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                  M
-                </div>
-                <div className="ml-4">
-                  <div className="font-semibold text-gray-900">Mariah W.</div>
-                  <div className="text-sm text-gray-600">Technology Director</div>
-                </div>
-              </div>
-              <div className="flex mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
-                ))}
-              </div>
-              <p className="text-gray-700 leading-relaxed mb-4">
-                "TestiFlow increased our conversion rates by 40%. The automated collection process saves our team 10+ hours per week."
-              </p>
-              <div className="text-sm text-gray-500">Technology</div>
-            </div>
-
-            <div className="bg-white p-8 rounded-xl shadow-lg border border-gray-100">
-              <div className="flex items-center mb-6">
-                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                  D
-                </div>
-                <div className="ml-4">
-                  <div className="font-semibold text-gray-900">Diane R.</div>
-                  <div className="text-sm text-gray-600">Professional Services Manager</div>
-                </div>
-              </div>
-              <div className="flex mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
-                ))}
-              </div>
-              <p className="text-gray-700 leading-relaxed mb-4">
-                "The branding customization and export features are game-changers. We can now maintain brand consistency across all testimonials."
-              </p>
-              <div className="text-sm text-gray-500">Agriculture & Technology</div>
-            </div>
-
-            <div className="bg-white p-8 rounded-xl shadow-lg border border-gray-100">
-              <div className="flex items-center mb-6">
-                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                  N
-                </div>
-                <div className="ml-4">
-                  <div className="font-semibold text-gray-900">Nathan R.</div>
-                  <div className="text-sm text-gray-600">IT Consultant</div>
-                </div>
-              </div>
-              <div className="flex mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
-                ))}
-              </div>
-              <p className="text-gray-700 leading-relaxed mb-4">
-                "Perfect for managing testimonials across our legal and real estate services. The organization features keep everything streamlined."
-              </p>
-              <div className="text-sm text-gray-500">IT, Legal, Real Estate</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-
-
-      {/* 5. Pricing */}
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">Simple Pricing</h2>
-            <p className="text-xl text-gray-600">Start free, upgrade when you're ready</p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <div className="bg-white border-2 border-gray-200 rounded-2xl p-8 hover:shadow-xl transition-all duration-300">
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Basic</h3>
-              <div className="mb-6">
-                <span className="text-5xl font-bold text-gray-900">$29</span>
-                <span className="text-xl text-gray-500">/month</span>
-              </div>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-center">
-                  <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                  <span>Up to 50 testimonials</span>
-                </li>
-                <li className="flex items-center">
-                  <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                  <span>Custom forms</span>
-                </li>
-                <li className="flex items-center">
-                  <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                  <span>Basic exports</span>
-                </li>
-              </ul>
-            </div>
-
-            <div className="bg-gradient-to-br from-primary-950 to-secondary-500 text-white rounded-2xl p-8 hover:shadow-xl transition-all duration-300 relative">
+            {/* Premium Plan */}
+            <div className="bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-secondary-500 relative">
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                <span className="bg-accent-500 text-white px-4 py-1 rounded-full text-sm font-semibold">
+                <span className="bg-gradient-to-r from-accent-500 to-accent-600 text-white px-4 py-1 rounded-full text-sm font-semibold shadow-lg">
                   MOST POPULAR
                 </span>
               </div>
-              <h3 className="text-2xl font-bold mb-4">Pro</h3>
-              <div className="mb-6">
-                <span className="text-5xl font-bold">$49</span>
-                <span className="text-xl text-white/80">/month</span>
+              <div className="bg-gradient-to-r from-primary-950 to-secondary-500 px-6 py-8 text-center">
+                <h3 className="text-2xl font-bold text-white">Premium</h3>
+                <div className="mt-4 flex items-baseline justify-center">
+                  <span className="text-5xl font-bold text-white">$49</span>
+                  <span className="text-xl text-white/80 ml-1">/month</span>
+                </div>
+                <p className="mt-2 text-white/90">Complete solution for growing businesses</p>
               </div>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-center">
-                  <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
-                  <span>Unlimited testimonials</span>
-                </li>
-                <li className="flex items-center">
-                  <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
-                  <span>Advanced exports & widgets</span>
-                </li>
-                <li className="flex items-center">
-                  <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
-                  <span>Video testimonials</span>
-                </li>
-                <li className="flex items-center">
-                  <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
-                  <span>Priority support</span>
-                </li>
-              </ul>
+              
+              <div className="px-6 py-8">
+                <ul className="space-y-4 mb-8">
+                  {[
+                    'Unlimited testimonials & forms',
+                    'Custom fields & branding',
+                    'Image + video testimonials',
+                    'Website widget generator',
+                    'Advanced exports (JSON, social media posts)',
+                    'Tag organization',
+                  ].map((feature, index) => (
+                    <li key={index} className="flex items-center">
+                      <Check className="h-5 w-5 text-secondary-500 mr-3 flex-shrink-0" />
+                      <span className="text-gray-700">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                <button
+                  onClick={handleGetStarted}
+                  className="w-full bg-secondary-500 text-white py-3 px-6 rounded-lg font-semibold hover:bg-secondary-600 transition-colors"
+                >
+                  Start Free Trial
+                </button>
+              </div>
             </div>
           </div>
-
-          <div className="text-center mt-12">
-            <button
-              onClick={handleGetStarted}
-              className="bg-primary-950 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-primary-900 transition-all duration-200 shadow-xl hover:shadow-2xl transform hover:-translate-y-1"
-            >
-              Start Your Free Trial
-            </button>
-            <p className="text-sm text-gray-500 mt-3">7-day free trial • Cancel anytime</p>
-          </div>
-        </div>
-      </section>
-
-      {/* 6. FAQ */}
-      <section className="py-24 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
-          </div>
-
-          <div className="space-y-4">
-            {[
-              {
-                question: "How quickly can I start collecting testimonials?",
-                answer: "You can create your first form and start collecting testimonials in under 2 minutes. No technical setup required."
-              },
-              {
-                question: "Can I customize the look of my forms?",
-                answer: "Yes! Add your logo, brand colors, and custom questions. Forms automatically match your brand identity."
-              },
-              {
-                question: "What export options do you offer?",
-                answer: "Export as CSV for analysis, JSON for developers, website widgets for embedding, or formatted social media posts."
-              },
-              {
-                question: "Is there a limit on testimonials?",
-                answer: "Basic plan includes 50 testimonials. Pro plan has unlimited testimonials and advanced features."
-              }
-            ].map((faq, index) => (
-              <details key={index} className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-all">
-                <summary className="font-semibold text-gray-900 cursor-pointer text-lg">
-                  {faq.question}
-                </summary>
-                <p className="text-gray-600 mt-4 leading-relaxed">{faq.answer}</p>
-              </details>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 7. Final CTA */}
-      <section className="py-24 bg-primary-950">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-bold text-white mb-6">
-            Ready to Turn Feedback Into Marketing Gold?
-          </h2>
-          <p className="text-xl text-white/80 mb-10 max-w-2xl mx-auto">
-            Join hundreds of businesses using TestiFlow to collect, organize, and leverage customer testimonials.
-          </p>
           
+          <div className="text-center mt-8">
+            <p className="text-gray-500">
+              All plans include a 7-day free trial. No credit card required to start.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* How It Works Section */}
+      <div className="py-16 bg-gray-50" id="demo">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">How TestiFlow Works</h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              From collection to showcase in just a few simple steps
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <MessageSquare className="h-8 w-8 text-primary-950" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">1. Create Forms</h3>
+              <p className="text-gray-600">
+                Design beautiful testimonial collection forms with your branding. Add custom fields and questions.
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-16 h-16 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Users className="h-8 w-8 text-primary-950" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">2. Collect Feedback</h3>
+              <p className="text-gray-600">
+                Share your forms with customers. They can submit text, images, and video testimonials easily.
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-16 h-16 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Zap className="h-8 w-8 text-primary-950" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">3. Export & Use</h3>
+              <p className="text-gray-600">
+                Export testimonials for your website, social media, or marketing materials. Generate widgets instantly.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* FAQ Section */}
+      <div className="bg-white py-16" id="faq">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
+            <p className="text-xl text-gray-600">Everything you need to know about TestiFlow</p>
+          </div>
+
+          <div className="space-y-8">
+            <div className="bg-gray-50 rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                What's the difference between Standard and Premium plans?
+              </h3>
+              <p className="text-gray-600">
+                Standard is perfect for small businesses with up to 25 testimonials and 1 form. Premium offers unlimited testimonials and forms, plus advanced features like custom branding, video testimonials, and website widgets.
+              </p>
+            </div>
+
+            <div className="bg-gray-50 rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Is there a free trial?
+              </h3>
+              <p className="text-gray-600">
+                Yes! All plans include a 7-day free trial with full access to all features. No credit card required to start.
+              </p>
+            </div>
+
+            <div className="bg-gray-50 rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Can I upgrade or downgrade my plan?
+              </h3>
+              <p className="text-gray-600">
+                Absolutely! You can change your plan anytime from your account settings. Changes take effect immediately with prorated billing.
+              </p>
+            </div>
+
+            <div className="bg-gray-50 rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                What happens to my data if I cancel?
+              </h3>
+              <p className="text-gray-600">
+                Your data remains accessible for 30 days after cancellation. You can export all your testimonials before the account is permanently deleted.
+              </p>
+            </div>
+
+            <div className="bg-gray-50 rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Do you offer annual discounts?
+              </h3>
+              <p className="text-gray-600">
+                Currently we offer monthly billing. Annual billing options with discounts are coming soon!
+              </p>
+            </div>
+
+            <div className="bg-gray-50 rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                What payment methods do you accept?
+              </h3>
+              <p className="text-gray-600">
+                We accept all major credit cards (Visa, MasterCard, American Express) and debit cards through our secure Stripe integration.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* CTA Section */}
+      <div className="bg-gradient-to-r from-primary-950 to-secondary-500 py-16">
+        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-white mb-4">
+            Ready to Transform Your Customer Feedback?
+          </h2>
+          <p className="text-xl text-white/90 mb-8">
+            Join hundreds of businesses using TestiFlow to collect and showcase customer testimonials.
+          </p>
           <button
             onClick={handleGetStarted}
-            className="bg-secondary-500 text-white px-10 py-5 rounded-xl font-bold text-xl hover:bg-secondary-600 transition-all duration-200 shadow-2xl hover:shadow-3xl transform hover:-translate-y-1"
+            className="bg-white text-primary-950 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
           >
             Start Your Free Trial Today
           </button>
-          
-          <p className="text-white/60 mt-6">
-            7-day free trial • Full access • Cancel anytime
+          <p className="text-white/80 text-sm mt-4">
+            7-day free trial • No credit card required • Cancel anytime
           </p>
         </div>
-      </section>
+      </div>
     </div>
   );
 };
