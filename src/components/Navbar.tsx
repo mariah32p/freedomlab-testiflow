@@ -22,134 +22,16 @@ export const Navbar = () => {
   return (
     <nav className="bg-white shadow-sm border-b sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-        {/* Mobile Right Side - Hamburger + CTA Button */}
-        <div className="md:hidden flex items-center space-x-2">
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-gray-600 hover:text-gray-900 transition-colors"
-          >
-            {mobileMenuOpen ? (
-              <X className="h-6 w-6" />
-            ) : (
-              <Menu className="h-6 w-6" />
-            )}
-          </button>
-          <div className="flex items-center md:hidden">
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              {mobileMenuOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
-            </button>
-          </div>
-
           {/* Logo - Left aligned */}
           <div className="flex items-center">
-            <Link to={user ? "/dashboard" : "/"} className="flex items-center space-x-2 md:mr-8">
+            <Link to={user ? "/dashboard" : "/"} className="flex items-center space-x-2">
               <TestiFlowIcon className="h-8 w-8 text-primary-950" />
-              <span className="text-xl font-bold text-primary-950 max-w-[120px] truncate">TestiFlow</span>
+              <span className="text-xl font-bold text-primary-950">TestiFlow</span>
             </Link>
           </div>
 
-          {/* Right Side - Desktop Navigation & Mobile Controls */}
-          <div className="flex items-center space-x-4">
-            {/* Desktop Navigation - Hidden on mobile */}
-            <div className="hidden md:flex items-center space-x-4">
-              {user ? (
-                <>
-                  <Link
-                    to="/dashboard"
-                    className="flex items-center space-x-1 text-gray-700 hover:text-primary-950 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                  >
-                    <User className="h-4 w-4" />
-                    <span>Dashboard</span>
-                  </Link>
-                  <Link
-                    to="/forms"
-                    className="text-gray-700 hover:text-primary-950 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                  >
-                    Forms
-                  </Link>
-                  <Link
-                    to="/branding"
-                    className="text-gray-700 hover:text-primary-950 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                  >
-                    Branding
-                  </Link>
-                  <Link
-                    to="/testimonials"
-                    className="text-gray-700 hover:text-primary-950 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                  >
-                    Testimonials
-                  </Link>
-                  <Link
-                    to="/settings"
-                    className="text-gray-700 hover:text-primary-950 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                  >
-                    Settings
-                  </Link>
-                  <button
-                    onClick={handleSignOut}
-                    className="flex items-center space-x-1 text-gray-700 hover:text-red-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                  >
-                    <LogOut className="h-4 w-4" />
-                    <span>Sign Out</span>
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link
-                    to="/login"
-                    className="text-gray-700 hover:text-primary-950 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                  >
-                    Login
-                  </Link>
-                  <button
-                    onClick={handleSignupClick}
-                    className="bg-primary-950 text-white hover:bg-primary-900 px-6 py-3 rounded-md text-sm font-semibold transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
-                    style={{ width: '160px', height: '48px' }}
-                  >
-                    Start Free Trial
-                  </button>
-                </>
-              )}
-            </div>
-
-            {/* Mobile Controls - Only visible on mobile */}
-            <div className="md:hidden flex items-center space-x-3">
-              {!user && (
-                <button
-                  onClick={handleSignupClick}
-                  className="bg-primary-950 text-white hover:bg-primary-900 px-4 py-2 rounded-md text-sm font-semibold transition-colors"
-                  style={{ minHeight: '44px' }}
-                >
-                  Try Free
-                </button>
-              )}
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 text-gray-600 hover:text-gray-900 transition-colors"
-              >
-                {mobileMenuOpen ? (
-                  <X className="h-6 w-6" />
-                ) : (
-                  <Menu className="h-6 w-6" />
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-        </div>
-
-        {/* Mobile Menu - Only visible when open */}
-        {mobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-200 bg-white">
-            <div className="px-2 pt-2 pb-3 space-y-1">
+          {/* Desktop Navigation - Hidden on mobile */}
+          <div className="hidden md:flex items-center space-x-4">
             {user ? (
               <>
                 <Link
@@ -194,12 +76,6 @@ export const Navbar = () => {
             ) : (
               <>
                 <Link
-                  to="/pricing"
-                  className="text-gray-700 hover:text-primary-950 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >
-                  Pricing
-                </Link>
-                <Link
                   to="/login"
                   className="text-gray-700 hover:text-primary-950 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >
@@ -216,8 +92,18 @@ export const Navbar = () => {
             )}
           </div>
 
-          {/* Mobile CTA Button - Only visible on mobile */}
-          <div className="md:hidden">
+          {/* Mobile Controls - Only visible on mobile */}
+          <div className="md:hidden flex items-center space-x-3">
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              {mobileMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
+            </button>
             {!user && (
               <button
                 onClick={handleSignupClick}
@@ -229,12 +115,25 @@ export const Navbar = () => {
             )}
           </div>
         </div>
-        )}
+        </div>
 
         {/* Mobile Menu - Only visible when open */}
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-gray-200 bg-white">
             <div className="px-2 pt-2 pb-3 space-y-1">
+            {user ? (
+              <>
+                <Link
+                  to="/dashboard"
+                  className="flex items-center space-x-1 text-gray-700 hover:text-primary-950 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  <User className="h-4 w-4" />
+                  <span>Dashboard</span>
+                </Link>
+                <Link
+                  to="/forms"
+                  className="text-gray-700 hover:text-primary-950 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >
               {user ? (
                 <>
                   <Link
