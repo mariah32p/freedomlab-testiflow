@@ -22,6 +22,7 @@ export const Navbar = () => {
   return (
     <nav className="bg-white shadow-sm border-b sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
           {/* Logo - Left aligned */}
           <div className="flex items-center">
             <Link to={user ? "/dashboard" : "/"} className="flex items-center space-x-2">
@@ -115,25 +116,12 @@ export const Navbar = () => {
             )}
           </div>
         </div>
-        </div>
+      </div>
 
         {/* Mobile Menu - Only visible when open */}
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-gray-200 bg-white">
             <div className="px-2 pt-2 pb-3 space-y-1">
-            {user ? (
-              <>
-                <Link
-                  to="/dashboard"
-                  className="flex items-center space-x-1 text-gray-700 hover:text-primary-950 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >
-                  <User className="h-4 w-4" />
-                  <span>Dashboard</span>
-                </Link>
-                <Link
-                  to="/forms"
-                  className="text-gray-700 hover:text-primary-950 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >
               {user ? (
                 <>
                   <Link
@@ -197,7 +185,6 @@ export const Navbar = () => {
             </div>
           </div>
         )}
-      </div>
     </nav>
   );
 };
