@@ -199,13 +199,40 @@ export const Home: React.FC = () => {
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-6">See TestiFlow in Action</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Watch how easy it is to collect, organize, and use customer testimonials
+              See how easy it is to collect, organize, and use customer testimonials
             </p>
           </div>
 
-          {/* Demo Container - Hidden on mobile */}
+          {/* Step Progress */}
+          <div className="flex justify-center mb-8">
+            <div className="flex items-center space-x-4 bg-white rounded-full px-6 py-3 shadow-lg border border-gray-200">
+              {['Create Form', 'Collect Reviews', 'Export & Use'].map((step, index) => (
+                <div key={index} className="flex items-center space-x-2">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-500 ${
+                    index <= currentStep 
+                      ? 'bg-secondary-500 text-white' 
+                      : 'bg-gray-200 text-gray-500'
+                  }`}>
+                    {index + 1}
+                  </div>
+                  <span className={`text-sm font-medium transition-colors duration-500 ${
+                    index <= currentStep ? 'text-gray-900' : 'text-gray-500'
+                  }`}>
+                    {step}
+                  </span>
+                  {index < 2 && (
+                    <div className={`w-8 h-0.5 transition-colors duration-500 ${
+                      index < currentStep ? 'bg-secondary-500' : 'bg-gray-200'
+                    }`}></div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Desktop Demo */}
           <div className="hidden lg:block">
-            <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200">
+            <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200 min-h-[600px]">
               {/* Demo Navbar */}
               <div className="bg-white border-b border-gray-200 px-6 py-4">
                 <div className="flex items-center justify-between">
@@ -214,84 +241,167 @@ export const Home: React.FC = () => {
                     <span className="font-bold text-primary-950">TestiFlow</span>
                   </div>
                   <div className="flex items-center space-x-6">
-                    <span className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
-                      currentStep === 1 ? 'bg-primary-100 text-primary-950' : 'text-gray-600'
+                    <span className={`px-3 py-1 rounded-md text-sm font-medium transition-all duration-300 ${
+                      currentStep === 0 ? 'bg-primary-100 text-primary-950' : 'text-gray-600'
                     }`}>
                       Forms
                     </span>
-                    <span className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
-                      currentStep >= 2 ? 'bg-primary-100 text-primary-950' : 'text-gray-600'
+                    <span className={`px-3 py-1 rounded-md text-sm font-medium transition-all duration-300 ${
+                      currentStep >= 1 ? 'bg-primary-100 text-primary-950' : 'text-gray-600'
                     }`}>
                       Testimonials
+                    </span>
+                    <span className={`px-3 py-1 rounded-md text-sm font-medium transition-all duration-300 ${
+                      currentStep >= 2 ? 'bg-primary-100 text-primary-950' : 'text-gray-600'
+                    }`}>
+                      Export
                     </span>
                   </div>
                 </div>
               </div>
 
               {/* Demo Content */}
-              <div className="p-8 min-h-[400px] relative">
-                {/* Step 1: Create Form */}
-                {showCreateForm && (
+              <div className="p-8 min-h-[500px] relative">
+                {/* Step 0: Create Form */}
+                {currentStep === 0 && (
                   <div className="animate-slide-in">
-                    <div className="flex items-center justify-between mb-6">
-                      <h3 className="text-2xl font-bold text-gray-900">Create Collection Form</h3>
-                      <button className="bg-primary-950 text-white px-4 py-2 rounded-lg flex items-center space-x-2">
-                        <Plus className="h-4 w-4" />
+                    <div className="flex items-center justify-between mb-8">
+                      <div>
+                        <h3 className="text-2xl font-bold text-gray-900 mb-2">Create Collection Forms</h3>
+                        <p className="text-gray-600">Set up branded forms to collect customer testimonials</p>
+                      </div>
+                      <button className="bg-primary-950 text-white px-6 py-3 rounded-lg flex items-center space-x-2 shadow-lg">
+                        <Plus className="h-5 w-5" />
                         <span>New Form</span>
                       </button>
                     </div>
-                    <div className="bg-gray-50 rounded-xl p-6">
-                      <div className="space-y-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Form Title</label>
-                          <div className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900">
-                            Customer Experience Survey
+                    
+                    <div className="grid lg:grid-cols-2 gap-8">
+                      <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
+                        <h4 className="font-semibold text-gray-900 mb-4">Form Builder</h4>
+                        <div className="space-y-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Form Title</label>
+                            <div className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white text-gray-900 font-medium">
+                              Share Your Experience
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                            <div className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white text-gray-700">
+                              We'd love to hear about your experience with us!
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-3">
+                            <input type="checkbox" checked className="rounded border-gray-300 text-primary-950" readOnly />
+                            <span className="text-sm text-gray-700">Allow image uploads</span>
+                          </div>
+                          <button className="w-full bg-primary-950 text-white py-3 rounded-lg font-semibold">
+                            Create Form
+                          </button>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-lg">
+                        <h4 className="font-semibold text-gray-900 mb-4">Live Preview</h4>
+                        <div className="border border-gray-200 rounded-lg overflow-hidden">
+                          <div className="bg-primary-950 px-4 py-6 text-center text-white">
+                            <TestiFlowIcon className="h-6 w-6 text-white mx-auto mb-2" />
+                            <h5 className="font-bold">Share Your Experience</h5>
+                            <p className="text-white/80 text-sm">We'd love to hear about your experience!</p>
+                          </div>
+                          <div className="p-4 space-y-3">
+                            <div>
+                              <label className="block text-xs font-medium text-gray-700 mb-1">Rating *</label>
+                              <div className="flex space-x-1">
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                  <Star key={star} className="h-4 w-4 text-yellow-400 fill-current" />
+                                ))}
+                              </div>
+                            </div>
+                            <div>
+                              <label className="block text-xs font-medium text-gray-700 mb-1">Name *</label>
+                              <div className="w-full px-2 py-2 border border-gray-300 rounded bg-gray-50 text-xs text-gray-500">
+                                Your name here...
+                              </div>
+                            </div>
+                            <div>
+                              <label className="block text-xs font-medium text-gray-700 mb-1">Testimonial *</label>
+                              <div className="w-full px-2 py-2 border border-gray-300 rounded bg-gray-50 text-xs text-gray-500 h-16">
+                                Share your experience...
+                              </div>
+                            </div>
+                            <button className="w-full bg-secondary-500 text-white py-2 rounded font-medium text-sm">
+                              Submit Testimonial
+                            </button>
                           </div>
                         </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                          <div className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900">
-                            Tell us about your experience with our service
-                          </div>
-                        </div>
-                        <button className="bg-primary-950 text-white px-6 py-2 rounded-lg font-medium">
-                          Create Form
-                        </button>
                       </div>
                     </div>
                   </div>
                 )}
 
-                {/* Step 2: Testimonials */}
-                {showTestimonials && (
+                {/* Step 1: Collect Reviews */}
+                {currentStep === 1 && (
                   <div className="animate-slide-in">
-                    <div className="flex items-center justify-between mb-6">
-                      <h3 className="text-2xl font-bold text-gray-900">Manage Testimonials</h3>
-                      <div className="flex space-x-2">
-                        <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm">3 Pending</span>
-                        <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">12 Approved</span>
+                    <div className="flex items-center justify-between mb-8">
+                      <div>
+                        <h3 className="text-2xl font-bold text-gray-900 mb-2">Collect & Manage Reviews</h3>
+                        <p className="text-gray-600">Customers submit testimonials through your branded forms</p>
+                      </div>
+                      <div className="flex space-x-3">
+                        <span className="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full text-sm font-medium">
+                          2 Pending Review
+                        </span>
+                        <span className="bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium">
+                          8 Approved
+                        </span>
                       </div>
                     </div>
+                    
                     <div className="space-y-4">
                       {[
-                        { name: 'Sarah Johnson', company: 'TechCorp', rating: 5, message: 'Amazing platform! Saves us hours every week.', status: 'pending' },
-                        { name: 'Mike Chen', company: 'StartupXYZ', rating: 5, message: 'Perfect for our marketing campaigns.', status: 'approved' },
-                        { name: 'Emily Davis', company: 'GrowthCo', rating: 4, message: 'Great export features and easy to use.', status: 'approved' }
+                        { 
+                          name: 'Sarah Johnson', 
+                          company: 'TechCorp Solutions', 
+                          rating: 5, 
+                          message: 'TestiFlow has completely transformed how we collect customer feedback. The automated workflows save us hours every week!', 
+                          status: 'pending',
+                          highlight: true
+                        },
+                        { 
+                          name: 'Mike Chen', 
+                          company: 'StartupXYZ', 
+                          rating: 5, 
+                          message: 'Amazing product! The testimonial management features are exactly what we needed for our marketing campaigns.', 
+                          status: 'approved',
+                          highlight: false
+                        },
+                        { 
+                          name: 'Emily Davis', 
+                          company: 'GrowthCo', 
+                          rating: 4, 
+                          message: 'The export features are incredible. We can now easily use testimonials across all our marketing channels.', 
+                          status: 'pending',
+                          highlight: false
+                        }
                       ].map((testimonial, index) => (
-                        <div key={index} className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-all">
-                          <div className="flex items-center justify-between mb-3">
-                            <div className="flex items-center space-x-3">
-                              <div className="w-10 h-10 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
-                                <span className="text-primary-950 font-semibold text-sm">
+                        <div key={index} className={`bg-white border rounded-xl p-6 transition-all duration-500 ${
+                          testimonial.highlight ? 'border-secondary-300 shadow-lg ring-4 ring-secondary-100' : 'border-gray-200 hover:shadow-md'
+                        }`}>
+                          <div className="flex items-center justify-between mb-4">
+                            <div className="flex items-center space-x-4">
+                              <div className="w-12 h-12 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
+                                <span className="text-primary-950 font-bold">
                                   {testimonial.name.split(' ').map(n => n[0]).join('')}
                                 </span>
                               </div>
                               <div>
                                 <div className="font-semibold text-gray-900">{testimonial.name}</div>
-                                <div className="text-sm text-gray-500">{testimonial.company}</div>
+                                <div className="text-sm text-gray-600">{testimonial.company}</div>
                               </div>
                             </div>
-                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            <span className={`px-3 py-1 rounded-full text-sm font-medium ${
                               testimonial.status === 'approved' 
                                 ? 'bg-green-100 text-green-800' 
                                 : 'bg-yellow-100 text-yellow-800'
@@ -299,21 +409,27 @@ export const Home: React.FC = () => {
                               {testimonial.status}
                             </span>
                           </div>
-                          <div className="flex items-center space-x-2 mb-2">
+                          
+                          <div className="flex items-center space-x-2 mb-3">
                             <div className="flex">
                               {[...Array(testimonial.rating)].map((_, i) => (
-                                <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
+                                <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
                               ))}
                             </div>
+                            <span className="text-sm text-gray-500">({testimonial.rating}/5)</span>
                           </div>
-                          <p className="text-gray-700 text-sm">"{testimonial.message}"</p>
+                          
+                          <p className="text-gray-700 leading-relaxed mb-4">"{testimonial.message}"</p>
+                          
                           {testimonial.status === 'pending' && (
-                            <div className="flex space-x-2 mt-3">
-                              <button className="bg-green-100 text-green-800 px-3 py-1 rounded-md text-xs font-medium">
-                                Approve
+                            <div className="flex space-x-3">
+                              <button className="bg-green-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-600 transition-colors flex items-center space-x-2">
+                                <CheckCircle className="h-4 w-4" />
+                                <span>Approve</span>
                               </button>
-                              <button className="bg-red-100 text-red-800 px-3 py-1 rounded-md text-xs font-medium">
-                                Reject
+                              <button className="bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-600 transition-colors flex items-center space-x-2">
+                                <X className="h-4 w-4" />
+                                <span>Reject</span>
                               </button>
                             </div>
                           )}
@@ -323,61 +439,261 @@ export const Home: React.FC = () => {
                   </div>
                 )}
 
-                {/* Step 3: Export */}
-                {showExport && (
+                {/* Step 2: Export & Use */}
+                {currentStep === 2 && (
                   <div className="animate-slide-in">
-                    <div className="flex items-center justify-between mb-6">
-                      <h3 className="text-2xl font-bold text-gray-900">Export & Use</h3>
-                      <button className="bg-secondary-500 text-white px-4 py-2 rounded-lg flex items-center space-x-2">
-                        <Download className="h-4 w-4" />
+                    <div className="flex items-center justify-between mb-8">
+                      <div>
+                        <h3 className="text-2xl font-bold text-gray-900 mb-2">Export & Use Everywhere</h3>
+                        <p className="text-gray-600">Turn testimonials into marketing assets for any channel</p>
+                      </div>
+                      <button className="bg-secondary-500 text-white px-6 py-3 rounded-lg flex items-center space-x-2 shadow-lg">
+                        <Download className="h-5 w-5" />
                         <span>Export</span>
                       </button>
                     </div>
-                    <div className="grid md:grid-cols-2 gap-6">
-                      <div className="bg-blue-50 rounded-xl p-6 border border-blue-200">
-                        <h4 className="font-semibold text-blue-900 mb-3">Website Widget</h4>
-                        <div className="bg-white rounded-lg p-4 border">
-                          <div className="text-center mb-3">
-                            <h5 className="font-semibold text-gray-900 text-sm">Customer Reviews</h5>
+                    
+                    <div className="grid md:grid-cols-2 gap-8">
+                      <div className="space-y-6">
+                        <div className="bg-blue-50 rounded-xl p-6 border border-blue-200">
+                          <div className="flex items-center space-x-3 mb-4">
+                            <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                              <MessageSquare className="h-5 w-5 text-white" />
+                            </div>
+                            <h4 className="font-semibold text-blue-900">Website Widget</h4>
                           </div>
-                          <div className="space-y-2">
-                            <div className="bg-gray-50 rounded p-2">
-                              <div className="flex mb-1">
-                                {[...Array(5)].map((_, i) => (
-                                  <Star key={i} className="h-3 w-3 text-yellow-400 fill-current" />
-                                ))}
+                          <div className="bg-white rounded-lg p-4 border border-blue-200">
+                            <div className="text-center mb-3">
+                              <h5 className="font-semibold text-gray-900 text-sm">What Our Customers Say</h5>
+                            </div>
+                            <div className="space-y-3">
+                              <div className="bg-gray-50 rounded-lg p-3 border-l-4 border-secondary-500">
+                                <div className="flex mb-1">
+                                  {[...Array(5)].map((_, i) => (
+                                    <Star key={i} className="h-3 w-3 text-yellow-400 fill-current" />
+                                  ))}
+                                </div>
+                                <p className="text-xs text-gray-700 italic">"Amazing platform! Saves us hours..."</p>
+                                <div className="text-xs text-gray-500 mt-1">- Sarah J., TechCorp</div>
                               </div>
-                              <p className="text-xs text-gray-700">"Amazing platform!"</p>
-                              <div className="text-xs text-gray-500">- Sarah J.</div>
+                              <div className="bg-gray-50 rounded-lg p-3 border-l-4 border-secondary-500">
+                                <div className="flex mb-1">
+                                  {[...Array(5)].map((_, i) => (
+                                    <Star key={i} className="h-3 w-3 text-yellow-400 fill-current" />
+                                  ))}
+                                </div>
+                                <p className="text-xs text-gray-700 italic">"Perfect for our marketing campaigns."</p>
+                                <div className="text-xs text-gray-500 mt-1">- Mike C., StartupXYZ</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="bg-green-50 rounded-xl p-6 border border-green-200">
+                          <div className="flex items-center space-x-3 mb-4">
+                            <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
+                              <TrendingUp className="h-5 w-5 text-white" />
+                            </div>
+                            <h4 className="font-semibold text-green-900">Social Media Post</h4>
+                          </div>
+                          <div className="bg-white rounded-lg p-4 border border-green-200">
+                            <div className="text-sm text-gray-700 space-y-1">
+                              <div className="font-medium">⭐⭐⭐⭐⭐ Customer Love!</div>
+                              <div className="italic">"Amazing platform! Saves us hours every week and the interface is so intuitive!"</div>
+                              <div className="text-gray-600">- Sarah Johnson, TechCorp Solutions</div>
+                              <div className="text-blue-600 font-medium">#CustomerSuccess #Testimonial</div>
                             </div>
                           </div>
                         </div>
                       </div>
-                      <div className="bg-green-50 rounded-xl p-6 border border-green-200">
-                        <h4 className="font-semibold text-green-900 mb-3">Social Media</h4>
-                        <div className="bg-white rounded-lg p-4 border">
-                          <div className="text-xs text-gray-700 space-y-1">
-                            <div>⭐⭐⭐⭐⭐ Customer Love!</div>
-                            <div>"Amazing platform! Saves us hours..."</div>
-                            <div>- Sarah Johnson, TechCorp</div>
-                            <div className="text-blue-600">#CustomerSuccess</div>
+                      
+                      <div className="bg-purple-50 rounded-xl p-6 border border-purple-200">
+                        <div className="flex items-center space-x-3 mb-4">
+                          <div className="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center">
+                            <Download className="h-5 w-5 text-white" />
+                          </div>
+                          <h4 className="font-semibold text-purple-900">Export Options</h4>
+                        </div>
+                        <div className="space-y-3">
+                          <div className="bg-white rounded-lg p-4 border border-purple-200 flex items-center justify-between">
+                            <div className="flex items-center space-x-3">
+                              <div className="w-6 h-6 bg-green-100 rounded flex items-center justify-center">
+                                <span className="text-green-600 text-xs">📊</span>
+                              </div>
+                              <span className="text-sm font-medium text-gray-900">CSV Spreadsheet</span>
+                            </div>
+                            <button className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">Export</button>
+                          </div>
+                          <div className="bg-white rounded-lg p-4 border border-purple-200 flex items-center justify-between">
+                            <div className="flex items-center space-x-3">
+                              <div className="w-6 h-6 bg-blue-100 rounded flex items-center justify-center">
+                                <span className="text-blue-600 text-xs">💻</span>
+                              </div>
+                              <span className="text-sm font-medium text-gray-900">Website Code</span>
+                            </div>
+                            <button className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">Generate</button>
+                          </div>
+                          <div className="bg-white rounded-lg p-4 border border-purple-200 flex items-center justify-between">
+                            <div className="flex items-center space-x-3">
+                              <div className="w-6 h-6 bg-orange-100 rounded flex items-center justify-center">
+                                <span className="text-orange-600 text-xs">📱</span>
+                              </div>
+                              <span className="text-sm font-medium text-gray-900">Social Posts</span>
+                            </div>
+                            <button className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">Create</button>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 )}
-
-                {/* Default state */}
-                {currentStep === 0 && (
-                  <div className="text-center py-16">
-                    <div className="w-20 h-20 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <MessageSquare className="h-10 w-10 text-primary-950" />
+              </div>
+            </div>
+          </div>
+          
+          {/* Mobile Demo */}
+          <div className="lg:hidden">
+            <div className="space-y-8">
+              {/* Step Cards */}
+              <div className="grid gap-6">
+                {/* Create Forms */}
+                <div className={`bg-white rounded-xl p-6 border-2 transition-all duration-500 ${
+                  currentStep === 0 ? 'border-primary-500 shadow-lg' : 'border-gray-200'
+                }`}>
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 ${
+                      currentStep === 0 ? 'bg-primary-950 text-white' : 'bg-gray-100 text-gray-600'
+                    }`}>
+                      <Settings className="h-5 w-5" />
                     </div>
-                    <h3 className="text-2xl font-semibold text-gray-900 mb-4">Ready to see the magic?</h3>
-                    <p className="text-gray-600">Scroll down to watch the demo</p>
+                    <div>
+                      <h3 className="text-lg font-bold text-gray-900">Create Forms</h3>
+                      <p className="text-sm text-gray-600">Build branded collection forms</p>
+                    </div>
                   </div>
-                )}
+                  
+                  {currentStep === 0 && (
+                    <div className="animate-slide-in">
+                      <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                        <div className="space-y-3">
+                          <div>
+                            <div className="text-xs font-medium text-gray-700 mb-1">Form Title</div>
+                            <div className="w-full px-3 py-2 bg-white border border-gray-300 rounded text-sm">
+                              Share Your Experience
+                            </div>
+                          </div>
+                          <div>
+                            <div className="text-xs font-medium text-gray-700 mb-1">Description</div>
+                            <div className="w-full px-3 py-2 bg-white border border-gray-300 rounded text-sm">
+                              We'd love your feedback!
+                            </div>
+                          </div>
+                          <button className="w-full bg-primary-950 text-white py-2 rounded font-medium text-sm">
+                            Create Form
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Collect Reviews */}
+                <div className={`bg-white rounded-xl p-6 border-2 transition-all duration-500 ${
+                  currentStep === 1 ? 'border-secondary-500 shadow-lg' : 'border-gray-200'
+                }`}>
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 ${
+                      currentStep === 1 ? 'bg-secondary-500 text-white' : 'bg-gray-100 text-gray-600'
+                    }`}>
+                      <MessageSquare className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold text-gray-900">Collect Reviews</h3>
+                      <p className="text-sm text-gray-600">Customers submit testimonials</p>
+                    </div>
+                  </div>
+                  
+                  {currentStep === 1 && (
+                    <div className="animate-slide-in space-y-3">
+                      <div className="bg-yellow-50 rounded-lg p-4 border border-yellow-200">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-2">
+                            <div className="w-6 h-6 bg-yellow-100 rounded-full flex items-center justify-center">
+                              <span className="text-yellow-600 text-xs font-bold">SJ</span>
+                            </div>
+                            <span className="text-sm font-medium">Sarah Johnson</span>
+                          </div>
+                          <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs">Pending</span>
+                        </div>
+                        <div className="flex mb-2">
+                          {[...Array(5)].map((_, i) => (
+                            <Star key={i} className="h-3 w-3 text-yellow-400 fill-current" />
+                          ))}
+                        </div>
+                        <p className="text-xs text-gray-700">"Amazing platform! Saves us hours..."</p>
+                      </div>
+                      <div className="bg-green-50 rounded-lg p-4 border border-green-200">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-2">
+                            <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
+                              <span className="text-green-600 text-xs font-bold">MC</span>
+                            </div>
+                            <span className="text-sm font-medium">Mike Chen</span>
+                          </div>
+                          <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">Approved</span>
+                        </div>
+                        <div className="flex mb-2">
+                          {[...Array(5)].map((_, i) => (
+                            <Star key={i} className="h-3 w-3 text-yellow-400 fill-current" />
+                          ))}
+                        </div>
+                        <p className="text-xs text-gray-700">"Perfect for marketing campaigns."</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Export & Use */}
+                <div className={`bg-white rounded-xl p-6 border-2 transition-all duration-500 ${
+                  currentStep === 2 ? 'border-purple-500 shadow-lg' : 'border-gray-200'
+                }`}>
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 ${
+                      currentStep === 2 ? 'bg-purple-500 text-white' : 'bg-gray-100 text-gray-600'
+                    }`}>
+                      <Download className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold text-gray-900">Export & Use</h3>
+                      <p className="text-sm text-gray-600">Ready for any marketing channel</p>
+                    </div>
+                  </div>
+                  
+                  {currentStep === 2 && (
+                    <div className="animate-slide-in">
+                      <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="bg-white rounded p-3 border text-center">
+                            <div className="text-green-600 mb-1">📊</div>
+                            <div className="text-xs font-medium">CSV Export</div>
+                          </div>
+                          <div className="bg-white rounded p-3 border text-center">
+                            <div className="text-blue-600 mb-1">💻</div>
+                            <div className="text-xs font-medium">Website Widget</div>
+                          </div>
+                          <div className="bg-white rounded p-3 border text-center">
+                            <div className="text-orange-600 mb-1">📱</div>
+                            <div className="text-xs font-medium">Social Posts</div>
+                          </div>
+                          <div className="bg-white rounded p-3 border text-center">
+                            <div className="text-purple-600 mb-1">📧</div>
+                            <div className="text-xs font-medium">Email Ready</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
