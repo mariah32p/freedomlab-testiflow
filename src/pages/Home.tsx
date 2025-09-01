@@ -882,56 +882,80 @@ export const Home: React.FC = () => {
       </section>
 
       {/* 4. Social Proof */}
-      <section className="py-24 bg-gray-50">
+      <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">Loved by Growing Businesses</h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Loved by Growing Businesses
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              See how companies are using TestiFlow to build trust and grow their business
+            </p>
           </div>
-
+          
           <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                name: "Sarah Chen",
-                role: "Marketing Director",
-                company: "TechFlow",
-                message: "TestiFlow transformed how we collect customer feedback. We went from scattered emails to organized testimonials in days.",
-                rating: 5
-              },
-              {
-                name: "Mike Rodriguez",
-                role: "Agency Owner",
-                company: "Growth Partners",
-                message: "Our clients love the branded forms. We've increased testimonial collection by 300% since switching to TestiFlow.",
-                rating: 5
-              },
-              {
-                name: "Emily Watson",
-                role: "SaaS Founder",
-                company: "DataSync",
-                message: "The export features are incredible. We use testimonials everywhere now - website, ads, social media. Game changer.",
-                rating: 5
-              }
-            ].map((testimonial, index) => (
-              <div key={index} className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
-                <div className="flex mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
-                  ))}
+            <div className="bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+              <div className="flex items-center mb-6">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                  M
                 </div>
-                <p className="text-gray-700 mb-6 leading-relaxed">"{testimonial.message}"</p>
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
-                    <span className="text-primary-950 font-semibold">
-                      {testimonial.name.split(' ').map(n => n[0]).join('')}
-                    </span>
-                  </div>
-                  <div>
-                    <div className="font-semibold text-gray-900">{testimonial.name}</div>
-                    <div className="text-sm text-gray-600">{testimonial.role}, {testimonial.company}</div>
-                  </div>
+                <div className="ml-4">
+                  <div className="font-semibold text-gray-900">Mariah W.</div>
+                  <div className="text-sm text-gray-600">Technology Director</div>
                 </div>
               </div>
-            ))}
+              <div className="flex mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
+                ))}
+              </div>
+              <p className="text-gray-700 leading-relaxed mb-4">
+                "TestiFlow increased our conversion rates by 40%. The automated collection process saves our team 10+ hours per week."
+              </p>
+              <div className="text-sm text-gray-500">Technology</div>
+            </div>
+
+            <div className="bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+              <div className="flex items-center mb-6">
+                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                  D
+                </div>
+                <div className="ml-4">
+                  <div className="font-semibold text-gray-900">Diane R.</div>
+                  <div className="text-sm text-gray-600">Professional Services Manager</div>
+                </div>
+              </div>
+              <div className="flex mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
+                ))}
+              </div>
+              <p className="text-gray-700 leading-relaxed mb-4">
+                "The branding customization and export features are game-changers. We can now maintain brand consistency across all testimonials."
+              </p>
+              <div className="text-sm text-gray-500">Agriculture & Technology</div>
+            </div>
+
+            <div className="bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+              <div className="flex items-center mb-6">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                  N
+                </div>
+                <div className="ml-4">
+                  <div className="font-semibold text-gray-900">Nathan R.</div>
+                  <div className="text-sm text-gray-600">IT Consultant</div>
+                </div>
+              </div>
+              <div className="flex mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
+                ))}
+              </div>
+              <p className="text-gray-700 leading-relaxed mb-4">
+                "Perfect for managing testimonials across our legal and real estate services. The organization features keep everything streamlined."
+              </p>
+              <div className="text-sm text-gray-500">IT, Legal, Real Estate</div>
+            </div>
           </div>
         </div>
       </section>
