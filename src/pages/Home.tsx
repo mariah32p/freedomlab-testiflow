@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Star, MessageSquare, Settings, Download, CheckCircle, User, Shield, Plus, Eye, Copy, ExternalLink } from 'lucide-react';
+import { ArrowRight, Star, MessageSquare, Settings, Download, CheckCircle, User, Shield, Plus, Eye, Copy, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
 import { TestiFlowIcon } from '../components/TestiFlowIcon';
 
 interface DemoStep {
@@ -20,7 +20,10 @@ const demoSteps: DemoStep[] = [
 
 export const Home: React.FC = () => {
   const navigate = useNavigate();
+  const demoRef = useRef<HTMLDivElement>(null);
+  const [isDemoVisible, setIsDemoVisible] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
+  const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
 
   // Demo state
   const [showCreatePanel, setShowCreatePanel] = useState(false);
@@ -49,8 +52,29 @@ export const Home: React.FC = () => {
   const [generatedContent, setGeneratedContent] = useState('');
   const [highlightedTestimonial, setHighlightedTestimonial] = useState<string | null>(null);
 
-  // Auto-advance timer
+  // Intersection Observer for demo
   useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !isDemoVisible) {
+          setIsDemoVisible(true);
+          setCurrentStep(0);
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    if (demoRef.current) {
+      observer.observe(demoRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [isDemoVisible]);
+
+  // Auto-advance timer for demo
+  useEffect(() => {
+    if (!isDemoVisible) return;
+
     const timer = setTimeout(() => {
       if (currentStep < demoSteps.length - 1) {
         setCurrentStep(prev => prev + 1);
@@ -61,7 +85,7 @@ export const Home: React.FC = () => {
     }, demoSteps[currentStep].duration);
 
     return () => clearTimeout(timer);
-  }, [currentStep]);
+  }, [currentStep, isDemoVisible]);
 
   const resetAllAnimations = () => {
     setShowCreatePanel(false);
@@ -80,6 +104,8 @@ export const Home: React.FC = () => {
 
   // Step-specific animations
   useEffect(() => {
+    if (!isDemoVisible) return;
+    
     resetAllAnimations();
 
     if (currentStep === 0) { // Create Forms
@@ -178,7 +204,7 @@ export const Home: React.FC = () => {
         setGeneratedContent('<div class="testimonials-widget">...</div>');
       }, 4000);
     }
-  }, [currentStep]);
+  }, [currentStep, isDemoVisible]);
 
   const handleSignupClick = () => {
     navigate('/signup');
@@ -200,7 +226,7 @@ export const Home: React.FC = () => {
     }
   };
 
-  const renderMainContent = () => {
+  const renderDemoContent = () => {
     if (currentStep === 2) {
       // Customer submission view
       return (
@@ -553,7 +579,7 @@ export const Home: React.FC = () => {
 
   return (
     <div className="bg-white">
-      {/* Hero Section */}
+      {/* 1. Hero Section - Hook them with the problem/solution */}
       <section className="relative bg-gradient-to-br from-primary-950 via-primary-900 to-secondary-500 text-white overflow-hidden">
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
@@ -575,8 +601,7 @@ export const Home: React.FC = () => {
               </h1>
               
               <p className="text-xl text-white/90 mb-8 leading-relaxed max-w-2xl mx-auto lg:mx-0">
-                Collect, manage, and showcase customer testimonials with our powerful platform. 
-                Build trust and drive conversions with authentic social proof.
+                Stop losing potential customers because they can't find social proof. TestiFlow makes it effortless to collect, manage, and showcase authentic testimonials that drive conversions.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
@@ -588,6 +613,10 @@ export const Home: React.FC = () => {
                   <ArrowRight className="h-5 w-5" />
                 </button>
               </div>
+              
+              <p className="text-white/70 text-sm mt-4">
+                7-day free trial • Cancel anytime
+              </p>
             </div>
 
             {/* Right Column - Mobile Mockup */}
@@ -650,7 +679,74 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* 2. Demo Video Section - Scroll-triggered animation */}
+      <section ref={demoRef} className="py-24 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              See TestiFlow in Action
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Watch how easy it is to collect, manage, and use customer testimonials with our intuitive platform.
+            </p>
+          </div>
+
+          {/* Step Progress */}
+          <div className="bg-white rounded-lg shadow-lg border border-gray-200 mb-8 p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="w-3 h-3 bg-secondary-500 rounded-full animate-pulse"></div>
+                <span className="text-lg font-semibold text-gray-900">
+                  Step {currentStep + 1}: {demoSteps[currentStep].title}
+                </span>
+              </div>
+              <div className="text-sm text-gray-600">
+                {demoSteps[currentStep].description}
+              </div>
+            </div>
+            
+            {/* Progress Bar */}
+            <div className="mt-4 bg-gray-200 rounded-full h-2">
+              <div 
+                className="bg-gradient-to-r from-secondary-500 to-primary-950 h-2 rounded-full transition-all duration-300"
+                style={{ width: `${((currentStep + 1) / demoSteps.length) * 100}%` }}
+              ></div>
+            </div>
+          </div>
+
+          {/* Demo Interface */}
+          <div className="bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden">
+            {/* Demo Navbar */}
+            <div className="bg-white border-b border-gray-200 px-6 py-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <TestiFlowIcon className="h-6 w-6 text-primary-950" />
+                  <span className="text-lg font-bold text-primary-950">TestiFlow</span>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <button className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${getActiveTab() === 'forms' ? 'text-primary-950 bg-primary-50' : 'text-gray-700 hover:text-primary-950'}`}>
+                    Forms
+                  </button>
+                  <button className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${getActiveTab() === 'testimonials' ? 'text-primary-950 bg-primary-50' : 'text-gray-700 hover:text-primary-950'}`}>
+                    Testimonials
+                  </button>
+                  <div className="flex items-center space-x-2 pl-4 border-l border-gray-200">
+                    <div className="w-6 h-6 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
+                      <User className="h-3 w-3 text-primary-950" />
+                    </div>
+                    <span className="text-sm text-gray-700">sarah@techcorp.com</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Demo Content */}
+            {renderDemoContent()}
+          </div>
+        </div>
+      </section>
+
+      {/* 3. Key Features - Detailed breakdown */}
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -719,81 +815,217 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Desktop Demo Section */}
-      <section className="hidden lg:block py-24 bg-gray-50">
+      {/* 4. Social Proof - Build trust */}
+      <section className="py-24 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              See TestiFlow in Action
+              Trusted by Growing Businesses
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Watch how easy it is to collect, manage, and use customer testimonials with our intuitive platform.
+            <p className="text-xl text-gray-600">
+              Join thousands of companies using TestiFlow to showcase their customer success
             </p>
           </div>
 
-          {/* Step Progress */}
-          <div className="bg-white rounded-lg shadow-lg border border-gray-200 mb-8 p-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="w-3 h-3 bg-secondary-500 rounded-full animate-pulse"></div>
-                <span className="text-lg font-semibold text-gray-900">
-                  Step {currentStep + 1}: {demoSteps[currentStep].title}
-                </span>
-              </div>
-              <div className="text-sm text-gray-600">
-                {demoSteps[currentStep].description}
-              </div>
-            </div>
-            
-            {/* Progress Bar */}
-            <div className="mt-4 bg-gray-200 rounded-full h-2">
-              <div 
-                className="bg-gradient-to-r from-secondary-500 to-primary-950 h-2 rounded-full transition-all duration-300"
-                style={{ width: `${((currentStep + 1) / demoSteps.length) * 100}%` }}
-              ></div>
-            </div>
-          </div>
-
-          {/* Demo Interface */}
-          <div className="bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden">
-            {/* Demo Navbar */}
-            <div className="bg-white border-b border-gray-200 px-6 py-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <TestiFlowIcon className="h-6 w-6 text-primary-950" />
-                  <span className="text-lg font-bold text-primary-950">TestiFlow</span>
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                quote: "TestiFlow has completely transformed how we collect customer feedback. The automated workflows save us hours every week!",
+                author: "Sarah Johnson",
+                role: "CTO, TechCorp",
+                rating: 5
+              },
+              {
+                quote: "The export features are incredible. We can now easily use testimonials across all our marketing channels.",
+                author: "Mike Chen",
+                role: "Marketing Director, StartupXYZ",
+                rating: 5
+              },
+              {
+                quote: "Amazing product! The testimonial management features are exactly what we needed for our campaigns.",
+                author: "Emily Davis",
+                role: "Growth Manager, ScaleCo",
+                rating: 5
+              }
+            ].map((testimonial, index) => (
+              <div key={index} className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+                <div className="flex mb-4">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
+                  ))}
                 </div>
-                <div className="flex items-center space-x-4">
-                  <button className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${getActiveTab() === 'forms' ? 'text-primary-950 bg-primary-50' : 'text-gray-700 hover:text-primary-950'}`}>
-                    Forms
-                  </button>
-                  <button className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${getActiveTab() === 'testimonials' ? 'text-primary-950 bg-primary-50' : 'text-gray-700 hover:text-primary-950'}`}>
-                    Testimonials
-                  </button>
-                  <div className="flex items-center space-x-2 pl-4 border-l border-gray-200">
-                    <div className="w-6 h-6 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
-                      <User className="h-3 w-3 text-primary-950" />
-                    </div>
-                    <span className="text-sm text-gray-700">sarah@techcorp.com</span>
+                <p className="text-gray-700 mb-4 italic">"{testimonial.quote}"</p>
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
+                    <User className="h-5 w-5 text-primary-950" />
+                  </div>
+                  <div>
+                    <div className="font-semibold text-gray-900">{testimonial.author}</div>
+                    <div className="text-sm text-gray-600">{testimonial.role}</div>
                   </div>
                 </div>
               </div>
-            </div>
-
-            {/* Demo Content */}
-            {renderMainContent()}
+            ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* 5. Pricing - Convert when they're convinced */}
+      <section className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Simple, Transparent Pricing
+            </h2>
+            <p className="text-xl text-gray-600">
+              Choose the plan that fits your testimonial management needs
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            {/* Basic Plan */}
+            <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-all duration-300">
+              <div className="bg-gray-50 px-6 py-8 text-center border-b border-gray-200">
+                <h3 className="text-2xl font-bold text-primary-950">Basic</h3>
+                <div className="mt-4 flex items-baseline justify-center">
+                  <span className="text-5xl font-bold text-primary-950">$29</span>
+                  <span className="text-xl text-gray-500 ml-1">/month</span>
+                </div>
+                <p className="mt-2 text-gray-600">Perfect for small businesses</p>
+              </div>
+              
+              <div className="px-6 py-8">
+                <ul className="space-y-4">
+                  {[
+                    'Up to 50 testimonials',
+                    'Email collection forms',
+                    'Basic organization',
+                    'Export to CSV',
+                    'Simple branding',
+                  ].map((feature, index) => (
+                    <li key={index} className="flex items-center">
+                      <CheckCircle className="h-5 w-5 text-secondary-500 mr-3 flex-shrink-0" />
+                      <span className="text-gray-700">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            {/* Pro Plan */}
+            <div className="bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-secondary-500 relative">
+              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                <span className="bg-gradient-to-r from-accent-500 to-accent-600 text-white px-4 py-1 rounded-full text-sm font-semibold shadow-lg">
+                  MOST POPULAR
+                </span>
+              </div>
+              <div className="bg-gradient-to-r from-primary-950 to-secondary-500 px-6 py-8 text-center">
+                <h3 className="text-2xl font-bold text-white">Pro</h3>
+                <div className="mt-4 flex items-baseline justify-center">
+                  <span className="text-5xl font-bold text-white">$49</span>
+                  <span className="text-xl text-white/80 ml-1">/month</span>
+                </div>
+                <p className="mt-2 text-white/90">Perfect for agencies and growing businesses</p>
+              </div>
+              
+              <div className="px-6 py-8">
+                <ul className="space-y-4">
+                  {[
+                    'Everything in Basic, plus:',
+                    'Unlimited testimonials',
+                    'Approval workflow',
+                    'Rich media support',
+                    'Integration tools',
+                  ].map((feature, index) => (
+                    <li key={index} className="flex items-center">
+                      <CheckCircle className="h-5 w-5 text-secondary-500 mr-3 flex-shrink-0" />
+                      <span className="text-gray-700">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center mt-12">
+            <button
+              onClick={handleSignupClick}
+              className="bg-primary-950 text-white px-8 py-4 rounded-lg font-semibold hover:bg-primary-900 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center space-x-2 mx-auto"
+            >
+              <span>Start Free Trial</span>
+              <ArrowRight className="h-5 w-5" />
+            </button>
+            <p className="text-gray-500 text-sm mt-3">7-day free trial</p>
+          </div>
+        </div>
+      </section>
+
+      {/* 6. FAQ - Handle objections */}
+      <section className="py-24 bg-gray-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-xl text-gray-600">
+              Everything you need to know about TestiFlow
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            {[
+              {
+                question: "How quickly can I start collecting testimonials?",
+                answer: "You can create your first form and start collecting testimonials within minutes. Our intuitive setup process guides you through creating branded forms that you can share immediately."
+              },
+              {
+                question: "Can I customize the look and feel of my forms?",
+                answer: "Absolutely! TestiFlow includes comprehensive branding options including custom logos, colors, fonts, and thank you messages to match your brand perfectly."
+              },
+              {
+                question: "What happens to my testimonials if I cancel?",
+                answer: "You can export all your testimonials as CSV or JSON before canceling. We also provide a 30-day grace period to download your data after cancellation."
+              },
+              {
+                question: "Do you offer integrations with other tools?",
+                answer: "Yes! TestiFlow provides export options and embeddable widgets that work with most marketing tools, websites, and CRM systems. We're constantly adding new integrations."
+              },
+              {
+                question: "Is there a limit on form responses?",
+                answer: "The Basic plan includes up to 50 testimonials, while the Pro plan offers unlimited testimonials. You can upgrade anytime as your needs grow."
+              }
+            ].map((faq, index) => (
+              <div key={index} className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                <button
+                  onClick={() => setExpandedFaq(expandedFaq === index ? null : index)}
+                  className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+                >
+                  <span className="font-semibold text-gray-900">{faq.question}</span>
+                  {expandedFaq === index ? (
+                    <ChevronUp className="h-5 w-5 text-gray-500" />
+                  ) : (
+                    <ChevronDown className="h-5 w-5 text-gray-500" />
+                  )}
+                </button>
+                {expandedFaq === index && (
+                  <div className="px-6 pb-4">
+                    <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 7. Final CTA - Last chance conversion */}
       <section className="py-24 bg-gradient-to-r from-primary-950 to-secondary-500">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold text-white mb-6">
             Ready to Transform Your Customer Feedback?
           </h2>
           <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-            Join thousands of businesses using TestiFlow to collect and showcase authentic customer testimonials.
+            Join thousands of businesses using TestiFlow to collect and showcase authentic customer testimonials that drive real results.
           </p>
           
           <button
@@ -805,7 +1037,7 @@ export const Home: React.FC = () => {
           </button>
           
           <p className="text-white/70 text-sm mt-4">
-            7-day free trial • No credit card required • Cancel anytime
+            7-day free trial • Cancel anytime
           </p>
         </div>
       </section>
