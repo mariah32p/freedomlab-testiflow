@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Star, MessageSquare, Download, Settings, CheckCircle, Play, Users, TrendingUp, Clock } from 'lucide-react';
+import { ArrowRight, Star, MessageSquare, Download, Settings, CheckCircle, Play, Users, TrendingUp, Clock, Plus } from 'lucide-react';
 import { TestiFlowIcon } from '../components/TestiFlowIcon';
 
 export const Home: React.FC = () => {
