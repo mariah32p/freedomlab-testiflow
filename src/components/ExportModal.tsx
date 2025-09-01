@@ -398,7 +398,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                 )}
 
                 {/* Widget Testimonial Selection */}
-                {(
+                {selectedFormat === 'widget' && (
                   <div>
                     <h3 className="text-lg font-medium text-gray-900 mb-4">Select Testimonials for Widget</h3>
                     
@@ -478,7 +478,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                       </div>
                     )}
                   </div>
-                          ✨ This preview shows exactly how the widget will appear on your website. Videos show as clickable thumbnails that open in a modal.
+                )}
 
                 {/* Export Summary */}
                 <div className="bg-gray-50 rounded-lg p-4">
@@ -569,7 +569,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                     </div>
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
                       <p className="text-sm text-blue-700">
-                        ✨ This preview shows exactly how the widget will appear on your website
+                        ✨ This preview shows exactly how the widget will appear on your website. Videos show as clickable thumbnails that open in a modal.
                       </p>
                     </div>
                   </div>
