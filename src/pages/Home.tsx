@@ -220,16 +220,6 @@ export const Home: React.FC = () => {
             </div>
           </div>
 
-          {/* Demo CTA */}
-          <div className="text-center mt-12">
-            <a
-              href="/demo"
-              className="inline-flex items-center px-6 py-3 border border-primary-950 text-base font-medium rounded-md text-primary-950 bg-white hover:bg-primary-50 transition-colors"
-            >
-              Try Interactive Demo
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </a>
-          </div>
         </div>
       </div>
 
