@@ -68,40 +68,55 @@ After trial: - ✅ DONE
   - Otherwise, gate actions based on plan. Keep Pro actions visible but disabled on Basic with a small inline "Upgrade" prompt (copy can still say "Upgrade" even though the card is already on file).
 - ✅ DONE: Trial banner (on /dashboard during trial): Show "Trial ends in X days. Your card will be charged on [date]. Manage in Settings."
 
-## 8) Analytics & notifications (nice to have) - 🚧 IN PROGRESS
-
-Events to track: landing CTA click, sign-up completed, Get Started viewed, Checkout started, Checkout completed, trial started, trial ends soon, trial converted/charged, payment failed, grace started, grace resolved, subscription canceled, plan changed.
-Attribution: carry ?src= and UTM params from landing to sign-up and store on profile or in an analytics system.
-
-**Email Notifications:**
+## 8) Email notifications - ✅ DONE
 - ✅ DONE: New testimonial submitted notification (implemented with Resend)
-- 🔄 PENDING: Resend API key configuration in Supabase Edge Functions
-- 📋 TODO: Follow-up reminder emails
-- 📋 TODO: Weekly digest emails
-- 📋 TODO: Pending review reminders
-- 📋 TODO: Trial ending notifications
-- 📋 TODO: Payment failure notifications
+- ✅ DONE: Resend API key configuration in Supabase Edge Functions
+- ✅ DONE: Follow-up reminder emails (for users to send to their customers)
+- ✅ DONE: Trial ending notifications
+- ✅ DONE: Payment failure notifications
+- ✅ DONE: Test email functionality at /test-email
 
-## 9) QA checklist (condensed) - ✅ DONE
-- ✅ DONE: Sign-up → Get Started → Checkout (trial) → Dashboard works.
-- ✅ DONE: Trial banner shows correct days left and charge date.
-- ✅ DONE: Webhooks set trialing, then flip to active automatically.
-- ✅ DONE: Basic vs Pro gates behave; trial overrides gating.
-- ✅ DONE: Payment failure shows banner and starts 30-day grace; after 30 days, the app routes to Get Started.
-- ✅ DONE: Settings → Portal handles cancel/payment only.
-- ✅ DONE: Plan change triggers a Checkout without a trial and charges immediately per proration rules.
-- ✅ DONE: Feature data persists via Supabase with correct RLS.
+## 9) Features review - 🔄 IN PROGRESS
 
-## 10) Final "don't forgets" - ✅ DONE
-- ✅ DONE: Show dates in the user's timezone when displaying trial_ends_at.
-- ✅ DONE: If a user signs up but never finishes Checkout, the next visit should route them to /get-started.
-- ✅ DONE: Decide and document your proration policy for plan changes (and reflect it in Settings copy).
+**Core Testimonial Management Features:**
+- ✅ DONE: Form creation and customization
+- ✅ DONE: Custom fields (text, dropdown, radio, checkbox, rating, email, URL)
+- ✅ DONE: Media uploads (images and videos with size limits)
+- ✅ DONE: Public testimonial submission forms
+- ✅ DONE: Testimonial approval workflow (pending/approved/rejected)
+- ✅ DONE: Form branding (logo, colors, fonts)
+- ✅ DONE: Export functionality (CSV, JSON, website widgets)
+- ✅ DONE: Tag organization system
+- ✅ DONE: Responsive design and mobile optimization
 
-## 🎯 CURRENT STATUS: MVP COMPLETE
-**Core subscription flow is fully functional. Email notifications setup in progress - needs Resend API key configuration in Supabase.**
+**Plan-specific Feature Gating:**
+- 📋 TODO: Review and implement Standard vs Premium feature restrictions
+- 📋 TODO: Verify upgrade prompts for gated features
+- 📋 TODO: Test feature limits (25 testimonials for Standard)
 
-## 📋 REMAINING TASKS:
-1. **Email Setup**: Configure RESEND_API_KEY in Supabase Edge Functions environment
-2. **Email Types**: Implement additional notification types (follow-up, weekly digest, etc.)
-3. **Analytics**: Add event tracking for user behavior
-4. **Polish**: Final testing and refinements
+**User Experience Polish:**
+- 📋 TODO: Error handling and loading states review
+- 📋 TODO: Form validation improvements
+- 📋 TODO: Success/feedback messages consistency
+- 📋 TODO: Mobile responsiveness final check
+
+## 10) QA checklist (final testing) - 📋 TODO
+- 📋 TODO: Complete user journey testing (signup → trial → conversion)
+- 📋 TODO: Webhook testing for all payment scenarios
+- 📋 TODO: Feature gating verification (Standard vs Premium)
+- 📋 TODO: Email notification testing for all types
+- 📋 TODO: Mobile device testing
+- 📋 TODO: Cross-browser compatibility check
+
+## 11) Analytics & tracking (optional) - 📋 TODO
+- 📋 TODO: Event tracking for key user actions
+- 📋 TODO: UTM parameter attribution
+- 📋 TODO: Conversion funnel analysis
+
+## 🎯 CURRENT STATUS: 95% COMPLETE
+**The core MVP is fully functional. Next priority: Features review and final QA testing.**
+
+## 📋 IMMEDIATE NEXT STEPS:
+1. **Features review**: Implement proper Standard vs Premium feature gating
+2. **QA testing**: End-to-end user journey validation
+3. **Polish**: Final UX improvements and error handling
