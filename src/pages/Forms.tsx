@@ -337,17 +337,17 @@ export const Forms: React.FC = () => {
                   <form onSubmit={editingForm ? handleUpdateForm : handleCreateForm} className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Form Title
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.title}
-                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-                        required
-                      />
-                    </div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Form Title
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.title}
+                          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                          required
+                        />
+                      </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                           Thank You Message
@@ -545,21 +545,21 @@ export const Forms: React.FC = () => {
                     description="Create unlimited testimonial collection forms with different questions and branding for various campaigns."
                   />
                 ) : (
-                <>
-                <div className="w-24 h-24 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Settings className="h-12 w-12 text-primary-950" />
-                </div>
-                <h3 className="text-2xl font-semibold text-gray-900 mb-3">Create Your First Form</h3>
-                <p className="text-gray-500 mb-8 max-w-md mx-auto text-lg">
-                  Start gathering customer testimonials by creating a customized form that you can share with your customers.
-                </p>
-                <button
-                  onClick={handleCreateFormClick}
-                  className="bg-primary-950 text-white px-8 py-4 rounded-lg hover:bg-primary-900 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-lg"
-                >
-                  Create Your First Form
-                </button>
-                </>
+                  <>
+                    <div className="w-24 h-24 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                      <Settings className="h-12 w-12 text-primary-950" />
+                    </div>
+                    <h3 className="text-2xl font-semibold text-gray-900 mb-3">Create Your First Form</h3>
+                    <p className="text-gray-500 mb-8 max-w-md mx-auto text-lg">
+                      Start gathering customer testimonials by creating a customized form that you can share with your customers.
+                    </p>
+                    <button
+                      onClick={handleCreateFormClick}
+                      className="bg-primary-950 text-white px-8 py-4 rounded-lg hover:bg-primary-900 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-lg"
+                    >
+                      Create Your First Form
+                    </button>
+                  </>
                 )}
               </div>
             ) : (
@@ -699,7 +699,7 @@ export const Forms: React.FC = () => {
                       </div>
 
                       <div className="bg-blue-50 rounded-lg p-4">
-                      {formData.allow_video_uploads && (
+                        <h4 className="text-sm font-medium text-blue-900 mb-2">📋 Shareable Form Link</h4>
                         <div className="flex items-center space-x-2">
                           <code className="flex-1 bg-white px-3 py-2 rounded border text-sm text-gray-700 font-mono">
                             {getFormUrl(viewingForm.id)}
@@ -707,7 +707,6 @@ export const Forms: React.FC = () => {
                           <button
                             onClick={() => copyFormUrl(viewingForm.id)}
                             className="bg-blue-600 text-white px-3 py-2 rounded hover:bg-blue-700 transition-colors flex items-center space-x-1"
-                            disabled={!subscription.limits.canUseVideoUploads}
                           >
                             <Copy className="h-4 w-4" />
                             <span>Copy</span>
@@ -774,11 +773,7 @@ export const Forms: React.FC = () => {
                           setCustomizingForm(viewingForm);
                           setViewingForm(null);
                         }}
-                        className={`flex-1 py-3 px-4 rounded-lg transition-colors font-medium flex items-center justify-center space-x-2 ${
-                          subscription.limits.canUseCustomFields
-                            ? 'bg-secondary-500 text-white hover:bg-secondary-600'
-                            : 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                        }`}
+                        className="flex-1 bg-secondary-500 text-white py-3 px-4 rounded-lg hover:bg-secondary-600 transition-colors font-medium flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
                         disabled={!subscription.limits.canUseCustomFields}
                       >
                         <Settings className="h-4 w-4" />
