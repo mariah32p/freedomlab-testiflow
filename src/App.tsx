@@ -18,6 +18,7 @@ import { Testimonials } from './pages/Testimonials';
 import { SubmitTestimonial } from './pages/SubmitTestimonial';
 import { Branding } from './pages/Branding';
 import { Demo } from './pages/Demo';
+import { TestEmailNotification } from './pages/TestEmailNotification';
 
 const AppContent: React.FC = () => {
   useRouteGuard();
@@ -80,6 +81,14 @@ const AppContent: React.FC = () => {
               element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/test-email"
+              element={
+                <ProtectedRoute>
+                  <TestEmailNotification />
                 </ProtectedRoute>
               }
             />
