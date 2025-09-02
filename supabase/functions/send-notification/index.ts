@@ -194,49 +194,34 @@ This email was sent by TestiFlow by Freedom Lab`
         await sendEmail(followUpTemplate);
         break;
 
-      case 'weekly_digest':
-        const { user_email: digestUserEmail, stats } = data;
-        const digestTemplate = {
-          to: digestUserEmail,
-          subject: `Your TestiFlow weekly summary - ${stats.newTestimonials} new testimonials`,
+      case 'trial_ending':
+        const { user_email: trialUserEmail, days_left, charge_date } = data;
+        const trialTemplate = {
+          to: trialUserEmail,
+          subject: `Your TestiFlow trial ends in ${days_left} day${days_left !== 1 ? 's' : ''}`,
           html: `
             <div style="font-family: 'Montserrat', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
               <div style="text-align: center; margin-bottom: 30px;">
                 <h1 style="color: #01004d; margin: 0; font-size: 24px;">TestiFlow by Freedom Lab</h1>
-                <p style="color: #666; margin: 5px 0 0 0;">Weekly Summary</p>
+                <p style="color: #666; margin: 5px 0 0 0;">Trial Ending Soon</p>
               </div>
               
               <div style="background: #f8f9fa; border-radius: 12px; padding: 24px; margin-bottom: 20px;">
-                <h2 style="color: #01004d; margin: 0 0 20px 0;">Week of ${stats.weekStart} - ${stats.weekEnd}</h2>
+                <h2 style="color: #01004d; margin: 0 0 16px 0;">Your trial ends in ${days_left} day${days_left !== 1 ? 's' : ''}</h2>
                 
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-bottom: 20px;">
-                  <div style="background: white; padding: 16px; border-radius: 8px; text-align: center; border-left: 4px solid #01b79e;">
-                    <div style="font-size: 24px; font-weight: bold; color: #01004d;">${stats.newTestimonials}</div>
-                    <div style="color: #666; font-size: 14px;">New Testimonials</div>
-                  </div>
-                  <div style="background: white; padding: 16px; border-radius: 8px; text-align: center; border-left: 4px solid #f59e0b;">
-                    <div style="font-size: 24px; font-weight: bold; color: #01004d;">${stats.pendingReviews}</div>
-                    <div style="color: #666; font-size: 14px;">Pending Reviews</div>
-                  </div>
-                  <div style="background: white; padding: 16px; border-radius: 8px; text-align: center; border-left: 4px solid #10b981;">
-                    <div style="font-size: 24px; font-weight: bold; color: #01004d;">${stats.totalApproved}</div>
-                    <div style="color: #666; font-size: 14px;">Total Approved</div>
-                  </div>
-                </div>
+                <p style="color: #333; line-height: 1.6; margin-bottom: 16px;">
+                  Your TestiFlow trial will end on <strong>${charge_date}</strong>. After that, your card will be charged and you'll continue with full access to all features.
+                </p>
                 
-                ${stats.pendingReviews > 0 ? `
-                <div style="background: #fef3cd; border: 1px solid #fbbf24; border-radius: 8px; padding: 16px; margin-top: 16px;">
-                  <p style="margin: 0; color: #92400e;">
-                    <strong>Action needed:</strong> You have ${stats.pendingReviews} testimonial${stats.pendingReviews !== 1 ? 's' : ''} waiting for review.
-                  </p>
-                </div>
-                ` : ''}
+                <p style="color: #333; line-height: 1.6; margin-bottom: 24px;">
+                  No action needed - your subscription will continue automatically. You can manage your billing or cancel anytime in your settings.
+                </p>
               </div>
               
               <div style="text-align: center;">
-                <a href="${Deno.env.get('APP_URL') || 'https://testiflow.com'}/testimonials" 
+                <a href="${Deno.env.get('APP_URL') || 'https://testiflow.com'}/settings" 
                    style="background: #01004d; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; display: inline-block; font-weight: 600;">
-                  View Dashboard
+                  Manage Subscription
                 </a>
               </div>
               
@@ -245,20 +230,72 @@ This email was sent by TestiFlow by Freedom Lab`
               </div>
             </div>
           `,
-          text: `TestiFlow Weekly Summary - Week of ${stats.weekStart} - ${stats.weekEnd}
+          text: `Your TestiFlow trial ends in ${days_left} day${days_left !== 1 ? 's' : ''}
 
-📊 Your Stats:
-- ${stats.newTestimonials} new testimonials
-- ${stats.pendingReviews} pending reviews  
-- ${stats.totalApproved} total approved
+Your trial will end on ${charge_date}. After that, your card will be charged and you'll continue with full access to all features.
 
-${stats.pendingReviews > 0 ? `⚠️ Action needed: ${stats.pendingReviews} testimonial${stats.pendingReviews !== 1 ? 's' : ''} waiting for review.` : ''}
+No action needed - your subscription will continue automatically. You can manage your billing or cancel anytime in your settings.
 
-View your dashboard: ${Deno.env.get('APP_URL') || 'https://testiflow.com'}/testimonials
+Manage subscription: ${Deno.env.get('APP_URL') || 'https://testiflow.com'}/settings
 
 This email was sent by TestiFlow by Freedom Lab`
         };
-        await sendEmail(digestTemplate);
+        await sendEmail(trialTemplate);
+        break;
+
+      case 'payment_failure':
+        const { user_email: failureUserEmail, grace_period_end } = data;
+        const failureTemplate = {
+          to: failureUserEmail,
+          subject: 'Action Required: Update your payment method - TestiFlow',
+          html: `
+            <div style="font-family: 'Montserrat', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+              <div style="text-align: center; margin-bottom: 30px;">
+                <h1 style="color: #01004d; margin: 0; font-size: 24px;">TestiFlow by Freedom Lab</h1>
+                <p style="color: #666; margin: 5px 0 0 0;">Payment Issue</p>
+              </div>
+              
+              <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 24px; margin-bottom: 20px;">
+                <h2 style="color: #dc2626; margin: 0 0 16px 0;">Payment Method Needs Attention</h2>
+                
+                <p style="color: #333; line-height: 1.6; margin-bottom: 16px;">
+                  We were unable to process your payment for TestiFlow. This could be due to an expired card, insufficient funds, or your bank declining the charge.
+                </p>
+                
+                <p style="color: #333; line-height: 1.6; margin-bottom: 16px;">
+                  <strong>Don't worry!</strong> Your account remains active until <strong>${grace_period_end}</strong>. Please update your payment method to continue using TestiFlow without interruption.
+                </p>
+                
+                <div style="background: #fee2e2; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
+                  <p style="margin: 0; color: #991b1b; font-size: 14px;">
+                    <strong>⏰ Grace Period:</strong> You have until ${grace_period_end} to update your payment method before your account is suspended.
+                  </p>
+                </div>
+              </div>
+              
+              <div style="text-align: center;">
+                <a href="${Deno.env.get('APP_URL') || 'https://testiflow.com'}/settings" 
+                   style="background: #dc2626; color: white; padding: 14px 28px; border-radius: 8px; text-decoration: none; display: inline-block; font-weight: 600; font-size: 16px;">
+                  Update Payment Method
+                </a>
+              </div>
+              
+              <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; text-align: center; color: #999; font-size: 12px;">
+                <p>This email was sent by TestiFlow by Freedom Lab</p>
+              </div>
+            </div>
+          `,
+          text: `Payment Method Needs Attention - TestiFlow
+
+We were unable to process your payment for TestiFlow. This could be due to an expired card, insufficient funds, or your bank declining the charge.
+
+Don't worry! Your account remains active until ${grace_period_end}. Please update your payment method to continue using TestiFlow without interruption.
+
+Update your payment method: ${Deno.env.get('APP_URL') || 'https://testiflow.com'}/settings
+
+This email was sent by TestiFlow by Freedom Lab`
+        };
+        await sendEmail(failureTemplate);
         break;
 
       default:

@@ -1,8 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { MessageSquare, CheckCircle, Download, Clock, AlertCircle } from 'lucide-react';
+import { MessageSquare, CheckCircle, Clock, AlertCircle, Star, User, Eye } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { Link } from 'react-router-dom';
+
+interface RecentTestimonial {
+  id: string;
+  name: string;
+  company: string | null;
+  message: string;
+  rating: number;
+  status: 'pending' | 'approved' | 'rejected';
+  submitted_at: string;
+  form_title: string;
+}
 
 export const Dashboard: React.FC = () => {
   const { user } = useAuth();
@@ -14,6 +25,8 @@ export const Dashboard: React.FC = () => {
   });
   const [, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [recentTestimonials, setRecentTestimonials] = useState<RecentTestimonial[]>([]);
+  const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -66,17 +79,53 @@ export const Dashboard: React.FC = () => {
           startOfMonth.setDate(1);
           startOfMonth.setHours(0, 0, 0, 0);
 
+          // Get last 30 days instead of just this calendar month
+          const thirtyDaysAgo = new Date();
+          thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
           const { count: thisMonthCount } = await supabase
             .from('testimonials')
             .select('*', { count: 'exact', head: true })
             .in('form_id', formIds)
-            .gte('created_at', startOfMonth.toISOString());
+            .gte('submitted_at', thirtyDaysAgo.toISOString());
 
           setStats({
             total: totalCount || 0,
             approved: approvedCount || 0,
             thisMonth: thisMonthCount || 0
           });
+
+          // Get recent testimonials with form titles
+          const { data: recentData } = await supabase
+            .from('testimonials')
+            .select(`
+              id,
+              name,
+              company,
+              message,
+              rating,
+              status,
+              submitted_at,
+              form_id,
+              testimonial_forms!inner(title)
+            `)
+            .in('form_id', formIds)
+            .order('submitted_at', { ascending: false })
+            .limit(5);
+
+          if (recentData) {
+            const formattedRecent: RecentTestimonial[] = recentData.map((item: any) => ({
+              id: item.id,
+              name: item.name,
+              company: item.company,
+              message: item.message,
+              rating: item.rating,
+              status: item.status,
+              submitted_at: item.submitted_at,
+              form_title: item.testimonial_forms.title
+            }));
+            setRecentTestimonials(formattedRecent);
+          }
         }
         
         setLoading(false);
@@ -103,6 +152,50 @@ export const Dashboard: React.FC = () => {
     if (!subscription?.current_period_end) return '';
     const endDate = new Date(subscription.current_period_end * 1000);
     return endDate.toLocaleDateString();
+  };
+
+  const handleQuickStatusChange = async (testimonialId: string, newStatus: 'approved' | 'rejected') => {
+    setUpdatingStatus(testimonialId);
+    try {
+      const { error } = await supabase
+        .from('testimonials')
+        .update({ 
+          status: newStatus,
+          reviewed_at: new Date().toISOString()
+        })
+        .eq('id', testimonialId);
+
+      if (error) throw error;
+
+      // Update local state
+      setRecentTestimonials(prev => 
+        prev.map(t => t.id === testimonialId ? { ...t, status: newStatus } : t)
+      );
+
+      // Update stats
+      if (newStatus === 'approved') {
+        setStats(prev => ({ ...prev, approved: prev.approved + 1 }));
+      }
+    } catch (error) {
+      console.error('Error updating testimonial status:', error);
+      setError('Failed to update testimonial status');
+    } finally {
+      setUpdatingStatus(null);
+    }
+  };
+
+  const getTimeAgo = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
+    
+    if (diffInHours < 1) return 'Just now';
+    if (diffInHours < 24) return `${diffInHours}h ago`;
+    
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays < 7) return `${diffInDays}d ago`;
+    
+    return date.toLocaleDateString();
   };
 
   return (
@@ -193,17 +286,30 @@ export const Dashboard: React.FC = () => {
               <div className="bg-gradient-to-br from-accent-50 to-accent-100 p-6 rounded-xl border border-accent-200">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-semibold text-gray-900">This Month</h3>
-                  <Download className="h-5 w-5 text-accent-600" />
+                  <Clock className="h-5 w-5 text-accent-600" />
                 </div>
                 <div className="text-3xl font-bold text-accent-600">{stats.thisMonth}</div>
-                <div className="text-sm text-gray-600 mt-1">new testimonials</div>
+                <div className="text-sm text-gray-600 mt-1">last 30 days</div>
               </div>
             </div>
 
-            {stats.total === 0 ? (
-              <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-200 p-8">
-                <h3 className="text-xl font-semibold text-gray-900 mb-6 text-center">Get Started</h3>
-                <div className="text-center">
+            {/* Recent Activity Section */}
+            <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-200 p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-semibold text-gray-900">Recent Activity</h3>
+                {recentTestimonials.length > 0 && (
+                  <Link
+                    to="/testimonials"
+                   onClick={() => window.scrollTo(0, 0)}
+                    className="text-primary-950 hover:text-primary-800 text-sm font-medium"
+                  >
+                    View All →
+                  </Link>
+                )}
+              </div>
+
+              {stats.total === 0 ? (
+                <div className="text-center py-8">
                   <MessageSquare className="h-12 w-12 text-gray-300 mx-auto mb-4" />
                   <h4 className="text-lg font-medium text-gray-900 mb-2">Create your first collection form</h4>
                   <p className="text-gray-500 mb-6 max-w-md mx-auto">Start gathering customer testimonials by creating a customized form that you can share with your customers.</p>
@@ -214,34 +320,102 @@ export const Dashboard: React.FC = () => {
                     Create Your First Form
                   </button>
                   </div>
-              </div>
-            ) : (
-              <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-200 p-8">
-                <h3 className="text-xl font-semibold text-gray-900 mb-6 text-center">Recent Activity</h3>
-                <div className="text-center">
-                  <CheckCircle className="h-12 w-12 text-secondary-500 mx-auto mb-4" />
-                  <h4 className="text-lg font-medium text-gray-900 mb-2">Great progress!</h4>
-                  <p className="text-gray-500 mb-6 max-w-md mx-auto">
-                    You've collected {stats.total} testimonial{stats.total !== 1 ? 's' : ''} so far. 
-                    {stats.approved > 0 && ` ${stats.approved} ${stats.approved === 1 ? 'is' : 'are'} approved and ready to use.`}
-                  </p>
-                  <div className="flex justify-center space-x-4">
-                    <button
-                      onClick={() => window.location.href = '/testimonials'}
-                      className="bg-secondary-500 text-white px-6 py-3 rounded-lg hover:bg-secondary-600 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                    >
-                      View Testimonials
-                    </button>
-                    <button
-                      onClick={() => window.location.href = '/forms'}
-                      className="bg-primary-950 text-white px-6 py-3 rounded-lg hover:bg-primary-900 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                    >
-                      Create Another Form
-                    </button>
+              ) : recentTestimonials.length === 0 ? (
+                <div className="text-center py-8">
+                  <Clock className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+                  <h4 className="text-lg font-medium text-gray-900 mb-2">No recent activity</h4>
+                  <p className="text-gray-500 mb-6">Recent testimonial submissions will appear here</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {recentTestimonials.map((testimonial) => (
+                    <div key={testimonial.id} className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-all duration-200">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-10 h-10 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
+                            <User className="h-5 w-5 text-primary-950" />
+                          </div>
+                          <div>
+                            <div className="font-semibold text-gray-900">{testimonial.name}</div>
+                            <div className="text-sm text-gray-500">{testimonial.company || 'No company'}</div>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            testimonial.status === 'approved' 
+                              ? 'bg-secondary-100 text-secondary-800' 
+                              : testimonial.status === 'pending'
+                              ? 'bg-yellow-100 text-yellow-800'
+                              : 'bg-red-100 text-red-800'
+                          }`}>
+                            {testimonial.status}
+                          </span>
+                          <span className="text-xs text-gray-500">{getTimeAgo(testimonial.submitted_at)}</span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center space-x-2 mb-3">
+                        <div className="flex">
+                          {[...Array(testimonial.rating)].map((_, i) => (
+                            <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
+                          ))}
+                        </div>
+                        <span className="text-sm text-gray-500">({testimonial.rating}/5)</span>
+                      </div>
+
+                      <p className="text-gray-700 text-sm leading-relaxed mb-3 line-clamp-2">
+                        "{testimonial.message}"
+                      </p>
+
+                      <div className="flex items-center justify-between">
+                        <div className="text-xs text-gray-500">
+                          From: {testimonial.form_title}
+                        </div>
+                        <div className="flex space-x-2">
+                          {testimonial.status === 'pending' && (
+                            <>
+                              <button
+                                onClick={() => handleQuickStatusChange(testimonial.id, 'approved')}
+                                disabled={updatingStatus === testimonial.id}
+                                className="bg-secondary-100 text-secondary-800 hover:bg-secondary-200 px-3 py-1 rounded-md text-xs font-medium transition-colors disabled:opacity-50"
+                              >
+                                {updatingStatus === testimonial.id ? '...' : 'Approve'}
+                              </button>
+                              <button
+                                onClick={() => handleQuickStatusChange(testimonial.id, 'rejected')}
+                                disabled={updatingStatus === testimonial.id}
+                                className="bg-red-100 text-red-800 hover:bg-red-200 px-3 py-1 rounded-md text-xs font-medium transition-colors disabled:opacity-50"
+                              >
+                                {updatingStatus === testimonial.id ? '...' : 'Reject'}
+                              </button>
+                            </>
+                          )}
+                          <Link
+                            to="/testimonials"
+                            className="bg-gray-100 text-gray-700 hover:bg-gray-200 px-3 py-1 rounded-md text-xs font-medium transition-colors flex items-center space-x-1"
+                          >
+                            <Eye className="h-3 w-3" />
+                            <span>View</span>
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                  {recentTestimonials.length >= 5 && (
+                    <div className="text-center pt-4">
+                      <Link
+                        to="/testimonials"
+                       onClick={() => window.scrollTo(0, 0)}
+                        className="text-primary-950 hover:text-primary-800 text-sm font-medium"
+                      >
+                        View all testimonials →
+                      </Link>
+                    </div>
+                  )}
                   </div>
-                  </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>

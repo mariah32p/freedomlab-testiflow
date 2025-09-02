@@ -63,12 +63,13 @@ export const TestimonialTagger: React.FC<TestimonialTaggerProps> = ({
 
   const handleAssignTag = async (tagId: string) => {
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('testimonial_tag_assignments')
         .insert([{
           testimonial_id: testimonialId,
           tag_id: tagId,
-        }]);
+        }])
+        .select();
 
       if (error) throw error;
 
@@ -77,6 +78,8 @@ export const TestimonialTagger: React.FC<TestimonialTaggerProps> = ({
         setAssignedTags([...assignedTags, tag]);
         onTagsChange?.();
       }
+      
+      console.log('Tag assigned successfully:', data);
     } catch (error) {
       console.error('Error assigning tag:', error);
     }
@@ -175,8 +178,13 @@ export const TestimonialTagger: React.FC<TestimonialTaggerProps> = ({
       )}
 
       {assignedTags.length === 0 && unassignedTags.length === 0 && (
-        <div className="text-sm text-gray-500 italic">
-          No tags available. Create tags first to organize testimonials.
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+          <div className="text-sm text-yellow-800">
+            <strong>No tags available.</strong> 
+            <a href="/tags" className="text-yellow-900 underline hover:text-yellow-700 ml-1">
+              Create tags first
+            </a> to organize testimonials.
+          </div>
         </div>
       )}
     </div>

@@ -20,6 +20,16 @@ export const isInGracePeriod = (paymentIssueSince?: string): boolean => {
   return daysSinceIssue <= 30;
 };
 
+// Helper to get payment issue date from subscription
+const getPaymentIssueDate = (subscription: any): string | undefined => {
+  // In a real implementation, you'd track this properly
+  // For now, use updated_at when status is past_due
+  if (subscription?.status === 'past_due') {
+    return subscription.updated_at;
+  }
+  return undefined;
+};
+
 export const useRouteGuard = () => {
   const { user, loading } = useAuth();
   const [routeLoading, setRouteLoading] = useState(true);
@@ -40,13 +50,14 @@ export const useRouteGuard = () => {
       // Allow certain pages without authentication
       const publicPages = ['/login', '/signup', '/forgot-password', '/reset-password', '/pricing', '/', '/demo'];
       const isPublicPage = publicPages.includes(location.pathname);
+      const isPublicFormSubmission = location.pathname.startsWith('/submit/');
       const isLandingPage = location.pathname === '/';
 
       // Real auth mode route logic
       if (!user) {
         // Not signed in → send to /signup (unless on public page)
         console.log('No user found, current path:', location.pathname, 'Is public page:', isPublicPage);
-        if (!isPublicPage && !isLandingPage) {
+        if (!isPublicPage && !isLandingPage && !isPublicFormSubmission) {
           console.log('Redirecting to signup because not on public page');
           navigate('/signup');
           return;
@@ -72,7 +83,7 @@ export const useRouteGuard = () => {
         if (!customerData) {
           // No customer record = no subscription
           console.log('No customer record found, user needs to subscribe');
-          if (location.pathname !== '/get-started' && !isPublicPage && !isLandingPage) {
+          if (location.pathname !== '/get-started' && !isPublicPage && !isLandingPage && !isPublicFormSubmission) {
             navigate('/get-started');
             return;
           }
@@ -98,7 +109,7 @@ export const useRouteGuard = () => {
           console.log('Found subscription:', subscriptionData);
           subscription = {
             status: subscriptionData.status,
-            payment_issue_since: subscriptionData.updated_at // Using updated_at as payment issue tracker for now
+            payment_issue_since: getPaymentIssueDate(subscriptionData)
           };
         }
 
@@ -110,7 +121,7 @@ export const useRouteGuard = () => {
           case 'active':
             // Active subscription → allow dashboard
             console.log('User has active/trialing subscription, allowing dashboard access');
-            if (location.pathname === '/get-started' || isLandingPage) {
+            if ((location.pathname === '/get-started' || isLandingPage) && !isPublicFormSubmission) {
               navigate('/dashboard');
             }
             setRouteLoading(false);
@@ -120,13 +131,13 @@ export const useRouteGuard = () => {
             // Check if in 30-day grace period
             if (isInGracePeriod(subscription.payment_issue_since)) {
               // Allow dashboard but will show payment issue banner
-              if (location.pathname === '/get-started' || isLandingPage) {
+              if ((location.pathname === '/get-started' || isLandingPage) && !isPublicFormSubmission) {
                 navigate('/dashboard');
               }
               setRouteLoading(false);
             } else {
               // Grace period expired → send to get-started
-              if (location.pathname !== '/get-started' && !isPublicPage && !isLandingPage) {
+              if (location.pathname !== '/get-started' && !isPublicPage && !isLandingPage && !isPublicFormSubmission) {
                 navigate('/get-started');
               }
               setRouteLoading(false);
@@ -138,7 +149,7 @@ export const useRouteGuard = () => {
           default:
             // No active subscription → send to get-started
             console.log('No active subscription, staying on get-started');
-            if (location.pathname !== '/get-started' && !isPublicPage && !isLandingPage) {
+            if (location.pathname !== '/get-started' && !isPublicPage && !isLandingPage && !isPublicFormSubmission) {
               navigate('/get-started');
             }
             setRouteLoading(false);

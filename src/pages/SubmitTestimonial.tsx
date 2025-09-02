@@ -68,27 +68,33 @@ export const SubmitTestimonial: React.FC = () => {
       }
 
       try {
-        const { data, error } = await supabase
+        // Create anonymous client for public form access
+        const anonClient = supabase;
+        
+        const { data, error } = await anonClient
           .from('testimonial_forms')
           .select('*')
           .eq('id', formId)
-          .maybeSingle();
+          .eq('is_active', true)
+          .single();
 
         if (error) {
-         console.error('Supabase error:', error);
-          setError('Failed to load form');
+          if (error.code === 'PGRST116') {
+            console.log('No form found with ID:', formId);
+            setError('Form not found or inactive');
+          } else {
+            console.error('Supabase error:', error);
+            setError('Failed to load form');
+          }
         } else if (!data) {
-         console.log('No form found with ID:', formId);
+          console.log('No form found with ID:', formId);
           setError('Form not found or inactive');
-        } else if (!data.is_active) {
-         console.log('Form found but inactive:', data);
-          setError('This form is currently inactive');
         } else {
-         console.log('Form loaded successfully:', data);
+          console.log('Form loaded successfully:', data);
           setForm(data);
           
-          // Fetch branding for this form's owner
-          const { data: brandingData } = await supabase
+          // Fetch branding for this form's owner (using same anon client)
+          const { data: brandingData } = await anonClient
             .from('form_branding')
             .select('*')
             .eq('user_id', data.user_id)
@@ -98,8 +104,8 @@ export const SubmitTestimonial: React.FC = () => {
             setBranding(brandingData);
           }
 
-          // Fetch custom fields for this form
-          const { data: fieldsData } = await supabase
+          // Fetch custom fields for this form (using same anon client)
+          const { data: fieldsData } = await anonClient
             .from('form_fields')
             .select('*')
             .eq('form_id', data.id)
@@ -232,6 +238,49 @@ export const SubmitTestimonial: React.FC = () => {
       return;
     }
 
+    // Check if form owner has reached testimonial limit (Standard plan)
+    try {
+      const { data: ownerData } = await supabase
+        .from('stripe_customers')
+        .select('customer_id')
+        .eq('user_id', form.user_id)
+        .maybeSingle();
+
+      if (ownerData) {
+        const { data: subscriptionData } = await supabase
+          .from('stripe_subscriptions')
+          .select('price_id, status')
+          .eq('customer_id', ownerData.customer_id)
+          .maybeSingle();
+
+        // Check if Standard plan (price_1Rznb5Dn6VTzl81bjqFfCagv)
+        if (subscriptionData?.price_id === 'price_1Rznb5Dn6VTzl81bjqFfCagv') {
+          
+          // Count existing testimonials for this user's forms
+          const { data: userForms } = await supabase
+            .from('testimonial_forms')
+            .select('id')
+            .eq('user_id', form.user_id);
+
+          if (userForms && userForms.length > 0) {
+            const formIds = userForms.map(f => f.id);
+            const { count } = await supabase
+              .from('testimonials')
+              .select('*', { count: 'exact', head: true })
+              .in('form_id', formIds);
+
+            if (count && count >= 25) {
+              setError('This form has reached its testimonial limit. Please contact the form owner.');
+              return;
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error checking testimonial limits:', error);
+      // Continue with submission if check fails
+    }
+
     // Validate required custom fields
     for (const field of customFields) {
       if (field.is_required && !customResponses[field.id]?.trim()) {
@@ -263,8 +312,13 @@ export const SubmitTestimonial: React.FC = () => {
         .single();
 
       if (error || !testimonialData) {
-        console.error('Supabase error:', error);
-        throw error;
+        if (error.code === 'PGRST116') {
+          console.log('No form found with ID:', formId);
+          setError('Form not found or inactive');
+        } else {
+          console.error('Supabase error:', error);
+          setError('Failed to load form');
+        }
       }
 
       // Save custom field responses
@@ -718,7 +772,7 @@ export const SubmitTestimonial: React.FC = () => {
                             <Play className="h-8 w-8 text-gray-400 mx-auto mb-2" />
                             <p className="text-sm text-gray-600">Click to upload a video</p>
                             <p className="text-xs text-gray-500 mt-1">
-                              MP4, MOV, AVI up to {form.max_video_size_mb || 100}MB
+                              MP4, MOV, AVI up to 100MB
                             </p>
                           </label>
                         </div>

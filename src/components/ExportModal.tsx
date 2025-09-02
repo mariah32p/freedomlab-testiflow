@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Download, FileText, Code, X, Copy, CheckCircle, Eye, Star } from 'lucide-react';
 import { ExportTestimonial, exportToCSV, exportToJSON, generateSocialMediaPost, generateWebsiteWidget } from '../utils/exportUtils';
 import { useAuth } from '../contexts/AuthContext';
+import { useSubscription } from '../hooks/useSubscription';
+import { UpgradePrompt } from '../components/UpgradePrompt';
 import { supabase } from '../lib/supabase';
 
 interface ExportModalProps {
@@ -12,6 +14,7 @@ interface ExportModalProps {
 
 export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose, onSuccess }) => {
   const { user } = useAuth();
+  const subscription = useSubscription();
   const [selectedFormat, setSelectedFormat] = useState<'csv' | 'json' | 'social' | 'widget'>('csv');
   const [selectedTestimonials, setSelectedTestimonials] = useState<string[]>([]);
   const [selectAll, setSelectAll] = useState(true);
@@ -19,7 +22,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
   const [generatedContent, setGeneratedContent] = useState<string>('');
   const [copied, setCopied] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
-  const [branding, setBranding] = useState<{ primary_color: string; secondary_color: string } | null>(null);
+  const [branding, setBranding] = useState<{ primary_color: string; secondary_color: string; font_family: string } | null>(null);
 
   // Fetch user's branding
   useEffect(() => {
@@ -29,7 +32,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
       try {
         const { data } = await supabase
           .from('form_branding')
-          .select('primary_color, secondary_color')
+          .select('primary_color, secondary_color, font_family')
           .eq('user_id', user.id)
           .maybeSingle();
         
@@ -136,8 +139,11 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
           onSuccess('Please select exactly one testimonial for social media post');
           return;
         }
-        const content = generatePreview();
-        setGeneratedContent(content);
+        const testimonial = statusFilteredTestimonials.find(t => t.id === selectedTestimonials[0]);
+        if (testimonial) {
+          const socialContent = generateSocialMediaPost(testimonial);
+          setGeneratedContent(socialContent);
+        }
         break;
       case 'widget':
         if (widgetTestimonials.length === 0) {
@@ -147,7 +153,8 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
         const widgetContent = generateWebsiteWidget(
           widgetTestimonials, 
           branding?.primary_color || '#01004d', 
-          branding?.secondary_color || '#01b79e'
+          branding?.secondary_color || '#01b79e',
+          branding?.font_family || 'Montserrat'
         );
         setGeneratedContent(widgetContent);
         break;
@@ -269,7 +276,11 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
 
                     <button
                       onClick={() => setSelectedFormat('json')}
-                      className={`w-full p-4 border rounded-lg text-left transition-colors ${
+                      disabled={!subscription.limits.canUseAdvancedExports}
+                      className={`w-full p-4 border rounded-lg text-left transition-colors relative ${
+                        !subscription.limits.canUseAdvancedExports
+                          ? 'border-gray-200 bg-gray-50 opacity-50 cursor-not-allowed'
+                          : 
                         selectedFormat === 'json'
                           ? 'border-primary-500 bg-primary-50'
                           : 'border-gray-200 hover:bg-gray-50'
@@ -280,13 +291,25 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                         <div>
                           <div className="font-medium">JSON Data</div>
                           <div className="text-sm text-gray-500">For developers and integrations</div>
+                          {!subscription.limits.canUseAdvancedExports && (
+                            <div className="text-xs text-accent-600 font-medium">Premium Feature</div>
+                          )}
                         </div>
                       </div>
+                      {!subscription.limits.canUseAdvancedExports && (
+                        <div className="absolute inset-0 bg-gray-100 bg-opacity-75 rounded-lg flex items-center justify-center">
+                          <span className="text-xs text-gray-600 font-medium">Premium Only</span>
+                        </div>
+                      )}
                     </button>
 
                     <button
                       onClick={() => setSelectedFormat('widget')}
-                      className={`w-full p-4 border rounded-lg text-left transition-colors ${
+                      disabled={!subscription.limits.canUseAdvancedExports}
+                      className={`w-full p-4 border rounded-lg text-left transition-colors relative ${
+                        !subscription.limits.canUseAdvancedExports
+                          ? 'border-gray-200 bg-gray-50 opacity-50 cursor-not-allowed'
+                          : 
                         selectedFormat === 'widget'
                           ? 'border-primary-500 bg-primary-50'
                           : 'border-gray-200 hover:bg-gray-50'
@@ -297,10 +320,28 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                         <div>
                           <div className="font-medium">Website Widget</div>
                           <div className="text-sm text-gray-500">HTML code to embed on your website</div>
+                          {!subscription.limits.canUseAdvancedExports && (
+                            <div className="text-xs text-accent-600 font-medium">Premium Feature</div>
+                          )}
                         </div>
                       </div>
+                      {!subscription.limits.canUseAdvancedExports && (
+                        <div className="absolute inset-0 bg-gray-100 bg-opacity-75 rounded-lg flex items-center justify-center">
+                          <span className="text-xs text-gray-600 font-medium">Premium Only</span>
+                        </div>
+                      )}
                     </button>
 
+                    {/* Show upgrade prompt for restricted formats */}
+                    {!subscription.limits.canUseAdvancedExports && (selectedFormat === 'json' || selectedFormat === 'widget') && (
+                      <div className="mt-4">
+                        <UpgradePrompt 
+                          feature="Advanced Exports"
+                          description="JSON exports and website widgets are available with Premium"
+                          inline
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -398,7 +439,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                 )}
 
                 {/* Widget Testimonial Selection */}
-                {(
+                {selectedFormat === 'widget' && (
                   <div>
                     <h3 className="text-lg font-medium text-gray-900 mb-4">Select Testimonials for Widget</h3>
                     
@@ -431,6 +472,44 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                                       <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
                                     ))}
                                   </div>
+                                  {/* Video thumbnail preview */}
+                                  {testimonial.video_url && (
+                                    <div style={{ marginBottom: '12px', position: 'relative', cursor: 'pointer' }}>
+                                      <div style={{ 
+                                        width: '100%', 
+                                        height: '80px', 
+                                        background: `linear-gradient(135deg, ${branding?.primary_color || '#01004d'}, ${branding?.secondary_color || '#01b79e'})`, 
+                                        borderRadius: '8px', 
+                                        display: 'flex', 
+                                        alignItems: 'center', 
+                                        justifyContent: 'center' 
+                                      }}>
+                                        <div style={{ 
+                                          background: 'rgba(255,255,255,0.9)', 
+                                          borderRadius: '50%', 
+                                          width: '30px', 
+                                          height: '30px', 
+                                          display: 'flex', 
+                                          alignItems: 'center', 
+                                          justifyContent: 'center' 
+                                        }}>
+                                          <span style={{ color: branding?.primary_color || '#01004d', fontSize: '12px' }}>▶</span>
+                                        </div>
+                                      </div>
+                                      <div style={{ 
+                                        position: 'absolute', 
+                                        bottom: '4px', 
+                                        left: '4px', 
+                                        background: 'rgba(0,0,0,0.7)', 
+                                        color: 'white', 
+                                        padding: '2px 4px', 
+                                        borderRadius: '4px', 
+                                        fontSize: '8px' 
+                                      }}>
+                                        Video
+                                      </div>
+                                    </div>
+                                  )}
                                 </div>
                                 <p className="text-sm text-gray-600 truncate">"{testimonial.message}"</p>
                               </div>
@@ -531,7 +610,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                     </div>
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
                       <p className="text-sm text-blue-700">
-                        ✨ This preview shows exactly how the widget will appear on your website
+                        This preview shows exactly how the widget will appear on your website. Videos show as clickable thumbnails that open in a modal.
                       </p>
                     </div>
                   </div>

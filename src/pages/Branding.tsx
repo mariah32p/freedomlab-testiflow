@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useSubscription } from '../hooks/useSubscription';
+import { UpgradePrompt } from '../components/UpgradePrompt';
 import { supabase } from '../lib/supabase';
 import { Upload, Eye, Save, RotateCcw } from 'lucide-react';
 import { Alert } from '../components/Alert';
@@ -36,6 +38,7 @@ const PRESET_COLORS = [
 
 export const Branding: React.FC = () => {
   const { user } = useAuth();
+  const subscription = useSubscription();
   const [, setBranding] = useState<FormBranding | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -176,6 +179,29 @@ export const Branding: React.FC = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-950"></div>
+      </div>
+    );
+  }
+
+  // Show upgrade prompt for Standard users
+  if (!subscription.limits.canUseBranding) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white shadow rounded-lg">
+            <div className="px-4 py-5 sm:p-6">
+              <div className="mb-8">
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">Form Branding</h1>
+                <p className="text-gray-600">Customize the appearance of your testimonial collection forms</p>
+              </div>
+              
+              <UpgradePrompt 
+                feature="Custom Branding"
+                description="Customize your forms with your logo, brand colors, and fonts to create a professional experience that matches your brand identity."
+              />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

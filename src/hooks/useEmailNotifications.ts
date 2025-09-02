@@ -66,35 +66,58 @@ export const useEmailNotifications = () => {
     }
   };
 
-  const sendWeeklyDigest = async (
+  const sendTrialEndingNotification = async (
     userEmail: string,
-    stats: {
-      newTestimonials: number;
-      pendingReviews: number;
-      totalApproved: number;
-      weekStart: string;
-      weekEnd: string;
-    }
+    daysLeft: number,
+    chargeDate: string
   ) => {
     try {
       const { error } = await supabase.functions.invoke('send-notification', {
         body: {
-          type: 'weekly_digest',
+          type: 'trial_ending',
           data: {
             user_email: userEmail,
-            stats,
+            days_left: daysLeft,
+            charge_date: chargeDate,
           },
         },
       });
 
       if (error) {
-        console.error('Error sending weekly digest:', error);
+        console.error('Error sending trial ending notification:', error);
         throw error;
       }
 
-      console.log('Weekly digest sent successfully');
+      console.log('Trial ending notification sent successfully');
     } catch (error) {
-      console.error('Failed to send weekly digest:', error);
+      console.error('Failed to send trial ending notification:', error);
+      throw error;
+    }
+  };
+
+  const sendPaymentFailureNotification = async (
+    userEmail: string,
+    gracePeriodEnd: string
+  ) => {
+    try {
+      const { error } = await supabase.functions.invoke('send-notification', {
+        body: {
+          type: 'payment_failure',
+          data: {
+            user_email: userEmail,
+            grace_period_end: gracePeriodEnd,
+          },
+        },
+      });
+
+      if (error) {
+        console.error('Error sending payment failure notification:', error);
+        throw error;
+      }
+
+      console.log('Payment failure notification sent successfully');
+    } catch (error) {
+      console.error('Failed to send payment failure notification:', error);
       throw error;
     }
   };
@@ -102,6 +125,7 @@ export const useEmailNotifications = () => {
   return {
     sendNewTestimonialNotification,
     sendFollowUpEmail,
-    sendWeeklyDigest,
+    sendTrialEndingNotification,
+    sendPaymentFailureNotification,
   };
 };

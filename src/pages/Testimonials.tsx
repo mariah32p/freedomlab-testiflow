@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useSubscription } from '../hooks/useSubscription';
+import { UpgradePrompt } from '../components/UpgradePrompt';
+import { TestimonialTagger } from '../components/TestimonialTagger';
 import { supabase } from '../lib/supabase';
-import { MessageSquare, Star, User, CheckCircle, Clock, X, Download, Trash2, MoreVertical, Eye, Mail, Building } from 'lucide-react';
+import { MessageSquare, Star, User, CheckCircle, Clock, X, Download, Trash2, MoreVertical, Eye, Mail, Building, Tag, Filter } from 'lucide-react';
 import { Alert } from '../components/Alert';
 import { ExportModal } from '../components/ExportModal';
 import { ExportTestimonial } from '../utils/exportUtils';
@@ -37,20 +40,43 @@ interface FormResponse {
   field: FormField;
 }
 
+interface TestimonialTag {
+  id: string;
+  name: string;
+  color: string;
+}
 export const Testimonials: React.FC = () => {
   const { user } = useAuth();
+  const subscription = useSubscription();
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [forms, setForms] = useState<TestimonialForm[]>([]);
+  const [tags, setTags] = useState<TestimonialTag[]>([]);
+  const [testimonialTags, setTestimonialTags] = useState<Record<string, TestimonialTag[]>>({});
   const [testimonialResponses, setTestimonialResponses] = useState<Record<string, FormResponse[]>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('all');
+  const [tagFilter, setTagFilter] = useState<string>('all');
   const [deletingTestimonial, setDeletingTestimonial] = useState<Testimonial | null>(null);
   const [showActionsFor, setShowActionsFor] = useState<string | null>(null);
   const [viewingTestimonial, setViewingTestimonial] = useState<Testimonial | null>(null);
   const [showExportModal, setShowExportModal] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
 
+  // Close actions menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (!target.closest('.actions-menu') && !target.closest('.actions-button')) {
+        setShowActionsFor(null);
+      }
+    };
+
+    if (showActionsFor) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [showActionsFor]);
   useEffect(() => {
     fetchData();
   }, [user]);
@@ -70,6 +96,19 @@ export const Testimonials: React.FC = () => {
       if (formsError) throw formsError;
       setForms(formsData || []);
 
+      // Get user's tags (always fetch, but only show UI if Premium)
+      const { data: tagsData, error: tagsError } = await supabase
+        .from('testimonial_tags')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('name');
+
+      if (tagsError) {
+        console.error('Error fetching tags:', tagsError);
+      } else {
+        setTags(tagsData || []);
+      }
+
       if (formsData && formsData.length > 0) {
         const formIds = formsData.map(f => f.id);
         
@@ -83,6 +122,34 @@ export const Testimonials: React.FC = () => {
         if (testimonialsError) throw testimonialsError;
         setTestimonials(testimonialsData || []);
 
+        // Get tag assignments for testimonials if Premium
+        if (subscription.limits.canUseTags && testimonialsData && testimonialsData.length > 0) {
+          const testimonialIds = testimonialsData.map(t => t.id);
+          
+          const { data: tagAssignments, error: tagAssignmentsError } = await supabase
+            .from('testimonial_tag_assignments')
+            .select(`
+              testimonial_id,
+              tag:testimonial_tags(id, name, color)
+            `)
+            .in('testimonial_id', testimonialIds);
+
+          if (tagAssignmentsError) {
+            console.error('Error fetching tag assignments:', tagAssignmentsError);
+          } else if (tagAssignments) {
+            // Group tags by testimonial ID
+            const tagsByTestimonial: Record<string, TestimonialTag[]> = {};
+            tagAssignments.forEach((assignment: any) => {
+              if (assignment.tag) {
+                if (!tagsByTestimonial[assignment.testimonial_id]) {
+                  tagsByTestimonial[assignment.testimonial_id] = [];
+                }
+                tagsByTestimonial[assignment.testimonial_id].push(assignment.tag);
+              }
+            });
+            setTestimonialTags(tagsByTestimonial);
+          }
+        }
         // Get custom field responses for all testimonials
         if (testimonialsData && testimonialsData.length > 0) {
           const testimonialIds = testimonialsData.map(t => t.id);
@@ -175,6 +242,13 @@ export const Testimonials: React.FC = () => {
       filter === 'all' || t.status === filter
     );
 
+    // Apply tag filter if Premium and tag filter is set
+    if (subscription.limits.canUseTags && tagFilter !== 'all') {
+      filtered = filtered.filter(t => {
+        const testimonialTagList = testimonialTags[t.id] || [];
+        return testimonialTagList.some(tag => tag.id === tagFilter);
+      });
+    }
     return filtered;
   };
 
@@ -272,7 +346,25 @@ export const Testimonials: React.FC = () => {
                 <h1 className="text-3xl font-bold text-gray-900">Testimonials</h1>
                 <p className="text-gray-600 mt-2">Review, approve, and manage customer testimonials</p>
               </div>
-              <div className="flex space-x-2">
+              <div className="flex space-x-2 items-center">
+                {/* Tag Filter - Premium only */}
+                {subscription.limits.canUseTags && tags.length > 0 && (
+                  <div className="flex items-center space-x-2">
+                    <Filter className="h-4 w-4 text-gray-400" />
+                    <select
+                      value={tagFilter}
+                      onChange={(e) => setTagFilter(e.target.value)}
+                      className="border border-gray-300 text-gray-700 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors text-sm"
+                    >
+                      <option value="all">All Tags</option>
+                      {tags.map((tag) => (
+                        <option key={tag.id} value={tag.id}>
+                          {tag.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
                 <select
                   value={filter}
                   onChange={(e) => setFilter(e.target.value as any)}
@@ -292,6 +384,65 @@ export const Testimonials: React.FC = () => {
                 </button>
               </div>
             </div>
+
+            {/* Usage Warning for Standard Plan */}
+            {subscription.plan === 'standard' && subscription.currentUsage.testimonialCount >= 20 && (
+              <div className="mb-6">
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-yellow-800 font-medium">
+                        You're approaching your limit
+                      </p>
+                      <p className="text-yellow-700 text-sm">
+                        {subscription.currentUsage.testimonialCount}/25 testimonials used. Upgrade to Premium for unlimited testimonials.
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => window.location.href = '/get-started'}
+                      className="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition-colors text-sm font-medium"
+                    >
+                      Manage Subscription
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* At Limit Warning for Standard Plan */}
+            {subscription.plan === 'standard' && subscription.currentUsage.testimonialCount >= 25 && (
+              <div className="mb-6">
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-red-800 font-medium">
+                        You've reached your testimonial limit
+                      </p>
+                      <p className="text-red-700 text-sm">
+                        25/25 testimonials used. New submissions will be blocked until you upgrade to Premium.
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => window.location.href = '/get-started'}
+                      className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors text-sm font-medium"
+                    >
+                      Manage Subscription
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Standard Plan Tag Restriction Notice */}
+            {!subscription.limits.canUseTags && tags.length > 0 && (
+              <div className="mb-6">
+                <UpgradePrompt 
+                  feature="Tag Organization"
+                  description="You have tags created but need Premium to assign them to testimonials and use filtering."
+                  inline
+                />
+              </div>
+            )}
 
             {error && (
               <div className="mb-6">
@@ -422,6 +573,38 @@ export const Testimonials: React.FC = () => {
                         </div>
                       )}
 
+                      {/* Tags Display */}
+                      {subscription.limits.canUseTags ? (
+                        testimonialTags[testimonial.id]?.length > 0 && (
+                        <div className="mb-4">
+                          <div className="flex flex-wrap gap-1">
+                            {testimonialTags[testimonial.id].map((tag) => (
+                              <span
+                                key={tag.id}
+                                className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
+                                style={{ 
+                                  backgroundColor: `${tag.color}20`,
+                                  border: `1px solid ${tag.color}`,
+                                  color: tag.color
+                                }}
+                              >
+                                {tag.name}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                        )
+                      ) : (
+                        testimonialTags[testimonial.id]?.length > 0 && (
+                          <div className="mb-4">
+                            <UpgradePrompt 
+                              feature="Tag Organization"
+                              description="Upgrade to Premium to organize testimonials with tags"
+                              inline
+                            />
+                          </div>
+                        )
+                      )}
                       {/* Form & Date */}
                       <div className="text-xs text-gray-500 mb-4 space-y-1">
                         <div>From: {getFormTitle(testimonial.form_id)}</div>
@@ -458,14 +641,14 @@ export const Testimonials: React.FC = () => {
                           
                           <div className="relative">
                             <button
+                              className="actions-button p-1 text-gray-400 hover:text-gray-600 transition-colors"
                               onClick={() => setShowActionsFor(showActionsFor === testimonial.id ? null : testimonial.id)}
-                              className="p-1 text-gray-400 hover:text-gray-600 transition-colors"
                             >
                               <MoreVertical className="h-4 w-4" />
                             </button>
                             
                             {showActionsFor === testimonial.id && (
-                              <div className="absolute right-0 bottom-8 bg-white border border-gray-200 rounded-lg shadow-lg z-10 min-w-40">
+                              <div className="actions-menu absolute right-0 bottom-8 bg-white border border-gray-200 rounded-lg shadow-lg z-10 min-w-40">
                                 <div className="py-1">
                                   {testimonial.status !== 'approved' && (
                                     <button
@@ -639,6 +822,28 @@ export const Testimonials: React.FC = () => {
                             </div>
                           ))}
                         </div>
+                      </div>
+                    )}
+
+                    {/* Tags Section */}
+                    {subscription.limits.canUseTags && (
+                      <div className="mb-6">
+                        <h3 className="text-sm font-medium text-gray-700 mb-3">Tags</h3>
+                        {tags.length === 0 ? (
+                          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                            <div className="text-sm text-yellow-800">
+                              <strong>No tags available.</strong> 
+                              <a href="/tags" className="text-yellow-900 underline hover:text-yellow-700 ml-1">
+                                Create tags first
+                              </a> to organize testimonials.
+                            </div>
+                          </div>
+                        ) : (
+                          <TestimonialTagger 
+                            testimonialId={viewingTestimonial.id}
+                            onTagsChange={fetchData}
+                          />
+                        )}
                       </div>
                     )}
 
