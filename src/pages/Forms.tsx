@@ -284,7 +284,6 @@ export const Forms: React.FC = () => {
                 <p className="text-gray-600 mt-2">Create and manage testimonial collection forms</p>
               </div>
               <button
-                onClick={() => setShowCreateForm(true)}
                 onClick={handleCreateFormClick}
                 className="bg-primary-950 text-white px-6 py-3 rounded-lg hover:bg-primary-900 transition-all duration-200 flex items-center space-x-2 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
               >
@@ -555,7 +554,6 @@ export const Forms: React.FC = () => {
                   Start gathering customer testimonials by creating a customized form that you can share with your customers.
                 </p>
                 <button
-                  onClick={() => setShowCreateForm(true)}
                   onClick={handleCreateFormClick}
                   className="bg-primary-950 text-white px-8 py-4 rounded-lg hover:bg-primary-900 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-lg"
                 >
@@ -633,11 +631,7 @@ export const Forms: React.FC = () => {
                           className="bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-1 rounded-md text-sm font-medium transition-colors flex items-center space-x-1"
                           title="Copy shareable link"
                         >
-                          className={`flex-1 py-3 px-4 rounded-lg transition-colors font-medium flex items-center justify-center space-x-2 ${
-                            subscription.limits.canUseCustomFields
-                              ? 'bg-secondary-500 text-white hover:bg-secondary-600'
-                              : 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                          }`}
+                          <Copy className="h-3 w-3" />
                           <span>Copy</span>
                         </button>
                         <a
@@ -739,7 +733,7 @@ export const Forms: React.FC = () => {
                               {new Date(viewingForm.updated_at).toLocaleDateString()}
                             </span>
                           </div>
-                      {!subscription.limits.canUseVideoUploads && (
+                        </div>
                       </div>
 
                       {/* Media Upload Settings */}
@@ -779,7 +773,11 @@ export const Forms: React.FC = () => {
                           setCustomizingForm(viewingForm);
                           setViewingForm(null);
                         }}
-                        className="flex-1 bg-secondary-500 text-white py-3 px-4 rounded-lg hover:bg-secondary-600 transition-colors font-medium flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className={`flex-1 py-3 px-4 rounded-lg transition-colors font-medium flex items-center justify-center space-x-2 ${
+                          subscription.limits.canUseCustomFields
+                            ? 'bg-secondary-500 text-white hover:bg-secondary-600'
+                            : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                        }`}
                         disabled={!subscription.limits.canUseCustomFields}
                       >
                         <Settings className="h-4 w-4" />
