@@ -23,6 +23,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
   const [copied, setCopied] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [branding, setBranding] = useState<{ primary_color: string; secondary_color: string } | null>(null);
+  const [branding, setBranding] = useState<{ primary_color: string; secondary_color: string; font_family: string } | null>(null);
 
   // Fetch user's branding
   useEffect(() => {
@@ -32,7 +33,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
       try {
         const { data } = await supabase
           .from('form_branding')
-          .select('primary_color, secondary_color')
+          .select('primary_color, secondary_color, font_family')
           .eq('user_id', user.id)
           .maybeSingle();
         
@@ -136,11 +137,13 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
         break;
       case 'social':
         if (selectedTestimonials.length !== 1) {
-          onSuccess('Please select exactly one testimonial for social media post');
-          return;
-        }
-        const content = generatePreview();
-        setGeneratedContent(content);
+        const widgetContent = generateWebsiteWidget(
+          widgetTestimonials, 
+          branding?.primary_color || '#01004d', 
+          branding?.secondary_color || '#01b79e',
+          branding?.font_family || 'Montserrat'
+        );
+        setGeneratedContent(widgetContent);
         break;
       case 'widget':
         if (widgetTestimonials.length === 0) {
@@ -150,7 +153,8 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
         const widgetContent = generateWebsiteWidget(
           widgetTestimonials, 
           branding?.primary_color || '#01004d', 
-          branding?.secondary_color || '#01b79e'
+          branding?.secondary_color || '#01b79e',
+          branding?.font_family || 'Montserrat'
         );
         setGeneratedContent(widgetContent);
         break;

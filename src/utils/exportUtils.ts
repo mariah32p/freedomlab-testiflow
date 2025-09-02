@@ -83,15 +83,15 @@ export const generateSocialMediaPost = (testimonial: ExportTestimonial): string 
   return `${stars} Customer Love!\n\n"${truncatedMessage}"\n\n- ${testimonial.name}${testimonial.company ? `, ${testimonial.company}` : ''}\n\n#CustomerSuccess #Testimonial`;
 };
 
-export const generateWebsiteWidget = (testimonials: ExportTestimonial[], primaryColor: string = '#01004d', secondaryColor: string = '#01b79e'): string => {
+export const generateWebsiteWidget = (testimonials: ExportTestimonial[], primaryColor: string = '#01004d', secondaryColor: string = '#01b79e', fontFamily: string = 'Montserrat'): string => {
   const approvedTestimonials = testimonials.filter(t => t.status === 'approved').slice(0, 3);
   
   return `<!-- TestiFlow Testimonials Widget -->
-<div class="testimonials-widget" style="max-width: 1000px; margin: 0 auto; padding: 20px;">
-  <h3 style="text-align: center; margin-bottom: 20px; color: #333;">What Our Customers Say</h3>
+<div class="testimonials-widget" style="max-width: 1000px; margin: 0 auto; padding: 20px; font-family: '${fontFamily}', system-ui, sans-serif;">
+  <h3 style="text-align: center; margin-bottom: 20px; color: #333; font-family: '${fontFamily}', system-ui, sans-serif;">What Our Customers Say</h3>
   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
     ${approvedTestimonials.map(testimonial => `
-    <div class="testimonial-card" style="background: #f9f9f9; padding: 20px; border-radius: 12px; border-left: 4px solid ${secondaryColor}; box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: relative;">
+    <div class="testimonial-card" style="background: #f9f9f9; padding: 20px; border-radius: 12px; border-left: 4px solid ${secondaryColor}; box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: relative; font-family: '${fontFamily}', system-ui, sans-serif;">
       <div style="display: flex; margin-bottom: 8px;">
         ${'★'.repeat(testimonial.rating)}<span style="color: #ddd;">${'★'.repeat(5 - testimonial.rating)}</span>
       </div>
@@ -111,7 +111,7 @@ export const generateWebsiteWidget = (testimonials: ExportTestimonial[], primary
         </div>
       </div>` : ''}
       <p style="margin: 0 0 15px 0; font-style: italic; color: #555; line-height: 1.5;">"${testimonial.message}"</p>
-      <div style="font-size: 14px; color: #777;">
+      <div style="font-size: 14px; color: #777; font-family: '${fontFamily}', system-ui, sans-serif;">
         - ${testimonial.name}${testimonial.company ? `, ${testimonial.company}` : ''}
       </div>
     </div>`).join('')}
@@ -119,10 +119,10 @@ export const generateWebsiteWidget = (testimonials: ExportTestimonial[], primary
 </div>
 
 <!-- Modal for video/image testimonials -->
-<div id="testimonial-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;">
-  <div style="background: white; border-radius: 12px; max-width: 600px; width: 90%; max-height: 80%; overflow: hidden; position: relative;">
+<div id="testimonial-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; font-family: '${fontFamily}', system-ui, sans-serif;">
+  <div style="background: white; border-radius: 12px; max-width: 600px; width: 90%; max-height: 80%; overflow: hidden; position: relative; font-family: '${fontFamily}', system-ui, sans-serif;">
     <button onclick="closeTestimonialModal()" style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.5); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; z-index: 1001;">×</button>
-    <div id="modal-content" style="padding: 20px;"></div>
+    <div id="modal-content" style="padding: 20px; font-family: '${fontFamily}', system-ui, sans-serif;"></div>
   </div>
 </div>
 
@@ -143,8 +143,8 @@ function openTestimonialModal(id, mediaUrl, name, message, rating, isVideo = fal
         \`<img src="\${mediaUrl}" alt="Customer photo" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; margin: 0 auto 20px; border: 3px solid ${secondaryColor};">\`
       }
       <div style="margin-bottom: 12px;">\${stars}</div>
-      <p style="font-style: italic; color: #555; line-height: 1.6; margin-bottom: 16px;">"\${message}"</p>
-      <div style="font-weight: 600; color: ${primaryColor};">- \${name}</div>
+      <p style="font-style: italic; color: #555; line-height: 1.6; margin-bottom: 16px; font-family: '${fontFamily}', system-ui, sans-serif;">"\${message}"</p>
+      <div style="font-weight: 600; color: ${primaryColor}; font-family: '${fontFamily}', system-ui, sans-serif;">- \${name}</div>
     </div>
   \`;
   
