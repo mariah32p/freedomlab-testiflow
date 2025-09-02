@@ -156,6 +156,7 @@ export const Settings: React.FC = () => {
                 <h2 className="text-lg font-medium text-gray-900 mb-4">Subscription</h2>
                 {subscription ? (
                   <div className="space-y-4">
+                  <>
                     <div className="flex items-center justify-between">
                       <span className="text-gray-600">Plan:</span>
                       <div className="flex items-center space-x-2">
@@ -286,6 +287,7 @@ export const Settings: React.FC = () => {
                       </div>
                     )}
                   </div>
+                  </>
                 ) : (
                   <div className="text-center py-6">
                     <p className="text-gray-500 mb-4">No active subscription</p>
