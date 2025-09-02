@@ -4,7 +4,7 @@ import { useSubscription } from '../hooks/useSubscription';
 import { UpgradePrompt } from '../components/UpgradePrompt';
 import { TestimonialTagger } from '../components/TestimonialTagger';
 import { supabase } from '../lib/supabase';
-import { MessageSquare, Star, User, CheckCircle, Clock, X, Download, Trash2, MoreVertical, Eye, Mail, Building, Tag, Filter } from 'lucide-react';
+import { MessageSquare, Star, User, CheckCircle, Clock, X, Download, Trash2, MoreVertical, Eye, Mail, Building, Filter } from 'lucide-react';
 import { Alert } from '../components/Alert';
 import { ExportModal } from '../components/ExportModal';
 import { ExportTestimonial } from '../utils/exportUtils';

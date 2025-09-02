@@ -93,26 +93,6 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
     }
   };
 
-  const generatePreview = () => {
-    switch (selectedFormat) {
-      case 'social':
-        if (selectedTestimonials.length === 1) {
-          const testimonial = statusFilteredTestimonials.find(t => t.id === selectedTestimonials[0]);
-          if (testimonial) {
-            return generateSocialMediaPost(testimonial);
-          }
-        }
-        return '';
-      case 'widget':
-        return generateWebsiteWidget(
-          widgetTestimonials, 
-          branding?.primary_color || '#01004d', 
-          branding?.secondary_color || '#01b79e'
-        );
-      default:
-        return '';
-    }
-  };
 
   const handleExport = () => {
     switch (selectedFormat) {

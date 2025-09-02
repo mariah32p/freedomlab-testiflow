@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TestiFlowIcon } from '../components/TestiFlowIcon';
-import { User, LogOut, Plus, Settings, Eye, Copy, ExternalLink, Star, Download, FileText, Code, Send, CheckCircle, X, ArrowUp, ArrowDown } from 'lucide-react';
+import { User, LogOut, Plus, Settings, Copy, ExternalLink, Star, Download, FileText, Code, Send, ArrowUp, ArrowDown } from 'lucide-react';
 
 interface DemoStep {
   id: string;
