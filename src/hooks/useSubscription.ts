@@ -10,6 +10,7 @@ export interface SubscriptionLimits {
   canUseVideoUploads: boolean;
   canUseAdvancedExports: boolean;
   canUseTags: boolean;
+  canUseImageUploads: boolean;
 }
 
 export interface SubscriptionInfo {
@@ -33,6 +34,7 @@ const PLAN_LIMITS: Record<'standard' | 'premium', SubscriptionLimits> = {
     canUseVideoUploads: false,
     canUseAdvancedExports: false,
     canUseTags: false,
+    canUseImageUploads: true,
   },
   premium: {
     maxTestimonials: Infinity,
@@ -42,6 +44,7 @@ const PLAN_LIMITS: Record<'standard' | 'premium', SubscriptionLimits> = {
     canUseVideoUploads: true,
     canUseAdvancedExports: true,
     canUseTags: true,
+    canUseImageUploads: true,
   },
 };
 

@@ -18,6 +18,7 @@ import { Testimonials } from './pages/Testimonials';
 import { SubmitTestimonial } from './pages/SubmitTestimonial';
 import { Branding } from './pages/Branding';
 import { Demo } from './pages/Demo';
+import { Tags } from './pages/Tags';
 import { TestEmailNotification } from './pages/TestEmailNotification';
 
 const AppContent: React.FC = () => {
@@ -57,6 +58,14 @@ const AppContent: React.FC = () => {
               element={
                 <ProtectedRoute>
                   <Branding />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/tags"
+              element={
+                <ProtectedRoute>
+                  <Tags />
                 </ProtectedRoute>
               }
             />

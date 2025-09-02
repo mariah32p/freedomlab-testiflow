@@ -404,9 +404,13 @@ export const Forms: React.FC = () => {
                               checked={formData.allow_video_uploads}
                               onChange={(e) => setFormData({ ...formData, allow_video_uploads: e.target.checked })}
                               className="rounded border-gray-300 text-primary-950 focus:ring-primary-500"
+                              disabled={!subscription.limits.canUseVideoUploads}
                             />
                             <label htmlFor="allow_videos" className="text-sm font-medium text-gray-700">
                               Allow video uploads
+                              {!subscription.limits.canUseVideoUploads && (
+                                <span className="text-accent-600 ml-1 text-xs">(Premium)</span>
+                              )}
                             </label>
                           </div>
                           {formData.allow_video_uploads && (
@@ -425,6 +429,16 @@ export const Forms: React.FC = () => {
                             </div>
                           )}
                         </div>
+                        
+                        {!subscription.limits.canUseVideoUploads && formData.allow_video_uploads && (
+                          <div className="mt-2">
+                            <UpgradePrompt 
+                              feature="Video Testimonials"
+                              description="Collect rich video testimonials from customers"
+                              inline
+                            />
+                          </div>
+                        )}
                       </div>
                       
                       <p className="text-xs text-blue-700 mt-3">

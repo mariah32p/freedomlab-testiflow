@@ -232,6 +232,50 @@ export const SubmitTestimonial: React.FC = () => {
       return;
     }
 
+    // Check if form owner has reached testimonial limit (Standard plan)
+    try {
+      const { data: ownerData } = await supabase
+        .from('stripe_customers')
+        .select('customer_id')
+        .eq('user_id', form.user_id)
+        .maybeSingle();
+
+      if (ownerData) {
+        const { data: subscriptionData } = await supabase
+          .from('stripe_subscriptions')
+          .select('price_id, status')
+          .eq('customer_id', ownerData.customer_id)
+          .maybeSingle();
+
+        // Check if Standard plan (price_1Rznb5Dn6VTzl81bjqFfCagv)
+        if (subscriptionData?.price_id === 'price_1Rznb5Dn6VTzl81bjqFfCagv' && 
+            (subscriptionData.status === 'active' || subscriptionData.status === 'trialing')) {
+          
+          // Count existing testimonials for this user's forms
+          const { data: userForms } = await supabase
+            .from('testimonial_forms')
+            .select('id')
+            .eq('user_id', form.user_id);
+
+          if (userForms && userForms.length > 0) {
+            const formIds = userForms.map(f => f.id);
+            const { count } = await supabase
+              .from('testimonials')
+              .select('*', { count: 'exact', head: true })
+              .in('form_id', formIds);
+
+            if (count && count >= 25) {
+              setError('This form has reached its testimonial limit. Please contact the form owner.');
+              return;
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error checking testimonial limits:', error);
+      // Continue with submission if check fails
+    }
+
     // Validate required custom fields
     for (const field of customFields) {
       if (field.is_required && !customResponses[field.id]?.trim()) {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../hooks/useSubscription';
 import { UpgradePrompt } from '../components/UpgradePrompt';
+import { TestimonialTagger } from '../components/TestimonialTagger';
 import { supabase } from '../lib/supabase';
 import { MessageSquare, Star, User, CheckCircle, Clock, X, Download, Trash2, MoreVertical, Eye, Mail, Building } from 'lucide-react';
 import { Alert } from '../components/Alert';
@@ -312,6 +313,30 @@ export const Testimonials: React.FC = () => {
                     <button
                       onClick={() => window.location.href = '/get-started'}
                       className="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition-colors text-sm font-medium"
+                    >
+                      Upgrade Now
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* At Limit Warning for Standard Plan */}
+            {subscription.plan === 'standard' && subscription.currentUsage.testimonialCount >= 25 && (
+              <div className="mb-6">
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-red-800 font-medium">
+                        You've reached your testimonial limit
+                      </p>
+                      <p className="text-red-700 text-sm">
+                        25/25 testimonials used. New submissions will be blocked until you upgrade to Premium.
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => window.location.href = '/get-started'}
+                      className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors text-sm font-medium"
                     >
                       Upgrade Now
                     </button>
@@ -666,6 +691,19 @@ export const Testimonials: React.FC = () => {
                             </div>
                           ))}
                         </div>
+                      </div>
+                    )}
+
+                    {/* Tags Section */}
+                    {subscription.limits.canUseTags && (
+                      <div className="mb-6">
+                        <h3 className="text-sm font-medium text-gray-700 mb-3">Tags</h3>
+                        <TestimonialTagger 
+                          testimonialId={viewingTestimonial.id}
+                          onTagsChange={() => {
+                            // Optionally refresh data
+                          }}
+                        />
                       </div>
                     )}
 
