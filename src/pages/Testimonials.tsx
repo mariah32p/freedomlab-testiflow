@@ -348,18 +348,15 @@ export const Testimonials: React.FC = () => {
               </div>
               <div className="flex space-x-2 items-center">
                 {/* Tag Filter - Premium only */}
-                {subscription.limits.canUseTags && (
+                {subscription.limits.canUseTags && tags.length > 0 && (
                   <div className="flex items-center space-x-2">
                     <Filter className="h-4 w-4 text-gray-400" />
                     <select
                       value={tagFilter}
                       onChange={(e) => setTagFilter(e.target.value)}
                       className="border border-gray-300 text-gray-700 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors text-sm"
-                      disabled={tags.length === 0}
                     >
-                      <option value="all">
-                        {tags.length === 0 ? 'No tags created' : 'All Tags'}
-                      </option>
+                      <option value="all">All Tags</option>
                       {tags.map((tag) => (
                         <option key={tag.id} value={tag.id}>
                           {tag.name}
@@ -433,6 +430,17 @@ export const Testimonials: React.FC = () => {
                     </button>
                   </div>
                 </div>
+              </div>
+            )}
+
+            {/* Standard Plan Tag Restriction Notice */}
+            {!subscription.limits.canUseTags && tags.length > 0 && (
+              <div className="mb-6">
+                <UpgradePrompt 
+                  feature="Tag Organization"
+                  description="You have tags created but need Premium to assign them to testimonials and use filtering."
+                  inline
+                />
               </div>
             )}
 
@@ -566,7 +574,7 @@ export const Testimonials: React.FC = () => {
                       )}
 
                       {/* Tags Display */}
-                      {subscription.limits.canUseTags && testimonialTags[testimonial.id] && testimonialTags[testimonial.id].length > 0 && (
+                      {subscription.limits.canUseTags && testimonialTags[testimonial.id]?.length > 0 && (
                         <div className="mb-4">
                           <div className="flex flex-wrap gap-1">
                             {testimonialTags[testimonial.id].map((tag) => (
@@ -809,10 +817,21 @@ export const Testimonials: React.FC = () => {
                     {subscription.limits.canUseTags && (
                       <div className="mb-6">
                         <h3 className="text-sm font-medium text-gray-700 mb-3">Tags</h3>
-                        <TestimonialTagger 
-                          testimonialId={viewingTestimonial.id}
-                          onTagsChange={fetchData}
-                        />
+                        {tags.length === 0 ? (
+                          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                            <div className="text-sm text-yellow-800">
+                              <strong>No tags available.</strong> 
+                              <a href="/tags" className="text-yellow-900 underline hover:text-yellow-700 ml-1">
+                                Create tags first
+                              </a> to organize testimonials.
+                            </div>
+                          </div>
+                        ) : (
+                          <TestimonialTagger 
+                            testimonialId={viewingTestimonial.id}
+                            onTagsChange={fetchData}
+                          />
+                        )}
                       </div>
                     )}
 

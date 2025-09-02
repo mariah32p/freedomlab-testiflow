@@ -34,7 +34,7 @@ const PLAN_LIMITS: Record<'standard' | 'premium', SubscriptionLimits> = {
     canUseVideoUploads: false,
     canUseAdvancedExports: false,
     canUseTags: false,
-    canUseImageUploads: true,
+    canUseImageUploads: true, // Images allowed on Standard
   },
   premium: {
     maxTestimonials: Infinity,

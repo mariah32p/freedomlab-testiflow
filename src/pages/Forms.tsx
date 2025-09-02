@@ -633,7 +633,11 @@ export const Forms: React.FC = () => {
                           className="bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-1 rounded-md text-sm font-medium transition-colors flex items-center space-x-1"
                           title="Copy shareable link"
                         >
-                          <Copy className="h-3 w-3" />
+                          className={`flex-1 py-3 px-4 rounded-lg transition-colors font-medium flex items-center justify-center space-x-2 ${
+                            subscription.limits.canUseCustomFields
+                              ? 'bg-secondary-500 text-white hover:bg-secondary-600'
+                              : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                          }`}
                           <span>Copy</span>
                         </button>
                         <a
@@ -735,7 +739,7 @@ export const Forms: React.FC = () => {
                               {new Date(viewingForm.updated_at).toLocaleDateString()}
                             </span>
                           </div>
-                        </div>
+                      {!subscription.limits.canUseVideoUploads && (
                       </div>
 
                       {/* Media Upload Settings */}
