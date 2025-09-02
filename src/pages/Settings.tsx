@@ -171,9 +171,19 @@ export const Settings: React.FC = () => {
                             <h4 className="font-medium text-blue-900">
                               {getCurrentPlan()?.id === 'standard' ? 'Upgrade to Premium' : 'Downgrade to Standard'}
                             </h4>
-                              <p className="text-sm text-blue-700 mt-1">
-                                Changes are prorated and take effect immediately.
+                            <div className="text-sm text-blue-700 mt-1 space-y-1">
+                              <p>
+                                <strong>Charged immediately:</strong> You'll be charged the difference (${getCurrentPlan()?.id === 'standard' ? '$20' : '-$20'}) right now.
                               </p>
+                              <p>
+                                Changes take effect immediately with prorated billing.
+                              </p>
+                              {subscription?.status === 'trialing' && (
+                                <p className="font-medium">
+                                  This will end your trial and start billing immediately.
+                                </p>
+                              )}
+                            </div>
                           </div>
                           <button
                             onClick={() => handlePlanChange(getOtherPlan()!.priceId)}

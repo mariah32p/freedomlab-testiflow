@@ -137,9 +137,16 @@ export const useSubscription = (): SubscriptionInfo => {
         const isTrialing = subscriptionData?.status === 'trialing';
         const hasActiveSubscription = isActive || isTrialing;
 
-        // Use the actual plan (Standard or Premium) - no special trial privileges
-        const effectivePlan = plan || 'standard';
-        console.log('Effective plan:', effectivePlan, 'isTrialing:', isTrialing, 'actualPlan:', plan);
+        // CRITICAL: Use actual plan limits - Standard gets Standard limits even during trial
+        const effectivePlan = plan || 'standard'; // Default to standard if no plan detected
+        console.log('Plan detection:', {
+          priceId: subscriptionData?.price_id,
+          detectedPlan: plan,
+          effectivePlan,
+          status: subscriptionData?.status,
+          isTrialing,
+          isActive
+        });
         
         const limits = PLAN_LIMITS[effectivePlan];
 
@@ -155,6 +162,13 @@ export const useSubscription = (): SubscriptionInfo => {
           },
         });
 
+        // Force re-render to update UI immediately after plan change
+        console.log('Subscription info updated:', {
+          plan,
+          effectivePlan,
+          limits: limits,
+          currentUsage: { testimonialCount, formCount }
+        });
       } catch (error) {
         console.error('Error fetching subscription info:', error);
         // On error, default to Standard limits
