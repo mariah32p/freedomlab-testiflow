@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { supabase } from '../lib/supabase';
 import { Alert } from '../components/Alert';
-import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { Lock, Eye, EyeOff, CheckCircle } from 'lucide-react';
 import { TestiFlowIcon } from '../components/TestiFlowIcon';
 
-export const Signup: React.FC = () => {
-  const [email, setEmail] = useState('');
+export const ResetPassword: React.FC = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const { signUp } = useAuth();
+  const [success, setSuccess] = useState(false);
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
   const getPasswordStrength = (password: string) => {
@@ -32,6 +32,24 @@ export const Signup: React.FC = () => {
   const passwordStrength = getPasswordStrength(password);
   const isPasswordStrong = passwordStrength.score >= 4;
 
+  useEffect(() => {
+    // Supabase sends reset tokens in the URL hash (#) rather than the query string
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    const accessToken = searchParams.get('access_token') || hashParams.get('access_token');
+    const refreshToken = searchParams.get('refresh_token') || hashParams.get('refresh_token');
+
+    if (!accessToken || !refreshToken) {
+      setError('Invalid or expired reset link. Please request a new password reset.');
+      return;
+    }
+
+    // Set the session with the tokens from the URL
+    supabase.auth.setSession({
+      access_token: accessToken,
+      refresh_token: refreshToken,
+    });
+  }, [searchParams]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -49,16 +67,66 @@ export const Signup: React.FC = () => {
       return;
     }
 
-    const { error } = await signUp(email, password);
-    
+    const { error } = await supabase.auth.updateUser({
+      password: password,
+    });
+
     if (error) {
       setError(error.message);
     } else {
-      navigate('/get-started');
+      setSuccess(true);
     }
-    
+
     setLoading(false);
   };
+
+  const handleBackToLogin = () => {
+    // Clear any existing session and redirect to login
+    supabase.auth.signOut();
+    navigate('/login');
+    window.location.reload(); // Refresh to ensure clean state
+  };
+
+  if (success) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div className="sm:mx-auto sm:w-full sm:max-w-md">
+          <div className="flex justify-center">
+            <div className="flex items-center space-x-2">
+              <TestiFlowIcon className="h-8 w-8 text-indigo-600" />
+              <span className="text-2xl font-bold text-gray-900">TestiFlow</span>
+            </div>
+          </div>
+          <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
+            Password Updated
+          </h2>
+        </div>
+
+        <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+          <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 text-center">
+            <div className="flex justify-center mb-6">
+              <CheckCircle className="h-16 w-16 text-green-500" />
+            </div>
+            
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Your password has been successfully updated!
+            </h3>
+            
+            <p className="text-gray-600 mb-8">
+              You can now sign in with your new password.
+            </p>
+            
+            <button
+              onClick={handleBackToLogin}
+              className="w-full bg-indigo-600 text-white py-3 px-4 rounded-md font-semibold hover:bg-indigo-700 transition-colors"
+            >
+              Continue to Sign In
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -70,16 +138,10 @@ export const Signup: React.FC = () => {
           </div>
         </div>
         <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
-          Create your account
+          Set new password
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
-          Or{' '}
-          <Link
-            to="/login"
-            className="font-medium text-indigo-600 hover:text-indigo-500"
-          >
-            sign in to your existing account
-          </Link>
+          Enter your new password below
         </p>
       </div>
 
@@ -97,30 +159,8 @@ export const Signup: React.FC = () => {
 
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email address
-              </label>
-              <div className="mt-1 relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  placeholder="Enter your email"
-                />
-              </div>
-            </div>
-
-            <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Password
+                New Password
               </label>
               <div className="mt-1 relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -135,7 +175,7 @@ export const Signup: React.FC = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="appearance-none block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  placeholder="Enter your password"
+                  placeholder="Enter your new password"
                 />
                 <button
                   type="button"
@@ -181,7 +221,7 @@ export const Signup: React.FC = () => {
 
             <div>
               <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
-                Confirm Password
+                Confirm New Password
               </label>
               <div className="mt-1 relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -196,7 +236,7 @@ export const Signup: React.FC = () => {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   className="appearance-none block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  placeholder="Confirm your password"
+                  placeholder="Confirm your new password"
                 />
                 <button
                   type="button"
@@ -215,16 +255,16 @@ export const Signup: React.FC = () => {
             <div>
               <button
                 type="submit"
-                disabled={loading}
+                disabled={loading || !isPasswordStrong}
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? (
                   <div className="flex items-center">
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Creating account...
+                    Updating password...
                   </div>
                 ) : (
-                  'Create account'
+                  'Update password'
                 )}
               </button>
             </div>

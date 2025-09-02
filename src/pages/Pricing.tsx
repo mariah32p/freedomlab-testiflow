@@ -1,38 +1,16 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Check } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
-import { useStripe } from '../hooks/useStripe';
-import { products } from '../stripe-config.js';
+import { Check, ArrowRight } from 'lucide-react';
 import { TestiFlowIcon } from '../components/TestiFlowIcon';
 
 export const Pricing: React.FC = () => {
-  const { user } = useAuth();
-  const { createCheckoutSession, loading, error } = useStripe();
   const navigate = useNavigate();
+  const [error] = React.useState<string>('');
+  const [loading] = React.useState<boolean>(false);
 
-  const handleSubscribe = async () => {
-    if (!user) {
-      navigate('/signup');
-      return;
-    }
-
-    const product = products.find(p => p.id === 'pro'); // Get the Pro product
-    if (!product) return;
-    
-    await createCheckoutSession(product.priceId);
-  };
-
-  const handleBasicSubscribe = async () => {
-    if (!user) {
-      navigate('/signup');
-      return;
-    }
-
-    const product = products.find(p => p.id === 'basic'); // Get the Basic product
-    if (!product) return;
-    
-    await createCheckoutSession(product.priceId);
+  const handleSignupClick = () => {
+    navigate('/signup');
+    window.scrollTo(0, 0);
   };
 
   return (
@@ -55,105 +33,93 @@ export const Pricing: React.FC = () => {
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          {/* Basic Plan */}
+          {/* Standard Plan */}
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-all duration-300">
             <div className="bg-gray-50 px-6 py-8 text-center border-b border-gray-200">
-              <h3 className="text-2xl font-bold text-navy">Basic</h3>
+              <h3 className="text-2xl font-bold text-primary-950">Standard</h3>
               <div className="mt-4 flex items-baseline justify-center">
-                <span className="text-5xl font-bold text-navy">$29</span>
+                <span className="text-5xl font-bold text-primary-950">$29</span>
                 <span className="text-xl text-gray-500 ml-1">/month</span>
               </div>
-              <p className="mt-2 text-gray-600">Perfect for small teams getting started</p>
+              <p className="mt-2 text-gray-600">Perfect for small businesses getting started</p>
             </div>
             
             <div className="px-6 py-8">
               <ul className="space-y-4 mb-8">
                 {[
-                  'Up to 100 testimonials/month',
-                  'Basic collection forms',
-                  'Standard export formats',
-                  'Email support',
-                  'Basic analytics',
+                  'Up to 25 testimonials',
+                  '1 collection form - Simple form to request testimonials',
+                  'Basic approval workflow - Review before testimonials go live',
+                  'CSV export',
+                  'Email notifications - Get notified of new submissions',
                 ].map((feature, index) => (
                   <li key={index} className="flex items-center">
-                    <Check className="h-5 w-5 text-teal mr-3 flex-shrink-0" />
+                    <Check className="h-5 w-5 text-secondary-500 mr-3 flex-shrink-0" />
                     <span className="text-gray-700">{feature}</span>
                   </li>
                 ))}
               </ul>
-              
-              <button
-                onClick={handleBasicSubscribe}
-                disabled={loading}
-                className="w-full bg-primary-950 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-900 transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? (
-                  <div className="flex items-center">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Processing...
-                  </div>
-                ) : (
-                  'Start Free Trial'
-                )}
-              </button>
             </div>
           </div>
 
-          {/* Pro Plan */}
+          {/* Premium Plan */}
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-secondary-500">
             <div className="bg-gradient-to-r from-primary-950 to-secondary-500 px-6 py-8 text-center">
-              <h3 className="text-2xl font-bold text-white">Pro</h3>
+              <h3 className="text-2xl font-bold text-white">Premium</h3>
               <div className="mt-4 flex items-baseline justify-center">
                 <span className="text-5xl font-bold text-white">$49</span>
                 <span className="text-xl text-white/80 ml-1">/month</span>
               </div>
-              <p className="mt-2 text-white/90">Everything you need to scale</p>
+              <p className="mt-2 text-white/90">Complete solution for growing businesses</p>
             </div>
             
             <div className="px-6 py-8">
               <ul className="space-y-4 mb-8">
                 {[
-                  'Unlimited testimonial collection',
-                  'Legal rights tracking & consent management',
-                  'Ad-ready export formats',
-                  'Custom collection forms',
-                  'Advanced analytics & reporting',
-                  'Priority email support',
-                  'API access',
-                  'White-label options',
+                  'Unlimited testimonials & forms',
+                  'Custom fields & branding',
+                  'Image + video testimonials - Rich media collection',
+                  'Website widget generator',
+                  'Advanced exports (JSON, social media posts)',
+                  'Tag organization',
                 ].map((feature, index) => (
                   <li key={index} className="flex items-center">
-                    <Check className="h-5 w-5 text-teal mr-3 flex-shrink-0" />
+                    <Check className="h-5 w-5 text-secondary-500 mr-3 flex-shrink-0" />
                     <span className="text-gray-700">{feature}</span>
                   </li>
                 ))}
               </ul>
-              
-              <div>
-                {error && (
-                  <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-                    <p className="text-red-800 text-sm">{error}</p>
-                  </div>
-                )}
-                <button
-                  onClick={handleSubscribe}
-                  disabled={loading}
-                  className="w-full bg-secondary-500 text-white py-3 px-6 rounded-lg font-semibold hover:bg-secondary-600 transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
-                >
-                  {loading ? (
-                    <div className="flex items-center">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      Processing...
-                    </div>
-                  ) : (
-                    'Start Free Trial'
-                  )}
-                </button>
-                <p className="text-sm text-gray-500 text-center mt-2">
-                  7-day free trial • No credit card required
-                </p>
-              </div>
             </div>
+          </div>
+        </div>
+        
+        {/* Single CTA Section */}
+        <div className="text-center mt-16">
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 max-w-md mx-auto">
+            <h3 className="text-2xl font-bold text-primary-950 mb-4">
+              Ready to Get Started?
+            </h3>
+            <p className="text-gray-600 mb-6">
+              Choose your plan after signing up. Start with a 7-day free trial.
+            </p>
+            
+            {error && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-red-800 text-sm">{error}</p>
+              </div>
+            )}
+            
+            <button
+              onClick={handleSignupClick}
+              disabled={loading}
+              className="w-full bg-primary-950 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-900 transition-colors flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <span>Start Free Trial</span>
+              <ArrowRight className="h-5 w-5" />
+            </button>
+            <p className="text-sm text-gray-500 text-center mt-2">
+              7-day free trial
+            </p>
           </div>
         </div>
       </div>
