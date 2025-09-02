@@ -63,6 +63,20 @@ export const Testimonials: React.FC = () => {
   const [showExportModal, setShowExportModal] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
 
+  // Close actions menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (!target.closest('.actions-menu') && !target.closest('.actions-button')) {
+        setShowActionsFor(null);
+      }
+    };
+
+    if (showActionsFor) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [showActionsFor]);
   useEffect(() => {
     fetchData();
   }, [user]);
@@ -607,14 +621,14 @@ export const Testimonials: React.FC = () => {
                           
                           <div className="relative">
                             <button
+                              className="actions-button p-1 text-gray-400 hover:text-gray-600 transition-colors"
                               onClick={() => setShowActionsFor(showActionsFor === testimonial.id ? null : testimonial.id)}
-                              className="p-1 text-gray-400 hover:text-gray-600 transition-colors"
                             >
                               <MoreVertical className="h-4 w-4" />
                             </button>
                             
                             {showActionsFor === testimonial.id && (
-                              <div className="absolute right-0 bottom-8 bg-white border border-gray-200 rounded-lg shadow-lg z-10 min-w-40">
+                              <div className="actions-menu absolute right-0 bottom-8 bg-white border border-gray-200 rounded-lg shadow-lg z-10 min-w-40">
                                 <div className="py-1">
                                   {testimonial.status !== 'approved' && (
                                     <button
