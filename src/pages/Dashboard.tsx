@@ -300,6 +300,7 @@ export const Dashboard: React.FC = () => {
                 {recentTestimonials.length > 0 && (
                   <Link
                     to="/testimonials"
+                   onClick={() => window.scrollTo(0, 0)}
                     className="text-primary-950 hover:text-primary-800 text-sm font-medium"
                   >
                     View All →
@@ -405,6 +406,7 @@ export const Dashboard: React.FC = () => {
                     <div className="text-center pt-4">
                       <Link
                         to="/testimonials"
+                       onClick={() => window.scrollTo(0, 0)}
                         className="text-primary-950 hover:text-primary-800 text-sm font-medium"
                       >
                         View all testimonials →
