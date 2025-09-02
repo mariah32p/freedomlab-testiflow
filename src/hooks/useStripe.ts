@@ -123,7 +123,7 @@ export const useStripe = () => {
           client_reference_id: session.user.id,
           success_url: `${window.location.origin}/settings?plan_changed=true`,
           cancel_url: `${window.location.origin}/settings`,
-          is_plan_change: true, // No trial for plan changes
+          is_plan_change: true,
         },
       });
 
@@ -133,7 +133,7 @@ export const useStripe = () => {
 
       // Redirect to Stripe Checkout
       if (data?.url) {
-        window.open(data.url, '_blank');
+        window.location.href = data.url; // Use same tab for plan changes
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
