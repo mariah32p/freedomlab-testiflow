@@ -139,7 +139,7 @@ export const useSubscription = (): SubscriptionInfo => {
           const standardPriceId = 'price_1Rznb5Dn6VTzl81bjqFfCagv';
           const premiumPriceId = 'price_1Rznb5Dn6VTzl81b8Hx5UQt6';
           
-          console.log('Price ID comparison:', {
+           console.log('useSubscription: Price ID comparison:', {
             currentPriceId: subscriptionData.price_id,
             standardPriceId,
             premiumPriceId,
@@ -149,12 +149,14 @@ export const useSubscription = (): SubscriptionInfo => {
           
           if (subscriptionData.price_id === standardPriceId) {
             plan = 'standard';
-            console.log('Detected Standard plan');
+             console.log('useSubscription: Detected Standard plan');
           } else if (subscriptionData.price_id === premiumPriceId) {
             plan = 'premium';
-            console.log('Detected Premium plan');
+             console.log('useSubscription: Detected Premium plan');
           } else {
-            console.warn('Unknown price ID:', subscriptionData.price_id);
+             console.warn('useSubscription: Unknown price ID:', subscriptionData.price_id);
+             // Let's also check if it might be a test price ID or different format
+             console.log('useSubscription: Full subscription data for debugging:', subscriptionData);
           }
         }
 
@@ -164,13 +166,14 @@ export const useSubscription = (): SubscriptionInfo => {
 
         // CRITICAL: Use actual plan limits - Standard gets Standard limits even during trial
         const effectivePlan = plan || 'standard'; // Default to standard if no plan detected
-        console.log('Plan detection:', {
+         console.log('useSubscription: Final plan detection:', {
           priceId: subscriptionData?.price_id,
           detectedPlan: plan,
           effectivePlan,
           status: subscriptionData?.status,
           isTrialing,
-          isActive
+           isActive,
+           limitsApplied: PLAN_LIMITS[effectivePlan]
         });
         
         const limits = PLAN_LIMITS[effectivePlan];
@@ -188,7 +191,7 @@ export const useSubscription = (): SubscriptionInfo => {
         });
 
         // Force re-render to update UI immediately after plan change
-        console.log('Subscription info updated:', {
+         console.log('useSubscription: Subscription info updated:', {
           plan,
           effectivePlan,
           limits: limits,
@@ -205,7 +208,7 @@ export const useSubscription = (): SubscriptionInfo => {
     };
 
     fetchSubscriptionInfo();
-  }, [user, refreshTrigger]);
+   }, [user, refreshTrigger]);
 
   return subscriptionInfo;
 };

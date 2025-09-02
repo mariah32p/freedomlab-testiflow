@@ -21,11 +21,17 @@ export const Settings: React.FC = () => {
       try {
         setLoading(true);
         setError(null);
+        
+        // Debug: Log what we're looking for
+        console.log('Settings: Fetching subscription for user:', user.id);
+        
         const { data: customerData } = await supabase
           .from('stripe_customers')
           .select('*')
           .eq('user_id', user.id)
           .maybeSingle();
+
+        console.log('Settings: Customer data found:', customerData);
 
         if (customerData) {
           const { data: subscriptionData } = await supabase
@@ -33,6 +39,14 @@ export const Settings: React.FC = () => {
             .select('*')
             .eq('customer_id', customerData.customer_id)
             .maybeSingle();
+           
+           console.log('Settings: Subscription data found:', {
+             subscription_id: subscriptionData?.subscription_id,
+             price_id: subscriptionData?.price_id,
+             status: subscriptionData?.status,
+             customer_id: subscriptionData?.customer_id
+           });
+           
           setSubscription(subscriptionData);
         }
       } catch (error) {
@@ -50,18 +64,52 @@ export const Settings: React.FC = () => {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('plan_changed') === 'true') {
       setSuccess('Your plan has been updated successfully!');
-      // Refresh subscription data after plan change
-      if ((window as any).refreshSubscription) {
-        setTimeout(() => {
-          (window as any).refreshSubscription();
-        }, 1000); // Give webhook time to process
-      }
+       
+       // Force refresh subscription data after plan change
+       setTimeout(async () => {
+         console.log('Settings: Plan changed, forcing data refresh...');
+         
+         if (!user) return;
+         
+         const { data: customerData } = await supabase
+           .from('stripe_customers')
+           .select('*')
+           .eq('user_id', user.id)
+           .maybeSingle();
+
+         if (customerData) {
+           const { data: subscriptionData } = await supabase
+             .from('stripe_subscriptions')
+             .select('*')
+             .eq('customer_id', customerData.customer_id)
+             .maybeSingle();
+           
+           console.log('Settings: Refreshed subscription data:', {
+             subscription_id: subscriptionData?.subscription_id,
+             price_id: subscriptionData?.price_id,
+             status: subscriptionData?.status
+           });
+           
+           setSubscription(subscriptionData);
+         }
+         
+         // Also refresh the global subscription hook
+         if ((window as any).refreshSubscription) {
+           (window as any).refreshSubscription();
+         }
+       }, 2000); // Give webhook more time to process
+       
       window.history.replaceState({}, '', window.location.pathname);
     }
   }, []);
 
   const getCurrentPlan = () => {
     if (!subscription?.price_id) return null;
+     
+     console.log('Settings: Getting current plan for price_id:', subscription.price_id);
+     const foundProduct = products.find(p => p.priceId === subscription.price_id);
+     console.log('Settings: Found product:', foundProduct);
+     
     return products.find(p => p.priceId === subscription.price_id);
   };
 
