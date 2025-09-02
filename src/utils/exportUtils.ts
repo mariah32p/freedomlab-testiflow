@@ -10,6 +10,8 @@ export interface ExportTestimonial {
   submitted_at: string;
   form_title: string;
   custom_responses?: Record<string, string>;
+  image_url?: string;
+  video_url?: string;
 }
 
 export const exportToCSV = (testimonials: ExportTestimonial[], filename: string = 'testimonials') => {

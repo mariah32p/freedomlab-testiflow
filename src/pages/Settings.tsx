@@ -129,7 +129,7 @@ export const Settings: React.FC = () => {
                         <span className="px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800">
                           {getCurrentPlan()?.name || 'Unknown Plan'}
                         </span>
-                        <span className="text-sm text-gray-500">${getCurrentPlan()?.price}/mo</span>
+                        {/* Price information is not available in product data */}
                       </div>
                     </div>
                     <div className="flex items-center justify-between">
