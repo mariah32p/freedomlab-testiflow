@@ -771,21 +771,12 @@ export const Forms: React.FC = () => {
                           setCustomizingForm(viewingForm);
                           setViewingForm(null);
                         }}
+                        className="flex-1 bg-secondary-500 text-white py-3 px-4 rounded-lg hover:bg-secondary-600 transition-colors font-medium flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
                         disabled={!subscription.limits.canUseCustomFields}
-                        className="flex-1 bg-secondary-500 text-white py-3 px-4 rounded-lg hover:bg-secondary-600 transition-colors font-medium flex items-center justify-center space-x-2"
                       >
                         <Settings className="h-4 w-4" />
                         <span>Custom Fields</span>
                       </button>
-                      {!subscription.limits.canUseCustomFields && (
-                        <div className="mt-2">
-                          <UpgradePrompt 
-                            feature="Custom Fields"
-                            description="Add custom questions beyond the standard fields"
-                            inline
-                          />
-                        </div>
-                      )}
                       <button
                         onClick={() => {
                           setDeletingForm(viewingForm);
@@ -796,6 +787,16 @@ export const Forms: React.FC = () => {
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </div>
+                    
+                    {!subscription.limits.canUseCustomFields && (
+                      <div className="mt-4">
+                        <UpgradePrompt 
+                          feature="Custom Fields"
+                          description="Add custom questions beyond the standard fields"
+                          inline
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

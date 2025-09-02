@@ -761,7 +761,7 @@ export const SubmitTestimonial: React.FC = () => {
                             <Play className="h-8 w-8 text-gray-400 mx-auto mb-2" />
                             <p className="text-sm text-gray-600">Click to upload a video</p>
                             <p className="text-xs text-gray-500 mt-1">
-                              MP4, MOV, AVI up to {form.max_video_size_mb || 100}MB
+                              MP4, MOV, AVI up to 100MB
                             </p>
                           </label>
                         </div>

@@ -149,6 +149,13 @@ export const Navbar = () => {
                     Branding
                   </Link>
                   <Link
+                    to="/tags"
+                    className="block text-gray-700 hover:text-primary-950 hover:bg-gray-50 px-3 py-3 rounded-md text-base font-medium transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Tags
+                  </Link>
+                  <Link
                     to="/testimonials"
                     className="block text-gray-700 hover:text-primary-950 hover:bg-gray-50 px-3 py-3 rounded-md text-base font-medium transition-colors"
                     onClick={() => setMobileMenuOpen(false)}
