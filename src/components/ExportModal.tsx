@@ -21,6 +21,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
   const [statusFilter, setStatusFilter] = useState<'all' | 'approved' | 'pending' | 'rejected'>('approved');
   const [generatedContent, setGeneratedContent] = useState<string>('');
   const [copied, setCopied] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
   const [branding, setBranding] = useState<{ primary_color: string; secondary_color: string; font_family: string } | null>(null);
 
   // Fetch user's branding
