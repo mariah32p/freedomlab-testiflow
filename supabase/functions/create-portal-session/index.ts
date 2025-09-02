@@ -105,34 +105,20 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Create portal session
-    const configurationObject = {
-      business_profile: {
-        headline: 'Manage your TestiFlow subscription',
-      },
-      features: {
-        payment_method_update: {
-          enabled: true,
-        },
-        subscription_cancel: {
-          enabled: true,
-          mode: 'at_period_end',
-          proration_behavior: 'none',
-        },
-        subscription_update: {
-          enabled: false,
-        },
-      },
-    };
+    // Get billing portal configuration ID from environment
+    const billingPortalConfigId = Deno.env.get('STRIPE_BILLING_PORTAL_CONFIGURATION_ID');
 
-    // Ensure clean object serialization
-    const cleanConfig = JSON.parse(JSON.stringify(configurationObject));
-
-    const portalSession = await stripe.billingPortal.sessions.create({
+    const sessionConfig: any = {
       customer: customerData.customer_id,
       return_url: return_url,
-      configuration: cleanConfig,
-    });
+    };
+
+    // Only add configuration if the environment variable is set
+    if (billingPortalConfigId) {
+      sessionConfig.configuration = billingPortalConfigId;
+    }
+
+    const portalSession = await stripe.billingPortal.sessions.create(sessionConfig);
 
     return new Response(
       JSON.stringify({ url: portalSession.url }), 
