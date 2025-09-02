@@ -107,26 +107,15 @@ export const Navbar = () => {
               )}
             </button>
             {!user && (
-              <button
-                onClick={handleSignupClick}
-                className="bg-primary-950 text-white hover:bg-primary-900 px-4 py-2 rounded-md text-sm font-semibold transition-colors"
-                style={{ minHeight: '44px' }}
-              >
-                Try Free
-              </button>
-              <Link
-                to="/tags"
-                className="text-gray-700 hover:text-primary-950 transition-colors"
-              >
-                Tags
-              </Link>
-              <Link
-                to="/tags"
-                className="block text-gray-700 hover:text-primary-950 hover:bg-gray-50 px-3 py-3 rounded-md text-base font-medium transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Tags
-              </Link>
+              <>
+                <button
+                  onClick={handleSignupClick}
+                  className="bg-primary-950 text-white hover:bg-primary-900 px-4 py-2 rounded-md text-sm font-semibold transition-colors"
+                  style={{ minHeight: '44px' }}
+                >
+                  Try Free
+                </button>
+              </>
             )}
           </div>
         </div>
