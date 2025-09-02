@@ -93,7 +93,7 @@ export const useRouteGuard = () => {
 
         console.log('Found customer record, checking subscription...');
         // Get subscription data
-        const { data: subscriptionData, error } = await supabase
+        const { data: subscriptionData, error: subscriptionError } = await supabase
           .from('stripe_subscriptions')
           .select('*')
           .eq('customer_id', customerData.customer_id)
@@ -101,12 +101,16 @@ export const useRouteGuard = () => {
 
         let subscription: UserSubscription;
         
-        if (error || !subscriptionData) {
+        if (subscriptionError || !subscriptionData) {
           // No subscription found
-          console.log('No subscription found for customer');
+          console.log('No subscription found for customer:', subscriptionError);
           subscription = { status: 'not_started' };
         } else {
-          console.log('Found subscription:', subscriptionData);
+          console.log('Found subscription:', {
+            id: subscriptionData.subscription_id,
+            status: subscriptionData.status,
+            priceId: subscriptionData.price_id
+          });
           subscription = {
             status: subscriptionData.status,
             payment_issue_since: getPaymentIssueDate(subscriptionData)
