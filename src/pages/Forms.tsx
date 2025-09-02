@@ -741,13 +741,13 @@ export const Forms: React.FC = () => {
                           <div className="flex justify-between">
                             <span className="text-blue-700">Images:</span>
                             <span className="font-medium text-blue-900">
-                              {viewingForm.allow_image_uploads ? `${viewingForm.max_image_size_mb}MB` : 'Disabled'}
+                              {viewingForm.allow_image_uploads ? `${viewingForm.max_image_size_mb || 10}MB` : 'Disabled'}
                             </span>
                           </div>
                           <div className="flex justify-between">
                             <span className="text-blue-700">Videos:</span>
                             <span className="font-medium text-blue-900">
-                              {viewingForm.allow_video_uploads ? `${viewingForm.max_video_size_mb}MB` : 'Disabled'}
+                              {viewingForm.allow_video_uploads ? `${viewingForm.max_video_size_mb || 100}MB` : 'Disabled'}
                             </span>
                           </div>
                         </div>
