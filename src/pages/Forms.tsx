@@ -3,7 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useSubscription, canCreateForm } from '../hooks/useSubscription';
 import { UpgradePrompt } from '../components/UpgradePrompt';
 import { supabase } from '../lib/supabase';
-import { Plus, Edit, Trash2, ExternalLink, Copy, Eye, Settings, X, Calendar, ToggleLeft, ToggleRight } from 'lucide-react';
+import { Plus, Edit, Trash2, ExternalLink, Copy, Eye, Settings, X, Calendar, ToggleLeft, ToggleRight, FileText, Image, Video } from 'lucide-react';
 import { Alert } from '../components/Alert';
 import { FormBuilder } from '../components/FormBuilder';
 
@@ -19,6 +19,7 @@ interface TestimonialForm {
   allow_video_uploads?: boolean;
   max_image_size_mb?: number;
   max_video_size_mb?: number;
+  custom_field_count?: number;
 }
 
 export const Forms: React.FC = () => {
@@ -40,9 +41,7 @@ export const Forms: React.FC = () => {
     description: "We'd love to hear about your experience with us!",
     thank_you_message: 'Thank you for your testimonial!',
     allow_image_uploads: true,
-    allow_video_uploads: false,
-    max_image_size_mb: 10,
-    max_video_size_mb: 100
+    allow_video_uploads: false
   });
 
   useEffect(() => {
@@ -53,14 +52,30 @@ export const Forms: React.FC = () => {
     if (!user) return;
 
     try {
-      const { data, error } = await supabase
+      const { data: formsData, error } = await supabase
         .from('testimonial_forms')
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setForms(data || []);
+      
+      // Get custom field counts for each form
+      const formsWithCounts = await Promise.all(
+        (formsData || []).map(async (form) => {
+          const { count } = await supabase
+            .from('form_fields')
+            .select('*', { count: 'exact', head: true })
+            .eq('form_id', form.id);
+          
+          return {
+            ...form,
+            custom_field_count: count || 0
+          };
+        })
+      );
+      
+      setForms(formsWithCounts);
     } catch (error) {
       console.error('Error fetching forms:', error);
       setError('Failed to load forms');

@@ -68,23 +68,22 @@ export const SubmitTestimonial: React.FC = () => {
       }
 
       try {
+        // Use anon access for public form submission
         const { data, error } = await supabase
           .from('testimonial_forms')
           .select('*')
           .eq('id', formId)
+          .eq('is_active', true)
           .maybeSingle();
 
         if (error) {
-         console.error('Supabase error:', error);
+          console.error('Supabase error:', error);
           setError('Failed to load form');
         } else if (!data) {
-         console.log('No form found with ID:', formId);
+          console.log('No form found with ID:', formId);
           setError('Form not found or inactive');
-        } else if (!data.is_active) {
-         console.log('Form found but inactive:', data);
-          setError('This form is currently inactive');
         } else {
-         console.log('Form loaded successfully:', data);
+          console.log('Form loaded successfully:', data);
           setForm(data);
           
           // Fetch branding for this form's owner
