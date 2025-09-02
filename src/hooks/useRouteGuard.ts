@@ -50,13 +50,14 @@ export const useRouteGuard = () => {
       // Allow certain pages without authentication
       const publicPages = ['/login', '/signup', '/forgot-password', '/reset-password', '/pricing', '/', '/demo'];
       const isPublicPage = publicPages.includes(location.pathname);
+      const isPublicFormSubmission = location.pathname.startsWith('/submit/');
       const isLandingPage = location.pathname === '/';
 
       // Real auth mode route logic
       if (!user) {
         // Not signed in → send to /signup (unless on public page)
         console.log('No user found, current path:', location.pathname, 'Is public page:', isPublicPage);
-        if (!isPublicPage && !isLandingPage) {
+        if (!isPublicPage && !isLandingPage && !isPublicFormSubmission) {
           console.log('Redirecting to signup because not on public page');
           navigate('/signup');
           return;
@@ -82,7 +83,7 @@ export const useRouteGuard = () => {
         if (!customerData) {
           // No customer record = no subscription
           console.log('No customer record found, user needs to subscribe');
-          if (location.pathname !== '/get-started' && !isPublicPage && !isLandingPage) {
+          if (location.pathname !== '/get-started' && !isPublicPage && !isLandingPage && !isPublicFormSubmission) {
             navigate('/get-started');
             return;
           }
@@ -120,7 +121,7 @@ export const useRouteGuard = () => {
           case 'active':
             // Active subscription → allow dashboard
             console.log('User has active/trialing subscription, allowing dashboard access');
-            if (location.pathname === '/get-started' || isLandingPage) {
+            if ((location.pathname === '/get-started' || isLandingPage) && !isPublicFormSubmission) {
               navigate('/dashboard');
             }
             setRouteLoading(false);
@@ -130,13 +131,13 @@ export const useRouteGuard = () => {
             // Check if in 30-day grace period
             if (isInGracePeriod(subscription.payment_issue_since)) {
               // Allow dashboard but will show payment issue banner
-              if (location.pathname === '/get-started' || isLandingPage) {
+              if ((location.pathname === '/get-started' || isLandingPage) && !isPublicFormSubmission) {
                 navigate('/dashboard');
               }
               setRouteLoading(false);
             } else {
               // Grace period expired → send to get-started
-              if (location.pathname !== '/get-started' && !isPublicPage && !isLandingPage) {
+              if (location.pathname !== '/get-started' && !isPublicPage && !isLandingPage && !isPublicFormSubmission) {
                 navigate('/get-started');
               }
               setRouteLoading(false);
@@ -148,7 +149,7 @@ export const useRouteGuard = () => {
           default:
             // No active subscription → send to get-started
             console.log('No active subscription, staying on get-started');
-            if (location.pathname !== '/get-started' && !isPublicPage && !isLandingPage) {
+            if (location.pathname !== '/get-started' && !isPublicPage && !isLandingPage && !isPublicFormSubmission) {
               navigate('/get-started');
             }
             setRouteLoading(false);
