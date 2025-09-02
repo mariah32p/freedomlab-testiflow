@@ -312,7 +312,7 @@ export const SubmitTestimonial: React.FC = () => {
         .single();
 
       if (error || !testimonialData) {
-        if (error.code === 'PGRST116') {
+        if (error && error.code === 'PGRST116') {
           console.log('No form found with ID:', formId);
           setError('Form not found or inactive');
         } else {

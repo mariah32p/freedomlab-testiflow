@@ -3,7 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useSubscription, canCreateForm } from '../hooks/useSubscription';
 import { UpgradePrompt } from '../components/UpgradePrompt';
 import { supabase } from '../lib/supabase';
-import { Plus, Edit, Trash2, ExternalLink, Copy, Eye, Settings, X, Calendar, ToggleLeft, ToggleRight, FileText, Image, Video } from 'lucide-react';
+import { Plus, Edit, Trash2, ExternalLink, Copy, Eye, Settings, X, Calendar, ToggleLeft, ToggleRight, FileText } from 'lucide-react';
 import { Alert } from '../components/Alert';
 import { FormBuilder } from '../components/FormBuilder';
 
