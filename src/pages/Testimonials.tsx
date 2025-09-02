@@ -4,7 +4,7 @@ import { useSubscription } from '../hooks/useSubscription';
 import { UpgradePrompt } from '../components/UpgradePrompt';
 import { TestimonialTagger } from '../components/TestimonialTagger';
 import { supabase } from '../lib/supabase';
-import { MessageSquare, Star, User, CheckCircle, Clock, X, Download, Trash2, MoreVertical, Eye, Mail, Building } from 'lucide-react';
+import { MessageSquare, Star, User, CheckCircle, Clock, X, Download, Trash2, MoreVertical, Eye, Mail, Building, Tag, Filter } from 'lucide-react';
 import { Alert } from '../components/Alert';
 import { ExportModal } from '../components/ExportModal';
 import { ExportTestimonial } from '../utils/exportUtils';
@@ -40,15 +40,23 @@ interface FormResponse {
   field: FormField;
 }
 
+interface TestimonialTag {
+  id: string;
+  name: string;
+  color: string;
+}
 export const Testimonials: React.FC = () => {
   const { user } = useAuth();
   const subscription = useSubscription();
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [forms, setForms] = useState<TestimonialForm[]>([]);
+  const [tags, setTags] = useState<TestimonialTag[]>([]);
+  const [testimonialTags, setTestimonialTags] = useState<Record<string, TestimonialTag[]>>({});
   const [testimonialResponses, setTestimonialResponses] = useState<Record<string, FormResponse[]>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('all');
+  const [tagFilter, setTagFilter] = useState<string>('all');
   const [deletingTestimonial, setDeletingTestimonial] = useState<Testimonial | null>(null);
   const [showActionsFor, setShowActionsFor] = useState<string | null>(null);
   const [viewingTestimonial, setViewingTestimonial] = useState<Testimonial | null>(null);
@@ -74,6 +82,20 @@ export const Testimonials: React.FC = () => {
       if (formsError) throw formsError;
       setForms(formsData || []);
 
+      // Get user's tags if they have Premium
+      if (subscription.limits.canUseTags) {
+        const { data: tagsData, error: tagsError } = await supabase
+          .from('testimonial_tags')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('name');
+
+        if (tagsError) {
+          console.error('Error fetching tags:', tagsError);
+        } else {
+          setTags(tagsData || []);
+        }
+      }
       if (formsData && formsData.length > 0) {
         const formIds = formsData.map(f => f.id);
         
@@ -87,6 +109,34 @@ export const Testimonials: React.FC = () => {
         if (testimonialsError) throw testimonialsError;
         setTestimonials(testimonialsData || []);
 
+        // Get tag assignments for testimonials if Premium
+        if (subscription.limits.canUseTags && testimonialsData && testimonialsData.length > 0) {
+          const testimonialIds = testimonialsData.map(t => t.id);
+          
+          const { data: tagAssignments, error: tagAssignmentsError } = await supabase
+            .from('testimonial_tag_assignments')
+            .select(`
+              testimonial_id,
+              tag:testimonial_tags(id, name, color)
+            `)
+            .in('testimonial_id', testimonialIds);
+
+          if (tagAssignmentsError) {
+            console.error('Error fetching tag assignments:', tagAssignmentsError);
+          } else if (tagAssignments) {
+            // Group tags by testimonial ID
+            const tagsByTestimonial: Record<string, TestimonialTag[]> = {};
+            tagAssignments.forEach((assignment: any) => {
+              if (assignment.tag) {
+                if (!tagsByTestimonial[assignment.testimonial_id]) {
+                  tagsByTestimonial[assignment.testimonial_id] = [];
+                }
+                tagsByTestimonial[assignment.testimonial_id].push(assignment.tag);
+              }
+            });
+            setTestimonialTags(tagsByTestimonial);
+          }
+        }
         // Get custom field responses for all testimonials
         if (testimonialsData && testimonialsData.length > 0) {
           const testimonialIds = testimonialsData.map(t => t.id);
@@ -179,6 +229,13 @@ export const Testimonials: React.FC = () => {
       filter === 'all' || t.status === filter
     );
 
+    // Apply tag filter if Premium and tag filter is set
+    if (subscription.limits.canUseTags && tagFilter !== 'all') {
+      filtered = filtered.filter(t => {
+        const testimonialTagList = testimonialTags[t.id] || [];
+        return testimonialTagList.some(tag => tag.id === tagFilter);
+      });
+    }
     return filtered;
   };
 
@@ -276,7 +333,25 @@ export const Testimonials: React.FC = () => {
                 <h1 className="text-3xl font-bold text-gray-900">Testimonials</h1>
                 <p className="text-gray-600 mt-2">Review, approve, and manage customer testimonials</p>
               </div>
-              <div className="flex space-x-2">
+              <div className="flex space-x-2 items-center">
+                {/* Tag Filter - Premium only */}
+                {subscription.limits.canUseTags && tags.length > 0 && (
+                  <div className="flex items-center space-x-2">
+                    <Filter className="h-4 w-4 text-gray-400" />
+                    <select
+                      value={tagFilter}
+                      onChange={(e) => setTagFilter(e.target.value)}
+                      className="border border-gray-300 text-gray-700 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors text-sm"
+                    >
+                      <option value="all">All Tags</option>
+                      {tags.map((tag) => (
+                        <option key={tag.id} value={tag.id}>
+                          {tag.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
                 <select
                   value={filter}
                   onChange={(e) => setFilter(e.target.value as any)}
@@ -474,6 +549,26 @@ export const Testimonials: React.FC = () => {
                         </div>
                       )}
 
+                      {/* Tags Display */}
+                      {subscription.limits.canUseTags && testimonialTags[testimonial.id] && testimonialTags[testimonial.id].length > 0 && (
+                        <div className="mb-4">
+                          <div className="flex flex-wrap gap-1">
+                            {testimonialTags[testimonial.id].map((tag) => (
+                              <span
+                                key={tag.id}
+                                className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border"
+                                style={{ 
+                                  backgroundColor: `${tag.color}20`,
+                                  borderColor: tag.color,
+                                  color: tag.color
+                                }}
+                              >
+                                {tag.name}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                       {/* Form & Date */}
                       <div className="text-xs text-gray-500 mb-4 space-y-1">
                         <div>From: {getFormTitle(testimonial.form_id)}</div>
@@ -700,9 +795,7 @@ export const Testimonials: React.FC = () => {
                         <h3 className="text-sm font-medium text-gray-700 mb-3">Tags</h3>
                         <TestimonialTagger 
                           testimonialId={viewingTestimonial.id}
-                          onTagsChange={() => {
-                            // Optionally refresh data
-                          }}
+                          onTagsChange={fetchData}
                         />
                       </div>
                     )}
