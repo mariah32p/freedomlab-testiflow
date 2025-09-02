@@ -831,7 +831,8 @@ export const Forms: React.FC = () => {
                     <FormBuilder 
                       formId={customizingForm.id}
                       onFieldsChange={() => {
-                        // Optionally refresh form data or show success message
+                        // Refresh forms to update custom field count
+                        fetchForms();
                       }}
                     />
                   </div>
