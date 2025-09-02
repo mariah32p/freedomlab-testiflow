@@ -676,6 +676,7 @@ export const Forms: React.FC = () => {
 
                   {/* Modal Content */}
                   <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+                    <>
                     {/* Form Info */}
                     <div className="mb-6">
                       <div className="flex items-center justify-between mb-4">
@@ -805,6 +806,7 @@ export const Forms: React.FC = () => {
                         />
                       </div>
                     )}
+                    </>
                   </div>
                 </div>
               </div>
