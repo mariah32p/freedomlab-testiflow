@@ -335,15 +335,18 @@ export const Testimonials: React.FC = () => {
               </div>
               <div className="flex space-x-2 items-center">
                 {/* Tag Filter - Premium only */}
-                {subscription.limits.canUseTags && tags.length > 0 && (
+                {subscription.limits.canUseTags && (
                   <div className="flex items-center space-x-2">
                     <Filter className="h-4 w-4 text-gray-400" />
                     <select
                       value={tagFilter}
                       onChange={(e) => setTagFilter(e.target.value)}
                       className="border border-gray-300 text-gray-700 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors text-sm"
+                      disabled={tags.length === 0}
                     >
-                      <option value="all">All Tags</option>
+                      <option value="all">
+                        {tags.length === 0 ? 'No tags created' : 'All Tags'}
+                      </option>
                       {tags.map((tag) => (
                         <option key={tag.id} value={tag.id}>
                           {tag.name}
