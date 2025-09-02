@@ -18,7 +18,7 @@ export const UpgradePrompt: React.FC<UpgradePromptProps> = ({
   const navigate = useNavigate();
 
   const handleUpgrade = () => {
-    navigate('/get-started');
+    navigate('/settings');
   };
 
   if (inline) {

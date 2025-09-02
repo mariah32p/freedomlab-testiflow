@@ -173,7 +173,12 @@ export const useSubscription = (): SubscriptionInfo => {
 
 // Helper functions for feature gating
 export const canCreateForm = (subscription: SubscriptionInfo): boolean => {
-  return subscription.currentUsage.formCount < subscription.limits.maxForms;
+  // During trial or active subscription, enforce plan limits
+  if (subscription.isActive || subscription.isTrialing) {
+    return subscription.currentUsage.formCount < subscription.limits.maxForms;
+  }
+  // No subscription = no forms allowed
+  return false;
 };
 
 export const canCreateTestimonial = (subscription: SubscriptionInfo): boolean => {

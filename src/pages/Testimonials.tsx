@@ -402,7 +402,7 @@ export const Testimonials: React.FC = () => {
                       onClick={() => window.location.href = '/get-started'}
                       className="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition-colors text-sm font-medium"
                     >
-                      Upgrade Now
+                      Manage Subscription
                     </button>
                   </div>
                 </div>
@@ -426,7 +426,7 @@ export const Testimonials: React.FC = () => {
                       onClick={() => window.location.href = '/get-started'}
                       className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors text-sm font-medium"
                     >
-                      Upgrade Now
+                      Manage Subscription
                     </button>
                   </div>
                 </div>
