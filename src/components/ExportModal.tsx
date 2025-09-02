@@ -22,7 +22,6 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
   const [generatedContent, setGeneratedContent] = useState<string>('');
   const [copied, setCopied] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
-  const [branding, setBranding] = useState<{ primary_color: string; secondary_color: string } | null>(null);
   const [branding, setBranding] = useState<{ primary_color: string; secondary_color: string; font_family: string } | null>(null);
 
   // Fetch user's branding
@@ -137,13 +136,14 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
         break;
       case 'social':
         if (selectedTestimonials.length !== 1) {
-        const widgetContent = generateWebsiteWidget(
-          widgetTestimonials, 
-          branding?.primary_color || '#01004d', 
-          branding?.secondary_color || '#01b79e',
-          branding?.font_family || 'Montserrat'
-        );
-        setGeneratedContent(widgetContent);
+          onSuccess('Please select exactly one testimonial for social media post');
+          return;
+        }
+        const testimonial = statusFilteredTestimonials.find(t => t.id === selectedTestimonials[0]);
+        if (testimonial) {
+          const socialContent = generateSocialMediaPost(testimonial);
+          setGeneratedContent(socialContent);
+        }
         break;
       case 'widget':
         if (widgetTestimonials.length === 0) {
