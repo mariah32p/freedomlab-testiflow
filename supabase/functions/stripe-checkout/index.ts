@@ -52,10 +52,7 @@ Deno.serve(async (req) => {
       return corsResponse({ error: 'Stripe is not configured. Please set STRIPE_SECRET_KEY environment variable.' }, 500);
     }
 
-    const { price_id, success_url, cancel_url, mode, customer_email, client_reference_id } = await req.json();
-
-    // Check if this is a plan change (no trial)
-    const { is_plan_change } = await req.json();
+    const { price_id, success_url, cancel_url, mode, customer_email, client_reference_id, is_plan_change } = await req.json();
 
     const error = validateParameters(
       { price_id, success_url, cancel_url, mode, customer_email },
