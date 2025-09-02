@@ -55,7 +55,7 @@ export const useSubscription = (): SubscriptionInfo => {
     status: 'not_started',
     isActive: false,
     isTrialing: false,
-    limits: PLAN_LIMITS.standard, // Default to most restrictive
+    limits: PLAN_LIMITS.standard,
     currentUsage: {
       testimonialCount: 0,
       formCount: 0,
@@ -67,6 +67,8 @@ export const useSubscription = (): SubscriptionInfo => {
       if (!user) return;
 
       try {
+        console.log('Fetching subscription info for user:', user.id);
+        
         // Get customer data
         const { data: customerData } = await supabase
           .from('stripe_customers')
@@ -74,8 +76,11 @@ export const useSubscription = (): SubscriptionInfo => {
           .eq('user_id', user.id)
           .maybeSingle();
 
+        console.log('Customer data:', customerData);
+
         if (!customerData) {
           // No customer = no subscription
+          console.log('No customer found - setting Standard limits');
           setSubscriptionInfo(prev => ({
             ...prev,
             plan: null,
@@ -93,6 +98,8 @@ export const useSubscription = (): SubscriptionInfo => {
           .select('*')
           .eq('customer_id', customerData.customer_id)
           .maybeSingle();
+
+        console.log('Subscription data:', subscriptionData);
 
         // Get current usage
         const { data: formsData } = await supabase
@@ -119,8 +126,10 @@ export const useSubscription = (): SubscriptionInfo => {
           // Premium: price_1Rznb5Dn6VTzl81b8Hx5UQt6
           if (subscriptionData.price_id === 'price_1Rznb5Dn6VTzl81bjqFfCagv') {
             plan = 'standard';
+            console.log('Detected Standard plan');
           } else if (subscriptionData.price_id === 'price_1Rznb5Dn6VTzl81b8Hx5UQt6') {
             plan = 'premium';
+            console.log('Detected Premium plan');
           }
         }
 
@@ -128,8 +137,10 @@ export const useSubscription = (): SubscriptionInfo => {
         const isTrialing = subscriptionData?.status === 'trialing';
         const hasActiveSubscription = isActive || isTrialing;
 
-        // During trial, give full Premium access
+        // During trial, give full Premium access, otherwise use actual plan
         const effectivePlan = isTrialing ? 'premium' : (plan || 'standard');
+        console.log('Effective plan:', effectivePlan, 'isTrialing:', isTrialing, 'actualPlan:', plan);
+        
         const limits = PLAN_LIMITS[effectivePlan];
 
         setSubscriptionInfo({
@@ -146,6 +157,11 @@ export const useSubscription = (): SubscriptionInfo => {
 
       } catch (error) {
         console.error('Error fetching subscription info:', error);
+        // On error, default to Standard limits
+        setSubscriptionInfo(prev => ({
+          ...prev,
+          limits: PLAN_LIMITS.standard,
+        }));
       }
     };
 

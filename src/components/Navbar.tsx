@@ -51,16 +51,22 @@ export const Navbar = () => {
                   Forms
                 </Link>
                 <Link
+                  to="/testimonials"
+                  className="text-gray-700 hover:text-primary-950 transition-colors"
+                >
+                  Testimonials
+                </Link>
+                <Link
                   to="/branding"
                   className="text-gray-700 hover:text-primary-950 transition-colors"
                 >
                   Branding
                 </Link>
                 <Link
-                  to="/testimonials"
+                  to="/tags"
                   className="text-gray-700 hover:text-primary-950 transition-colors"
                 >
-                  Testimonials
+                  Tags
                 </Link>
                 <Link
                   to="/settings"
@@ -142,6 +148,13 @@ export const Navbar = () => {
                     Forms
                   </Link>
                   <Link
+                    to="/testimonials"
+                    className="block text-gray-700 hover:text-primary-950 hover:bg-gray-50 px-3 py-3 rounded-md text-base font-medium transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Testimonials
+                  </Link>
+                  <Link
                     to="/branding"
                     className="block text-gray-700 hover:text-primary-950 hover:bg-gray-50 px-3 py-3 rounded-md text-base font-medium transition-colors"
                     onClick={() => setMobileMenuOpen(false)}
@@ -154,13 +167,6 @@ export const Navbar = () => {
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Tags
-                  </Link>
-                  <Link
-                    to="/testimonials"
-                    className="block text-gray-700 hover:text-primary-950 hover:bg-gray-50 px-3 py-3 rounded-md text-base font-medium transition-colors"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Testimonials
                   </Link>
                   <Link
                     to="/settings"

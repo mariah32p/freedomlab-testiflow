@@ -427,7 +427,7 @@ export const Forms: React.FC = () => {
                               )}
                             </label>
                           </div>
-                          {formData.allow_video_uploads && (
+                          {formData.allow_video_uploads && subscription.limits.canUseVideoUploads && (
                             <div className="flex items-center space-x-2">
                               <span className="text-xs text-gray-500">Max size:</span>
                               <select
@@ -444,7 +444,7 @@ export const Forms: React.FC = () => {
                           )}
                         </div>
                         
-                        {!subscription.limits.canUseVideoUploads && formData.allow_video_uploads && (
+                        {!subscription.limits.canUseVideoUploads && (
                           <div className="mt-2">
                             <UpgradePrompt 
                               feature="Video Testimonials"
