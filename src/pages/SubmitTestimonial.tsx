@@ -244,7 +244,7 @@ export const SubmitTestimonial: React.FC = () => {
         .from('stripe_customers')
         .select('customer_id')
         .eq('user_id', form.user_id)
-        .single();
+        .maybeSingle();
 
       if (ownerData) {
         const { data: subscriptionData } = await supabase
