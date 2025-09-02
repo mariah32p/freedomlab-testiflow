@@ -202,9 +202,20 @@ export const Settings: React.FC = () => {
                       </div>
                     )}
 
-                    {/* Plan Change Options */}
-                    {subscription.status === 'active' || subscription.status === 'trialing' ? (
-                      <div className="pt-4 border-t border-gray-200 space-y-3">
+                                 <div className="text-xs text-blue-600 mt-2 space-y-1">
+                                   <p className="font-medium">
+                                     {getCurrentPlan()?.id === 'standard' 
+                                       ? '💳 You\'ll be charged the prorated difference immediately'
+                                       : '💰 You\'ll receive a prorated credit on your next bill'
+                                     }
+                                   </p>
+                                   <p>
+                                     {getCurrentPlan()?.id === 'standard' 
+                                       ? 'Example: If 15 days left in cycle, you pay ~$10 extra now'
+                                       : 'Example: If 15 days left in cycle, you get ~$10 credit'
+                                     }
+                                   </p>
+                                 </div>
                         {getOtherPlan() && (
                           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                             <div className="flex items-center justify-between">
