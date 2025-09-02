@@ -41,7 +41,9 @@ export const Forms: React.FC = () => {
     description: "We'd love to hear about your experience with us!",
     thank_you_message: 'Thank you for your testimonial!',
     allow_image_uploads: true,
-    allow_video_uploads: false
+    allow_video_uploads: false,
+    max_image_size_mb: 10,
+    max_video_size_mb: 100
   });
 
   useEffect(() => {
@@ -773,7 +775,11 @@ export const Forms: React.FC = () => {
                           setCustomizingForm(viewingForm);
                           setViewingForm(null);
                         }}
-                        className="flex-1 bg-secondary-500 text-white py-3 px-4 rounded-lg hover:bg-secondary-600 transition-colors font-medium flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className={`flex-1 py-3 px-4 rounded-lg transition-colors font-medium flex items-center justify-center space-x-2 ${
+                          subscription.limits.canUseCustomFields
+                            ? 'bg-secondary-500 text-white hover:bg-secondary-600'
+                            : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                        }`}
                         disabled={!subscription.limits.canUseCustomFields}
                       >
                         <Settings className="h-4 w-4" />
