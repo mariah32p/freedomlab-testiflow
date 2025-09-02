@@ -773,11 +773,7 @@ export const Forms: React.FC = () => {
                           setCustomizingForm(viewingForm);
                           setViewingForm(null);
                         }}
-                        className={`flex-1 py-3 px-4 rounded-lg transition-colors font-medium flex items-center justify-center space-x-2 ${
-                          subscription.limits.canUseCustomFields
-                            ? 'bg-secondary-500 text-white hover:bg-secondary-600'
-                            : 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                        }`}
+                        className="flex-1 bg-secondary-500 text-white py-3 px-4 rounded-lg hover:bg-secondary-600 transition-colors font-medium flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
                         disabled={!subscription.limits.canUseCustomFields}
                       >
                         <Settings className="h-4 w-4" />
