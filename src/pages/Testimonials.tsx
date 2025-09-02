@@ -82,20 +82,19 @@ export const Testimonials: React.FC = () => {
       if (formsError) throw formsError;
       setForms(formsData || []);
 
-      // Get user's tags if they have Premium
-      if (subscription.limits.canUseTags) {
-        const { data: tagsData, error: tagsError } = await supabase
-          .from('testimonial_tags')
-          .select('*')
-          .eq('user_id', user.id)
-          .order('name');
+      // Get user's tags (always fetch, but only show UI if Premium)
+      const { data: tagsData, error: tagsError } = await supabase
+        .from('testimonial_tags')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('name');
 
-        if (tagsError) {
-          console.error('Error fetching tags:', tagsError);
-        } else {
-          setTags(tagsData || []);
-        }
+      if (tagsError) {
+        console.error('Error fetching tags:', tagsError);
+      } else {
+        setTags(tagsData || []);
       }
+
       if (formsData && formsData.length > 0) {
         const formIds = formsData.map(f => f.id);
         
