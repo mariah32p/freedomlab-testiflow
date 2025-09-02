@@ -20,6 +20,16 @@ export const isInGracePeriod = (paymentIssueSince?: string): boolean => {
   return daysSinceIssue <= 30;
 };
 
+// Helper to get payment issue date from subscription
+const getPaymentIssueDate = (subscription: any): string | undefined => {
+  // In a real implementation, you'd track this properly
+  // For now, use updated_at when status is past_due
+  if (subscription?.status === 'past_due') {
+    return subscription.updated_at;
+  }
+  return undefined;
+};
+
 export const useRouteGuard = () => {
   const { user, loading } = useAuth();
   const [routeLoading, setRouteLoading] = useState(true);
@@ -98,7 +108,7 @@ export const useRouteGuard = () => {
           console.log('Found subscription:', subscriptionData);
           subscription = {
             status: subscriptionData.status,
-            payment_issue_since: subscriptionData.updated_at // Using updated_at as payment issue tracker for now
+            payment_issue_since: getPaymentIssueDate(subscriptionData)
           };
         }
 

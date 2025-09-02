@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { User, Mail, AlertCircle } from 'lucide-react';
+import { User, Mail, AlertCircle, ExternalLink, CreditCard, ArrowUpCircle, ArrowDownCircle } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { useStripe } from '../hooks/useStripe';
+import { products } from '../stripe-config';
+import { Alert } from '../components/Alert';
 
 export const Settings: React.FC = () => {
   const { user } = useAuth();
+  const { createPortalSession, changePlan, loading: stripeLoading, error: stripeError } = useStripe();
   const [subscription, setSubscription] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchSubscriptionData = async () => {
@@ -44,6 +49,40 @@ export const Settings: React.FC = () => {
     fetchSubscriptionData();
   }, [user]);
 
+  // Check for plan change success
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('plan_changed') === 'true') {
+      setSuccess('Your plan has been updated successfully!');
+      // Clean up URL
+      window.history.replaceState({}, '', '/settings');
+    }
+  }, []);
+
+  const getCurrentPlan = () => {
+    if (!subscription?.price_id) return null;
+    return products.find(p => p.priceId === subscription.price_id);
+  };
+
+  const getOtherPlan = () => {
+    const currentPlan = getCurrentPlan();
+    if (!currentPlan) return null;
+    return products.find(p => p.id !== currentPlan.id);
+  };
+
+  const handleManageSubscription = async () => {
+    await createPortalSession();
+  };
+
+  const handlePlanChange = async (newPriceId: string) => {
+    await changePlan(newPriceId);
+  };
+
+  const isInGracePeriod = () => {
+    // Simple grace period check - in production you'd want more sophisticated tracking
+    return subscription?.status === 'past_due';
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -71,6 +110,26 @@ export const Settings: React.FC = () => {
               </div>
             )}
             
+            {success && (
+              <div className="mb-6">
+                <Alert
+                  type="success"
+                  message={success}
+                  onClose={() => setSuccess(null)}
+                />
+              </div>
+            )}
+
+            {stripeError && (
+              <div className="mb-6">
+                <Alert
+                  type="error"
+                  message={stripeError}
+                  onClose={() => {}}
+                />
+              </div>
+            )}
+
             <div className="space-y-6">
               {/* Account Information */}
               <div className="bg-gray-50 rounded-lg p-6">
@@ -96,13 +155,17 @@ export const Settings: React.FC = () => {
               <div className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-lg p-6">
                 <h2 className="text-lg font-medium text-gray-900 mb-4">Subscription</h2>
                 {subscription ? (
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <span className="text-gray-600">Plan:</span>
-                      <span className="px-3 py-1 rounded-full text-sm font-medium bg-primary-100 text-primary-950">
-                        {subscription.price_id === 'price_1Rznb5Dn6VTzl81bjqFfCagv' ? 'Standard' : 
-                         subscription.price_id === 'price_1Rznb5Dn6VTzl81b8Hx5UQt6' ? 'Premium' : 'Unknown'}
-                      </span>
+                      <div className="flex items-center space-x-2">
+                        <span className="px-3 py-1 rounded-full text-sm font-medium bg-primary-100 text-primary-950">
+                          {getCurrentPlan()?.name || 'Unknown Plan'}
+                        </span>
+                        <span className="text-sm text-gray-500">
+                          ${subscription.price_id === 'price_1Rznb5Dn6VTzl81bjqFfCagv' ? '29' : '49'}/mo
+                        </span>
+                      </div>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-gray-600">Status:</span>
@@ -125,14 +188,104 @@ export const Settings: React.FC = () => {
                         </span>
                       </div>
                     )}
-                    <div className="pt-4 border-t border-gray-200">
-                      <button className="bg-primary-950 text-white px-4 py-2 rounded-lg hover:bg-primary-900 transition-all duration-200 font-medium shadow-md hover:shadow-lg">
-                        Manage Subscription
-                      </button>
-                    </div>
+
+                    {/* Grace Period Warning */}
+                    {isInGracePeriod() && (
+                      <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                        <div className="flex items-center">
+                          <AlertCircle className="h-4 w-4 text-red-600 mr-2" />
+                          <div className="text-sm">
+                            <p className="text-red-800 font-medium">Payment Issue</p>
+                            <p className="text-red-600">Please update your payment method to avoid service interruption</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Plan Change Options */}
+                    {subscription.status === 'active' || subscription.status === 'trialing' ? (
+                      <div className="pt-4 border-t border-gray-200 space-y-3">
+                        {getOtherPlan() && (
+                          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <h4 className="font-medium text-blue-900">
+                                  {getCurrentPlan()?.id === 'standard' ? 'Upgrade to Premium' : 'Downgrade to Standard'}
+                                </h4>
+                                <p className="text-sm text-blue-700">
+                                  {getCurrentPlan()?.id === 'standard' 
+                                    ? 'Get unlimited forms, custom branding, and advanced exports'
+                                    : 'Switch to our basic plan with essential features'
+                                  }
+                                </p>
+                                <p className="text-xs text-blue-600 mt-1">
+                                  Changes take effect immediately with prorated billing
+                                </p>
+                              </div>
+                              <button
+                                onClick={() => handlePlanChange(getOtherPlan()!.priceId)}
+                                disabled={stripeLoading}
+                                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2 disabled:opacity-50"
+                              >
+                                {getCurrentPlan()?.id === 'standard' ? (
+                                  <ArrowUpCircle className="h-4 w-4" />
+                                ) : (
+                                  <ArrowDownCircle className="h-4 w-4" />
+                                )}
+                                <span>
+                                  {stripeLoading ? 'Processing...' : 
+                                   getCurrentPlan()?.id === 'standard' ? 'Upgrade' : 'Downgrade'}
+                                </span>
+                              </button>
+                            </div>
+                          </div>
+                        )}
+
+                        <div className="flex space-x-3">
+                          <button 
+                            onClick={handleManageSubscription}
+                            disabled={stripeLoading}
+                            className="bg-primary-950 text-white px-4 py-2 rounded-lg hover:bg-primary-900 transition-all duration-200 font-medium shadow-md hover:shadow-lg flex items-center space-x-2 disabled:opacity-50"
+                          >
+                            <ExternalLink className="h-4 w-4" />
+                            <span>{stripeLoading ? 'Loading...' : 'Manage Billing'}</span>
+                          </button>
+                          
+                          {isInGracePeriod() && (
+                            <button 
+                              onClick={handleManageSubscription}
+                              className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors flex items-center space-x-2"
+                            >
+                              <CreditCard className="h-4 w-4" />
+                              <span>Update Payment</span>
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="pt-4 border-t border-gray-200">
+                        <button 
+                          onClick={handleManageSubscription}
+                          disabled={stripeLoading}
+                          className="bg-primary-950 text-white px-4 py-2 rounded-lg hover:bg-primary-900 transition-all duration-200 font-medium shadow-md hover:shadow-lg flex items-center space-x-2 disabled:opacity-50"
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                          <span>{stripeLoading ? 'Loading...' : 'Manage Subscription'}</span>
+                        </button>
+                      </div>
+                    )}
                   </div>
                 ) : (
-                  <p className="text-gray-500">No active subscription</p>
+                  <div className="text-center py-6">
+                    <p className="text-gray-500 mb-4">No active subscription</p>
+                    <button
+                      onClick={() => window.location.href = '/get-started'}
+                      </button>
+                      className="bg-primary-950 text-white px-6 py-3 rounded-lg hover:bg-primary-900 transition-colors font-medium"
+                    >
+                      Choose a Plan
+                    </button>
+                  </div>
                 )}
               </div>
             </div>
