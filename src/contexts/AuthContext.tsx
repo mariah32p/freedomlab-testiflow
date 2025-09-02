@@ -29,11 +29,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     console.log('AuthContext: Initializing auth state check');
 
-    // Real auth mode
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      console.log('AuthContext: Initial session check', session?.user?.email || 'No user');
-      setSession(session);
-      setUser(session?.user ?? null);
+    // Real auth mode with error handling for invalid refresh tokens
+    supabase.auth.getSession().then(({ data: { session }, error }) => {
+      if (error && error.message.includes('Refresh Token Not Found')) {
+        console.log('AuthContext: Invalid refresh token detected, clearing session');
+        // Clear any stale session data
+        supabase.auth.signOut();
+        setSession(null);
+        setUser(null);
+      } else {
+        console.log('AuthContext: Initial session check', session?.user?.email || 'No user');
+        setSession(session);
+        setUser(session?.user ?? null);
+      }
       setLoading(false);
     });
 
