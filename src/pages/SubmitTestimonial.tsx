@@ -68,17 +68,24 @@ export const SubmitTestimonial: React.FC = () => {
       }
 
       try {
-        // Use anon access for public form submission
-        const { data, error } = await supabase
+        // Create anonymous client for public form access
+        const anonClient = supabase;
+        
+        const { data, error } = await anonClient
           .from('testimonial_forms')
           .select('*')
           .eq('id', formId)
           .eq('is_active', true)
-          .maybeSingle();
+          .single();
 
         if (error) {
-          console.error('Supabase error:', error);
-          setError('Failed to load form');
+          if (error.code === 'PGRST116') {
+            console.log('No form found with ID:', formId);
+            setError('Form not found or inactive');
+          } else {
+            console.error('Supabase error:', error);
+            setError('Failed to load form');
+          }
         } else if (!data) {
           console.log('No form found with ID:', formId);
           setError('Form not found or inactive');
@@ -86,8 +93,8 @@ export const SubmitTestimonial: React.FC = () => {
           console.log('Form loaded successfully:', data);
           setForm(data);
           
-          // Fetch branding for this form's owner
-          const { data: brandingData } = await supabase
+          // Fetch branding for this form's owner (using same anon client)
+          const { data: brandingData } = await anonClient
             .from('form_branding')
             .select('*')
             .eq('user_id', data.user_id)
@@ -97,8 +104,8 @@ export const SubmitTestimonial: React.FC = () => {
             setBranding(brandingData);
           }
 
-          // Fetch custom fields for this form
-          const { data: fieldsData } = await supabase
+          // Fetch custom fields for this form (using same anon client)
+          const { data: fieldsData } = await anonClient
             .from('form_fields')
             .select('*')
             .eq('form_id', data.id)
