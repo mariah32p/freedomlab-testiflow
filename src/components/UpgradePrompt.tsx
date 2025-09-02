@@ -29,15 +29,12 @@ export const UpgradePrompt: React.FC<UpgradePromptProps> = ({
             <Crown className="h-4 w-4 text-accent-600" />
             <div>
               <div className="text-sm font-medium text-accent-900">{feature} - Premium Feature</div>
-              {description && <div className="text-xs text-accent-700">{description}</div>}
+              <div className="text-xs text-accent-700">
+                {description || `${feature} is available with Premium. Upgrade to unlock this powerful feature.`}
+                <br />
+                <span className="font-medium">Charged immediately • Prorated billing</span>
+              </div>
             </div>
-                <div className="text-xs text-accent-700">
-                  {description || `${feature} is available with Premium. Upgrade to unlock this powerful feature.`}
-                  <br />
-                  <span className="font-medium">Charged immediately • Prorated billing</span>
-                </div>
-              Charged immediately • Prorated billing • Access unlocked instantly
-            </p>
           </div>
           <button
             onClick={handleUpgrade}
