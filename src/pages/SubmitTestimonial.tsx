@@ -237,7 +237,7 @@ export const SubmitTestimonial: React.FC = () => {
         .from('stripe_customers')
         .select('customer_id')
         .eq('user_id', form.user_id)
-        .maybeSingle();
+        .single();
 
       if (ownerData) {
         const { data: subscriptionData } = await supabase
@@ -306,8 +306,13 @@ export const SubmitTestimonial: React.FC = () => {
         .single();
 
       if (error || !testimonialData) {
-        console.error('Supabase error:', error);
-        throw error;
+        if (error.code === 'PGRST116') {
+          console.log('No form found with ID:', formId);
+          setError('Form not found or inactive');
+        } else {
+          console.error('Supabase error:', error);
+          setError('Failed to load form');
+        }
       }
 
       // Save custom field responses
