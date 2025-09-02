@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { MessageSquare, CheckCircle, Download, Clock, AlertCircle } from 'lucide-react';
+import { MessageSquare, CheckCircle, Clock, AlertCircle } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { Link } from 'react-router-dom';
 
@@ -66,11 +66,15 @@ export const Dashboard: React.FC = () => {
           startOfMonth.setDate(1);
           startOfMonth.setHours(0, 0, 0, 0);
 
+          // Get last 30 days instead of just this calendar month
+          const thirtyDaysAgo = new Date();
+          thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
           const { count: thisMonthCount } = await supabase
             .from('testimonials')
             .select('*', { count: 'exact', head: true })
             .in('form_id', formIds)
-            .gte('created_at', startOfMonth.toISOString());
+            .gte('submitted_at', thirtyDaysAgo.toISOString());
 
           setStats({
             total: totalCount || 0,
@@ -193,10 +197,10 @@ export const Dashboard: React.FC = () => {
               <div className="bg-gradient-to-br from-accent-50 to-accent-100 p-6 rounded-xl border border-accent-200">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-semibold text-gray-900">This Month</h3>
-                  <Download className="h-5 w-5 text-accent-600" />
+                  <Clock className="h-5 w-5 text-accent-600" />
                 </div>
                 <div className="text-3xl font-bold text-accent-600">{stats.thisMonth}</div>
-                <div className="text-sm text-gray-600 mt-1">new testimonials</div>
+                <div className="text-sm text-gray-600 mt-1">last 30 days</div>
               </div>
             </div>
 
