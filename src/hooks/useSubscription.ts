@@ -50,6 +50,7 @@ const PLAN_LIMITS: Record<'standard' | 'premium', SubscriptionLimits> = {
 
 export const useSubscription = (): SubscriptionInfo => {
   const { user } = useAuth();
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [subscriptionInfo, setSubscriptionInfo] = useState<SubscriptionInfo>({
     plan: null,
     status: 'not_started',
@@ -61,6 +62,19 @@ export const useSubscription = (): SubscriptionInfo => {
       formCount: 0,
     },
   });
+
+  // Function to manually refresh subscription data
+  const refreshSubscription = () => {
+    setRefreshTrigger(prev => prev + 1);
+  };
+
+  // Expose refresh function globally for other components
+  useEffect(() => {
+    (window as any).refreshSubscription = refreshSubscription;
+    return () => {
+      delete (window as any).refreshSubscription;
+    };
+  }, []);
 
   useEffect(() => {
     const fetchSubscriptionInfo = async () => {
@@ -122,14 +136,25 @@ export const useSubscription = (): SubscriptionInfo => {
         // Determine plan from price_id
         let plan: 'standard' | 'premium' | null = null;
         if (subscriptionData?.price_id) {
-          // Standard: price_1Rznb5Dn6VTzl81bjqFfCagv
-          // Premium: price_1Rznb5Dn6VTzl81b8Hx5UQt6
-          if (subscriptionData.price_id === 'price_1Rznb5Dn6VTzl81bjqFfCagv') {
+          const standardPriceId = 'price_1Rznb5Dn6VTzl81bjqFfCagv';
+          const premiumPriceId = 'price_1Rznb5Dn6VTzl81b8Hx5UQt6';
+          
+          console.log('Price ID comparison:', {
+            currentPriceId: subscriptionData.price_id,
+            standardPriceId,
+            premiumPriceId,
+            isStandard: subscriptionData.price_id === standardPriceId,
+            isPremium: subscriptionData.price_id === premiumPriceId
+          });
+          
+          if (subscriptionData.price_id === standardPriceId) {
             plan = 'standard';
             console.log('Detected Standard plan');
-          } else if (subscriptionData.price_id === 'price_1Rznb5Dn6VTzl81b8Hx5UQt6') {
+          } else if (subscriptionData.price_id === premiumPriceId) {
             plan = 'premium';
             console.log('Detected Premium plan');
+          } else {
+            console.warn('Unknown price ID:', subscriptionData.price_id);
           }
         }
 
@@ -180,7 +205,7 @@ export const useSubscription = (): SubscriptionInfo => {
     };
 
     fetchSubscriptionInfo();
-  }, [user]);
+  }, [user, refreshTrigger]);
 
   return subscriptionInfo;
 };
