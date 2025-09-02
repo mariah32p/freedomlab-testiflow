@@ -280,7 +280,6 @@ export const Settings: React.FC = () => {
                     <p className="text-gray-500 mb-4">No active subscription</p>
                     <button
                       onClick={() => window.location.href = '/get-started'}
-                      </button>
                       className="bg-primary-950 text-white px-6 py-3 rounded-lg hover:bg-primary-900 transition-colors font-medium"
                     >
                       Choose a Plan
