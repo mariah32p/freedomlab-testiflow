@@ -106,27 +106,32 @@ Deno.serve(async (req) => {
     }
 
     // Create portal session
+    const configurationObject = {
+      business_profile: {
+        headline: 'Manage your TestiFlow subscription',
+      },
+      features: {
+        payment_method_update: {
+          enabled: true,
+        },
+        subscription_cancel: {
+          enabled: true,
+          mode: 'at_period_end',
+          proration_behavior: 'none',
+        },
+        subscription_update: {
+          enabled: false,
+        },
+      },
+    };
+
+    // Ensure clean object serialization
+    const cleanConfig = JSON.parse(JSON.stringify(configurationObject));
+
     const portalSession = await stripe.billingPortal.sessions.create({
       customer: customerData.customer_id,
       return_url: return_url,
-      configuration: {
-        business_profile: {
-          headline: 'Manage your TestiFlow subscription',
-        },
-        features: {
-          payment_method_update: {
-            enabled: true,
-          },
-          subscription_cancel: {
-            enabled: true,
-            mode: 'at_period_end',
-            proration_behavior: 'none',
-          },
-          subscription_update: {
-            enabled: false, // Disable plan changes in portal - handle in app
-          },
-        },
-      },
+      configuration: cleanConfig,
     });
 
     return new Response(
