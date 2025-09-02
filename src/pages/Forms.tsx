@@ -699,7 +699,7 @@ export const Forms: React.FC = () => {
                       </div>
 
                       <div className="bg-blue-50 rounded-lg p-4">
-                        <h4 className="text-sm font-medium text-blue-900 mb-2">Shareable Link</h4>
+                      {formData.allow_video_uploads && (
                         <div className="flex items-center space-x-2">
                           <code className="flex-1 bg-white px-3 py-2 rounded border text-sm text-gray-700 font-mono">
                             {getFormUrl(viewingForm.id)}
@@ -707,6 +707,7 @@ export const Forms: React.FC = () => {
                           <button
                             onClick={() => copyFormUrl(viewingForm.id)}
                             className="bg-blue-600 text-white px-3 py-2 rounded hover:bg-blue-700 transition-colors flex items-center space-x-1"
+                            disabled={!subscription.limits.canUseVideoUploads}
                           >
                             <Copy className="h-4 w-4" />
                             <span>Copy</span>
@@ -773,7 +774,11 @@ export const Forms: React.FC = () => {
                           setCustomizingForm(viewingForm);
                           setViewingForm(null);
                         }}
-                        className="flex-1 bg-secondary-500 text-white py-3 px-4 rounded-lg hover:bg-secondary-600 transition-colors font-medium flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className={`flex-1 py-3 px-4 rounded-lg transition-colors font-medium flex items-center justify-center space-x-2 ${
+                          subscription.limits.canUseCustomFields
+                            ? 'bg-secondary-500 text-white hover:bg-secondary-600'
+                            : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                        }`}
                         disabled={!subscription.limits.canUseCustomFields}
                       >
                         <Settings className="h-4 w-4" />

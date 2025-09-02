@@ -55,7 +55,7 @@ export const useSubscription = (): SubscriptionInfo => {
     status: 'not_started',
     isActive: false,
     isTrialing: false,
-    limits: PLAN_LIMITS.standard,
+    limits: PLAN_LIMITS.standard, // Default to Standard limits
     currentUsage: {
       testimonialCount: 0,
       formCount: 0,
@@ -137,8 +137,8 @@ export const useSubscription = (): SubscriptionInfo => {
         const isTrialing = subscriptionData?.status === 'trialing';
         const hasActiveSubscription = isActive || isTrialing;
 
-        // During trial, give full Premium access, otherwise use actual plan
-        const effectivePlan = isTrialing ? 'premium' : (plan || 'standard');
+        // Use the actual plan (Standard or Premium) - no special trial privileges
+        const effectivePlan = plan || 'standard';
         console.log('Effective plan:', effectivePlan, 'isTrialing:', isTrialing, 'actualPlan:', plan);
         
         const limits = PLAN_LIMITS[effectivePlan];

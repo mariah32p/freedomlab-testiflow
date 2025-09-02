@@ -277,7 +277,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                     <button
                       onClick={() => setSelectedFormat('json')}
                       disabled={!subscription.limits.canUseAdvancedExports}
-                      className={`w-full p-4 border rounded-lg text-left transition-colors ${
+                      className={`w-full p-4 border rounded-lg text-left transition-colors relative ${
                         !subscription.limits.canUseAdvancedExports
                           ? 'border-gray-200 bg-gray-50 opacity-50 cursor-not-allowed'
                           : 
@@ -296,12 +296,17 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                           )}
                         </div>
                       </div>
+                      {!subscription.limits.canUseAdvancedExports && (
+                        <div className="absolute inset-0 bg-gray-100 bg-opacity-75 rounded-lg flex items-center justify-center">
+                          <span className="text-xs text-gray-600 font-medium">Premium Only</span>
+                        </div>
+                      )}
                     </button>
 
                     <button
                       onClick={() => setSelectedFormat('widget')}
                       disabled={!subscription.limits.canUseAdvancedExports}
-                      className={`w-full p-4 border rounded-lg text-left transition-colors ${
+                      className={`w-full p-4 border rounded-lg text-left transition-colors relative ${
                         !subscription.limits.canUseAdvancedExports
                           ? 'border-gray-200 bg-gray-50 opacity-50 cursor-not-allowed'
                           : 
@@ -320,6 +325,11 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                           )}
                         </div>
                       </div>
+                      {!subscription.limits.canUseAdvancedExports && (
+                        <div className="absolute inset-0 bg-gray-100 bg-opacity-75 rounded-lg flex items-center justify-center">
+                          <span className="text-xs text-gray-600 font-medium">Premium Only</span>
+                        </div>
+                      )}
                     </button>
 
                     {/* Show upgrade prompt for restricted formats */}

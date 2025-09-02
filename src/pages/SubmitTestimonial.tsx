@@ -254,8 +254,7 @@ export const SubmitTestimonial: React.FC = () => {
           .maybeSingle();
 
         // Check if Standard plan (price_1Rznb5Dn6VTzl81bjqFfCagv)
-        if (subscriptionData?.price_id === 'price_1Rznb5Dn6VTzl81bjqFfCagv' && 
-            (subscriptionData.status === 'active' || subscriptionData.status === 'trialing')) {
+        if (subscriptionData?.price_id === 'price_1Rznb5Dn6VTzl81bjqFfCagv') {
           
           // Count existing testimonials for this user's forms
           const { data: userForms } = await supabase
