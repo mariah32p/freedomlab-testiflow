@@ -610,6 +610,10 @@ export const Forms: React.FC = () => {
                           <Calendar className="h-4 w-4" />
                           <span>Created {new Date(form.created_at).toLocaleDateString()}</span>
                         </div>
+                        <div className="flex items-center space-x-1">
+                          <Settings className="h-4 w-4" />
+                          <span>{form.custom_field_count || 0} custom field{(form.custom_field_count || 0) !== 1 ? 's' : ''}</span>
+                        </div>
                       </div>
                     </div>
 
