@@ -63,12 +63,13 @@ export const TestimonialTagger: React.FC<TestimonialTaggerProps> = ({
 
   const handleAssignTag = async (tagId: string) => {
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('testimonial_tag_assignments')
         .insert([{
           testimonial_id: testimonialId,
           tag_id: tagId,
-        }]);
+        }])
+        .select();
 
       if (error) throw error;
 
@@ -77,6 +78,8 @@ export const TestimonialTagger: React.FC<TestimonialTaggerProps> = ({
         setAssignedTags([...assignedTags, tag]);
         onTagsChange?.();
       }
+      
+      console.log('Tag assigned successfully:', data);
     } catch (error) {
       console.error('Error assigning tag:', error);
     }

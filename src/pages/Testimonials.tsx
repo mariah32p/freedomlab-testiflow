@@ -552,21 +552,16 @@ export const Testimonials: React.FC = () => {
                       )}
 
                       {/* Tags Display */}
-                      {subscription.limits.canUseTags && (
+                      {subscription.limits.canUseTags && testimonialTags[testimonial.id] && testimonialTags[testimonial.id].length > 0 && (
                         <div className="mb-4">
-                          <div className="flex items-center space-x-2 mb-2">
-                            <Tag className="h-3 w-3 text-gray-400" />
-                            <span className="text-xs font-medium text-gray-600">Tags:</span>
-                          </div>
-                          {testimonialTags[testimonial.id] && testimonialTags[testimonial.id].length > 0 ? (
                           <div className="flex flex-wrap gap-1">
                             {testimonialTags[testimonial.id].map((tag) => (
                               <span
                                 key={tag.id}
-                                className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border"
+                                className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
                                 style={{ 
                                   backgroundColor: `${tag.color}20`,
-                                  borderColor: tag.color,
+                                  border: `1px solid ${tag.color}`,
                                   color: tag.color
                                 }}
                               >
@@ -574,9 +569,6 @@ export const Testimonials: React.FC = () => {
                               </span>
                             ))}
                           </div>
-                          ) : (
-                            <div className="text-xs text-gray-400 italic">No tags assigned</div>
-                          )}
                         </div>
                       )}
                       {/* Form & Date */}
