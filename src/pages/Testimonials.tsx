@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useSubscription } from '../hooks/useSubscription';
+import { UpgradePrompt } from '../components/UpgradePrompt';
 import { supabase } from '../lib/supabase';
 import { MessageSquare, Star, User, CheckCircle, Clock, X, Download, Trash2, MoreVertical, Eye, Mail, Building } from 'lucide-react';
 import { Alert } from '../components/Alert';
@@ -39,6 +41,7 @@ interface FormResponse {
 
 export const Testimonials: React.FC = () => {
   const { user } = useAuth();
+  const subscription = useSubscription();
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [forms, setForms] = useState<TestimonialForm[]>([]);
   const [testimonialResponses, setTestimonialResponses] = useState<Record<string, FormResponse[]>>({});
@@ -292,6 +295,30 @@ export const Testimonials: React.FC = () => {
                 </button>
               </div>
             </div>
+
+            {/* Usage Warning for Standard Plan */}
+            {subscription.plan === 'standard' && subscription.currentUsage.testimonialCount >= 20 && (
+              <div className="mb-6">
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-yellow-800 font-medium">
+                        You're approaching your limit
+                      </p>
+                      <p className="text-yellow-700 text-sm">
+                        {subscription.currentUsage.testimonialCount}/25 testimonials used. Upgrade to Premium for unlimited testimonials.
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => window.location.href = '/get-started'}
+                      className="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition-colors text-sm font-medium"
+                    >
+                      Upgrade Now
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {error && (
               <div className="mb-6">

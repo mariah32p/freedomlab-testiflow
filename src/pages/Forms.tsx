@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useSubscription, canCreateForm } from '../hooks/useSubscription';
+import { UpgradePrompt } from '../components/UpgradePrompt';
 import { supabase } from '../lib/supabase';
 import { Plus, Edit, Trash2, ExternalLink, Copy, Eye, Settings, X, Calendar, ToggleLeft, ToggleRight } from 'lucide-react';
 import { Alert } from '../components/Alert';
@@ -21,6 +23,7 @@ interface TestimonialForm {
 
 export const Forms: React.FC = () => {
   const { user } = useAuth();
+  const subscription = useSubscription();
   const [forms, setForms] = useState<TestimonialForm[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -238,6 +241,14 @@ export const Forms: React.FC = () => {
     });
   };
 
+  const handleCreateFormClick = () => {
+    if (!canCreateForm(subscription)) {
+      setError(`You've reached the limit of ${subscription.limits.maxForms} form${subscription.limits.maxForms !== 1 ? 's' : ''} for your current plan. Upgrade to Premium for unlimited forms.`);
+      return;
+    }
+    setShowCreateForm(true);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -259,6 +270,7 @@ export const Forms: React.FC = () => {
               </div>
               <button
                 onClick={() => setShowCreateForm(true)}
+                onClick={handleCreateFormClick}
                 className="bg-primary-950 text-white px-6 py-3 rounded-lg hover:bg-primary-900 transition-all duration-200 flex items-center space-x-2 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
               >
                 <Plus className="h-5 w-5" />
@@ -499,6 +511,13 @@ export const Forms: React.FC = () => {
             {/* Forms Grid */}
             {forms.length === 0 ? (
               <div className="text-center py-16">
+                {!canCreateForm(subscription) ? (
+                  <UpgradePrompt 
+                    feature="Multiple Forms"
+                    description="Create unlimited testimonial collection forms with different questions and branding for various campaigns."
+                  />
+                ) : (
+                <>
                 <div className="w-24 h-24 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center mx-auto mb-6">
                   <Settings className="h-12 w-12 text-primary-950" />
                 </div>
@@ -508,10 +527,13 @@ export const Forms: React.FC = () => {
                 </p>
                 <button
                   onClick={() => setShowCreateForm(true)}
+                  onClick={handleCreateFormClick}
                   className="bg-primary-950 text-white px-8 py-4 rounded-lg hover:bg-primary-900 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-lg"
                 >
                   Create Your First Form
                 </button>
+                </>
+                )}
               </div>
             ) : (
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -720,11 +742,21 @@ export const Forms: React.FC = () => {
                           setCustomizingForm(viewingForm);
                           setViewingForm(null);
                         }}
+                        disabled={!subscription.limits.canUseCustomFields}
                         className="flex-1 bg-secondary-500 text-white py-3 px-4 rounded-lg hover:bg-secondary-600 transition-colors font-medium flex items-center justify-center space-x-2"
                       >
                         <Settings className="h-4 w-4" />
                         <span>Custom Fields</span>
                       </button>
+                      {!subscription.limits.canUseCustomFields && (
+                        <div className="mt-2">
+                          <UpgradePrompt 
+                            feature="Custom Fields"
+                            description="Add custom questions beyond the standard fields"
+                            inline
+                          />
+                        </div>
+                      )}
                       <button
                         onClick={() => {
                           setDeletingForm(viewingForm);

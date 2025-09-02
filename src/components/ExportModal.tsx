@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Download, FileText, Code, X, Copy, CheckCircle, Eye, Star } from 'lucide-react';
 import { ExportTestimonial, exportToCSV, exportToJSON, generateSocialMediaPost, generateWebsiteWidget } from '../utils/exportUtils';
 import { useAuth } from '../contexts/AuthContext';
+import { useSubscription } from '../hooks/useSubscription';
+import { UpgradePrompt } from '../components/UpgradePrompt';
 import { supabase } from '../lib/supabase';
 
 interface ExportModalProps {
@@ -12,6 +14,7 @@ interface ExportModalProps {
 
 export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose, onSuccess }) => {
   const { user } = useAuth();
+  const subscription = useSubscription();
   const [selectedFormat, setSelectedFormat] = useState<'csv' | 'json' | 'social' | 'widget'>('csv');
   const [selectedTestimonials, setSelectedTestimonials] = useState<string[]>([]);
   const [selectAll, setSelectAll] = useState(true);
@@ -269,7 +272,11 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
 
                     <button
                       onClick={() => setSelectedFormat('json')}
+                      disabled={!subscription.limits.canUseAdvancedExports}
                       className={`w-full p-4 border rounded-lg text-left transition-colors ${
+                        !subscription.limits.canUseAdvancedExports
+                          ? 'border-gray-200 bg-gray-50 opacity-50 cursor-not-allowed'
+                          : 
                         selectedFormat === 'json'
                           ? 'border-primary-500 bg-primary-50'
                           : 'border-gray-200 hover:bg-gray-50'
@@ -280,13 +287,20 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                         <div>
                           <div className="font-medium">JSON Data</div>
                           <div className="text-sm text-gray-500">For developers and integrations</div>
+                          {!subscription.limits.canUseAdvancedExports && (
+                            <div className="text-xs text-accent-600 font-medium">Premium Feature</div>
+                          )}
                         </div>
                       </div>
                     </button>
 
                     <button
                       onClick={() => setSelectedFormat('widget')}
+                      disabled={!subscription.limits.canUseAdvancedExports}
                       className={`w-full p-4 border rounded-lg text-left transition-colors ${
+                        !subscription.limits.canUseAdvancedExports
+                          ? 'border-gray-200 bg-gray-50 opacity-50 cursor-not-allowed'
+                          : 
                         selectedFormat === 'widget'
                           ? 'border-primary-500 bg-primary-50'
                           : 'border-gray-200 hover:bg-gray-50'
@@ -297,10 +311,23 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                         <div>
                           <div className="font-medium">Website Widget</div>
                           <div className="text-sm text-gray-500">HTML code to embed on your website</div>
+                          {!subscription.limits.canUseAdvancedExports && (
+                            <div className="text-xs text-accent-600 font-medium">Premium Feature</div>
+                          )}
                         </div>
                       </div>
                     </button>
 
+                    {/* Show upgrade prompt for restricted formats */}
+                    {!subscription.limits.canUseAdvancedExports && (selectedFormat === 'json' || selectedFormat === 'widget') && (
+                      <div className="mt-4">
+                        <UpgradePrompt 
+                          feature="Advanced Exports"
+                          description="JSON exports and website widgets are available with Premium"
+                          inline
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
 

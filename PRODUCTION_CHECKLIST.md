@@ -93,6 +93,16 @@ After trial: - ✅ DONE
 - 📋 TODO: Review and implement Standard vs Premium feature restrictions
 - 📋 TODO: Verify upgrade prompts for gated features
 - 📋 TODO: Test feature limits (25 testimonials for Standard)
+ - 🔄 IN PROGRESS: Standard vs Premium feature restrictions
+   - ✅ DONE: Form limits (1 for Standard, unlimited for Premium)
+   - ✅ DONE: Custom fields gating (Premium only)
+   - ✅ DONE: Branding gating (Premium only)
+   - ✅ DONE: Advanced exports gating (JSON/Widget Premium only)
+   - 📋 TODO: Video upload gating (Premium only)
+   - 📋 TODO: Tag system gating (Premium only)
+   - 📋 TODO: Testimonial count limits (25 for Standard)
+ - 🔄 IN PROGRESS: Upgrade prompts for gated features
+ - 📋 TODO: Test all feature limits and restrictions
 
 **User Experience Polish:**
 - 📋 TODO: Error handling and loading states review
