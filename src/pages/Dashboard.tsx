@@ -23,7 +23,7 @@ export const Dashboard: React.FC = () => {
     approved: 0,
     thisMonth: 0
   });
-  const [, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [recentTestimonials, setRecentTestimonials] = useState<RecentTestimonial[]>([]);
   const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
@@ -272,7 +272,11 @@ export const Dashboard: React.FC = () => {
                   <h3 className="font-semibold text-gray-900">Total</h3>
                   <MessageSquare className="h-5 w-5 text-primary-950" />
                 </div>
-                <div className="text-3xl font-bold text-primary-950">{stats.total}</div>
+                {loading ? (
+                  <div className="h-[36px] w-8 bg-gray-300 rounded animate-pulse" />
+                ) : (
+                  <div className="text-3xl font-bold text-primary-950">{stats.total}</div>
+                )}
                 <div className="text-sm text-gray-600 mt-1">testimonials collected</div>
               </div>
               <div className="bg-gradient-to-br from-secondary-50 to-secondary-100 p-6 rounded-xl border border-secondary-200">
@@ -280,7 +284,11 @@ export const Dashboard: React.FC = () => {
                   <h3 className="font-semibold text-gray-900">Approved</h3>
                   <CheckCircle className="h-5 w-5 text-secondary-500" />
                 </div>
-                <div className="text-3xl font-bold text-secondary-500">{stats.approved}</div>
+                {loading ? (
+                  <div className="h-[36px] w-8 bg-gray-300 rounded animate-pulse" />
+                ) : (
+                  <div className="text-3xl font-bold text-secondary-500">{stats.approved}</div>
+                )}
                 <div className="text-sm text-gray-600 mt-1">ready to use</div>
               </div>
               <div className="bg-gradient-to-br from-accent-50 to-accent-100 p-6 rounded-xl border border-accent-200">
@@ -288,7 +296,11 @@ export const Dashboard: React.FC = () => {
                   <h3 className="font-semibold text-gray-900">This Month</h3>
                   <Clock className="h-5 w-5 text-accent-600" />
                 </div>
-                <div className="text-3xl font-bold text-accent-600">{stats.thisMonth}</div>
+                {loading ? (
+                  <div className="h-[36px] w-8 bg-gray-300 rounded animate-pulse" />
+                ) : (
+                  <div className="text-3xl font-bold text-accent-600">{stats.thisMonth}</div>
+                )}
                 <div className="text-sm text-gray-600 mt-1">last 30 days</div>
               </div>
             </div>
