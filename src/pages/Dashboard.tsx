@@ -267,71 +267,125 @@ export const Dashboard: React.FC = () => {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-100">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-semibold text-gray-900">Total</h3>
-                  <MessageSquare className="h-5 w-5 text-primary-950" />
-                </div>
-                {loading ? (
-                  <div className="h-[36px] w-8 bg-gray-300 rounded animate-pulse" />
-                ) : (
-                  <div className="text-3xl font-bold text-primary-950">{stats.total}</div>
-                )}
-                <div className="text-sm text-gray-600 mt-1">testimonials collected</div>
-              </div>
-              <div className="bg-gradient-to-br from-secondary-50 to-secondary-100 p-6 rounded-xl border border-secondary-200">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-semibold text-gray-900">Approved</h3>
-                  <CheckCircle className="h-5 w-5 text-secondary-500" />
-                </div>
-                {loading ? (
-                  <div className="h-[36px] w-8 bg-gray-300 rounded animate-pulse" />
-                ) : (
-                  <div className="text-3xl font-bold text-secondary-500">{stats.approved}</div>
-                )}
-                <div className="text-sm text-gray-600 mt-1">ready to use</div>
-              </div>
-              <div className="bg-gradient-to-br from-accent-50 to-accent-100 p-6 rounded-xl border border-accent-200">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-semibold text-gray-900">This Month</h3>
-                  <Clock className="h-5 w-5 text-accent-600" />
-                </div>
-                {loading ? (
-                  <div className="h-[36px] w-8 bg-gray-300 rounded animate-pulse" />
-                ) : (
-                  <div className="text-3xl font-bold text-accent-600">{stats.thisMonth}</div>
-                )}
-                <div className="text-sm text-gray-600 mt-1">last 30 days</div>
-              </div>
+              {loading ? (
+                <>
+                  {[...Array(3)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="bg-white p-6 rounded-xl border border-gray-200 animate-pulse"
+                    >
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="h-4 w-20 bg-gray-300 rounded"></div>
+                        <div className="h-5 w-5 bg-gray-300 rounded-full"></div>
+                      </div>
+                      <div className="h-9 w-16 bg-gray-300 rounded mb-2"></div>
+                      <div className="h-3 w-24 bg-gray-300 rounded"></div>
+                    </div>
+                  ))}
+                </>
+              ) : (
+                <>
+                  <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-100">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="font-semibold text-gray-900">Total</h3>
+                      <MessageSquare className="h-5 w-5 text-primary-950" />
+                    </div>
+                    <div className="text-3xl font-bold text-primary-950">{stats.total}</div>
+                    <div className="text-sm text-gray-600 mt-1">testimonials collected</div>
+                  </div>
+                  <div className="bg-gradient-to-br from-secondary-50 to-secondary-100 p-6 rounded-xl border border-secondary-200">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="font-semibold text-gray-900">Approved</h3>
+                      <CheckCircle className="h-5 w-5 text-secondary-500" />
+                    </div>
+                    <div className="text-3xl font-bold text-secondary-500">{stats.approved}</div>
+                    <div className="text-sm text-gray-600 mt-1">ready to use</div>
+                  </div>
+                  <div className="bg-gradient-to-br from-accent-50 to-accent-100 p-6 rounded-xl border border-accent-200">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="font-semibold text-gray-900">This Month</h3>
+                      <Clock className="h-5 w-5 text-accent-600" />
+                    </div>
+                    <div className="text-3xl font-bold text-accent-600">{stats.thisMonth}</div>
+                    <div className="text-sm text-gray-600 mt-1">last 30 days</div>
+                  </div>
+                </>
+              )}
             </div>
 
             {/* Recent Activity Section */}
-            <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-200 p-6">
+           <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-semibold text-gray-900">Recent Activity</h3>
-                {recentTestimonials.length > 0 && (
-                  <Link
-                    to="/testimonials"
-                   onClick={() => window.scrollTo(0, 0)}
-                    className="text-primary-950 hover:text-primary-800 text-sm font-medium"
-                  >
-                    View All →
-                  </Link>
+                {loading ? (
+                  <div className="h-6 w-32 bg-gray-300 rounded animate-pulse"></div>
+                ) : (
+                  <h3 className="text-xl font-semibold text-gray-900">Recent Activity</h3>
+                )}
+                {loading ? (
+                  <div className="h-4 w-16 bg-gray-300 rounded animate-pulse"></div>
+                ) : (
+                  recentTestimonials.length > 0 && (
+                    <Link
+                      to="/testimonials"
+                      onClick={() => window.scrollTo(0, 0)}
+                      className="text-primary-950 hover:text-primary-800 text-sm font-medium"
+                    >
+                      View All →
+                    </Link>
+                  )
                 )}
               </div>
 
-              {stats.total === 0 ? (
+              {loading ? (
+                <div className="space-y-4">
+                  {[...Array(3)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="bg-white border border-gray-200 rounded-lg p-4 animate-pulse"
+                    >
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-10 h-10 bg-gray-300 rounded-full"></div>
+                          <div>
+                            <div className="h-4 w-24 bg-gray-300 rounded mb-2"></div>
+                            <div className="h-3 w-16 bg-gray-200 rounded"></div>
+                          </div>
+                        </div>
+                        <div className="h-5 w-16 bg-gray-300 rounded"></div>
+                      </div>
+
+                      <div className="flex items-center space-x-2 mb-3">
+                        <div className="h-4 w-20 bg-gray-300 rounded"></div>
+                        <div className="h-3 w-8 bg-gray-200 rounded"></div>
+                      </div>
+
+                      <div className="h-4 w-full bg-gray-300 rounded mb-2"></div>
+                      <div className="h-4 w-3/4 bg-gray-200 rounded mb-3"></div>
+
+                      <div className="flex items-center justify-between">
+                        <div className="h-3 w-28 bg-gray-300 rounded"></div>
+                        <div className="flex space-x-2">
+                          <div className="h-6 w-14 bg-gray-200 rounded"></div>
+                          <div className="h-6 w-14 bg-gray-200 rounded"></div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : stats.total === 0 ? (
                 <div className="text-center py-8">
                   <MessageSquare className="h-12 w-12 text-gray-300 mx-auto mb-4" />
                   <h4 className="text-lg font-medium text-gray-900 mb-2">Create your first collection form</h4>
-                  <p className="text-gray-500 mb-6 max-w-md mx-auto">Start gathering customer testimonials by creating a customized form that you can share with your customers.</p>
+                  <p className="text-gray-500 mb-6 max-w-md mx-auto">
+                    Start gathering customer testimonials by creating a customized form that you can share with your customers.
+                  </p>
                   <button
-                    onClick={() => window.location.href = '/forms'}
+                    onClick={() => (window.location.href = "/forms")}
                     className="bg-primary-950 text-white px-6 py-3 rounded-lg hover:bg-primary-900 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                   >
                     Create Your First Form
                   </button>
-                  </div>
+                </div>
               ) : recentTestimonials.length === 0 ? (
                 <div className="text-center py-8">
                   <Clock className="h-12 w-12 text-gray-300 mx-auto mb-4" />
@@ -341,7 +395,10 @@ export const Dashboard: React.FC = () => {
               ) : (
                 <div className="space-y-4">
                   {recentTestimonials.map((testimonial) => (
-                    <div key={testimonial.id} className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-all duration-200">
+                    <div
+                      key={testimonial.id}
+                      className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-all duration-200"
+                    >
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center space-x-3">
                           <div className="w-10 h-10 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
@@ -418,14 +475,14 @@ export const Dashboard: React.FC = () => {
                     <div className="text-center pt-4">
                       <Link
                         to="/testimonials"
-                       onClick={() => window.scrollTo(0, 0)}
+                        onClick={() => window.scrollTo(0, 0)}
                         className="text-primary-950 hover:text-primary-800 text-sm font-medium"
                       >
                         View all testimonials →
                       </Link>
                     </div>
                   )}
-                  </div>
+                </div>
               )}
             </div>
           </div>
