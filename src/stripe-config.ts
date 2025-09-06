@@ -9,14 +9,14 @@ export interface Product {
 export const products: Product[] = [
   {
     id: 'standard',
-    priceId: 'price_1Rznb5Dn6VTzl81bjqFfCagv',
+    priceId: 'price_1S3gdlDn6VTzl81bSMHl4mNw',
     name: 'Standard Plan',
     description: 'Perfect for small businesses getting started.',
     mode: 'subscription'
   },
   {
     id: 'premium',
-    priceId: 'price_1Rznb5Dn6VTzl81b8Hx5UQt6',
+    priceId: 'price_1S3gdlDn6VTzl81bnzEtZYER',
     name: 'Premium Plan',
     description: 'Complete solution for growing businesses.',
     mode: 'subscription'

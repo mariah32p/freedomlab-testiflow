@@ -136,8 +136,8 @@ export const useSubscription = (): SubscriptionInfo => {
         // Determine plan from price_id
         let plan: 'standard' | 'premium' | null = null;
         if (subscriptionData?.price_id) {
-          const standardPriceId = 'price_1Rznb5Dn6VTzl81bjqFfCagv';
-          const premiumPriceId = 'price_1Rznb5Dn6VTzl81b8Hx5UQt6';
+          const standardPriceId = 'price_1S3gdlDn6VTzl81bSMHl4mNw';
+          const premiumPriceId = 'price_1S3gdlDn6VTzl81bnzEtZYER';
           
            console.log('useSubscription: Price ID comparison:', {
             currentPriceId: subscriptionData.price_id,
