@@ -1,3 +1,4 @@
+import { VITE_STRIPE_STANDARD_PRICE_ID, VITE_STRIPE_PREMIUM_PRICE_ID } from '../config/variables'
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
@@ -136,8 +137,8 @@ export const useSubscription = (): SubscriptionInfo => {
         // Determine plan from price_id
         let plan: 'standard' | 'premium' | null = null;
         if (subscriptionData?.price_id) {
-          const standardPriceId = 'price_1Rznb5Dn6VTzl81bjqFfCagv';
-          const premiumPriceId = 'price_1Rznb5Dn6VTzl81b8Hx5UQt6';
+          const standardPriceId = VITE_STRIPE_STANDARD_PRICE_ID;
+          const premiumPriceId = VITE_STRIPE_PREMIUM_PRICE_ID;
           
            console.log('useSubscription: Price ID comparison:', {
             currentPriceId: subscriptionData.price_id,
