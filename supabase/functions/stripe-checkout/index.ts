@@ -54,6 +54,13 @@ Deno.serve(async (req) => {
 
     const { price_id, success_url, cancel_url, mode, customer_email, client_reference_id, is_plan_change } = await req.json();
 
+    // CRITICAL: Prevent plan changes through this endpoint
+    if (is_plan_change) {
+      return corsResponse({ 
+        error: 'Plan changes must use the modify-subscription endpoint. This endpoint is for new signups only.' 
+      }, 400);
+    }
+
     const error = validateParameters(
       { price_id, success_url, cancel_url, mode, customer_email },
       {
