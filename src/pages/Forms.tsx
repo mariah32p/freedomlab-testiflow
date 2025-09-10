@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { useSubscription, canCreateForm } from '../hooks/useSubscription';
+import { useSubscription } from '../hooks/useSubscription';
 import { UpgradePrompt } from '../components/UpgradePrompt';
 import { supabase } from '../lib/supabase';
 import { Plus, Edit, Trash2, ExternalLink, Copy, Eye, Settings, X, Calendar, ToggleLeft, ToggleRight, FileText } from 'lucide-react';
@@ -259,7 +259,7 @@ export const Forms: React.FC = () => {
   };
 
   const handleCreateFormClick = () => {
-    if (!canCreateForm(subscription)) {
+    if (subscription.currentUsage.formCount >= subscription.limits.maxForms) {
       setError(`You've reached the limit of ${subscription.limits.maxForms} form${subscription.limits.maxForms !== 1 ? 's' : ''} for your current plan. Upgrade to Premium for unlimited forms.`);
       return;
     }
@@ -541,7 +541,7 @@ export const Forms: React.FC = () => {
             {/* Forms Grid */}
             {forms.length === 0 ? (
               <div className="text-center py-16">
-                {!canCreateForm(subscription) ? (
+                {subscription.currentUsage.formCount >= subscription.limits.maxForms ? (
                   <UpgradePrompt 
                     feature="Multiple Forms"
                     description="Create unlimited testimonial collection forms with different questions and branding for various campaigns."
