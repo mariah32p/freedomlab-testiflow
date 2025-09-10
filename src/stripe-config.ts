@@ -5,6 +5,8 @@ export interface Product {
   name: string;
   description: string;
   mode: 'payment' | 'subscription';
+  isComingSoon?: boolean;
+  isActive?: boolean;
 }
 
 export const products: Product[] = [
@@ -13,16 +15,30 @@ export const products: Product[] = [
     priceId: VITE_STRIPE_STANDARD_PRICE_ID,
     name: 'Standard Plan',
     description: 'Perfect for small businesses getting started.',
-    mode: 'subscription'
+    mode: 'subscription',
+    isActive: true,
+    isComingSoon: false
   },
   {
     id: 'premium',
     priceId: VITE_STRIPE_PREMIUM_PRICE_ID,
     name: 'Premium Plan',
     description: 'Complete solution for growing businesses.',
-    mode: 'subscription'
+    mode: 'subscription',
+    isActive: false,
+    isComingSoon: true
   }
 ];
+
+// Only return active products for actual checkout
+export const getActiveProducts = (): Product[] => {
+  return products.filter(product => product.isActive);
+};
+
+// Get the functional plan (Standard only)
+export const getFunctionalPlan = (): Product => {
+  return products.find(product => product.isActive) || products[0];
+};
 
 export const getProductById = (id: string): Product | undefined => {
   return products.find(product => product.id === id);

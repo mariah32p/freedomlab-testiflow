@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { products } from '../stripe-config';
+import { products, getFunctionalPlan } from '../stripe-config';
 import { useAuth } from '../contexts/AuthContext';
 
 export const useStripe = () => {
@@ -8,11 +8,47 @@ export const useStripe = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Check if user has already used their trial
+  const checkTrialEligibility = async (userId: string): Promise<boolean> => {
+    try {
+      const { data: customerData } = await supabase
+        .from('stripe_customers')
+        .select('customer_id')
+        .eq('user_id', userId)
+        .maybeSingle();
+
+      // If no customer record exists, they're eligible for trial
+      if (!customerData) {
+        return true;
+      }
+
+      // Check if they've ever had a subscription (trial used)
+      const { data: subscriptionData } = await supabase
+        .from('stripe_subscriptions')
+        .select('subscription_id')
+        .eq('customer_id', customerData.customer_id)
+        .maybeSingle();
+
+      // If no subscription record, they're eligible for trial
+      return !subscriptionData;
+    } catch (error) {
+      console.error('Error checking trial eligibility:', error);
+      // Default to no trial if we can't check
+      return false;
+    }
+  };
+
   const createCheckoutSession = async (priceId: string) => {
     setLoading(true);
     setError(null);
 
     try {
+      // Always use the functional plan (Standard) regardless of what was requested
+      const functionalPlan = getFunctionalPlan();
+      const actualPriceId = functionalPlan.priceId;
+      
+      console.log('createCheckoutSession: Requested price:', priceId, 'Using actual price:', actualPriceId);
+
       // Get authenticated user
       let userEmail: string;
       let userId: string;
@@ -28,17 +64,17 @@ export const useStripe = () => {
         throw new Error('You must be logged in to make a purchase');
       }
 
-      const product = products.find(p => p.priceId === priceId);
-      if (!product) {
-        throw new Error('Product not found');
-      }
+      // Check trial eligibility
+      const isTrialEligible = await checkTrialEligibility(userId);
+      console.log('createCheckoutSession: Trial eligible:', isTrialEligible);
 
       const { data, error: functionError } = await supabase.functions.invoke('stripe-checkout', {
         body: {
-          price_id: priceId,
-          mode: product.mode,
+          price_id: actualPriceId,
+          mode: functionalPlan.mode,
           customer_email: userEmail,
           client_reference_id: userId,
+          has_trial: isTrialEligible,
           success_url: `${window.location.origin}/success`,
           cancel_url: `${window.location.origin}/get-started`,
         },
@@ -99,81 +135,16 @@ export const useStripe = () => {
     }
   };
 
-  const changePlan = async (newPriceId: string) => {
-    if (!user) {
-      setError('You must be logged in');
-      return { success: false };
-    }
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      console.log('changePlan: Starting plan change to price_id:', newPriceId);
-      
-      // Get current subscription to validate plan change
-      const { data: customerData } = await supabase
-        .from('stripe_customers')
-        .select('customer_id')
-        .eq('user_id', user?.id)
-        .maybeSingle();
-
-      if (!customerData) {
-        throw new Error('No customer found. Please contact support.');
-      }
-
-      const { data: currentSubscription } = await supabase
-        .from('stripe_subscriptions')
-        .select('price_id, status')
-        .eq('customer_id', customerData.customer_id)
-        .maybeSingle();
-
-      if (currentSubscription?.price_id === newPriceId) {
-        throw new Error('You are already on this plan.');
-      }
-
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session) {
-        throw new Error('No active session');
-      }
-
-      const { data, error: functionError } = await supabase.functions.invoke('modify-subscription', {
-        headers: {
-          Authorization: `Bearer ${session.access_token}`,
-        },
-        body: {
-          new_price_id: newPriceId,
-        },
-      });
-
-      if (functionError) {
-        console.error('changePlan: Function error:', functionError);
-        throw new Error(functionError.message);
-      }
-
-      console.log('changePlan: Success response:', data);
-      
-      // Force refresh subscription data immediately
-      if ((window as any).refreshSubscription) {
-        console.log('changePlan: Triggering subscription refresh');
-        (window as any).refreshSubscription();
-      }
-      
-      return { success: true, data };
-    } catch (err) {
-      console.error('changePlan: Error:', err);
-      setError(err instanceof Error ? err.message : 'An error occurred');
-      return { success: false };
-    } finally {
-      setLoading(false);
-    }
+  // Show "Coming Soon" modal for Pro plan
+  const showComingSoonModal = () => {
+    // Simple alert for now - can be enhanced with a proper modal later
+    alert('Pro Plan is coming soon! For now, enjoy all features with our Standard plan.');
   };
 
   return {
     createCheckoutSession,
     createPortalSession,
-    changePlan,
+    showComingSoonModal,
     loading,
     error,
   };

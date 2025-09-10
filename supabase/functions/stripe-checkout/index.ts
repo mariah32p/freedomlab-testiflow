@@ -53,6 +53,7 @@ Deno.serve(async (req) => {
     }
 
     const { price_id, success_url, cancel_url, mode, customer_email, client_reference_id, is_plan_change } = await req.json();
+    const { has_trial = true } = await req.json();
 
     // CRITICAL: Prevent plan changes through this endpoint
     if (is_plan_change) {
@@ -94,7 +95,7 @@ Deno.serve(async (req) => {
         },
       ],
       mode,
-      subscription_data: mode === 'subscription' && !is_plan_change ? {
+      subscription_data: mode === 'subscription' && has_trial ? {
         trial_period_days: 7,
       } : mode === 'subscription' ? {} : undefined,
       client_reference_id,
@@ -102,7 +103,7 @@ Deno.serve(async (req) => {
       cancel_url,
       allow_promotion_codes: true,
       billing_address_collection: 'auto',
-      payment_method_collection: 'if_required',
+      payment_method_collection: 'always', // Always collect payment method for trials
     });
 
     console.log(`Created checkout session ${session.id} for customer ${newCustomer.id}`);
