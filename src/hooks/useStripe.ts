@@ -100,46 +100,52 @@ export const useStripe = () => {
   };
 
   const changePlan = async (newPriceId: string) => {
+    if (!user) {
+      setError('You must be logged in');
+      return { success: false };
+    }
+
     setLoading(true);
     setError(null);
 
     try {
+      console.log('changePlan: Starting plan change to price_id:', newPriceId);
+      
       const { data: { session } } = await supabase.auth.getSession();
       
-      if (!session?.user?.email) {
-        throw new Error('You must be logged in');
+      if (!session) {
+        throw new Error('No active session');
       }
 
-      const product = products.find(p => p.priceId === newPriceId);
-      if (!product) {
-        throw new Error('Product not found');
-      }
-
-      const { data, error: functionError } = await supabase.functions.invoke('stripe-checkout', {
+      const { data, error: functionError } = await supabase.functions.invoke('modify-subscription', {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
         body: {
-          price_id: newPriceId,
-          mode: product.mode,
-          customer_email: session.user.email,
-          client_reference_id: session.user.id,
-          success_url: `${window.location.origin}/settings?plan_changed=true`,
-          cancel_url: `${window.location.origin}/settings`,
-          is_plan_change: true,
+          new_price_id: newPriceId,
         },
       });
 
       if (functionError) {
+        console.error('changePlan: Function error:', functionError);
         throw new Error(functionError.message);
       }
 
-      // Redirect to Stripe Checkout
-      if (data?.url) {
-        window.location.href = data.url; // Use same tab for plan changes
+      console.log('changePlan: Success response:', data);
+      
+      // Force refresh subscription data immediately
+      if ((window as any).refreshSubscription) {
+        console.log('changePlan: Triggering subscription refresh');
+        (window as any).refreshSubscription();
       }
+      
+      return { success: true, data };
     } catch (err) {
+      console.error('changePlan: Error:', err);
       setError(err instanceof Error ? err.message : 'An error occurred');
+      return { success: false };
     } finally {
       setLoading(false);
-    }
   };
 
   return {

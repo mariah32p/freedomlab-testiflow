@@ -61,46 +61,7 @@ export const Settings: React.FC = () => {
   }, [user]);
 
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('plan_changed') === 'true') {
-      setSuccess('Your plan has been updated successfully!');
-       
-       // Force refresh subscription data after plan change
-       setTimeout(async () => {
-         console.log('Settings: Plan changed, forcing data refresh...');
-         
-         if (!user) return;
-         
-         const { data: customerData } = await supabase
-           .from('stripe_customers')
-           .select('*')
-           .eq('user_id', user.id)
-           .maybeSingle();
-
-         if (customerData) {
-           const { data: subscriptionData } = await supabase
-             .from('stripe_subscriptions')
-             .select('*')
-             .eq('customer_id', customerData.customer_id)
-             .maybeSingle();
-           
-           console.log('Settings: Refreshed subscription data:', {
-             subscription_id: subscriptionData?.subscription_id,
-             price_id: subscriptionData?.price_id,
-             status: subscriptionData?.status
-           });
-           
-           setSubscription(subscriptionData);
-         }
-         
-         // Also refresh the global subscription hook
-         if ((window as any).refreshSubscription) {
-           (window as any).refreshSubscription();
-         }
-       }, 2000); // Give webhook more time to process
-       
-      window.history.replaceState({}, '', window.location.pathname);
-    }
+    // Remove URL-based plan change detection since we now handle it immediately
   }, []);
 
   const getCurrentPlan = () => {
@@ -125,7 +86,42 @@ export const Settings: React.FC = () => {
 
   const handlePlanChange = async (newPriceId: string) => {
     if (!newPriceId) return;
-    await changePlan(newPriceId);
+    
+    try {
+      setError(null);
+      await changePlan(newPriceId);
+      setSuccess('Your plan has been updated successfully! Changes take effect immediately.');
+      
+      // Force refresh subscription data after a short delay
+      setTimeout(async () => {
+        if (!user) return;
+        
+        const { data: customerData } = await supabase
+          .from('stripe_customers')
+          .select('*')
+          .eq('user_id', user.id)
+          .maybeSingle();
+
+        if (customerData) {
+          const { data: subscriptionData } = await supabase
+            .from('stripe_subscriptions')
+            .select('*')
+            .eq('customer_id', customerData.customer_id)
+            .maybeSingle();
+          
+          console.log('Settings: Force refreshed subscription data after plan change:', {
+            subscription_id: subscriptionData?.subscription_id,
+            price_id: subscriptionData?.price_id,
+            status: subscriptionData?.status
+          });
+          
+          setSubscription(subscriptionData);
+        }
+      }, 1000);
+    } catch (error) {
+      console.error('Plan change failed:', error);
+      setError('Failed to change plan. Please try again or contact support.');
+    }
   };
 
   const isInGracePeriod = () => {
@@ -227,14 +223,14 @@ export const Settings: React.FC = () => {
                             </h4>
                             <div className="text-sm text-blue-700 mt-1 space-y-1">
                               <p>
-                                <strong>Charged immediately:</strong> You'll be charged the difference (${getCurrentPlan()?.id === 'standard' ? '$20' : '-$20'}) right now.
+                                <strong>Changes immediately:</strong> You'll be {getCurrentPlan()?.id === 'standard' ? 'charged $20' : 'credited $20'} right now with prorated billing.
                               </p>
                               <p>
-                                Changes take effect immediately with prorated billing.
+                                All features update instantly - no redirect needed.
                               </p>
                               {subscription?.status === 'trialing' && (
                                 <p className="font-medium">
-                                  This will end your trial and start billing immediately.
+                                  ⚠️ This will end your trial and start billing immediately.
                                 </p>
                               )}
                             </div>
