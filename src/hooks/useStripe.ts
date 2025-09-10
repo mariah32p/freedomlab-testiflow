@@ -111,6 +111,27 @@ export const useStripe = () => {
     try {
       console.log('changePlan: Starting plan change to price_id:', newPriceId);
       
+      // Get current subscription to validate plan change
+      const { data: customerData } = await supabase
+        .from('stripe_customers')
+        .select('customer_id')
+        .eq('user_id', user?.id)
+        .maybeSingle();
+
+      if (!customerData) {
+        throw new Error('No customer found. Please contact support.');
+      }
+
+      const { data: currentSubscription } = await supabase
+        .from('stripe_subscriptions')
+        .select('price_id, status')
+        .eq('customer_id', customerData.customer_id)
+        .maybeSingle();
+
+      if (currentSubscription?.price_id === newPriceId) {
+        throw new Error('You are already on this plan.');
+      }
+
       const { data: { session } } = await supabase.auth.getSession();
       
       if (!session) {

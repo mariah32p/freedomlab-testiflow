@@ -87,6 +87,12 @@ export const Settings: React.FC = () => {
   const handlePlanChange = async (newPriceId: string) => {
     if (!newPriceId) return;
     
+    const currentPlan = getCurrentPlan();
+    if (currentPlan?.priceId === newPriceId) {
+      setError('You are already on this plan.');
+      return;
+    }
+    
     try {
       setError(null);
       await changePlan(newPriceId);
