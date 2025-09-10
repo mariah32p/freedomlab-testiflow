@@ -1,53 +1,18 @@
-import { VITE_STRIPE_STANDARD_PRICE_ID, VITE_STRIPE_PREMIUM_PRICE_ID } from '../config/variables'
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 
-export interface SubscriptionLimits {
-  maxTestimonials: number;
-  maxForms: number;
-  canUseCustomFields: boolean;
-  canUseBranding: boolean;
-  canUseVideoUploads: boolean;
-  canUseAdvancedExports: boolean;
-  canUseTags: boolean;
-  canUseImageUploads: boolean;
-}
-
 export interface SubscriptionInfo {
-  plan: 'standard' | 'premium' | null;
-  status: string;
-  isActive: boolean;
+  hasActiveSubscription: boolean;
+  status: 'trialing' | 'active' | 'past_due' | 'canceled' | 'not_started';
   isTrialing: boolean;
-  limits: SubscriptionLimits;
+  currentPeriodEnd: number | null;
+  paymentIssueSince: string | null;
   currentUsage: {
     testimonialCount: number;
     formCount: number;
   };
 }
-
-const PLAN_LIMITS: Record<'standard' | 'premium', SubscriptionLimits> = {
-  standard: {
-    maxTestimonials: 25,
-    maxForms: 1,
-    canUseCustomFields: false,
-    canUseBranding: false,
-    canUseVideoUploads: false,
-    canUseAdvancedExports: false,
-    canUseTags: false,
-    canUseImageUploads: true, // Images allowed on Standard
-  },
-  premium: {
-    maxTestimonials: Infinity,
-    maxForms: Infinity,
-    canUseCustomFields: true,
-    canUseBranding: true,
-    canUseVideoUploads: true,
-    canUseAdvancedExports: true,
-    canUseTags: true,
-    canUseImageUploads: true,
-  },
-};
 
 export interface SubscriptionState extends SubscriptionInfo {
   loading: boolean;
@@ -57,11 +22,11 @@ export const useSubscription = (): SubscriptionState => {
   const { user } = useAuth();
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [subscriptionInfo, setSubscriptionInfo] = useState<SubscriptionInfo>({
-    plan: null,
+    hasActiveSubscription: false,
     status: 'not_started',
-    isActive: false,
     isTrialing: false,
-    limits: PLAN_LIMITS.standard, // Default to Standard limits
+    currentPeriodEnd: null,
+    paymentIssueSince: null,
     currentUsage: {
       testimonialCount: 0,
       formCount: 0,
@@ -91,7 +56,7 @@ export const useSubscription = (): SubscriptionState => {
       setLoading(true);
 
       try {
-        console.log('Fetching subscription info for user:', user.id);
+        console.log('useSubscription: Fetching subscription info for user:', user.id);
         
         // Get customer data
         const { data: customerData } = await supabase
@@ -100,18 +65,18 @@ export const useSubscription = (): SubscriptionState => {
           .eq('user_id', user.id)
           .maybeSingle();
 
-        console.log('Customer data:', customerData);
+        console.log('useSubscription: Customer data:', customerData);
 
         if (!customerData) {
           // No customer = no subscription
-          console.log('No customer found - setting Standard limits');
+          console.log('useSubscription: No customer found - no subscription');
           setSubscriptionInfo(prev => ({
             ...prev,
-            plan: null,
+            hasActiveSubscription: false,
             status: 'not_started',
-            isActive: false,
             isTrialing: false,
-            limits: PLAN_LIMITS.standard,
+            currentPeriodEnd: null,
+            paymentIssueSince: null,
           }));
           return;
         }
@@ -123,7 +88,7 @@ export const useSubscription = (): SubscriptionState => {
           .eq('customer_id', customerData.customer_id)
           .maybeSingle();
 
-        console.log('Subscription data:', subscriptionData);
+        console.log('useSubscription: Subscription data:', subscriptionData);
 
         // Get current usage
         const { data: formsData } = await supabase
@@ -143,104 +108,69 @@ export const useSubscription = (): SubscriptionState => {
           testimonialCount = count || 0;
         }
 
-        // Determine plan from price_id
-        let plan: 'standard' | 'premium' | null = null;
-        if (subscriptionData?.price_id) {
-          const standardPriceId = VITE_STRIPE_STANDARD_PRICE_ID;
-          const premiumPriceId = VITE_STRIPE_PREMIUM_PRICE_ID;
-          
-           console.log('useSubscription: Price ID comparison:', {
-            currentPriceId: subscriptionData.price_id,
-            standardPriceId,
-            premiumPriceId,
-            isStandard: subscriptionData.price_id === standardPriceId,
-            isPremium: subscriptionData.price_id === premiumPriceId
-          });
-          
-          if (subscriptionData.price_id === standardPriceId) {
-            plan = 'standard';
-             console.log('useSubscription: Detected Standard plan');
-          } else if (subscriptionData.price_id === premiumPriceId) {
-            plan = 'premium';
-             console.log('useSubscription: Detected Premium plan');
-          } else {
-             console.warn('useSubscription: Unknown price ID:', subscriptionData.price_id);
-             // Let's also check if it might be a test price ID or different format
-             console.log('useSubscription: Full subscription data for debugging:', subscriptionData);
-          }
-        }
-
-        const isActive = subscriptionData?.status === 'active';
-        const isTrialing = subscriptionData?.status === 'trialing';
+        // Determine subscription status
+        const status = subscriptionData?.status || 'not_started';
+        const isActive = status === 'active';
+        const isTrialing = status === 'trialing';
         const hasActiveSubscription = isActive || isTrialing;
 
-        // CRITICAL: Use actual plan limits - Standard gets Standard limits even during trial
-        const effectivePlan = plan || 'standard'; // Default to standard if no plan detected
-         console.log('useSubscription: Final plan detection:', {
-          priceId: subscriptionData?.price_id,
-          detectedPlan: plan,
-          effectivePlan,
-          status: subscriptionData?.status,
+        // Get payment issue date for grace period calculation
+        const paymentIssueSince = status === 'past_due' ? subscriptionData?.updated_at : null;
+
+        console.log('useSubscription: Final status:', {
+          status,
+          hasActiveSubscription,
           isTrialing,
-           isActive,
-           limitsApplied: PLAN_LIMITS[effectivePlan]
+          currentUsage: { testimonialCount, formCount }
         });
-        
-        const limits = PLAN_LIMITS[effectivePlan];
 
         setSubscriptionInfo({
-          plan,
-          status: subscriptionData?.status || 'not_started',
-          isActive: hasActiveSubscription,
+          hasActiveSubscription,
+          status,
           isTrialing,
-          limits,
+          currentPeriodEnd: subscriptionData?.current_period_end || null,
+          paymentIssueSince,
           currentUsage: {
             testimonialCount,
             formCount,
           },
         });
 
-        // Force re-render to update UI immediately after plan change
-         console.log('useSubscription: Subscription info updated:', {
-          plan,
-          effectivePlan,
-          limits: limits,
-          currentUsage: { testimonialCount, formCount }
-        });
-        } catch (error) {
-          console.error('Error fetching subscription info:', error);
-          // On error, default to Standard limits
-          setSubscriptionInfo(prev => ({
-            ...prev,
-            limits: PLAN_LIMITS.standard,
-          }));
-        } finally {
-          setLoading(false);
-        }
-      };
+      } catch (error) {
+        console.error('useSubscription: Error fetching subscription info:', error);
+        // On error, default to no subscription
+        setSubscriptionInfo(prev => ({
+          ...prev,
+          hasActiveSubscription: false,
+          status: 'not_started',
+        }));
+      } finally {
+        setLoading(false);
+      }
+    };
 
-      fetchSubscriptionInfo();
-   }, [user, refreshTrigger]);
+    fetchSubscriptionInfo();
+  }, [user, refreshTrigger]);
 
   return { ...subscriptionInfo, loading };
 };
 
-// Helper functions for feature gating
-export const canCreateForm = (subscription: SubscriptionState): boolean => {
+// Simplified helper functions - no more feature gating
+export const canAccessDashboard = (subscription: SubscriptionState): boolean => {
   if (subscription.loading) return true;
-  // During trial or active subscription, enforce plan limits
-  if (subscription.isActive || subscription.isTrialing) {
-    return subscription.currentUsage.formCount < subscription.limits.maxForms;
-  }
-  // No subscription = no forms allowed
-  return false;
+  return subscription.hasActiveSubscription;
 };
 
-export const canCreateTestimonial = (subscription: SubscriptionState): boolean => {
-  if (subscription.loading) return true;
-  return subscription.currentUsage.testimonialCount < subscription.limits.maxTestimonials;
+export const isInGracePeriod = (subscription: SubscriptionState): boolean => {
+  if (!subscription.paymentIssueSince || subscription.status !== 'past_due') return false;
+  
+  const issueDate = new Date(subscription.paymentIssueSince);
+  const now = new Date();
+  const daysSinceIssue = Math.floor((now.getTime() - issueDate.getTime()) / (1000 * 60 * 60 * 24));
+  
+  return daysSinceIssue <= 30;
 };
 
-export const getUpgradeMessage = (feature: string): string => {
-  return `${feature} is available with Premium. Upgrade to unlock this feature.`;
+export const shouldAllowDashboardAccess = (subscription: SubscriptionState): boolean => {
+  return subscription.hasActiveSubscription || isInGracePeriod(subscription);
 };
