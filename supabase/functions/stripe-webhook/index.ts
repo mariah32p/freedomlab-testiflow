@@ -219,11 +219,31 @@ async function syncCustomerFromStripe(customerId: string) {
       return;
     }
 
-    // Assumes that a customer can only have a single subscription
-    const subscription = subscriptions.data[0];
+    // Get the most recent active subscription (active > trialing > past_due)
+    const activeSubscription = subscriptions.data.find(sub => 
+      sub.status === 'active' || sub.status === 'trialing' || sub.status === 'past_due'
+    );
+    
+    const subscription = activeSubscription || subscriptions.data[0];
 
     console.log(`Syncing subscription ${subscription.id} with status: ${subscription.status}`);
 
+    // If we're syncing an active subscription and there are multiple subscriptions,
+    // cancel the old ones in Stripe to maintain consistency
+    if (subscription.status === 'active' && subscriptions.data.length > 1) {
+      console.log(`Found ${subscriptions.data.length} subscriptions for customer ${customerId}, canceling old ones`);
+      
+      for (const oldSub of subscriptions.data) {
+        if (oldSub.id !== subscription.id && (oldSub.status === 'active' || oldSub.status === 'trialing')) {
+          try {
+            await stripe.subscriptions.cancel(oldSub.id);
+            console.log(`Canceled old subscription: ${oldSub.id}`);
+          } catch (cancelError) {
+            console.error(`Failed to cancel old subscription ${oldSub.id}:`, cancelError);
+          }
+        }
+      }
+    }
     // Store subscription state
     const subscriptionData: any = {
       customer_id: customerId,
