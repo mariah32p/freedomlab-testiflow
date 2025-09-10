@@ -53,7 +53,7 @@ export const Testimonials: React.FC = () => {
   const [tags, setTags] = useState<TestimonialTag[]>([]);
   const [testimonialTags, setTestimonialTags] = useState<Record<string, TestimonialTag[]>>({});
   const [testimonialResponses, setTestimonialResponses] = useState<Record<string, FormResponse[]>>({});
-  const [loading, setLoading] = useState(true);
+  const [dataLoading, setDataLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('all');
   const [tagFilter, setTagFilter] = useState<string>('all');
@@ -77,12 +77,16 @@ export const Testimonials: React.FC = () => {
       return () => document.removeEventListener('mousedown', handleClickOutside);
     }
   }, [showActionsFor]);
-  useEffect(() => {
-    fetchData();
-  }, [user]);
+    useEffect(() => {
+      if (!subscription.loading) {
+        fetchData();
+      }
+    }, [user, subscription.loading]);
 
   const fetchData = async () => {
     if (!user) return;
+
+    setDataLoading(true);
 
     try {
       setError(null);
@@ -184,11 +188,11 @@ export const Testimonials: React.FC = () => {
         }
       }
 
-      setLoading(false);
+      setDataLoading(false);
     } catch (error) {
       console.error('Error fetching testimonials:', error);
       setError('Failed to load testimonials');
-      setLoading(false);
+      setDataLoading(false);
     }
   };
 
@@ -327,7 +331,7 @@ export const Testimonials: React.FC = () => {
 
   const filteredTestimonials = getFilteredTestimonials();
 
-  if (loading) {
+  if (dataLoading || subscription.loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-950"></div>

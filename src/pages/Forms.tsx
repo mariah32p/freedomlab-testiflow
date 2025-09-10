@@ -26,7 +26,7 @@ export const Forms: React.FC = () => {
   const { user } = useAuth();
   const subscription = useSubscription();
   const [forms, setForms] = useState<TestimonialForm[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [formsLoading, setFormsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -82,7 +82,7 @@ export const Forms: React.FC = () => {
       console.error('Error fetching forms:', error);
       setError('Failed to load forms');
     } finally {
-      setLoading(false);
+        setFormsLoading(false);
     }
   };
 
@@ -266,7 +266,7 @@ export const Forms: React.FC = () => {
     setShowCreateForm(true);
   };
 
-  if (loading) {
+  if (formsLoading || subscription.loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-950"></div>

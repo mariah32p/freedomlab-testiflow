@@ -6,6 +6,14 @@ import { TagManager } from '../components/TagManager';
 export const Tags: React.FC = () => {
   const subscription = useSubscription();
 
+  if (subscription.loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-950"></div>
+      </div>
+    );
+  }
+
   // Show upgrade prompt for Standard users
   if (!subscription.limits.canUseTags) {
     return (
