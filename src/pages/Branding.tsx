@@ -40,7 +40,7 @@ export const Branding: React.FC = () => {
   const { user } = useAuth();
   const subscription = useSubscription();
   const [, setBranding] = useState<FormBranding | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [brandingLoading, setBrandingLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -56,11 +56,13 @@ export const Branding: React.FC = () => {
     fetchBranding();
   }, [user]);
 
-  const fetchBranding = async () => {
-    if (!user) return;
+    const fetchBranding = async () => {
+      if (!user) return;
 
-    try {
-      const { data, error } = await supabase
+      setBrandingLoading(true);
+
+      try {
+        const { data, error } = await supabase
         .from('form_branding')
         .select('*')
         .eq('user_id', user.id)
@@ -78,13 +80,13 @@ export const Branding: React.FC = () => {
         setFontFamily(data.font_family);
       }
       
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching branding:', error);
-      setError('Failed to load branding settings');
-      setLoading(false);
-    }
-  };
+        setBrandingLoading(false);
+      } catch (error) {
+        console.error('Error fetching branding:', error);
+        setError('Failed to load branding settings');
+        setBrandingLoading(false);
+      }
+    };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -175,7 +177,7 @@ export const Branding: React.FC = () => {
     }
   };
 
-  if (loading) {
+  if (brandingLoading || subscription.loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-950"></div>

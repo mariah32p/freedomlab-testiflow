@@ -49,7 +49,11 @@ const PLAN_LIMITS: Record<'standard' | 'premium', SubscriptionLimits> = {
   },
 };
 
-export const useSubscription = (): SubscriptionInfo => {
+export interface SubscriptionState extends SubscriptionInfo {
+  loading: boolean;
+}
+
+export const useSubscription = (): SubscriptionState => {
   const { user } = useAuth();
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [subscriptionInfo, setSubscriptionInfo] = useState<SubscriptionInfo>({
@@ -63,6 +67,7 @@ export const useSubscription = (): SubscriptionInfo => {
       formCount: 0,
     },
   });
+  const [loading, setLoading] = useState(true);
 
   // Function to manually refresh subscription data
   const refreshSubscription = () => {
@@ -79,7 +84,11 @@ export const useSubscription = (): SubscriptionInfo => {
 
   useEffect(() => {
     const fetchSubscriptionInfo = async () => {
-      if (!user) return;
+      if (!user) {
+        setLoading(false);
+        return;
+      }
+      setLoading(true);
 
       try {
         console.log('Fetching subscription info for user:', user.id);
@@ -198,24 +207,27 @@ export const useSubscription = (): SubscriptionInfo => {
           limits: limits,
           currentUsage: { testimonialCount, formCount }
         });
-      } catch (error) {
-        console.error('Error fetching subscription info:', error);
-        // On error, default to Standard limits
-        setSubscriptionInfo(prev => ({
-          ...prev,
-          limits: PLAN_LIMITS.standard,
-        }));
-      }
-    };
+        } catch (error) {
+          console.error('Error fetching subscription info:', error);
+          // On error, default to Standard limits
+          setSubscriptionInfo(prev => ({
+            ...prev,
+            limits: PLAN_LIMITS.standard,
+          }));
+        } finally {
+          setLoading(false);
+        }
+      };
 
-    fetchSubscriptionInfo();
+      fetchSubscriptionInfo();
    }, [user, refreshTrigger]);
 
-  return subscriptionInfo;
+  return { ...subscriptionInfo, loading };
 };
 
 // Helper functions for feature gating
-export const canCreateForm = (subscription: SubscriptionInfo): boolean => {
+export const canCreateForm = (subscription: SubscriptionState): boolean => {
+  if (subscription.loading) return true;
   // During trial or active subscription, enforce plan limits
   if (subscription.isActive || subscription.isTrialing) {
     return subscription.currentUsage.formCount < subscription.limits.maxForms;
@@ -224,7 +236,8 @@ export const canCreateForm = (subscription: SubscriptionInfo): boolean => {
   return false;
 };
 
-export const canCreateTestimonial = (subscription: SubscriptionInfo): boolean => {
+export const canCreateTestimonial = (subscription: SubscriptionState): boolean => {
+  if (subscription.loading) return true;
   return subscription.currentUsage.testimonialCount < subscription.limits.maxTestimonials;
 };
 
