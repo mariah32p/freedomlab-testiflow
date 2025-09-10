@@ -2,58 +2,70 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 
-export interface SubscriptionInfo {
+export interface SubscriptionLimits {
+  maxTestimonials: number;
+  maxForms: number;
+  canUseCustomFields: boolean;
+  canUseBranding: boolean;
+  canUseVideoUploads: boolean;
+  canUseAdvancedExports: boolean;
+  canUseTags: boolean;
+}
+
+export interface SubscriptionState {
+  loading: boolean;
   hasActiveSubscription: boolean;
   status: 'trialing' | 'active' | 'past_due' | 'canceled' | 'not_started';
   isTrialing: boolean;
+  plan: 'standard' | 'premium';
   currentPeriodEnd: number | null;
   paymentIssueSince: string | null;
   currentUsage: {
     testimonialCount: number;
     formCount: number;
   };
+  limits: SubscriptionLimits;
 }
 
-export interface SubscriptionState extends SubscriptionInfo {
-  loading: boolean;
-}
+// Since we only have one functional plan, everyone gets "premium" limits
+const UNIVERSAL_LIMITS: SubscriptionLimits = {
+  maxTestimonials: Infinity,
+  maxForms: Infinity,
+  canUseCustomFields: true,
+  canUseBranding: true,
+  canUseVideoUploads: true,
+  canUseAdvancedExports: true,
+  canUseTags: true,
+};
 
 export const useSubscription = (): SubscriptionState => {
   const { user } = useAuth();
-  const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const [subscriptionInfo, setSubscriptionInfo] = useState<SubscriptionInfo>({
+  const [subscriptionInfo, setSubscriptionInfo] = useState<SubscriptionState>({
+    loading: true,
     hasActiveSubscription: false,
     status: 'not_started',
     isTrialing: false,
+    plan: 'standard',
     currentPeriodEnd: null,
     paymentIssueSince: null,
     currentUsage: {
       testimonialCount: 0,
       formCount: 0,
     },
+    limits: UNIVERSAL_LIMITS,
   });
-  const [loading, setLoading] = useState(true);
-
-  // Function to manually refresh subscription data
-  const refreshSubscription = () => {
-    setRefreshTrigger(prev => prev + 1);
-  };
-
-  // Expose refresh function globally for other components
-  useEffect(() => {
-    (window as any).refreshSubscription = refreshSubscription;
-    return () => {
-      delete (window as any).refreshSubscription;
-    };
-  }, []);
 
   useEffect(() => {
     const fetchSubscriptionInfo = async () => {
       if (!user) {
-        setLoading(false);
+        setSubscriptionInfo(prev => ({
+          ...prev,
+          loading: false,
+          hasActiveSubscription: false,
+          status: 'not_started',
+        }));
         return;
       }
-      setLoading(true);
 
       try {
         console.log('useSubscription: Fetching subscription info for user:', user.id);
@@ -72,11 +84,9 @@ export const useSubscription = (): SubscriptionState => {
           console.log('useSubscription: No customer found - no subscription');
           setSubscriptionInfo(prev => ({
             ...prev,
+            loading: false,
             hasActiveSubscription: false,
             status: 'not_started',
-            isTrialing: false,
-            currentPeriodEnd: null,
-            paymentIssueSince: null,
           }));
           return;
         }
@@ -125,37 +135,38 @@ export const useSubscription = (): SubscriptionState => {
         });
 
         setSubscriptionInfo({
+          loading: false,
           hasActiveSubscription,
           status,
           isTrialing,
+          plan: 'standard', // Everyone is on "standard" plan now
           currentPeriodEnd: subscriptionData?.current_period_end || null,
           paymentIssueSince,
           currentUsage: {
             testimonialCount,
             formCount,
           },
+          limits: UNIVERSAL_LIMITS, // Everyone gets full access
         });
 
       } catch (error) {
         console.error('useSubscription: Error fetching subscription info:', error);
-        // On error, default to no subscription
         setSubscriptionInfo(prev => ({
           ...prev,
+          loading: false,
           hasActiveSubscription: false,
           status: 'not_started',
         }));
-      } finally {
-        setLoading(false);
       }
     };
 
     fetchSubscriptionInfo();
-  }, [user, refreshTrigger]);
+  }, [user]);
 
-  return { ...subscriptionInfo, loading };
+  return subscriptionInfo;
 };
 
-// Simplified helper functions - no more feature gating
+// Helper functions for route guard
 export const canAccessDashboard = (subscription: SubscriptionState): boolean => {
   if (subscription.loading) return true;
   return subscription.hasActiveSubscription;

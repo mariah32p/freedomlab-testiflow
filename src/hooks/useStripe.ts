@@ -135,9 +135,7 @@ export const useStripe = () => {
     }
   };
 
-  // Show "Coming Soon" modal for Pro plan
   const showComingSoonModal = () => {
-    // Simple alert for now - can be enhanced with a proper modal later
     alert('Pro Plan is coming soon! For now, enjoy all features with our Standard plan.');
   };
 
