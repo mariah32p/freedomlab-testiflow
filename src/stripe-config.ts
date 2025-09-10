@@ -1,4 +1,3 @@
-import { VITE_STRIPE_STANDARD_PRICE_ID, VITE_STRIPE_PREMIUM_PRICE_ID } from './config/variables'
 export interface Product {
   id: string;
   priceId: string;
@@ -12,7 +11,7 @@ export interface Product {
 export const products: Product[] = [
   {
     id: 'standard',
-    priceId: VITE_STRIPE_STANDARD_PRICE_ID,
+    priceId: import.meta.env.VITE_STRIPE_STANDARD_PRICE_ID,
     name: 'Standard Plan',
     description: 'Perfect for small businesses getting started.',
     mode: 'subscription',
@@ -21,7 +20,7 @@ export const products: Product[] = [
   },
   {
     id: 'premium',
-    priceId: VITE_STRIPE_PREMIUM_PRICE_ID,
+    priceId: import.meta.env.VITE_STRIPE_PREMIUM_PRICE_ID,
     name: 'Premium Plan',
     description: 'Complete solution for growing businesses.',
     mode: 'subscription',
