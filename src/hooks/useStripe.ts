@@ -146,8 +146,8 @@ export const useStripe = () => {
       return { success: false };
     } finally {
       setLoading(false);
-      };
-  }
+    }
+  };
 
   return {
     createCheckoutSession,
