@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { User, Mail, AlertCircle, ExternalLink, CreditCard, ArrowUpCircle, ArrowDownCircle } from 'lucide-react';
+import { User, Mail, AlertCircle, ExternalLink, CreditCard } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useStripe } from '../hooks/useStripe';
-import { products } from '../stripe-config';
 import { Alert } from '../components/Alert';
 
 export const Settings: React.FC = () => {
@@ -68,66 +67,12 @@ export const Settings: React.FC = () => {
     if (!subscription?.price_id) return null;
      
      console.log('Settings: Getting current plan for price_id:', subscription.price_id);
-     const foundProduct = products.find(p => p.priceId === subscription.price_id);
-     console.log('Settings: Found product:', foundProduct);
-     
-    return products.find(p => p.priceId === subscription.price_id);
-  };
-
-  const getOtherPlan = () => {
-    const currentPlan = getCurrentPlan();
-    if (!currentPlan) return null;
-    return products.find(p => p.id !== currentPlan.id);
+     // Since we only have Standard plan now, just return a simple object
+     return { name: 'Standard Plan', id: 'standard' };
   };
 
   const handleManageSubscription = async () => {
     await createPortalSession();
-  };
-
-  const handlePlanChange = async (newPriceId: string) => {
-    if (!newPriceId) return;
-    
-    const currentPlan = getCurrentPlan();
-    if (currentPlan?.priceId === newPriceId) {
-      setError('You are already on this plan.');
-      return;
-    }
-    
-    try {
-      setError(null);
-      await changePlan(newPriceId);
-      setSuccess('Your plan has been updated successfully! Changes take effect immediately.');
-      
-      // Force refresh subscription data after a short delay
-      setTimeout(async () => {
-        if (!user) return;
-        
-        const { data: customerData } = await supabase
-          .from('stripe_customers')
-          .select('*')
-          .eq('user_id', user.id)
-          .maybeSingle();
-
-        if (customerData) {
-          const { data: subscriptionData } = await supabase
-            .from('stripe_subscriptions')
-            .select('*')
-            .eq('customer_id', customerData.customer_id)
-            .maybeSingle();
-          
-          console.log('Settings: Force refreshed subscription data after plan change:', {
-            subscription_id: subscriptionData?.subscription_id,
-            price_id: subscriptionData?.price_id,
-            status: subscriptionData?.status
-          });
-          
-          setSubscription(subscriptionData);
-        }
-      }, 1000);
-    } catch (error) {
-      console.error('Plan change failed:', error);
-      setError('Failed to change plan. Please try again or contact support.');
-    }
   };
 
   const isInGracePeriod = () => {
@@ -185,7 +130,6 @@ export const Settings: React.FC = () => {
                         <span className="px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800">
                           {getCurrentPlan()?.name || 'Unknown Plan'}
                         </span>
-                        {/* Price information is not available in product data */}
                       </div>
                     </div>
                     <div className="flex items-center justify-between">
@@ -217,40 +161,6 @@ export const Settings: React.FC = () => {
                             <p className="text-red-800 font-medium">Payment Issue</p>
                             <p className="text-red-600">Please update your payment method.</p>
                           </div>
-                        </div>
-                      </div>
-                    )}
-                    {getOtherPlan() && (
-                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <h4 className="font-medium text-blue-900">
-                              {getCurrentPlan()?.id === 'standard' ? 'Upgrade to Premium' : 'Downgrade to Standard'}
-                            </h4>
-                            <div className="text-sm text-blue-700 mt-1 space-y-1">
-                              <p>
-                                <strong>Changes immediately:</strong> You'll be {getCurrentPlan()?.id === 'standard' ? 'charged $20' : 'credited $20'} right now with prorated billing.
-                              </p>
-                              <p>
-                                All features update instantly - no redirect needed.
-                              </p>
-                              {subscription?.status === 'trialing' && (
-                                <p className="font-medium">
-                                  ⚠️ This will end your trial and start billing immediately.
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                          <button
-                            onClick={() => handlePlanChange(getOtherPlan()!.priceId)}
-                            disabled={stripeLoading}
-                            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2 disabled:opacity-50"
-                          >
-                            {getCurrentPlan()?.id === 'standard' ? <ArrowUpCircle className="h-4 w-4" /> : <ArrowDownCircle className="h-4 w-4" />}
-                            <span>
-                              {stripeLoading ? 'Processing...' : (getCurrentPlan()?.id === 'standard' ? 'Upgrade' : 'Downgrade')}
-                            </span>
-                          </button>
                         </div>
                       </div>
                     )}
