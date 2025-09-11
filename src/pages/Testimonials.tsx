@@ -247,7 +247,7 @@ export const Testimonials: React.FC = () => {
     );
 
     // Apply tag filter if Premium and tag filter is set
-    if (tagFilter !== 'all') {
+    if (subscription.limits.canUseTags && tagFilter !== 'all') {
       filtered = filtered.filter(t => {
         const testimonialTagList = testimonialTags[t.id] || [];
         return testimonialTagList.some(tag => tag.id === tagFilter);
@@ -578,8 +578,7 @@ export const Testimonials: React.FC = () => {
                       )}
 
                       {/* Tags Display */}
-                      {subscription.limits.canUseTags ? (
-                        testimonialTags[testimonial.id]?.length > 0 && (
+                      {testimonialTags[testimonial.id]?.length > 0 && (
                         <div className="mb-4">
                           <div className="flex flex-wrap gap-1">
                             {testimonialTags[testimonial.id].map((tag) => (
@@ -597,18 +596,8 @@ export const Testimonials: React.FC = () => {
                             ))}
                           </div>
                         </div>
-                        )
-                      ) : (
-                        testimonialTags[testimonial.id]?.length > 0 && (
-                          <div className="mb-4">
-                            <UpgradePrompt 
-                              feature="Tag Organization"
-                              description="Upgrade to Premium to organize testimonials with tags"
-                              inline
-                            />
-                          </div>
-                        )
                       )}
+
                       {/* Form & Date */}
                       <div className="text-xs text-gray-500 mb-4 space-y-1">
                         <div>From: {getFormTitle(testimonial.form_id)}</div>
