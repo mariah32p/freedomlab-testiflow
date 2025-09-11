@@ -185,29 +185,6 @@ export const Branding: React.FC = () => {
     );
   }
 
-  // Show upgrade prompt for Standard users
-  if (!subscription.limits.canUseBranding) {
-    return (
-      <div className="min-h-screen bg-gray-50 py-8">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white shadow rounded-lg">
-            <div className="px-4 py-5 sm:p-6">
-              <div className="mb-8">
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">Form Branding</h1>
-                <p className="text-gray-600">Customize the appearance of your testimonial collection forms</p>
-              </div>
-              
-              <UpgradePrompt 
-                feature="Custom Branding"
-                description="Customize your forms with your logo, brand colors, and fonts to create a professional experience that matches your brand identity."
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">

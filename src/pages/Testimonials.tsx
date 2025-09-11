@@ -247,7 +247,7 @@ export const Testimonials: React.FC = () => {
     );
 
     // Apply tag filter if Premium and tag filter is set
-    if (subscription.limits.canUseTags && tagFilter !== 'all') {
+    if (tagFilter !== 'all') {
       filtered = filtered.filter(t => {
         const testimonialTagList = testimonialTags[t.id] || [];
         return testimonialTagList.some(tag => tag.id === tagFilter);

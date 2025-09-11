@@ -135,14 +135,15 @@ export const useStripe = () => {
     }
   };
 
-  const showComingSoonModal = () => {
+  const changePlan = async (newPriceId: string) => {
+    // Show coming soon modal for Pro plan
     alert('Pro Plan is coming soon! For now, enjoy all features with our Standard plan.');
   };
 
   return {
     createCheckoutSession,
     createPortalSession,
-    showComingSoonModal,
+    changePlan,
     loading,
     error,
   };

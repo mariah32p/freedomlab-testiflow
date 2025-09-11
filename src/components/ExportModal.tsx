@@ -295,11 +295,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
 
                     <button
                       onClick={() => setSelectedFormat('widget')}
-                      disabled={!subscription.limits.canUseAdvancedExports}
-                      className={`w-full p-4 border rounded-lg text-left transition-colors relative ${
-                        !subscription.limits.canUseAdvancedExports
-                          ? 'border-gray-200 bg-gray-50 opacity-50 cursor-not-allowed'
-                          : 
+                      className={`w-full p-4 border rounded-lg text-left transition-colors ${
                         selectedFormat === 'widget'
                           ? 'border-primary-500 bg-primary-50'
                           : 'border-gray-200 hover:bg-gray-50'
@@ -310,28 +306,9 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                         <div>
                           <div className="font-medium">Website Widget</div>
                           <div className="text-sm text-gray-500">HTML code to embed on your website</div>
-                          {!subscription.limits.canUseAdvancedExports && (
-                            <div className="text-xs text-accent-600 font-medium">Premium Feature</div>
-                          )}
                         </div>
                       </div>
-                      {!subscription.limits.canUseAdvancedExports && (
-                        <div className="absolute inset-0 bg-gray-100 bg-opacity-75 rounded-lg flex items-center justify-center">
-                          <span className="text-xs text-gray-600 font-medium">Premium Only</span>
-                        </div>
-                      )}
                     </button>
-
-                    {/* Show upgrade prompt for restricted formats */}
-                    {!subscription.limits.canUseAdvancedExports && (selectedFormat === 'json' || selectedFormat === 'widget') && (
-                      <div className="mt-4">
-                        <UpgradePrompt 
-                          feature="Advanced Exports"
-                          description="JSON exports and website widgets are available with Premium"
-                          inline
-                        />
-                      </div>
-                    )}
                   </div>
                 </div>
 
