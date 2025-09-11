@@ -3,7 +3,6 @@ import { Download, FileText, Code, X, Copy, CheckCircle, Eye, Star } from 'lucid
 import { ExportTestimonial, exportToCSV, exportToJSON, generateSocialMediaPost, generateWebsiteWidget } from '../utils/exportUtils';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../hooks/useSubscription';
-import { UpgradePrompt } from '../components/UpgradePrompt';
 import { supabase } from '../lib/supabase';
 
 interface ExportModalProps {

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../hooks/useSubscription';
-import { UpgradePrompt } from '../components/UpgradePrompt';
 import { TestimonialTagger } from '../components/TestimonialTagger';
 import { supabase } from '../lib/supabase';
 import { MessageSquare, Star, User, CheckCircle, Clock, X, Download, Trash2, MoreVertical, Eye, Mail, Building, Filter } from 'lucide-react';
