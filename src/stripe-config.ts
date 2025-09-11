@@ -11,7 +11,7 @@ export interface Product {
 export const products: Product[] = [
   {
     id: 'standard',
-    priceId: import.meta.env.VITE_STRIPE_STANDARD_PRICE_ID,
+    priceId: 'price_1Rznb5Dn6VTzl81bjqFfCagv', // Standard plan price ID
     name: 'Standard Plan',
     description: 'Perfect for small businesses getting started.',
     mode: 'subscription',
@@ -20,7 +20,7 @@ export const products: Product[] = [
   },
   {
     id: 'premium',
-    priceId: import.meta.env.VITE_STRIPE_PREMIUM_PRICE_ID,
+    priceId: 'price_1Rznb5Dn6VTzl81b8Hx5UQt6', // Premium plan price ID  
     name: 'Premium Plan',
     description: 'Complete solution for growing businesses.',
     mode: 'subscription',

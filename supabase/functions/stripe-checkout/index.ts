@@ -95,15 +95,15 @@ Deno.serve(async (req) => {
         },
       ],
       mode,
-      subscription_data: mode === 'subscription' && has_trial ? {
-        trial_period_days: 7,
-      } : mode === 'subscription' ? {} : undefined,
+      subscription_data: mode === 'subscription' ? {
+        trial_period_days: has_trial ? 7 : 0,
+      } : undefined,
       client_reference_id,
       success_url,
       cancel_url,
       allow_promotion_codes: true,
       billing_address_collection: 'auto',
-      payment_method_collection: 'always', // Always collect payment method for trials
+      payment_method_collection: 'always', // Collect payment method upfront
     });
 
     console.log(`Created checkout session ${session.id} for customer ${newCustomer.id}`);
