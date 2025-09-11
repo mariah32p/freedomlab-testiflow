@@ -259,10 +259,6 @@ export const Forms: React.FC = () => {
   };
 
   const handleCreateFormClick = () => {
-    if (subscription.currentUsage.formCount >= subscription.limits.maxForms) {
-      setError(`You've reached the limit of ${subscription.limits.maxForms} form${subscription.limits.maxForms !== 1 ? 's' : ''} for your current plan. Upgrade to Premium for unlimited forms.`);
-      return;
-    }
     setShowCreateForm(true);
   };
 
@@ -541,28 +537,21 @@ export const Forms: React.FC = () => {
             {/* Forms Grid */}
             {forms.length === 0 ? (
               <div className="text-center py-16">
-                {subscription.currentUsage.formCount >= subscription.limits.maxForms ? (
-                  <UpgradePrompt 
-                    feature="Multiple Forms"
-                    description="Create unlimited testimonial collection forms with different questions and branding for various campaigns."
-                  />
-                ) : (
-                  <>
-                    <div className="w-24 h-24 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <Settings className="h-12 w-12 text-primary-950" />
-                    </div>
-                    <h3 className="text-2xl font-semibold text-gray-900 mb-3">Create Your First Form</h3>
-                    <p className="text-gray-500 mb-8 max-w-md mx-auto text-lg">
-                      Start gathering customer testimonials by creating a customized form that you can share with your customers.
-                    </p>
-                    <button
-                      onClick={handleCreateFormClick}
-                      className="bg-primary-950 text-white px-8 py-4 rounded-lg hover:bg-primary-900 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-lg"
-                    >
-                      Create Your First Form
-                    </button>
-                  </>
-                )}
+                <>
+                  <div className="w-24 h-24 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Settings className="h-12 w-12 text-primary-950" />
+                  </div>
+                  <h3 className="text-2xl font-semibold text-gray-900 mb-3">Create Your First Form</h3>
+                  <p className="text-gray-500 mb-8 max-w-md mx-auto text-lg">
+                    Start gathering customer testimonials by creating a customized form that you can share with your customers.
+                  </p>
+                  <button
+                    onClick={handleCreateFormClick}
+                    className="bg-primary-950 text-white px-8 py-4 rounded-lg hover:bg-primary-900 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-lg"
+                  >
+                    Create Your First Form
+                  </button>
+                </>
               </div>
             ) : (
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -776,12 +765,7 @@ export const Forms: React.FC = () => {
                           setCustomizingForm(viewingForm);
                           setViewingForm(null);
                         }}
-                        className={`flex-1 py-3 px-4 rounded-lg transition-colors font-medium flex items-center justify-center space-x-2 ${
-                          subscription.limits.canUseCustomFields
-                            ? 'bg-secondary-500 text-white hover:bg-secondary-600'
-                            : 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                        }`}
-                        disabled={!subscription.limits.canUseCustomFields}
+                        className="flex-1 bg-secondary-500 text-white py-3 px-4 rounded-lg hover:bg-secondary-600 transition-colors font-medium flex items-center justify-center space-x-2"
                       >
                         <Settings className="h-4 w-4" />
                         <span>Custom Fields</span>
@@ -796,16 +780,6 @@ export const Forms: React.FC = () => {
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </div>
-                    
-                    {!subscription.limits.canUseCustomFields && (
-                      <div className="mt-4">
-                        <UpgradePrompt 
-                          feature="Custom Fields"
-                          description="Add custom questions beyond the standard fields"
-                          inline
-                        />
-                      </div>
-                    )}
                     </>
                   </div>
                 </div>
