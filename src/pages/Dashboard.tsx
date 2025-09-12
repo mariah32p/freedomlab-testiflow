@@ -204,7 +204,7 @@ export const Dashboard: React.FC = () => {
         <div className="bg-white shadow rounded-lg">
           <div className="px-4 py-5 sm:p-6">
             {/* Subscription Status Banners */}
-            {subscription?.status === 'trialing' && (
+            {subscription?.status === 'trialing' && getTrialDaysLeft() > 0 && (
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">

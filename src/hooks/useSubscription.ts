@@ -119,7 +119,7 @@ export const useSubscription = (): SubscriptionState => {
         }
 
         // Determine subscription status
-        const status = subscriptionData?.status || 'not_started';
+        const status = actualStatus;
         const isActive = status === 'active';
         const isTrialing = status === 'trialing';
         const hasActiveSubscription = isActive || isTrialing;
