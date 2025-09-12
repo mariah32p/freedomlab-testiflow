@@ -106,7 +106,15 @@ Deno.serve(async (req) => {
       payment_method_collection: 'always', // Collect payment method upfront
     });
 
-    console.log(`Created checkout session ${session.id} for customer ${newCustomer.id}`);
+    console.log(`🛒 Created checkout session ${session.id} for customer ${newCustomer.id}`);
+    console.log(`🛒 Session details:`, {
+      session_id: session.id,
+      customer_id: newCustomer.id,
+      client_reference_id: session.client_reference_id,
+      price_id: price_id,
+      mode: session.mode,
+      has_trial: has_trial
+    });
 
     return corsResponse({ 
       sessionId: session.id, 
