@@ -457,11 +457,12 @@ export const Home: React.FC = () => {
               <div className="px-4 sm:px-6 py-6 sm:py-8">
                 <ul className="space-y-3 sm:space-y-4">
                   {[
-                    'Up to 25 testimonials',
-                    '1 collection form',
-                    'Basic approval workflow',
-                    'CSV export',
-                    'Email notifications',
+                    'Unlimited testimonials & forms',
+                    'Custom fields & branding',
+                    'Image + video testimonials',
+                    'Website widget generator',
+                    'Advanced exports (JSON, social media posts)',
+                    'Tag organization',
                   ].map((feature, index) => (
                     <li key={index} className="flex items-center">
                       <Check className="h-4 w-4 sm:h-5 sm:w-5 text-secondary-500 mr-2 sm:mr-3 flex-shrink-0" />
@@ -486,12 +487,12 @@ export const Home: React.FC = () => {
               <div className="px-4 sm:px-6 py-6 sm:py-8">
                 <ul className="space-y-3 sm:space-y-4">
                   {[
-                    'Unlimited testimonials & forms',
-                    'Custom fields & branding',
-                    'Image + video testimonials',
-                    'Website widget generator',
-                    'Advanced exports (JSON, social media posts)',
-                    'Tag organization',
+                    'Everything in Standard, plus:',
+                    'Advanced analytics & insights',
+                    'White-label branding removal',
+                    'Priority support',
+                    'API access for integrations',
+                    'Custom domain support',
                   ].map((feature, index) => (
                     <li key={index} className="flex items-center">
                       <Check className="h-4 w-4 sm:h-5 sm:w-5 text-secondary-500 mr-2 sm:mr-3 flex-shrink-0" />
