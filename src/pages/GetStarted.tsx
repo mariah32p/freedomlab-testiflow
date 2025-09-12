@@ -108,23 +108,19 @@ export const GetStarted: React.FC = () => {
                 COMING SOON
               </span>
             </div>
-            <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-              <span className="bg-gray-500 text-white px-4 py-1 rounded-full text-sm font-semibold shadow-lg">
-                COMING SOON
-              </span>
-            </div>
+            <div className="px-6 py-8 text-center border-b border-gray-200 bg-gray-500">
+              <div className="flex items-center justify-center mb-4">
                 <div className="w-6 h-6 rounded-full border-2 border-white/50 flex items-center justify-center">
+                </div>
+              </div>
               <h3 className="text-xl sm:text-2xl font-bold text-white">Premium</h3>
               <div className="mt-4 flex items-baseline justify-center">
-                <span className="text-5xl font-bold text-white">$49</span>
-                <span className="text-xl text-white/80 ml-1">/mo</span>
-              </div>
                 <span className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">$49</span>
                 <span className="text-lg sm:text-xl text-white/80 ml-1">/mo</span>
-            
+              </div>
               <p className="mt-2 text-sm sm:text-base text-white/90">Complete solution for growing businesses</p>
-              <div className="absolute inset-0 bg-gray-100 bg-opacity-75 rounded-b-2xl flex items-center justify-center">
-                <span className="text-gray-600 font-semibold">Coming Soon</span>
+            </div>
+            
             <div className="px-4 sm:px-6 py-6 sm:py-8 relative">
               <div className="absolute inset-0 bg-gray-100 bg-opacity-75 rounded-b-2xl flex items-center justify-center">
                 <span className="text-gray-600 font-semibold">Coming Soon</span>
