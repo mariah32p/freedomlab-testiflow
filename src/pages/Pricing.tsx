@@ -47,11 +47,12 @@ export const Pricing: React.FC = () => {
             <div className="px-6 py-8">
               <ul className="space-y-4 mb-8">
                 {[
-                  'Up to 25 testimonials',
-                  '1 collection form - Simple form to request testimonials',
-                  'Basic approval workflow - Review before testimonials go live',
-                  'CSV export',
-                  'Email notifications - Get notified of new submissions',
+                  'Unlimited testimonials & forms',
+                  'Custom fields & branding',
+                  'Image + video testimonials - Rich media collection',
+                  'Website widget generator',
+                  'Advanced exports (JSON, social media posts)',
+                  'Tag organization',
                 ].map((feature, index) => (
                   <li key={index} className="flex items-center">
                     <Check className="h-5 w-5 text-secondary-500 mr-3 flex-shrink-0" />
@@ -76,12 +77,12 @@ export const Pricing: React.FC = () => {
             <div className="px-6 py-8">
               <ul className="space-y-4 mb-8">
                 {[
-                  'Unlimited testimonials & forms',
-                  'Custom fields & branding',
-                  'Image + video testimonials - Rich media collection',
-                  'Website widget generator',
-                  'Advanced exports (JSON, social media posts)',
-                  'Tag organization',
+                  'Everything in Standard, plus:',
+                  'Advanced analytics & insights',
+                  'White-label branding removal',
+                  'Priority support',
+                  'API access for integrations',
+                  'Custom domain support',
                 ].map((feature, index) => (
                   <li key={index} className="flex items-center">
                     <Check className="h-5 w-5 text-secondary-500 mr-3 flex-shrink-0" />
