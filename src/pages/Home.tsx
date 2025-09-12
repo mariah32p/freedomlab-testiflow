@@ -481,12 +481,12 @@ export const Home: React.FC = () => {
                 </span>
               </div>
               <div className="bg-gray-500 px-4 sm:px-6 py-6 sm:py-8 text-center">
-                  <h3 className="text-xl sm:text-2xl font-bold text-white">Premium</h3>
-                  <div className="mt-4 flex items-baseline justify-center">
-                    <span className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">$49</span>
-                    <span className="text-lg sm:text-xl text-white/80 ml-1">/month</span>
+                <h3 className="text-xl sm:text-2xl font-bold text-white">Premium</h3>
+                <div className="mt-4 flex items-baseline justify-center">
                   <span className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">$49</span>
                   <span className="text-lg sm:text-xl text-white/80 ml-1">/month</span>
+                </div>
+                <p className="mt-2 text-sm sm:text-base text-white/80">For growing businesses with advanced needs</p>
               </div>
               
               <div className="px-4 sm:px-6 py-6 sm:py-8 relative">
@@ -565,7 +565,6 @@ export const Home: React.FC = () => {
                 Absolutely! You can change your plan anytime from your account settings. Changes take effect immediately with prorated billing.
               </p>
             </div>
-
 
           </div>
         </div>
