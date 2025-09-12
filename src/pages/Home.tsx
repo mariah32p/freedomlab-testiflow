@@ -475,11 +475,6 @@ export const Home: React.FC = () => {
 
             {/* Premium Plan - Disabled */}
             <div className="bg-white rounded-2xl shadow-lg overflow-hidden border-2 border-gray-300 opacity-60 cursor-not-allowed pointer-events-none relative">
-              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
-                <span className="bg-gray-500 text-white px-4 py-1 rounded-full text-sm font-semibold shadow-lg">
-                  COMING SOON
-                </span>
-              </div>
               <div className="bg-gray-500 px-4 sm:px-6 py-6 sm:py-8 text-center">
                 <h3 className="text-xl sm:text-2xl font-bold text-white">Premium</h3>
                 <div className="mt-4 flex items-baseline justify-center">
