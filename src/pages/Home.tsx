@@ -461,7 +461,7 @@ export const Home: React.FC = () => {
                     'Custom fields & branding',
                     'Image + video testimonials',
                     'Website widget generator',
-                    'Advanced exports (JSON, CSVs)',
+                    'Advanced exports (JSON, CSV)',
                     'Tag organization',
                   ].map((feature, index) => (
                     <li key={index} className="flex items-center">
