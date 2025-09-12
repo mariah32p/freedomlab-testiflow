@@ -198,6 +198,13 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session, custome
       console.log(`Successfully processed one-time payment for session: ${checkout_session_id}`);
     }
   }
+
+  // CRITICAL: Clear payment issue tracking when subscription becomes active
+  if (updatedSubscription.status === 'active') {
+    subscriptionData.payment_issue_since = null;
+    subscriptionData.grace_period_end = null;
+  }
+
 }
 
 async function syncCustomerFromStripe(customerId: string) {
@@ -293,12 +300,33 @@ async function handleSubscriptionDeleted(customerId: string) {
 
 async function handlePaymentFailed(customerId: string) {
   console.log(`Handling payment failure for customer: ${customerId}`);
-  const { error } = await supabase.from('stripe_subscriptions').upsert({
+  
+  // Get current subscription data first
+  const { data: currentSub } = await supabase
+    .from('stripe_subscriptions')
+    .select('*')
+    .eq('customer_id', customerId)
+    .maybeSingle();
+
+  const updateData: any = {
     customer_id: customerId,
     status: 'past_due',
-  }, {
-    onConflict: 'customer_id',
-  });
+  };
+
+  // Set payment issue tracking if not already set
+  if (!currentSub?.payment_issue_since) {
+    updateData.payment_issue_since = new Date().toISOString();
+    // Set grace period end to 30 days from now
+    const gracePeriodEnd = new Date();
+    gracePeriodEnd.setDate(gracePeriodEnd.getDate() + 30);
+    updateData.grace_period_end = gracePeriodEnd.toISOString();
+  }
+
+  const { error } = await supabase
+    .from('stripe_subscriptions')
+    .upsert(updateData, {
+      onConflict: 'customer_id',
+    });
 
   if (error) {
     console.error('Error updating past due subscription:', error);
