@@ -137,18 +137,18 @@ export const Settings: React.FC = () => {
                     <div className="flex items-center justify-between">
                       <span className="text-gray-600">Status:</span>
                       <span className={`px-2 py-1 rounded-full text-xs font-medium capitalize ${
-                        subscription.status === 'active' ? 'bg-green-100 text-green-800' :
-                        subscription.status === 'trialing' ? 'bg-blue-100 text-blue-800' :
-                        subscription.status === 'past_due' ? 'bg-red-100 text-red-800' :
+                        getActualStatus() === 'active' ? 'bg-green-100 text-green-800' :
+                        getActualStatus() === 'trialing' ? 'bg-blue-100 text-blue-800' :
+                        getActualStatus() === 'past_due' ? 'bg-red-100 text-red-800' :
                         'bg-gray-100 text-gray-800'
                       }`}>
-                        {subscription.status.replace('_', ' ')}
+                        {getActualStatus().replace('_', ' ')}
                       </span>
                     </div>
-                    {subscription.current_period_end && (
+                    {subscription.current_period_end && getActualStatus() === 'trialing' && (
                       <div className="flex items-center justify-between">
                         <span className="text-gray-600">
-                          {subscription.status === 'trialing' ? 'Trial ends:' : 'Renews on:'}
+                          Trial ends:
                         </span>
                         <span className="text-gray-900">
                           {new Date(subscription.current_period_end * 1000).toLocaleDateString()}
