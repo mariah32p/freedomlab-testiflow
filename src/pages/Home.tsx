@@ -473,44 +473,38 @@ export const Home: React.FC = () => {
               </div>
             </div>
 
-            {/* Premium Plan */}
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden border-2 border-gray-300 opacity-60 cursor-not-allowed pointer-events-none relative">
-              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
-                <span className="bg-gray-500 text-white px-4 py-1 rounded-full text-sm font-semibold shadow-lg">
-                  COMING SOON
-                </span>
-              </div>
-              <div className="bg-gray-500 px-4 sm:px-6 py-6 sm:py-8 text-center">
-                <h3 className="text-xl sm:text-2xl font-bold text-white">Premium</h3>
-                <div className="mt-4 flex items-baseline justify-center">
-                  <span className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">$49</span>
-                  <span className="text-lg sm:text-xl text-white/80 ml-1">/month</span>
-                </div>
-                <p className="mt-2 text-sm sm:text-base text-white/80">For growing businesses with advanced needs</p>
-              </div>
-              
-              <div className="px-4 sm:px-6 py-6 sm:py-8 relative">
-                <div className="absolute inset-0 bg-gray-100 bg-opacity-75 rounded-b-2xl flex items-center justify-center">
-                  <span className="text-gray-600 font-semibold">Coming Soon</span>
-                </div>
-                <ul className="space-y-3 sm:space-y-4">
-                  {[
-                    'Everything in Standard, plus:',
-                    'Advanced analytics & insights',
-                    'White-label branding removal',
-                    'Priority support',
-                    'API access for integrations',
-                    'Custom domain support',
-                  ].map((feature, index) => (
-                    <li key={index} className="flex items-center">
-                      <Check className="h-4 w-4 sm:h-5 sm:w-5 text-secondary-500 mr-2 sm:mr-3 flex-shrink-0" />
-                      <span className="text-sm sm:text-base text-gray-700">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
+           {/* Premium Plan */}
+<div className="bg-white rounded-2xl shadow-lg overflow-hidden border-2 border-gray-300 opacity-60 cursor-not-allowed pointer-events-none relative">
+  {/* The badge element has been removed from here */}
+  <div className="bg-gray-500 px-4 sm:px-6 py-6 sm:py-8 text-center">
+    <h3 className="text-xl sm:text-2xl font-bold text-white">Premium</h3>
+    <div className="mt-4 flex items-baseline justify-center">
+      <span className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">$49</span>
+      <span className="text-lg sm:text-xl text-white/80 ml-1">/month</span>
+    </div>
+    <p className="mt-2 text-sm sm:text-base text-white/80">For growing businesses with advanced needs</p>
+  </div>
+  
+  <div className="px-4 sm:px-6 py-6 sm:py-8 relative">
+    {/* This is the overlay that remains */}
+    <div className="absolute inset-0 bg-gray-100 bg-opacity-75 rounded-b-2xl flex items-center justify-center">
+      <span className="text-gray-600 font-semibold">Coming Soon</span>
+    </div>
+    <ul className="space-y-3 sm:space-y-4">
+      {[
+        'Advanced analytics & insights',
+        'White-label branding',
+        'API access for integrations',
+        'Custom domain support',
+      ].map((feature, index) => (
+        <li key={index} className="flex items-center">
+          <Check className="h-4 w-4 sm:h-5 sm:w-5 text-secondary-500 mr-2 sm:mr-3 flex-shrink-0" />
+          <span className="text-sm sm:text-base text-gray-700">{feature}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</div>
           
           {/* Single CTA Button */}
           <div className="text-center mt-8 sm:mt-12">
