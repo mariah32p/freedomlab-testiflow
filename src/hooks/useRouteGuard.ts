@@ -68,11 +68,11 @@ export const useRouteGuard = () => {
       
       // If on success page, give it a moment before checking subscription
       if (isSuccessPage) {
-        console.log('🔍 On success page, waiting 2 seconds before checking subscription...');
+        console.log('🔍 On success page, waiting 5 seconds before checking subscription...');
         setTimeout(() => {
           console.log('🔍 Success page timeout complete, rechecking subscription...');
           checkSubscriptionStatus();
-        }, 2000);
+        }, 5000);
         setRouteLoading(false);
         return;
       }
