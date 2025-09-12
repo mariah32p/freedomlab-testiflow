@@ -7,7 +7,7 @@ import { Alert } from '../components/Alert';
 
 export const GetStarted: React.FC = () => {
   const { createCheckoutSession, loading, error } = useStripe();
-  const [selectedPlan, setSelectedPlan] = useState<string>('premium');
+  const [selectedPlan, setSelectedPlan] = useState<string>('standard');
 
   const handleStartTrial = async () => {
     const product = products.find(p => p.id === selectedPlan);
