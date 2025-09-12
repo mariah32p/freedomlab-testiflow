@@ -594,15 +594,6 @@ export const Home: React.FC = () => {
               </p>
             </div>
 
-            <div className="bg-gray-50 rounded-lg p-4 sm:p-6">
-              <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
-                Can I upgrade or downgrade my plan?
-              </h3>
-              <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-                Absolutely! You can change your plan anytime from your account settings. Changes take effect immediately with prorated billing.
-              </p>
-            </div>
-
           </div>
         </div>
       </div>
