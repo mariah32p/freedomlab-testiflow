@@ -451,6 +451,7 @@ export const Home: React.FC = () => {
                   <span className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary-950">$29</span>
                   <span className="text-lg sm:text-xl text-gray-500 ml-1">/month</span>
                 </div>
+                </div>
                 <p className="mt-2 text-sm sm:text-base text-gray-600">Perfect for small businesses getting started</p>
               </div>
               
