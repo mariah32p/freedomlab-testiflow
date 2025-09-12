@@ -105,24 +105,18 @@ export const GetStarted: React.FC = () => {
               selectedPlan === 'premium' 
                 ? 'border-secondary-500 ring-4 ring-secondary-100 transform scale-105' 
                 : 'border-secondary-300 hover:border-secondary-400'
-            }`}
-            onClick={() => setSelectedPlan('premium')}
+            } opacity-50 cursor-not-allowed`}
           >
             <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-              <span className="bg-gradient-to-r from-accent-500 to-accent-600 text-white px-4 py-1 rounded-full text-sm font-semibold shadow-lg">
-                MOST POPULAR
+              <span className="bg-gray-500 text-white px-4 py-1 rounded-full text-sm font-semibold shadow-lg">
+                COMING SOON
               </span>
             </div>
-            <div className="bg-gradient-to-r from-primary-950 to-secondary-500 px-6 py-8 text-center relative">
+            <div className="bg-gray-400 px-6 py-8 text-center relative">
               <div className="flex items-center justify-center mb-4">
                 <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                  selectedPlan === 'premium' 
-                    ? 'border-white bg-white' 
-                    : 'border-white/50'
+                  'border-white/50 cursor-not-allowed'
                 }`}>
-                  {selectedPlan === 'premium' && (
-                    <Check className="h-4 w-4 text-primary-950" />
-                  )}
                 </div>
               </div>
               <h3 className="text-2xl font-bold text-white">Premium</h3>
@@ -133,7 +127,10 @@ export const GetStarted: React.FC = () => {
               <p className="mt-2 text-white/90">Complete solution for growing businesses</p>
             </div>
             
-            <div className="px-6 py-8">
+            <div className="px-6 py-8 relative">
+              <div className="absolute inset-0 bg-gray-100 bg-opacity-75 rounded-b-2xl flex items-center justify-center">
+                <span className="text-gray-600 font-semibold">Coming Soon</span>
+              </div>
               <ul className="space-y-4">
                 {[
                   'Everything in Standard, plus:',
