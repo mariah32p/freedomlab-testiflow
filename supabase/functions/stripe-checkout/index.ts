@@ -52,8 +52,16 @@ Deno.serve(async (req) => {
       return corsResponse({ error: 'Stripe is not configured. Please set STRIPE_SECRET_KEY environment variable.' }, 500);
     }
 
-    const { price_id, success_url, cancel_url, mode, customer_email, client_reference_id, is_plan_change } = await req.json();
-    const { has_trial = true } = await req.json();
+    const {
+      price_id,
+      success_url,
+      cancel_url,
+      mode,
+      customer_email,
+      client_reference_id,
+      is_plan_change,
+      has_trial = true,
+    } = await req.json();
 
     // CRITICAL: Prevent plan changes through this endpoint
     if (is_plan_change) {
