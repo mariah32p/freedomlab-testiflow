@@ -103,11 +103,6 @@ export const GetStarted: React.FC = () => {
           <div 
             className="bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-gray-300 opacity-60 cursor-not-allowed pointer-events-none relative"
           >
-            <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
-              <span className="bg-gray-500 text-white px-4 py-1 rounded-full text-sm font-semibold shadow-lg">
-                COMING SOON
-              </span>
-            </div>
             <div className="px-6 py-8 text-center border-b border-gray-200 bg-gray-500">
               <div className="flex items-center justify-center mb-4">
                 <div className="w-6 h-6 rounded-full border-2 border-white/50 flex items-center justify-center">
