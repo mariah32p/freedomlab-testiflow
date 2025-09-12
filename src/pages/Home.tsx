@@ -474,24 +474,25 @@ export const Home: React.FC = () => {
             </div>
 
             {/* Premium Plan */}
-            <div className="bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-secondary-500">
-              <div className="bg-gradient-to-r from-primary-950 to-secondary-500 px-4 sm:px-6 py-6 sm:py-8 text-center">
-                <div className="relative">
-                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
-                    <span className="bg-gray-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
-                      COMING SOON
-                    </span>
-                  </div>
+            <div className="bg-white rounded-2xl shadow-lg overflow-hidden border-2 border-gray-300 opacity-60 cursor-not-allowed pointer-events-none relative">
+              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+                <span className="bg-gray-500 text-white px-4 py-1 rounded-full text-sm font-semibold shadow-lg">
+                  COMING SOON
+                </span>
+              </div>
+              <div className="bg-gray-500 px-4 sm:px-6 py-6 sm:py-8 text-center">
                   <h3 className="text-xl sm:text-2xl font-bold text-white">Premium</h3>
                   <div className="mt-4 flex items-baseline justify-center">
                     <span className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">$49</span>
                     <span className="text-lg sm:text-xl text-white/80 ml-1">/month</span>
-                  </div>
-                  <p className="mt-2 text-sm sm:text-base text-white/90">Complete solution for growing businesses</p>
-                </div>
+                  <span className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">$49</span>
+                  <span className="text-lg sm:text-xl text-white/80 ml-1">/month</span>
               </div>
               
-              <div className="px-4 sm:px-6 py-6 sm:py-8">
+              <div className="px-4 sm:px-6 py-6 sm:py-8 relative">
+                <div className="absolute inset-0 bg-gray-100 bg-opacity-75 rounded-b-2xl flex items-center justify-center">
+                  <span className="text-gray-600 font-semibold">Coming Soon</span>
+                </div>
                 <ul className="space-y-3 sm:space-y-4">
                   {[
                     'Everything in Standard, plus:',
