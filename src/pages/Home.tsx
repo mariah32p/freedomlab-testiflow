@@ -566,7 +566,7 @@ export const Home: React.FC = () => {
                   </li>
                   <li className="flex items-center">
                     <Check className="h-4 w-4 text-secondary-500 mr-2 flex-shrink-0" />
-                    <span>Advanced exports (JSON, CSV, social media)</span>
+                    <span>Advanced exports (JSON, CSV)</span>
                   </li>
                   <li className="flex items-center">
                     <Check className="h-4 w-4 text-secondary-500 mr-2 flex-shrink-0" />
