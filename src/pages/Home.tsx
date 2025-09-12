@@ -490,10 +490,8 @@ export const Home: React.FC = () => {
                 </div>
                 <ul className="space-y-3 sm:space-y-4">
                   {[
-                    'Everything in Standard, plus:',
                     'Advanced analytics & insights',
                     'White-label branding removal',
-                    'Priority support',
                     'API access for integrations',
                     'Custom domain support',
                   ].map((feature, index) => (
