@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { User, Mail, AlertCircle, ExternalLink, CreditCard, Trash2 } from 'lucide-react';
+import { User, Mail, AlertCircle, ExternalLink, CreditCard } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useStripe } from '../hooks/useStripe';
 import { Alert } from '../components/Alert';
@@ -14,8 +14,6 @@ export const Settings: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     const fetchSubscriptionData = async () => {
@@ -81,29 +79,6 @@ export const Settings: React.FC = () => {
 
   const isInGracePeriod = () => {
     return subscription?.status === 'past_due';
-  };
-
-  const handleDeleteAccount = async () => {
-    if (!user) return;
-    
-    setDeleting(true);
-    setError(null);
-    
-    try {
-      // Delete user account (this will cascade delete all related data due to foreign keys)
-      const { error } = await supabase.auth.admin.deleteUser(user.id);
-      
-      if (error) throw error;
-      
-      // Sign out and redirect
-      await supabase.auth.signOut();
-      navigate('/');
-      
-    } catch (error) {
-      console.error('Error deleting account:', error);
-      setError('Failed to delete account. Please try again.');
-      setDeleting(false);
-    }
   };
 
   if (loading) {
@@ -224,93 +199,10 @@ export const Settings: React.FC = () => {
                 )}
               </div>
 
-              {/* Danger Zone */}
-              <div className="bg-red-50 border border-red-200 rounded-lg p-6">
-                <h2 className="text-lg font-medium text-red-900 mb-4">Danger Zone</h2>
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="text-sm font-medium text-red-800 mb-2">Delete Account</h3>
-                    <p className="text-sm text-red-700 mb-4">
-                      Permanently delete your account and all associated data. This action cannot be undone.
-                    </p>
-                    <button
-                      onClick={() => setShowDeleteConfirm(true)}
-                      className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors font-medium flex items-center space-x-2"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                      <span>Delete Account</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
 
-        {/* Delete Confirmation Modal */}
-        {showDeleteConfirm && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
-              <h2 className="text-xl font-bold text-red-900 mb-4">Delete Account</h2>
-              <div className="space-y-4">
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                  <p className="text-red-800 font-medium mb-2">⚠️ This action cannot be undone!</p>
-                  <p className="text-red-700 text-sm">
-                    Deleting your account will permanently remove:
-                  </p>
-                  <ul className="text-red-700 text-sm mt-2 space-y-1">
-                    <li>• All testimonial forms</li>
-                    <li>• All collected testimonials</li>
-                    <li>• Custom fields and branding</li>
-                    <li>• Tags and organization</li>
-                    <li>• Your account and subscription</li>
-                  </ul>
-                </div>
-                
-                <p className="text-gray-600 text-sm">
-                  Type your email address to confirm deletion:
-                </p>
-                
-                <input
-                  type="email"
-                  placeholder={user?.email || ''}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
-                  onChange={(e) => {
-                    const deleteButton = document.getElementById('confirm-delete') as HTMLButtonElement;
-                    if (deleteButton) {
-                      deleteButton.disabled = e.target.value !== user?.email;
-                    }
-                  }}
-                />
-                
-                <div className="flex space-x-3">
-                  <button
-                    id="confirm-delete"
-                    onClick={handleDeleteAccount}
-                    disabled={deleting}
-                    className="flex-1 bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {deleting ? (
-                      <div className="flex items-center justify-center">
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                        Deleting...
-                      </div>
-                    ) : (
-                      'Delete My Account'
-                    )}
-                  </button>
-                  <button
-                    onClick={() => setShowDeleteConfirm(false)}
-                    disabled={deleting}
-                    className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 transition-colors font-medium disabled:opacity-50"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
