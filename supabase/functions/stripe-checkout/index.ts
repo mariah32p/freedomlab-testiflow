@@ -70,16 +70,17 @@ Deno.serve(async (req) => {
       }, 400);
     }
 
-    const error = validateParameters(
-      { price_id, success_url, cancel_url, mode, customer_email },
-      {
-        cancel_url: 'string',
-        price_id: 'string',
-        success_url: 'string',
-        customer_email: 'string',
-        mode: { values: ['payment', 'subscription'] },
-      },
-    );
+      const error = validateParameters(
+        { price_id, success_url, cancel_url, mode, customer_email, client_reference_id },
+        {
+          cancel_url: 'string',
+          price_id: 'string',
+          success_url: 'string',
+          customer_email: 'string',
+          client_reference_id: 'string',
+          mode: { values: ['payment', 'subscription'] },
+        },
+      );
 
     if (error) {
       return corsResponse({ error }, 400);
