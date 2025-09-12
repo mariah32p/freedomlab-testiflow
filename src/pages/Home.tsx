@@ -537,7 +537,51 @@ export const Home: React.FC = () => {
                 What's the difference between Standard and Premium plans?
               </h3>
               <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-                Standard is perfect for small businesses with up to 25 testimonials and 1 form. Premium offers unlimited testimonials and forms, plus advanced features like custom branding, video testimonials, and website widgets.
+                Currently, only our Standard plan is available, which includes unlimited testimonials, forms, custom fields, branding, video uploads, and all export features. Premium plan with advanced analytics and API access is coming soon.
+              </p>
+            </div>
+
+            <div className="bg-gray-50 rounded-lg p-4 sm:p-6">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
+                What features are included in the Standard plan?
+              </h3>
+              <div className="text-sm sm:text-base text-gray-600 leading-relaxed">
+                <p className="mb-3">The Standard plan includes everything you need to manage testimonials:</p>
+                <ul className="space-y-2 ml-4">
+                  <li className="flex items-center">
+                    <Check className="h-4 w-4 text-secondary-500 mr-2 flex-shrink-0" />
+                    <span>Unlimited testimonials & forms</span>
+                  </li>
+                  <li className="flex items-center">
+                    <Check className="h-4 w-4 text-secondary-500 mr-2 flex-shrink-0" />
+                    <span>Custom fields & branding</span>
+                  </li>
+                  <li className="flex items-center">
+                    <Check className="h-4 w-4 text-secondary-500 mr-2 flex-shrink-0" />
+                    <span>Image + video testimonials</span>
+                  </li>
+                  <li className="flex items-center">
+                    <Check className="h-4 w-4 text-secondary-500 mr-2 flex-shrink-0" />
+                    <span>Website widget generator</span>
+                  </li>
+                  <li className="flex items-center">
+                    <Check className="h-4 w-4 text-secondary-500 mr-2 flex-shrink-0" />
+                    <span>Advanced exports (JSON, CSV, social media)</span>
+                  </li>
+                  <li className="flex items-center">
+                    <Check className="h-4 w-4 text-secondary-500 mr-2 flex-shrink-0" />
+                    <span>Tag organization system</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="bg-gray-50 rounded-lg p-4 sm:p-6">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
+                When will the Premium plan be available?
+              </h3>
+              <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
+                Premium plan with advanced analytics, API access, and white-label options is currently in development. For now, enjoy all core testimonial management features with our comprehensive Standard plan.
               </p>
             </div>
 
