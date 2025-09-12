@@ -27,7 +27,7 @@ export const Navbar = () => {
           {/* Logo - Left aligned */}
           <div className="flex items-center">
             {/* FIX 1: Wrapped the logo icon in a Link to make it navigable */}
-            <Link to="/" className="flex items-center space-x-2">
+            <Link to={user ? "/dashboard" : "/"} className="flex items-center space-x-2">
               <TestiFlowIcon className="h-8 w-8 text-primary-950" />
               <span className="text-xl font-bold text-primary-950">TestiFlow</span>
             </Link>
