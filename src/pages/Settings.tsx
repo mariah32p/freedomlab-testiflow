@@ -73,6 +73,22 @@ export const Settings: React.FC = () => {
      return { name: 'Standard Plan', id: 'standard' };
   };
 
+  const getActualStatus = () => {
+    if (!subscription) return 'not_started';
+    
+    // Check if trial has expired
+    if (subscription.status === 'trialing' && subscription.current_period_end) {
+      const trialEndDate = new Date(subscription.current_period_end * 1000);
+      const now = new Date();
+      
+      if (now > trialEndDate) {
+        return 'active'; // Trial expired, should be active
+      }
+    }
+    
+    return subscription.status;
+  };
+
   const handleManageSubscription = async () => {
     await createPortalSession();
   };
