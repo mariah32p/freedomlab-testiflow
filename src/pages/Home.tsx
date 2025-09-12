@@ -590,7 +590,7 @@ export const Home: React.FC = () => {
                 Is there a free trial?
               </h3>
               <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-                Yes! All plans include a 7-day free trial with full access to all features. No credit card required to start.
+                Yes! All plans include a 7-day free trial with full access to all features.
               </p>
             </div>
 
