@@ -108,20 +108,44 @@ Deno.serve(async (req) => {
 
 async function processEvent(event: Stripe.Event) {
   try {
+    console.log(`🎯 Processing event: ${event.type}`);
+    
     const stripeData = event?.data?.object ?? {};
 
     if (!stripeData || !('customer' in stripeData)) {
-      console.log('No customer data in event');
+      console.log('🎯 No customer data in event, skipping');
       return;
     }
 
     const { customer: customerId } = stripeData;
     if (!customerId || typeof customerId !== 'string') {
-      console.error(`No valid customer ID in event: ${event.type}`);
+      console.error(`🎯 No valid customer ID in event: ${event.type}`);
       return;
     }
 
-    console.log(`Processing event: ${event.type} for customer: ${customerId}`);
+    console.log(`🎯 Event for customer: ${customerId}`);
+    
+    // CRITICAL: Check if this customer belongs to TestiFlow
+    const { data: existingCustomer, error: customerCheckError } = await supabase
+      .from('stripe_customers')
+      .select('user_id')
+      .eq('customer_id', customerId)
+      .maybeSingle();
+    
+    if (customerCheckError) {
+      console.error(`🎯 Error checking customer: ${customerCheckError.message}`);
+      return;
+    }
+    
+    // For checkout.session.completed, we might not have the customer record yet
+    if (event.type !== 'checkout.session.completed' && !existingCustomer) {
+      console.log(`🎯 Customer ${customerId} not found in TestiFlow database, skipping event`);
+      return;
+    }
+    
+    if (existingCustomer) {
+      console.log(`🎯 Customer ${customerId} belongs to TestiFlow user: ${existingCustomer.user_id}`);
+    }
 
     // Handle different event types
     switch (event.type) {
@@ -150,25 +174,30 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session, custome
   const { mode, payment_status, client_reference_id } = session;
   const isSubscription = mode === 'subscription';
 
-  console.log(`Processing ${isSubscription ? 'subscription' : 'one-time payment'} checkout session`);
+  console.log(`🎯 Processing ${isSubscription ? 'subscription' : 'one-time payment'} checkout session for customer: ${customerId}`);
+  
+  // CRITICAL: Only process if we have a client_reference_id (TestiFlow user ID)
+  if (!client_reference_id) {
+    console.log(`🎯 No client_reference_id in checkout session, this might be from another product. Skipping.`);
+    return;
+  }
+  
+  console.log(`🎯 Checkout session has client_reference_id: ${client_reference_id}, proceeding with TestiFlow processing`);
 
   if (isSubscription) {
-    // Store customer relationship - only if we have a user ID
-    if (client_reference_id) {
-      const { error: customerError } = await supabase.from('stripe_customers').upsert({
-        customer_id: customerId,
-        user_id: client_reference_id,
-      }, {
-        onConflict: 'customer_id',
-      });
+    // Store customer relationship
+    const { error: customerError } = await supabase.from('stripe_customers').upsert({
+      customer_id: customerId,
+      user_id: client_reference_id,
+    }, {
+      onConflict: 'customer_id',
+    });
 
-      if (customerError) {
-        console.error('Error storing customer relationship:', customerError);
-      } else {
-        console.log(`Successfully linked customer ${customerId} to user ${client_reference_id}`);
-      }
+    if (customerError) {
+      console.error('🎯 Error storing customer relationship:', customerError);
+    } else {
+      console.log(`🎯 Successfully linked customer ${customerId} to user ${client_reference_id}`);
     }
-
     // Sync subscription data
     await syncCustomerFromStripe(customerId);
   } else if (mode === 'payment' && payment_status === 'paid') {
@@ -209,6 +238,8 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session, custome
 
 async function syncCustomerFromStripe(customerId: string) {
   try {
+    console.log(`🎯 Syncing customer ${customerId} from Stripe`);
+    
     if (!stripe) {
       throw new Error('Stripe not initialized');
     }
@@ -222,7 +253,7 @@ async function syncCustomerFromStripe(customerId: string) {
     });
 
     if (subscriptions.data.length === 0) {
-      console.log(`No subscriptions found for customer: ${customerId}`);
+      console.log(`🎯 No subscriptions found for customer: ${customerId}`);
       return;
     }
 
@@ -233,7 +264,18 @@ async function syncCustomerFromStripe(customerId: string) {
     
     const subscription = activeSubscription || subscriptions.data[0];
 
-    console.log(`Syncing subscription ${subscription.id} with status: ${subscription.status}`);
+    console.log(`🎯 Syncing subscription ${subscription.id} with status: ${subscription.status}, price: ${subscription.items.data[0].price.id}`);
+    
+    // CRITICAL: Validate this is a TestiFlow price ID
+    const validPriceIds = ['price_1Rznb5Dn6VTzl81bjqFfCagv', 'price_1Rznb5Dn6VTzl81b8Hx5UQt6'];
+    const subscriptionPriceId = subscription.items.data[0].price.id;
+    
+    if (!validPriceIds.includes(subscriptionPriceId)) {
+      console.log(`🎯 Subscription has price ID ${subscriptionPriceId} which is not a TestiFlow price. Skipping sync.`);
+      return;
+    }
+    
+    console.log(`🎯 Confirmed TestiFlow subscription with price: ${subscriptionPriceId}`);
 
     // If we're syncing an active subscription and there are multiple subscriptions,
     // cancel the old ones in Stripe to maintain consistency
