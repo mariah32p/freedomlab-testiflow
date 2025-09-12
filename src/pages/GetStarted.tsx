@@ -87,7 +87,7 @@ export const GetStarted: React.FC = () => {
                   'Custom fields & branding',
                   'Image + video testimonials - Rich media collection',
                   'Website widget generator',
-                  'Advanced exports (JSON, social media posts)',
+                  'Advanced exports (JSON, CSV)',
                   'Tag organization',
                 ].map((feature, index) => (
                   <li key={index} className="flex items-center">
@@ -122,10 +122,8 @@ export const GetStarted: React.FC = () => {
               </div>
               <ul className="space-y-4">
                 {[
-                  'Everything in Standard, plus:',
                   'Advanced analytics & insights',
                   'White-label branding removal',
-                  'Priority support',
                   'API access for integrations',
                   'Custom domain support',
                 ].map((feature, index) => (
