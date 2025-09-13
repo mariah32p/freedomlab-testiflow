@@ -69,12 +69,23 @@ export const useRouteGuard = () => {
       // If on success page, give it a moment before checking subscription
       if (isSuccessPage) {
         console.log('🔍 On success page, waiting 5 seconds before checking subscription...');
-        setTimeout(() => {
-          console.log('🔍 Success page timeout complete, rechecking subscription...');
-          checkSubscriptionStatus();
-        }, 5000);
-        setRouteLoading(false);
-        return;
+        // Add a counter to prevent infinite loops
+        const attempts = parseInt(sessionStorage.getItem('successPageAttempts') || '0');
+        if (attempts < 3) {
+          sessionStorage.setItem('successPageAttempts', (attempts + 1).toString());
+          setTimeout(() => {
+            console.log('🔍 Success page timeout complete, rechecking subscription... Attempt:', attempts + 1);
+            checkSubscriptionStatus();
+          }, 5000);
+          setRouteLoading(false);
+          return;
+        } else {
+          console.log('🔍 Success page: Max attempts reached, redirecting to get-started');
+          sessionStorage.removeItem('successPageAttempts');
+          navigate('/get-started');
+          setRouteLoading(false);
+          return;
+        }
       }
       
       // User is signed in - fetch subscription data
@@ -147,6 +158,8 @@ export const useRouteGuard = () => {
         if (canAccessDashboard) {
           // Has active subscription or in grace period → allow dashboard
           console.log('🔍 User has active subscription or in grace period, allowing dashboard access');
+          // Clear success page attempts when successfully accessing dashboard
+          sessionStorage.removeItem('successPageAttempts');
           if ((location.pathname === '/get-started' || isLandingPage) && !isPublicFormSubmission) {
             console.log('🔍 Redirecting from get-started/home to dashboard');
             navigate('/dashboard');
@@ -154,6 +167,8 @@ export const useRouteGuard = () => {
         } else {
           // No active subscription → send to get-started
           console.log('🔍 No active subscription, redirecting to get-started');
+          // Clear success page attempts when redirecting to get-started
+          sessionStorage.removeItem('successPageAttempts');
           if (location.pathname !== '/get-started' && !isPublicPage && !isLandingPage && !isPublicFormSubmission) {
             navigate('/get-started');
           }

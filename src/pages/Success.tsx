@@ -19,13 +19,13 @@ export const Success: React.FC = () => {
             Thank you for subscribing to TestiFlow. Your account has been activated and you now have access to all Pro features.
           </p>
           
-          <div className="flex items-center justify-center space-x-2 text-gray-500">
+          <div className="flex items-center justify-center space-x-2 text-gray-500 mb-4">
             <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary-950"></div>
             <span>Setting up your account...</span>
           </div>
           
           <p className="text-sm text-gray-500 mt-4">
-            You'll be redirected to your dashboard in a moment.
+            You'll be redirected automatically. If this takes too long, you may need to choose a plan.
           </p>
         </div>
       </div>
