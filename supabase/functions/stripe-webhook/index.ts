@@ -28,8 +28,13 @@ const corsHeaders = {
 
 Deno.serve(async (req) => {
   try {
+    console.log('🎯 WEBHOOK: Received request');
+    console.log('🎯 WEBHOOK: Method:', req.method);
+    console.log('🎯 WEBHOOK: Headers:', Object.fromEntries(req.headers.entries()));
+
     // Handle OPTIONS request for CORS preflight
     if (req.method === 'OPTIONS') {
+      console.log('🎯 WEBHOOK: Handling OPTIONS request');
       return new Response(null, { 
         status: 204,
         headers: corsHeaders
@@ -37,6 +42,7 @@ Deno.serve(async (req) => {
     }
 
     if (req.method !== 'POST') {
+      console.log('🎯 WEBHOOK: Invalid method:', req.method);
       return new Response('Method not allowed', { 
         status: 405,
         headers: corsHeaders
@@ -45,6 +51,10 @@ Deno.serve(async (req) => {
 
     // Check if Stripe is properly configured
     if (!stripe || !stripeSecret || !stripeWebhookSecret) {
+      console.log('🎯 WEBHOOK: Stripe not configured properly');
+      console.log('🎯 WEBHOOK: Has stripe:', !!stripe);
+      console.log('🎯 WEBHOOK: Has stripeSecret:', !!stripeSecret);
+      console.log('🎯 WEBHOOK: Has stripeWebhookSecret:', !!stripeWebhookSecret);
       return new Response(
         JSON.stringify({ error: 'Stripe is not configured properly' }), 
         { 
@@ -56,6 +66,7 @@ Deno.serve(async (req) => {
 
     // Get the signature from the header
     const signature = req.headers.get('stripe-signature');
+    console.log('🎯 WEBHOOK: Stripe signature present:', !!signature);
     if (!signature) {
       return new Response(
         JSON.stringify({ error: 'No signature found' }), 
@@ -68,11 +79,15 @@ Deno.serve(async (req) => {
 
     // Get the raw body
     const body = await req.text();
+    console.log('🎯 WEBHOOK: Body length:', body.length);
 
     // Verify the webhook signature
     let event: Stripe.Event;
     try {
       event = await stripe.webhooks.constructEventAsync(body, signature, stripeWebhookSecret);
+      console.log('🎯 WEBHOOK: Event verified successfully');
+      console.log('🎯 WEBHOOK: Event type:', event.type);
+      console.log('🎯 WEBHOOK: Event ID:', event.id);
     } catch (error: any) {
       console.error(`Webhook signature verification failed: ${error.message}`);
       return new Response(
@@ -85,8 +100,10 @@ Deno.serve(async (req) => {
     }
 
     // Process the event asynchronously
+    console.log('🎯 WEBHOOK: Starting event processing...');
     processEvent(event);
 
+    console.log('🎯 WEBHOOK: Returning success response');
     return new Response(
       JSON.stringify({ received: true }), 
       { 
@@ -95,7 +112,7 @@ Deno.serve(async (req) => {
       }
     );
   } catch (error: any) {
-    console.error('Error processing webhook:', error);
+    console.error('🎯 WEBHOOK: Top-level error:', error);
     return new Response(
       JSON.stringify({ error: error.message }), 
       { 
@@ -108,24 +125,27 @@ Deno.serve(async (req) => {
 
 async function processEvent(event: Stripe.Event) {
   try {
-    console.log(`🎯 Processing event: ${event.type}`);
+    console.log(`🎯 PROCESS_EVENT: Starting - Type: ${event.type}, ID: ${event.id}`);
+    console.log(`🎯 PROCESS_EVENT: Event data object:`, JSON.stringify(event.data.object, null, 2));
     
     const stripeData = event?.data?.object ?? {};
 
     if (!stripeData || !('customer' in stripeData)) {
-      console.log('🎯 No customer data in event, skipping');
+      console.log('🎯 PROCESS_EVENT: No customer field in event data, skipping');
+      console.log('🎯 PROCESS_EVENT: Available fields:', Object.keys(stripeData));
       return;
     }
 
     const { customer: customerId } = stripeData;
     if (!customerId || typeof customerId !== 'string') {
-      console.error(`🎯 No valid customer ID in event: ${event.type}`);
+      console.error(`🎯 PROCESS_EVENT: Invalid customer ID - Type: ${typeof customerId}, Value: ${customerId}`);
       return;
     }
 
-    console.log(`🎯 Event for customer: ${customerId}`);
+    console.log(`🎯 PROCESS_EVENT: Valid customer ID found: ${customerId}`);
     
     // CRITICAL: Check if this customer belongs to TestiFlow
+    console.log(`🎯 PROCESS_EVENT: Checking if customer ${customerId} exists in TestiFlow database...`);
     const { data: existingCustomer, error: customerCheckError } = await supabase
       .from('stripe_customers')
       .select('user_id')
@@ -133,21 +153,24 @@ async function processEvent(event: Stripe.Event) {
       .maybeSingle();
     
     if (customerCheckError) {
-      console.error(`🎯 Error checking customer: ${customerCheckError.message}`);
+      console.error(`🎯 PROCESS_EVENT: Database error checking customer: ${customerCheckError.message}`);
       return;
     }
     
     // For checkout.session.completed, we might not have the customer record yet
     if (event.type !== 'checkout.session.completed' && !existingCustomer) {
-      console.log(`🎯 Customer ${customerId} not found in TestiFlow database, skipping event`);
+      console.log(`🎯 PROCESS_EVENT: Customer ${customerId} not found in TestiFlow database, skipping ${event.type} event`);
       return;
     }
     
     if (existingCustomer) {
-      console.log(`🎯 Customer ${customerId} belongs to TestiFlow user: ${existingCustomer.user_id}`);
+      console.log(`🎯 PROCESS_EVENT: Customer ${customerId} belongs to TestiFlow user: ${existingCustomer.user_id}`);
+    } else {
+      console.log(`🎯 PROCESS_EVENT: New customer for checkout.session.completed event`);
     }
 
     // Handle different event types
+    console.log(`🎯 PROCESS_EVENT: Routing to handler for event type: ${event.type}`);
     switch (event.type) {
       case 'checkout.session.completed':
         await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session, customerId);
@@ -163,29 +186,40 @@ async function processEvent(event: Stripe.Event) {
         await handlePaymentFailed(customerId);
         break;
       default:
-        console.log(`Unhandled event type: ${event.type}`);
+        console.log(`🎯 PROCESS_EVENT: Unhandled event type: ${event.type}`);
     }
+    
+    console.log(`🎯 PROCESS_EVENT: Completed processing for event: ${event.type}`);
   } catch (error) {
-    console.error('Error processing event:', error);
+    console.error('🎯 PROCESS_EVENT: Error processing event:', error);
   }
 }
 
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session, customerId: string) {
+  console.log(`🎯 CHECKOUT_COMPLETED: Starting handler`);
+  console.log(`🎯 CHECKOUT_COMPLETED: Session ID: ${session.id}`);
+  console.log(`🎯 CHECKOUT_COMPLETED: Customer ID: ${customerId}`);
+  console.log(`🎯 CHECKOUT_COMPLETED: Mode: ${session.mode}`);
+  console.log(`🎯 CHECKOUT_COMPLETED: Payment Status: ${session.payment_status}`);
+  console.log(`🎯 CHECKOUT_COMPLETED: Client Reference ID: ${session.client_reference_id}`);
+
   const { mode, payment_status, client_reference_id } = session;
   const isSubscription = mode === 'subscription';
 
-  console.log(`🎯 Processing ${isSubscription ? 'subscription' : 'one-time payment'} checkout session for customer: ${customerId}`);
+  console.log(`🎯 CHECKOUT_COMPLETED: Processing ${isSubscription ? 'subscription' : 'one-time payment'} checkout`);
   
   // CRITICAL: Only process if we have a client_reference_id (TestiFlow user ID)
   if (!client_reference_id) {
-    console.log(`🎯 No client_reference_id in checkout session, this might be from another product. Skipping.`);
+    console.log(`🎯 CHECKOUT_COMPLETED: No client_reference_id - this is from another product. Skipping.`);
     return;
   }
   
-  console.log(`🎯 Checkout session has client_reference_id: ${client_reference_id}, proceeding with TestiFlow processing`);
+  console.log(`🎯 CHECKOUT_COMPLETED: Valid TestiFlow checkout - User ID: ${client_reference_id}`);
 
   if (isSubscription) {
+    console.log(`🎯 CHECKOUT_COMPLETED: Processing subscription checkout`);
     // Store customer relationship
+    console.log(`🎯 CHECKOUT_COMPLETED: Storing customer relationship...`);
     const { error: customerError } = await supabase.from('stripe_customers').upsert({
       customer_id: customerId,
       user_id: client_reference_id,
@@ -194,13 +228,17 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session, custome
     });
 
     if (customerError) {
-      console.error('🎯 Error storing customer relationship:', customerError);
+      console.error('🎯 CHECKOUT_COMPLETED: Error storing customer relationship:', customerError);
     } else {
-      console.log(`🎯 Successfully linked customer ${customerId} to user ${client_reference_id}`);
+      console.log(`🎯 CHECKOUT_COMPLETED: Successfully linked customer ${customerId} to user ${client_reference_id}`);
     }
+    
+    console.log(`🎯 CHECKOUT_COMPLETED: Calling syncCustomerFromStripe...`);
     // Sync subscription data
     await syncCustomerFromStripe(customerId);
+    console.log(`🎯 CHECKOUT_COMPLETED: syncCustomerFromStripe completed`);
   } else if (mode === 'payment' && payment_status === 'paid') {
+    console.log(`🎯 CHECKOUT_COMPLETED: Processing one-time payment`);
     // Handle one-time payment
     const {
       id: checkout_session_id,
@@ -210,6 +248,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session, custome
       currency,
     } = session;
 
+    console.log(`🎯 CHECKOUT_COMPLETED: Inserting order record...`);
     const { error: orderError } = await supabase.from('stripe_orders').insert({
       checkout_session_id,
       payment_intent_id: payment_intent as string,
@@ -222,28 +261,25 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session, custome
     });
 
     if (orderError) {
-      console.error('Error inserting order:', orderError);
+      console.error('🎯 CHECKOUT_COMPLETED: Error inserting order:', orderError);
     } else {
-      console.log(`Successfully processed one-time payment for session: ${checkout_session_id}`);
+      console.log(`🎯 CHECKOUT_COMPLETED: Successfully processed one-time payment for session: ${checkout_session_id}`);
     }
   }
 
-  // CRITICAL: Clear payment issue tracking when subscription becomes active
-  if (updatedSubscription.status === 'active') {
-    subscriptionData.payment_issue_since = null;
-    subscriptionData.grace_period_end = null;
-  }
-
+  console.log(`🎯 CHECKOUT_COMPLETED: Handler completed successfully`);
 }
 
 async function syncCustomerFromStripe(customerId: string) {
   try {
-    console.log(`🎯 Syncing customer ${customerId} from Stripe`);
+    console.log(`🎯 SYNC_CUSTOMER: Starting sync for customer ${customerId}`);
     
     if (!stripe) {
+      console.error('🎯 SYNC_CUSTOMER: Stripe not initialized');
       throw new Error('Stripe not initialized');
     }
 
+    console.log(`🎯 SYNC_CUSTOMER: Fetching subscriptions from Stripe...`);
     // Fetch latest subscription data from Stripe
     const subscriptions = await stripe.subscriptions.list({
       customer: customerId,
@@ -252,8 +288,17 @@ async function syncCustomerFromStripe(customerId: string) {
       expand: ['data.default_payment_method'],
     });
 
+    console.log(`🎯 SYNC_CUSTOMER: Found ${subscriptions.data.length} subscriptions`);
+    console.log(`🎯 SYNC_CUSTOMER: Subscription details:`, subscriptions.data.map(sub => ({
+      id: sub.id,
+      status: sub.status,
+      price_id: sub.items.data[0]?.price.id,
+      current_period_start: sub.current_period_start,
+      current_period_end: sub.current_period_end
+    })));
+
     if (subscriptions.data.length === 0) {
-      console.log(`🎯 No subscriptions found for customer: ${customerId}`);
+      console.log(`🎯 SYNC_CUSTOMER: No subscriptions found for customer: ${customerId}`);
       return;
     }
 
@@ -264,35 +309,45 @@ async function syncCustomerFromStripe(customerId: string) {
     
     const subscription = activeSubscription || subscriptions.data[0];
 
-    console.log(`🎯 Syncing subscription ${subscription.id} with status: ${subscription.status}, price: ${subscription.items.data[0].price.id}`);
+    console.log(`🎯 SYNC_CUSTOMER: Selected subscription ${subscription.id}`);
+    console.log(`🎯 SYNC_CUSTOMER: Status: ${subscription.status}`);
+    console.log(`🎯 SYNC_CUSTOMER: Price ID: ${subscription.items.data[0].price.id}`);
+    console.log(`🎯 SYNC_CUSTOMER: Current period: ${subscription.current_period_start} - ${subscription.current_period_end}`);
     
     // CRITICAL: Validate this is a TestiFlow price ID
     const validPriceIds = ['price_1Rznb5Dn6VTzl81bjqFfCagv', 'price_1Rznb5Dn6VTzl81b8Hx5UQt6'];
     const subscriptionPriceId = subscription.items.data[0].price.id;
     
+    console.log(`🎯 SYNC_CUSTOMER: Validating price ID...`);
+    console.log(`🎯 SYNC_CUSTOMER: Subscription price: ${subscriptionPriceId}`);
+    console.log(`🎯 SYNC_CUSTOMER: Valid TestiFlow prices: ${validPriceIds.join(', ')}`);
+    console.log(`🎯 SYNC_CUSTOMER: Is valid TestiFlow price: ${validPriceIds.includes(subscriptionPriceId)}`);
+    
     if (!validPriceIds.includes(subscriptionPriceId)) {
-      console.log(`🎯 Subscription has price ID ${subscriptionPriceId} which is not a TestiFlow price. Skipping sync.`);
+      console.log(`🎯 SYNC_CUSTOMER: Price ID ${subscriptionPriceId} is not a TestiFlow price. Skipping sync.`);
       return;
     }
     
-    console.log(`🎯 Confirmed TestiFlow subscription with price: ${subscriptionPriceId}`);
+    console.log(`🎯 SYNC_CUSTOMER: Confirmed TestiFlow subscription with price: ${subscriptionPriceId}`);
 
     // If we're syncing an active subscription and there are multiple subscriptions,
     // cancel the old ones in Stripe to maintain consistency
     if (subscription.status === 'active' && subscriptions.data.length > 1) {
-      console.log(`Found ${subscriptions.data.length} subscriptions for customer ${customerId}, canceling old ones`);
+      console.log(`🎯 SYNC_CUSTOMER: Found ${subscriptions.data.length} subscriptions, canceling old ones`);
       
       for (const oldSub of subscriptions.data) {
         if (oldSub.id !== subscription.id && (oldSub.status === 'active' || oldSub.status === 'trialing')) {
           try {
             await stripe.subscriptions.cancel(oldSub.id);
-            console.log(`Canceled old subscription: ${oldSub.id}`);
+            console.log(`🎯 SYNC_CUSTOMER: Canceled old subscription: ${oldSub.id}`);
           } catch (cancelError) {
-            console.error(`Failed to cancel old subscription ${oldSub.id}:`, cancelError);
+            console.error(`🎯 SYNC_CUSTOMER: Failed to cancel old subscription ${oldSub.id}:`, cancelError);
           }
         }
       }
     }
+    
+    console.log(`🎯 SYNC_CUSTOMER: Preparing subscription data for database...`);
     // Store subscription state
     const subscriptionData: any = {
       customer_id: customerId,
@@ -304,23 +359,47 @@ async function syncCustomerFromStripe(customerId: string) {
       status: subscription.status,
     };
 
+    console.log(`🎯 SYNC_CUSTOMER: Subscription data to store:`, subscriptionData);
+
     // Add payment method info if available
     if (subscription.default_payment_method && typeof subscription.default_payment_method !== 'string') {
+      console.log(`🎯 SYNC_CUSTOMER: Adding payment method info`);
       subscriptionData.payment_method_brand = subscription.default_payment_method.card?.brand ?? null;
       subscriptionData.payment_method_last4 = subscription.default_payment_method.card?.last4 ?? null;
+    } else {
+      console.log(`🎯 SYNC_CUSTOMER: No payment method info available`);
     }
 
+    console.log(`🎯 SYNC_CUSTOMER: Upserting subscription to database...`);
     const { error } = await supabase.from('stripe_subscriptions').upsert(subscriptionData, {
       onConflict: 'customer_id',
     });
 
     if (error) {
-      console.error('Error syncing subscription:', error);
+      console.error('🎯 SYNC_CUSTOMER: Error upserting subscription to database:', error);
+      console.error('🎯 SYNC_CUSTOMER: Failed subscription data:', subscriptionData);
     } else {
-      console.log(`Successfully synced subscription for customer: ${customerId} - Status: ${subscription.status}`);
+      console.log(`🎯 SYNC_CUSTOMER: Successfully synced subscription for customer: ${customerId}`);
+      console.log(`🎯 SYNC_CUSTOMER: Final status: ${subscription.status}, Price: ${subscription.items.data[0].price.id}`);
+      
+      // Verify the data was actually stored
+      console.log(`🎯 SYNC_CUSTOMER: Verifying data was stored...`);
+      const { data: verifyData, error: verifyError } = await supabase
+        .from('stripe_subscriptions')
+        .select('*')
+        .eq('customer_id', customerId)
+        .maybeSingle();
+      
+      if (verifyError) {
+        console.error('🎯 SYNC_CUSTOMER: Error verifying stored data:', verifyError);
+      } else if (verifyData) {
+        console.log(`🎯 SYNC_CUSTOMER: Verification successful - stored data:`, verifyData);
+      } else {
+        console.error('🎯 SYNC_CUSTOMER: Verification failed - no data found after upsert');
+      }
     }
   } catch (error) {
-    console.error(`Failed to sync subscription for customer ${customerId}:`, error);
+    console.error(`🎯 SYNC_CUSTOMER: Failed to sync subscription for customer ${customerId}:`, error);
   }
 }
 
