@@ -159,7 +159,8 @@ export const useRouteGuard = () => {
           // Has active subscription or in grace period → allow dashboard
           console.log('🔍 User has active subscription or in grace period, allowing dashboard access');
           // Clear success page attempts when successfully accessing dashboard
-          sessionStorage.removeItem('successPageAttempts');
+          localStorage.removeItem('successPageAttempts');
+          localStorage.removeItem('successPageStartTime');
           if ((location.pathname === '/get-started' || isLandingPage) && !isPublicFormSubmission) {
             console.log('🔍 Redirecting from get-started/home to dashboard');
             navigate('/dashboard');
@@ -168,7 +169,8 @@ export const useRouteGuard = () => {
           // No active subscription → send to get-started
           console.log('🔍 No active subscription, redirecting to get-started');
           // Clear success page attempts when redirecting to get-started
-          sessionStorage.removeItem('successPageAttempts');
+          localStorage.removeItem('successPageAttempts');
+          localStorage.removeItem('successPageStartTime');
           if (location.pathname !== '/get-started' && !isPublicPage && !isLandingPage && !isPublicFormSubmission) {
             navigate('/get-started');
           }
