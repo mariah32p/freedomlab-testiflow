@@ -101,7 +101,12 @@ Deno.serve(async (req) => {
 
     // Process the event asynchronously
     console.log('🎯 WEBHOOK: Starting event processing...');
-    await processEvent(event);
+    try {
+      await processEvent(event);
+    } catch (error) {
+      console.error('🎯 WEBHOOK: Error processing event:', error);
+      throw error;
+    }
 
     console.log('🎯 WEBHOOK: Returning success response');
     return new Response(
