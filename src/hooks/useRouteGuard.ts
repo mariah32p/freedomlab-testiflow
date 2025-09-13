@@ -69,19 +69,33 @@ export const useRouteGuard = () => {
       // If on success page, give it a moment before checking subscription
       if (isSuccessPage) {
         console.log('🔍 On success page, waiting 5 seconds before checking subscription...');
-        // Add a counter to prevent infinite loops
-        const attempts = parseInt(sessionStorage.getItem('successPageAttempts') || '0');
-        if (attempts < 3) {
-          sessionStorage.setItem('successPageAttempts', (attempts + 1).toString());
+        // Add a counter to prevent infinite loops - use localStorage to persist across tabs
+        const attempts = parseInt(localStorage.getItem('successPageAttempts') || '0');
+        const startTime = localStorage.getItem('successPageStartTime');
+        const now = Date.now();
+        
+        // Reset attempts if more than 2 minutes have passed
+        if (startTime && (now - parseInt(startTime)) > 120000) {
+          localStorage.removeItem('successPageAttempts');
+          localStorage.removeItem('successPageStartTime');
+          localStorage.setItem('successPageAttempts', '1');
+          localStorage.setItem('successPageStartTime', now.toString());
+        } else if (!startTime) {
+          localStorage.setItem('successPageStartTime', now.toString());
+        }
+        
+        if (attempts < 6) { // Increased to 6 attempts (30 seconds total)
+          localStorage.setItem('successPageAttempts', (attempts + 1).toString());
           setTimeout(() => {
             console.log('🔍 Success page timeout complete, rechecking subscription... Attempt:', attempts + 1);
             checkSubscriptionStatus();
-          }, 5000);
+          }, 5000); // Still 5 seconds between attempts
           setRouteLoading(false);
           return;
         } else {
           console.log('🔍 Success page: Max attempts reached, redirecting to get-started');
-          sessionStorage.removeItem('successPageAttempts');
+          localStorage.removeItem('successPageAttempts');
+          localStorage.removeItem('successPageStartTime');
           navigate('/get-started');
           setRouteLoading(false);
           return;

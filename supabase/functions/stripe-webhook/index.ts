@@ -239,66 +239,11 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session, custome
       console.log(`🎯 CHECKOUT_COMPLETED: Successfully linked customer ${customerId} to user ${client_reference_id}`);
     }
     
-    // For subscription checkouts, get the subscription directly from the session
-    if (session.subscription) {
-      console.log(`🎯 CHECKOUT_COMPLETED: Found subscription in session: ${session.subscription}`);
-      
-      try {
-        // Fetch the subscription details from Stripe
-        const subscription = await stripe!.subscriptions.retrieve(session.subscription as string, {
-          expand: ['default_payment_method']
-        });
-        
-        console.log(`🎯 CHECKOUT_COMPLETED: Retrieved subscription details:`, {
-          id: subscription.id,
-          status: subscription.status,
-          price_id: subscription.items.data[0].price.id,
-          current_period_start: subscription.current_period_start,
-          current_period_end: subscription.current_period_end
-        });
-        
-        // Store subscription directly
-        const subscriptionData: any = {
-          customer_id: customerId,
-          subscription_id: subscription.id,
-          price_id: subscription.items.data[0].price.id,
-          current_period_start: subscription.current_period_start,
-          current_period_end: subscription.current_period_end,
-          cancel_at_period_end: subscription.cancel_at_period_end,
-          status: subscription.status,
-        };
-
-        // Add payment method info if available
-        if (subscription.default_payment_method && typeof subscription.default_payment_method !== 'string') {
-          subscriptionData.payment_method_brand = subscription.default_payment_method.card?.brand ?? null;
-          subscriptionData.payment_method_last4 = subscription.default_payment_method.card?.last4 ?? null;
-        }
-
-        console.log(`🎯 CHECKOUT_COMPLETED: Storing subscription data:`, subscriptionData);
-        
-        const { error: subscriptionError } = await supabase
-          .from('stripe_subscriptions')
-          .upsert(subscriptionData, {
-            onConflict: 'customer_id',
-          });
-
-        if (subscriptionError) {
-          console.error('🎯 CHECKOUT_COMPLETED: Error storing subscription:', subscriptionError);
-        } else {
-          console.log(`🎯 CHECKOUT_COMPLETED: Successfully stored subscription ${subscription.id}`);
-        }
-        
-      } catch (subscriptionError) {
-        console.error('🎯 CHECKOUT_COMPLETED: Error fetching subscription from Stripe:', subscriptionError);
-        // Fallback to the old sync method
-        console.log(`🎯 CHECKOUT_COMPLETED: Falling back to syncCustomerFromStripe...`);
-        await syncCustomerFromStripe(customerId);
-      }
-    } else {
-      console.log(`🎯 CHECKOUT_COMPLETED: No subscription in session, calling syncCustomerFromStripe...`);
-      // Sync subscription data
-      await syncCustomerFromStripe(customerId);
-    }
+    // CRITICAL: Always sync subscription data after checkout
+    // The subscription might not be immediately available in the session
+    console.log(`🎯 CHECKOUT_COMPLETED: Syncing subscription data...`);
+    await syncCustomerFromStripe(customerId);
+    
     console.log(`🎯 CHECKOUT_COMPLETED: Subscription processing completed`);
   } else if (mode === 'payment' && payment_status === 'paid') {
     console.log(`🎯 CHECKOUT_COMPLETED: Processing one-time payment`);
