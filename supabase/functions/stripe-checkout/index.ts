@@ -61,7 +61,7 @@ Deno.serve(async (req) => {
       client_reference_id,
       is_plan_change,
       has_trial = true,
-    } = await req.json();
+    } = await req.clone().json();
 
     // CRITICAL: Prevent plan changes through this endpoint
     if (is_plan_change) {
