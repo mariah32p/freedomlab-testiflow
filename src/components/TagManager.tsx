@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../contexts/AuthContext';
+import { useOutsetaAuth } from '../contexts/OutsetaAuthContext';
 import { supabase } from '../lib/supabase';
 import { Plus, X, Edit3, Save, Trash2, Tag } from 'lucide-react';
 import { Alert } from './Alert';
@@ -29,7 +29,7 @@ const PRESET_COLORS = [
 ];
 
 export const TagManager: React.FC<TagManagerProps> = ({ onTagsChange }) => {
-  const { user } = useAuth();
+  const { user } = useOutsetaAuth();
   const [tags, setTags] = useState<TestimonialTag[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -49,13 +49,13 @@ export const TagManager: React.FC<TagManagerProps> = ({ onTagsChange }) => {
   }, [user]);
 
   const fetchTags = async () => {
-    if (!user) return;
+    if (!user?.sub) return;
 
     try {
       const { data, error } = await supabase
         .from('testimonial_tags')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('outseta_uid', user.sub)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -70,14 +70,14 @@ export const TagManager: React.FC<TagManagerProps> = ({ onTagsChange }) => {
 
   const handleCreateTag = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) return;
+    if (!user?.sub) return;
 
     try {
       setError(null);
       const { data, error } = await supabase
         .from('testimonial_tags')
         .insert([{
-          user_id: user.id,
+          outseta_uid: user.sub,
           name: tagData.name.trim(),
           color: tagData.color,
         }])
@@ -103,7 +103,7 @@ export const TagManager: React.FC<TagManagerProps> = ({ onTagsChange }) => {
 
   const handleUpdateTag = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user || !editingTag) return;
+    if (!user?.sub || !editingTag) return;
 
     try {
       setError(null);
@@ -114,7 +114,7 @@ export const TagManager: React.FC<TagManagerProps> = ({ onTagsChange }) => {
           color: tagData.color,
         })
         .eq('id', editingTag.id)
-        .eq('user_id', user.id)
+        .eq('outseta_uid', user.sub)
         .select()
         .single();
 
@@ -141,7 +141,7 @@ export const TagManager: React.FC<TagManagerProps> = ({ onTagsChange }) => {
         .from('testimonial_tags')
         .delete()
         .eq('id', tagId)
-        .eq('user_id', user!.id);
+        .eq('outseta_uid', user!.sub);
 
       if (error) throw error;
 

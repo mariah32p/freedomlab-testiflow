@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../contexts/AuthContext';
+import { useOutsetaAuth } from '../contexts/OutsetaAuthContext';
 import { MessageSquare, CheckCircle, Clock, AlertCircle, Star, User, Eye } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { Link } from 'react-router-dom';
@@ -16,7 +16,7 @@ interface RecentTestimonial {
 }
 
 export const Dashboard: React.FC = () => {
-  const { user } = useAuth();
+  const { user } = useOutsetaAuth();
   const [subscription, setSubscription] = useState<any>(null);
   const [stats, setStats] = useState({
     total: 0,
@@ -30,7 +30,7 @@ export const Dashboard: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!user) return;
+      if (!user?.sub) return;
       
       try {
         setError(null);
@@ -38,7 +38,7 @@ export const Dashboard: React.FC = () => {
         const { data: customerData } = await supabase
           .from('stripe_customers')
           .select('*')
-          .eq('user_id', user.id)
+          .eq('outseta_uid', user.sub)
           .maybeSingle();
 
         if (customerData) {
@@ -56,7 +56,7 @@ export const Dashboard: React.FC = () => {
         const { data: formsData } = await supabase
           .from('testimonial_forms')
           .select('id')
-          .eq('user_id', user.id);
+          .eq('outseta_uid', user.sub);
 
         if (formsData && formsData.length > 0) {
           const formIds = formsData.map(f => f.id);

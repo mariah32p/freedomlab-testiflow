@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../contexts/AuthContext';
-import { useSubscription } from '../hooks/useSubscription';
+import { useOutsetaAuth } from '../contexts/OutsetaAuthContext';
+import { useOutsetaSubscription } from '../hooks/useOutsetaSubscription';
 import { UpgradePrompt } from '../components/UpgradePrompt';
 import { TestimonialTagger } from '../components/TestimonialTagger';
 import { supabase } from '../lib/supabase';
@@ -46,8 +46,8 @@ interface TestimonialTag {
   color: string;
 }
 export const Testimonials: React.FC = () => {
-  const { user } = useAuth();
-  const subscription = useSubscription();
+  const { user } = useOutsetaAuth();
+  const outsetaSubscription = useOutsetaSubscription();
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [forms, setForms] = useState<TestimonialForm[]>([]);
   const [tags, setTags] = useState<TestimonialTag[]>([]);
@@ -78,13 +78,13 @@ export const Testimonials: React.FC = () => {
     }
   }, [showActionsFor]);
     useEffect(() => {
-      if (!subscription.loading) {
+      if (!outsetaSubscription.loading) {
         fetchData();
       }
-    }, [user, subscription.loading]);
+    }, [user, outsetaSubscription.loading]);
 
   const fetchData = async () => {
-    if (!user) return;
+    if (!user?.sub) return;
 
     setDataLoading(true);
 
@@ -95,7 +95,7 @@ export const Testimonials: React.FC = () => {
       const { data: formsData, error: formsError } = await supabase
         .from('testimonial_forms')
         .select('id, title')
-        .eq('user_id', user.id);
+        .eq('outseta_uid', user.sub);
 
       if (formsError) throw formsError;
       setForms(formsData || []);
@@ -104,7 +104,7 @@ export const Testimonials: React.FC = () => {
       const { data: tagsData, error: tagsError } = await supabase
         .from('testimonial_tags')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('outseta_uid', user.sub)
         .order('name');
 
       if (tagsError) {
@@ -127,7 +127,7 @@ export const Testimonials: React.FC = () => {
         setTestimonials(testimonialsData || []);
 
         // Get tag assignments for testimonials if Premium
-        if (subscription.limits.canUseTags && testimonialsData && testimonialsData.length > 0) {
+        if (outsetaSubscription.limits.canUseTags && testimonialsData && testimonialsData.length > 0) {
           const testimonialIds = testimonialsData.map(t => t.id);
           
           const { data: tagAssignments, error: tagAssignmentsError } = await supabase
@@ -247,7 +247,7 @@ export const Testimonials: React.FC = () => {
     );
 
     // Apply tag filter if Premium and tag filter is set
-    if (subscription.limits.canUseTags && tagFilter !== 'all') {
+    if (outsetaSubscription.limits.canUseTags && tagFilter !== 'all') {
       filtered = filtered.filter(t => {
         const testimonialTagList = testimonialTags[t.id] || [];
         return testimonialTagList.some(tag => tag.id === tagFilter);
@@ -331,7 +331,7 @@ export const Testimonials: React.FC = () => {
 
   const filteredTestimonials = getFilteredTestimonials();
 
-  if (dataLoading || subscription.loading) {
+  if (dataLoading || outsetaSubscription.loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-950"></div>
@@ -352,7 +352,7 @@ export const Testimonials: React.FC = () => {
               </div>
               <div className="flex space-x-2 items-center">
                 {/* Tag Filter - Premium only */}
-                {subscription.limits.canUseTags && tags.length > 0 && (
+                {outsetaSubscription.limits.canUseTags && tags.length > 0 && (
                   <div className="flex items-center space-x-2">
                     <Filter className="h-4 w-4 text-gray-400" />
                     <select
@@ -390,7 +390,7 @@ export const Testimonials: React.FC = () => {
             </div>
 
             {/* Usage Warning for Standard Plan */}
-            {subscription.plan === 'standard' && subscription.currentUsage.testimonialCount >= 20 && (
+            {outsetaSubscription.plan === 'standard' && outsetaSubscription.currentUsage.testimonialCount >= 20 && (
               <div className="mb-6">
                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                   <div className="flex items-center justify-between">
@@ -399,7 +399,7 @@ export const Testimonials: React.FC = () => {
                         You're approaching your limit
                       </p>
                       <p className="text-yellow-700 text-sm">
-                        {subscription.currentUsage.testimonialCount}/25 testimonials used. Upgrade to Premium for unlimited testimonials.
+                        {outsetaSubscription.currentUsage.testimonialCount}/25 testimonials used. Upgrade to Premium for unlimited testimonials.
                       </p>
                     </div>
                     <button
@@ -414,7 +414,7 @@ export const Testimonials: React.FC = () => {
             )}
 
             {/* At Limit Warning for Standard Plan */}
-            {subscription.plan === 'standard' && subscription.currentUsage.testimonialCount >= 25 && (
+            {outsetaSubscription.plan === 'standard' && outsetaSubscription.currentUsage.testimonialCount >= 25 && (
               <div className="mb-6">
                 <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                   <div className="flex items-center justify-between">
@@ -438,7 +438,7 @@ export const Testimonials: React.FC = () => {
             )}
 
             {/* Standard Plan Tag Restriction Notice */}
-            {!subscription.limits.canUseTags && tags.length > 0 && (
+            {!outsetaSubscription.limits.canUseTags && tags.length > 0 && (
               <div className="mb-6">
                 <UpgradePrompt 
                   feature="Tag Organization"
@@ -819,7 +819,7 @@ export const Testimonials: React.FC = () => {
                     )}
 
                     {/* Tags Section */}
-                    {subscription.limits.canUseTags && (
+                    {outsetaSubscription.limits.canUseTags && (
                       <div className="mb-6">
                         <h3 className="text-sm font-medium text-gray-700 mb-3">Tags</h3>
                         {tags.length === 0 ? (

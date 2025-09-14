@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../contexts/AuthContext';
+import { useOutsetaAuth } from '../contexts/OutsetaAuthContext';
 import { supabase } from '../lib/supabase';
 import { X, Plus } from 'lucide-react';
 
@@ -18,7 +18,7 @@ export const TestimonialTagger: React.FC<TestimonialTaggerProps> = ({
   testimonialId,
   onTagsChange
 }) => {
-  const { user } = useAuth();
+  const { user } = useOutsetaAuth();
   const [availableTags, setAvailableTags] = useState<TestimonialTag[]>([]);
   const [assignedTags, setAssignedTags] = useState<TestimonialTag[]>([]);
   const [loading, setLoading] = useState(true);
@@ -29,14 +29,14 @@ export const TestimonialTagger: React.FC<TestimonialTaggerProps> = ({
   }, [user, testimonialId]);
 
   const fetchTags = async () => {
-    if (!user) return;
+    if (!user?.sub) return;
 
     try {
       // Get all user's tags
       const { data: allTags, error: tagsError } = await supabase
         .from('testimonial_tags')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('outseta_uid', user.sub)
         .order('name');
 
       if (tagsError) throw tagsError;

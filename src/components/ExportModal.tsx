@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Download, FileText, Code, X, Copy, CheckCircle, Eye, Star } from 'lucide-react';
 import { ExportTestimonial, exportToCSV, exportToJSON, generateSocialMediaPost, generateWebsiteWidget } from '../utils/exportUtils';
-import { useAuth } from '../contexts/AuthContext';
-import { useSubscription } from '../hooks/useSubscription';
+import { useOutsetaAuth } from '../contexts/OutsetaAuthContext';
+import { useOutsetaSubscription } from '../hooks/useOutsetaSubscription';
 import { supabase } from '../lib/supabase';
 
 interface ExportModalProps {
@@ -12,8 +12,8 @@ interface ExportModalProps {
 }
 
 export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose, onSuccess }) => {
-  const { user } = useAuth();
-  const subscription = useSubscription();
+  const { user } = useOutsetaAuth();
+  const outsetaSubscription = useOutsetaSubscription();
   const [selectedFormat, setSelectedFormat] = useState<'csv' | 'json' | 'social' | 'widget'>('csv');
   const [selectedTestimonials, setSelectedTestimonials] = useState<string[]>([]);
   const [selectAll, setSelectAll] = useState(true);
@@ -26,13 +26,13 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
   // Fetch user's branding
   useEffect(() => {
     const fetchBranding = async () => {
-      if (!user) return;
+      if (!user?.sub) return;
       
       try {
         const { data } = await supabase
           .from('form_branding')
           .select('primary_color, secondary_color, font_family')
-          .eq('user_id', user.id)
+          .eq('outseta_uid', user.sub)
           .maybeSingle();
         
         if (data) {
@@ -158,7 +158,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
     }
   };
 
-  if (subscription.loading) {
+  if (outsetaSubscription.loading) {
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
         <div className="bg-white rounded-lg p-6">
@@ -265,9 +265,9 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
 
                     <button
                       onClick={() => setSelectedFormat('json')}
-                      disabled={!subscription.limits.canUseAdvancedExports}
+                      disabled={!outsetaSubscription.limits.canUseAdvancedExports}
                       className={`w-full p-4 border rounded-lg text-left transition-colors relative ${
-                        !subscription.limits.canUseAdvancedExports
+                        !outsetaSubscription.limits.canUseAdvancedExports
                           ? 'border-gray-200 bg-gray-50 opacity-50 cursor-not-allowed'
                           : 
                         selectedFormat === 'json'
@@ -280,12 +280,12 @@ export const ExportModal: React.FC<ExportModalProps> = ({ testimonials, onClose,
                         <div>
                           <div className="font-medium">JSON Data</div>
                           <div className="text-sm text-gray-500">For developers and integrations</div>
-                          {!subscription.limits.canUseAdvancedExports && (
+                          {!outsetaSubscription.limits.canUseAdvancedExports && (
                             <div className="text-xs text-accent-600 font-medium">Premium Feature</div>
                           )}
                         </div>
                       </div>
-                      {!subscription.limits.canUseAdvancedExports && (
+                      {!outsetaSubscription.limits.canUseAdvancedExports && (
                         <div className="absolute inset-0 bg-gray-100 bg-opacity-75 rounded-lg flex items-center justify-center">
                           <span className="text-xs text-gray-600 font-medium">Premium Only</span>
                         </div>
