@@ -1,28 +1,21 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './contexts/AuthContext';
-import { ProtectedRoute } from './components/ProtectedRoute';
-import { useRouteGuard } from './hooks/useRouteGuard';
-import { Navbar } from './components/Navbar';
+import { OutsetaAuthProvider } from './contexts/OutsetaAuthContext';
+import { OutsetaProtectedRoute } from './components/OutsetaProtectedRoute';
+import { useOutsetaRouteGuard } from './hooks/useOutsetaRouteGuard';
+import { OutsetaNavbar } from './components/OutsetaNavbar';
 import { Home } from './pages/Home';
-import { Login } from './pages/Login';
-import { Signup } from './pages/Signup';
+import { OutsetaHome } from './pages/OutsetaHome';
 import { Dashboard } from './pages/Dashboard';
-import { Pricing } from './pages/Pricing.tsx';
-import { Success } from './pages/Success.tsx';
-import { Settings } from './pages/Settings';
-import { GetStarted } from './pages/GetStarted';
-import { ForgotPassword } from './pages/ForgotPassword';
-import { ResetPassword } from './pages/ResetPassword';
+import { OutsetaPricing } from './pages/OutsetaPricing';
 import { Forms } from './pages/Forms';
 import { Testimonials } from './pages/Testimonials';
 import { SubmitTestimonial } from './pages/SubmitTestimonial';
 import { Branding } from './pages/Branding';
 import { Demo } from './pages/Demo';
 import { Tags } from './pages/Tags';
-import { TestEmailNotification } from './pages/TestEmailNotification';
 
 const AppContent: React.FC = () => {
-  useRouteGuard();
+  useOutsetaRouteGuard();
 
   return (
     <Routes>
@@ -35,70 +28,48 @@ const AppContent: React.FC = () => {
       {/* All other routes with navbar */}
       <Route path="/*" element={
         <div className="min-h-screen bg-gray-50">
-          <Navbar />
+          <OutsetaNavbar />
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/pricing" element={<Pricing />} />
-            <Route path="/get-started" element={<GetStarted />} />
-            <Route path="/success" element={<Success />} />
+            <Route path="/" element={<OutsetaHome />} />
+            <Route path="/pricing" element={<OutsetaPricing />} />
             <Route
               path="/forms"
               element={
-                <ProtectedRoute>
+                <OutsetaProtectedRoute>
                   <Forms />
-                </ProtectedRoute>
+                </OutsetaProtectedRoute>
               }
             />
             <Route
               path="/branding"
               element={
-                <ProtectedRoute>
+                <OutsetaProtectedRoute>
                   <Branding />
-                </ProtectedRoute>
+                </OutsetaProtectedRoute>
               }
             />
             <Route
               path="/tags"
               element={
-                <ProtectedRoute>
+                <OutsetaProtectedRoute>
                   <Tags />
-                </ProtectedRoute>
+                </OutsetaProtectedRoute>
               }
             />
             <Route
               path="/testimonials"
               element={
-                <ProtectedRoute>
+                <OutsetaProtectedRoute>
                   <Testimonials />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/settings"
-              element={
-                <ProtectedRoute>
-                  <Settings />
-                </ProtectedRoute>
+                </OutsetaProtectedRoute>
               }
             />
             <Route
               path="/dashboard"
               element={
-                <ProtectedRoute>
+                <OutsetaProtectedRoute>
                   <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/test-email"
-              element={
-                <ProtectedRoute>
-                  <TestEmailNotification />
-                </ProtectedRoute>
+                </OutsetaProtectedRoute>
               }
             />
           </Routes>
@@ -110,11 +81,11 @@ const AppContent: React.FC = () => {
 
 function App() {
   return (
-    <AuthProvider>
+    <OutsetaAuthProvider>
       <Router>
         <AppContent />
       </Router>
-    </AuthProvider>
+    </OutsetaAuthProvider>
   );
 }
 

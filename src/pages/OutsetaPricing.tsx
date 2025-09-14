@@ -1,16 +1,16 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
 import { Check, ArrowRight } from 'lucide-react';
 import { TestiFlowIcon } from '../components/TestiFlowIcon';
+import { initializeOutseta, triggerSignup } from '../lib/outseta';
 
-export const Pricing: React.FC = () => {
-  const navigate = useNavigate();
-  const [error] = React.useState<string>('');
-  const [loading] = React.useState<boolean>(false);
+export const OutsetaPricing: React.FC = () => {
+  useEffect(() => {
+    // Initialize Outseta when component mounts
+    initializeOutseta();
+  }, []);
 
-  const handleSignupClick = () => {
-    navigate('/signup');
-    window.scrollTo(0, 0);
+  const handleGetStarted = () => {
+    triggerSignup();
   };
 
   return (
@@ -18,9 +18,9 @@ export const Pricing: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <div className="flex justify-center mb-8">
-            <div className="flex items-center space-x-2 bg-teal/10 px-4 py-2 rounded-full">
-              <TestiFlowIcon className="h-6 w-6 text-teal" />
-              <span className="text-teal font-semibold">TestiFlow Pricing</span>
+            <div className="flex items-center space-x-2 bg-primary-100 px-4 py-2 rounded-full">
+              <TestiFlowIcon className="h-6 w-6 text-primary-950" />
+              <span className="text-primary-950 font-semibold">TestiFlow Pricing</span>
             </div>
           </div>
           
@@ -45,14 +45,14 @@ export const Pricing: React.FC = () => {
             </div>
             
             <div className="px-6 py-8">
-              <ul className="space-y-4 mb-8">
+              <ul className="space-y-4">
                 {[
-                  'Unlimited testimonials & forms',
-                  'Custom fields & branding',
-                  'Image + video testimonials - Rich media collection',
-                  'Website widget generator',
-                  'Advanced exports (JSON, social media posts)',
-                  'Tag organization',
+                  'Up to 25 testimonials',
+                  '1 collection form',
+                  'Basic approval workflow',
+                  'Image uploads',
+                  'CSV export',
+                  'Email notifications',
                 ].map((feature, index) => (
                   <li key={index} className="flex items-center">
                     <Check className="h-5 w-5 text-secondary-500 mr-3 flex-shrink-0" />
@@ -64,13 +64,13 @@ export const Pricing: React.FC = () => {
           </div>
 
           {/* Premium Plan */}
-          <div className="bg-white rounded-2xl shadow-lg overflow-hidden border-2 border-gray-300 opacity-60 cursor-not-allowed pointer-events-none relative">
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden border-2 border-primary-500 relative">
             <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
-              <span className="bg-gray-500 text-white px-4 py-1 rounded-full text-sm font-semibold shadow-lg">
-                COMING SOON
+              <span className="bg-primary-500 text-white px-4 py-1 rounded-full text-sm font-semibold shadow-lg">
+                MOST POPULAR
               </span>
             </div>
-            <div className="bg-gray-500 px-6 py-8 text-center">
+            <div className="bg-primary-500 px-6 py-8 text-center">
               <h3 className="text-2xl font-bold text-white">Premium</h3>
               <div className="mt-4 flex items-baseline justify-center">
                 <span className="text-5xl font-bold text-white">$49</span>
@@ -79,18 +79,15 @@ export const Pricing: React.FC = () => {
               <p className="mt-2 text-white/90">Complete solution for growing businesses</p>
             </div>
             
-            <div className="px-6 py-8 relative">
-              <div className="absolute inset-0 bg-gray-100 bg-opacity-75 rounded-b-2xl flex items-center justify-center">
-                <span className="text-gray-600 font-semibold">Coming Soon</span>
-              </div>
-              <ul className="space-y-4 mb-8">
+            <div className="px-6 py-8">
+              <ul className="space-y-4">
                 {[
-                  'Everything in Standard, plus:',
-                  'Advanced analytics & insights',
-                  'White-label branding removal',
-                  'Priority support',
-                  'API access for integrations',
-                  'Custom domain support',
+                  'Unlimited testimonials & forms',
+                  'Custom fields & branding',
+                  'Image + video testimonials',
+                  'Website widget generator',
+                  'Advanced exports (JSON, CSV)',
+                  'Tag organization',
                 ].map((feature, index) => (
                   <li key={index} className="flex items-center">
                     <Check className="h-5 w-5 text-secondary-500 mr-3 flex-shrink-0" />
@@ -109,25 +106,18 @@ export const Pricing: React.FC = () => {
               Ready to Get Started?
             </h3>
             <p className="text-gray-600 mb-6">
-              Choose your plan after signing up. Start with a 7-day free trial.
+              Start with a 7-day free trial. Choose your plan during signup.
             </p>
             
-            {error && (
-              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-                <p className="text-red-800 text-sm">{error}</p>
-              </div>
-            )}
-            
             <button
-              onClick={handleSignupClick}
-              disabled={loading}
-              className="w-full bg-primary-950 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-900 transition-colors flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={handleGetStarted}
+              className="w-full bg-primary-950 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-900 transition-colors flex items-center justify-center space-x-2"
             >
               <span>Start Free Trial</span>
               <ArrowRight className="h-5 w-5" />
             </button>
             <p className="text-sm text-gray-500 text-center mt-2">
-              7-day free trial
+              7-day free trial • Cancel anytime
             </p>
           </div>
         </div>
