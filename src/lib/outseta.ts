@@ -258,10 +258,9 @@ export const initializeOutseta = (): Promise<void> => {
 
 // Outseta embed triggers
 export const triggerSignup = async () => {
-  await initializeOutseta();
-  if (typeof window !== 'undefined' && window.Outseta) {
-    window.Outseta.getSignupWidget().open();
-  }
+  // For embedded signup, we don't need to trigger anything
+  // The embedded div handles the signup flow
+  console.log('Signup triggered - embedded form should handle this');
 };
 
 export const triggerLogin = async () => {

@@ -35,7 +35,8 @@ export const OutsetaNavbar = () => {
   };
 
   const handleSignup = async () => {
-    await triggerSignup();
+    // Navigate to pricing page where embedded signup form is located
+    window.location.href = '/pricing';
     setMobileMenuOpen(false);
   };
 

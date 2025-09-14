@@ -17,7 +17,8 @@ export const OutsetaHome: React.FC = () => {
   }, []);
 
   const handleGetStarted = async () => {
-    await triggerSignup();
+    // Navigate to pricing page where embedded signup form is located
+    window.location.href = '/pricing';
   };
 
   return (

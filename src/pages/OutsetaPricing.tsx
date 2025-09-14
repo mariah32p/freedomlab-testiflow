@@ -14,7 +14,11 @@ export const OutsetaPricing: React.FC = () => {
   }, []);
 
   const handleGetStarted = async () => {
-    await triggerSignup();
+    // Scroll to the embedded signup form
+    const signupElement = document.getElementById('embedded-signup');
+    if (signupElement) {
+      signupElement.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
@@ -100,7 +104,8 @@ export const OutsetaPricing: React.FC = () => {
         </div>
         
         {/* Single CTA Section */}
-        <div className="text-center mt-16">
+        {/* Embedded Signup Section */}
+        <div className="text-center mt-16" id="embedded-signup">
           <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 max-w-md mx-auto">
             <h3 className="text-2xl font-bold text-primary-950 mb-4">
               Ready to Get Started?
@@ -109,14 +114,18 @@ export const OutsetaPricing: React.FC = () => {
               Start with a 7-day free trial. Get access to all Standard plan features.
             </p>
             
-            <button
-              onClick={handleGetStarted}
-              className="w-full bg-primary-950 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-900 transition-colors flex items-center justify-center space-x-2"
-            >
-              <span>Start Free Trial</span>
-              <ArrowRight className="h-5 w-5" />
-            </button>
-            <p className="text-sm text-gray-500 text-center mt-2">
+            {/* Embedded Outseta Signup Form */}
+            <div 
+              data-o-auth="1"
+              data-widget-mode="register"
+              data-plan-uid="jW78klmq"
+              data-plan-payment-term="month"
+              data-skip-plan-options="true"
+              data-mode="embed"
+              className="min-h-[400px]"
+            ></div>
+            
+            <p className="text-sm text-gray-500 text-center mt-4">
               7-day free trial • Cancel anytime
             </p>
           </div>
