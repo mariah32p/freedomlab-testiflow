@@ -35,8 +35,8 @@ export const OutsetaNavbar = () => {
   };
 
   const handleSignup = async () => {
-  const handleLogin = async () => {
-    await triggerLogin();
+    await triggerSignup();
+    setMobileMenuOpen(false);
   };
 
   const handleProfile = async () => {
