@@ -1,6 +1,8 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(import.meta.env.VITE_RESEND_API_KEY);
+const resend = import.meta.env.VITE_RESEND_API_KEY 
+  ? new Resend(import.meta.env.VITE_RESEND_API_KEY)
+  : null;
 
 export interface EmailTemplate {
   to: string;
@@ -10,6 +12,11 @@ export interface EmailTemplate {
 }
 
 export const sendEmail = async (template: EmailTemplate) => {
+  if (!resend) {
+    console.warn('Resend API key not configured - email sending disabled');
+    return { success: false, data: null };
+  }
+
   try {
     const { data, error } = await resend.emails.send({
       from: 'TestiFlow by Freedom Lab <info@freedomlab.ai>',
