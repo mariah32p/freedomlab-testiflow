@@ -27,11 +27,15 @@ export const OutsetaAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
   useEffect(() => {
     console.log('OutsetaAuth: Initializing...');
     
-    // Initialize Outseta script
-    initializeOutseta();
-
-    // Check for existing token in localStorage or URL
-    checkAuthState();
+    const initialize = async () => {
+      // Initialize Outseta script and wait for it to be ready
+      await initializeOutseta();
+      
+      // Check for existing token in localStorage or URL
+      checkAuthState();
+    };
+    
+    initialize();
 
     // Listen for auth state changes from Outseta embeds
     const handleMessage = (event: MessageEvent) => {

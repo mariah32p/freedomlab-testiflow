@@ -34,13 +34,13 @@ export const OutsetaNavbar = () => {
     setMobileMenuOpen(false);
   };
 
-  const handleSignup = () => {
-    triggerSignup();
-    setMobileMenuOpen(false);
+  const handleSignup = async () => {
+  const handleLogin = async () => {
+    await triggerLogin();
   };
 
-  const handleProfile = () => {
-    triggerProfile();
+  const handleProfile = async () => {
+    await triggerProfile();
     setMobileMenuOpen(false);
   };
 

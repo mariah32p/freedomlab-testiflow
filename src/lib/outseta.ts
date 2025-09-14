@@ -130,43 +130,76 @@ export const hasActiveSubscription = (jwt: OutsetaJWT): boolean => {
 };
 
 // Initialize Outseta script
-export const initializeOutseta = () => {
+export const initializeOutseta = (): Promise<void> => {
   if (typeof window === 'undefined') return;
 
-  // Add Outseta script if not already present
-  if (!document.querySelector('script[src*="outseta.min.js"]')) {
-    const script = document.createElement('script');
-    script.src = 'https://cdn.outseta.com/outseta.min.js';
-    script.setAttribute('data-options', 'o_options');
-    
-    // Add configuration
-    const configScript = document.createElement('script');
-    configScript.innerHTML = `
-      var o_options = {
-        domain: '${OUTSETA_CONFIG.domain}'
+  return new Promise((resolve) => {
+    // If Outseta is already loaded and ready, resolve immediately
+    if (window.Outseta && window.Outseta.getSignupWidget) {
+      resolve();
+      return;
+    }
+
+    // Add Outseta script if not already present
+    if (!document.querySelector('script[src*="outseta.min.js"]')) {
+      const script = document.createElement('script');
+      script.src = 'https://cdn.outseta.com/outseta.min.js';
+      script.setAttribute('data-options', 'o_options');
+      
+      script.onload = () => {
+        // Poll for Outseta widget methods to be available
+        const checkOutsetaReady = () => {
+          if (window.Outseta && window.Outseta.getSignupWidget) {
+            resolve();
+          } else {
+            setTimeout(checkOutsetaReady, 100);
+          }
+        };
+        checkOutsetaReady();
       };
-    `;
-    
-    document.head.appendChild(configScript);
-    document.head.appendChild(script);
-  }
+      
+      // Add configuration
+      const configScript = document.createElement('script');
+      configScript.innerHTML = `
+        var o_options = {
+          domain: '${OUTSETA_CONFIG.domain}'
+        };
+      `;
+      
+      document.head.appendChild(configScript);
+      document.head.appendChild(script);
+    } else {
+      // Script exists, poll for readiness
+      const checkOutsetaReady = () => {
+        if (window.Outseta && window.Outseta.getSignupWidget) {
+          resolve();
+        } else {
+          setTimeout(checkOutsetaReady, 100);
+        }
+      };
+      checkOutsetaReady();
+    }
+  });
 };
 
 // Outseta embed triggers
-export const triggerSignup = () => {
-  if (typeof window !== 'undefined' && (window as any).Outseta) {
-    (window as any).Outseta.getSignupWidget().open();
+export const triggerSignup = async () => {
+  await initializeOutseta();
+  if (typeof window !== 'undefined' && window.Outseta) {
+    window.Outseta.getSignupWidget().open();
   }
 };
 
-export const triggerLogin = () => {
-  if (typeof window !== 'undefined' && (window as any).Outseta) {
-    (window as any).Outseta.getLoginWidget().open();
+export const triggerLogin = async () => {
+  await initializeOutseta();
+  if (typeof window !== 'undefined' && window.Outseta) {
+    window.Outseta.getLoginWidget().open();
   }
 };
 
-export const triggerProfile = () => {
-  if (typeof window !== 'undefined' && (window as any).Outseta) {
-    (window as any).Outseta.getProfileWidget().open();
+export const triggerProfile = async () => {
+  await initializeOutseta();
+  if (typeof window !== 'undefined' && window.Outseta) {
+    window.Outseta.getProfileWidget().open();
   }
 };

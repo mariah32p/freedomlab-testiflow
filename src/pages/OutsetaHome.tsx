@@ -5,12 +5,16 @@ import { initializeOutseta, triggerSignup } from '../lib/outseta';
 
 export const OutsetaHome: React.FC = () => {
   useEffect(() => {
-    // Initialize Outseta when component mounts
-    initializeOutseta();
+    const initialize = async () => {
+      // Initialize Outseta when component mounts and wait for it to be ready
+      await initializeOutseta();
+    };
+    
+    initialize();
   }, []);
 
-  const handleGetStarted = () => {
-    triggerSignup();
+  const handleGetStarted = async () => {
+    await triggerSignup();
   };
 
   return (
