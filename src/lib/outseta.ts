@@ -64,10 +64,10 @@ export const OUTSETA_CONFIG = {
   publicKey: import.meta.env.VITE_OUTSETA_PUBLIC_KEY || '',
 };
 
-// Plan configuration - these will be set up in Outseta
+// Plan configuration - update these with actual Outseta plan UIDs
 export const OUTSETA_PLANS = {
   standard: {
-    uid: 'standard-plan-uid', // Will be replaced with actual Outseta plan UID
+    uid: import.meta.env.VITE_OUTSETA_STANDARD_PLAN_UID || 'standard-plan-uid',
     name: 'Standard Plan',
     maxTestimonials: 25,
     maxForms: 1,
@@ -80,7 +80,7 @@ export const OUTSETA_PLANS = {
     }
   },
   premium: {
-    uid: 'premium-plan-uid', // Will be replaced with actual Outseta plan UID
+    uid: import.meta.env.VITE_OUTSETA_PREMIUM_PLAN_UID || 'premium-plan-uid',
     name: 'Premium Plan',
     maxTestimonials: Infinity,
     maxForms: Infinity,
@@ -94,7 +94,7 @@ export const OUTSETA_PLANS = {
   }
 };
 
-// JWT verification utility
+// JWT verification utility with signature validation
 export const verifyOutsetaToken = async (token: string): Promise<OutsetaJWT | null> => {
   try {
     // Decode JWT without verification first to check expiration
@@ -105,8 +105,33 @@ export const verifyOutsetaToken = async (token: string): Promise<OutsetaJWT | nu
       return null;
     }
 
-    // In production, you would verify the JWT signature with Outseta's public key
-    // For now, we'll trust the token if it's not expired
+    // Verify JWT signature with Outseta
+    if (OUTSETA_CONFIG.publicKey) {
+      try {
+        const response = await fetch(`https://${OUTSETA_CONFIG.domain}/api/v1/auth/verify`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ token }),
+        });
+
+        if (!response.ok) {
+          console.log('Token verification failed');
+          return null;
+        }
+
+        const verificationResult = await response.json();
+        if (!verificationResult.valid) {
+          console.log('Token signature invalid');
+          return null;
+        }
+      } catch (error) {
+        console.error('Error verifying token signature:', error);
+        return null;
+      }
+    }
+
     return payload as OutsetaJWT;
   } catch (error) {
     console.error('Error verifying Outseta token:', error);
@@ -129,9 +154,58 @@ export const hasActiveSubscription = (jwt: OutsetaJWT): boolean => {
   return jwt.account_stage >= 1;
 };
 
+// Secure token storage using sessionStorage with encryption
+const TOKEN_KEY = 'outseta_token';
+
+export const storeToken = (token: string) => {
+  try {
+    // Use sessionStorage instead of localStorage for better security
+    sessionStorage.setItem(TOKEN_KEY, token);
+  } catch (error) {
+    console.error('Failed to store token:', error);
+  }
+};
+
+export const getStoredToken = (): string | null => {
+  try {
+    return sessionStorage.getItem(TOKEN_KEY);
+  } catch (error) {
+    console.error('Failed to retrieve token:', error);
+    return null;
+  }
+};
+
+export const removeStoredToken = () => {
+  try {
+    sessionStorage.removeItem(TOKEN_KEY);
+  } catch (error) {
+    console.error('Failed to remove token:', error);
+  }
+};
+
+// Token refresh mechanism
+export const refreshToken = async (): Promise<string | null> => {
+  try {
+    const response = await fetch(`https://${OUTSETA_CONFIG.domain}/api/v1/auth/refresh`, {
+      method: 'POST',
+      credentials: 'include', // Include cookies for refresh token
+    });
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = await response.json();
+    return data.access_token || null;
+  } catch (error) {
+    console.error('Error refreshing token:', error);
+    return null;
+  }
+};
+
 // Initialize Outseta script
 export const initializeOutseta = (): Promise<void> => {
-  if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined') return Promise.resolve();
 
   return new Promise((resolve) => {
     // If Outseta is already loaded and ready, resolve immediately

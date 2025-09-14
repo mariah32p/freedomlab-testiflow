@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { OutsetaJWT, verifyOutsetaToken, getUserPlan, hasActiveSubscription, initializeOutseta } from '../lib/outseta';
+import { OutsetaJWT, verifyOutsetaToken, getUserPlan, hasActiveSubscription, initializeOutseta, storeToken, getStoredToken, removeStoredToken, refreshToken } from '../lib/outseta';
+import { supabase } from '../lib/supabase';
 
 interface OutsetaAuthContextType {
   user: OutsetaJWT | null;
@@ -68,8 +69,34 @@ export const OutsetaAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
     };
   }, []);
 
+  // Token refresh mechanism
+  useEffect(() => {
+    if (!user) return;
+
+    const checkTokenExpiry = async () => {
+      const token = getStoredToken();
+      if (!token) return;
+
+      const jwt = await verifyOutsetaToken(token);
+      if (!jwt) {
+        // Token expired or invalid, try to refresh
+        const newToken = await refreshToken();
+        if (newToken) {
+          handleAuthToken(newToken);
+        } else {
+          // Refresh failed, sign out
+          handleSignOut();
+        }
+      }
+    };
+
+    // Check token every 5 minutes
+    const interval = setInterval(checkTokenExpiry, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, [user]);
+
   const checkAuthState = async () => {
-    const token = localStorage.getItem('outseta_access_token');
+    const token = getStoredToken();
     
     if (token) {
       console.log('OutsetaAuth: Found stored token, verifying...');
@@ -80,7 +107,7 @@ export const OutsetaAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
         setUser(jwt);
       } else {
         console.log('OutsetaAuth: Token invalid, clearing storage');
-        localStorage.removeItem('outseta_access_token');
+        removeStoredToken();
       }
     } else {
       console.log('OutsetaAuth: No stored token found');
@@ -96,7 +123,7 @@ export const OutsetaAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
     
     if (jwt) {
       console.log('OutsetaAuth: Token verified, storing user:', jwt.email);
-      localStorage.setItem('outseta_access_token', token);
+      storeToken(token);
       setUser(jwt);
       
       // Sync user data to Supabase for testimonial management
@@ -108,20 +135,30 @@ export const OutsetaAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   const syncUserToSupabase = async (jwt: OutsetaJWT) => {
     try {
-      // We'll keep using Supabase for testimonial data storage
-      // but use Outseta user ID as the primary key
       console.log('OutsetaAuth: Syncing user to Supabase:', jwt.sub);
       
-      // This will be implemented when we update the database schema
-      // For now, just log the user data
-      console.log('OutsetaAuth: User data to sync:', {
-        outseta_uid: jwt.sub,
-        email: jwt.email,
-        name: jwt.name,
-        account_uid: jwt.account_uid,
-        plan: getUserPlan(jwt),
-        account_stage: jwt.account_stage
-      });
+      // Upsert user data to outseta_users table
+      const { error } = await supabase
+        .from('outseta_users')
+        .upsert({
+          outseta_uid: jwt.sub,
+          email: jwt.email,
+          first_name: jwt.name?.split(' ')[0] || '',
+          last_name: jwt.name?.split(' ').slice(1).join(' ') || '',
+          full_name: jwt.name || '',
+          account_uid: jwt.account_uid,
+          plan_uid: jwt.plan_uid || null,
+          account_stage: jwt.account_stage,
+          last_sync_at: new Date().toISOString()
+        }, {
+          onConflict: 'outseta_uid'
+        });
+
+      if (error) {
+        console.error('OutsetaAuth: Error syncing to Supabase:', error);
+      } else {
+        console.log('OutsetaAuth: User synced successfully');
+      }
     } catch (error) {
       console.error('OutsetaAuth: Error syncing user to Supabase:', error);
     }
@@ -129,7 +166,7 @@ export const OutsetaAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   const handleSignOut = () => {
     console.log('OutsetaAuth: Signing out user');
-    localStorage.removeItem('outseta_access_token');
+    removeStoredToken();
     setUser(null);
   };
 
