@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../contexts/AuthContext';
-import { useSubscription } from '../hooks/useSubscription';
+import { useOutsetaAuth } from '../contexts/OutsetaAuthContext';
+import { useOutsetaSubscription } from '../hooks/useOutsetaSubscription';
 import { UpgradePrompt } from '../components/UpgradePrompt';
 import { supabase } from '../lib/supabase';
 import { Upload, Eye, Save, RotateCcw } from 'lucide-react';
@@ -37,8 +37,8 @@ const PRESET_COLORS = [
 ];
 
 export const Branding: React.FC = () => {
-  const { user } = useAuth();
-  const subscription = useSubscription();
+  const { user } = useOutsetaAuth();
+  const outsetaSubscription = useOutsetaSubscription();
   const [, setBranding] = useState<FormBranding | null>(null);
   const [brandingLoading, setBrandingLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -57,7 +57,7 @@ export const Branding: React.FC = () => {
   }, [user]);
 
     const fetchBranding = async () => {
-      if (!user) return;
+      if (!user?.sub) return;
 
       setBrandingLoading(true);
 
@@ -65,7 +65,7 @@ export const Branding: React.FC = () => {
         const { data, error } = await supabase
         .from('form_branding')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('outseta_uid', user.sub)
         .maybeSingle();
 
       if (error && error.code !== 'PGRST116') { // PGRST116 = no rows found
@@ -90,7 +90,7 @@ export const Branding: React.FC = () => {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) return;
+    if (!user?.sub) return;
 
     setSaving(true);
     setError(null);
@@ -98,7 +98,7 @@ export const Branding: React.FC = () => {
 
     try {
       const brandingData = {
-        user_id: user.id,
+        outseta_uid: user.sub,
         logo_url: logoUrl.trim() || null,
         primary_color: primaryColor,
         secondary_color: secondaryColor,
@@ -109,7 +109,7 @@ export const Branding: React.FC = () => {
       const { data, error } = await supabase
         .from('form_branding')
         .upsert(brandingData, {
-          onConflict: 'user_id',
+          onConflict: 'outseta_uid',
         })
         .select()
         .single();
@@ -177,7 +177,7 @@ export const Branding: React.FC = () => {
     }
   };
 
-  if (brandingLoading || subscription.loading) {
+  if (brandingLoading || outsetaSubscription.loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-950"></div>

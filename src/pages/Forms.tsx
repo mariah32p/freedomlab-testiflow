@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../contexts/AuthContext';
-import { useSubscription } from '../hooks/useSubscription';
+import { useOutsetaAuth } from '../contexts/OutsetaAuthContext';
+import { useOutsetaSubscription } from '../hooks/useOutsetaSubscription';
 import { UpgradePrompt } from '../components/UpgradePrompt';
 import { supabase } from '../lib/supabase';
 import { Plus, Edit, Trash2, ExternalLink, Copy, Eye, Settings, X, Calendar, ToggleLeft, ToggleRight, FileText } from 'lucide-react';
@@ -23,8 +23,8 @@ interface TestimonialForm {
 }
 
 export const Forms: React.FC = () => {
-  const { user } = useAuth();
-  const subscription = useSubscription();
+  const { user } = useOutsetaAuth();
+  const outsetaSubscription = useOutsetaSubscription();
   const [forms, setForms] = useState<TestimonialForm[]>([]);
   const [formsLoading, setFormsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -88,14 +88,14 @@ export const Forms: React.FC = () => {
 
   const handleCreateForm = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) return;
+    if (!user?.sub) return;
 
     try {
       setError(null);
       const { data, error } = await supabase
         .from('testimonial_forms')
         .insert([{
-          user_id: user.id,
+          outseta_uid: user.sub,
           title: formData.title,
           description: formData.description,
           thank_you_message: formData.thank_you_message,
@@ -130,7 +130,7 @@ export const Forms: React.FC = () => {
 
   const handleUpdateForm = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user || !editingForm) return;
+    if (!user?.sub || !editingForm) return;
 
     try {
       setError(null);
@@ -146,7 +146,7 @@ export const Forms: React.FC = () => {
           max_video_size_mb: formData.max_video_size_mb
         })
         .eq('id', editingForm.id)
-        .eq('user_id', user.id)
+        .eq('outseta_uid', user.sub)
         .select()
         .single();
 
@@ -177,7 +177,7 @@ export const Forms: React.FC = () => {
         .from('testimonial_forms')
         .update({ is_active: !form.is_active })
         .eq('id', form.id)
-        .eq('user_id', user!.id);
+        .eq('outseta_uid', user!.sub);
 
       if (error) throw error;
 
@@ -197,7 +197,7 @@ export const Forms: React.FC = () => {
         .from('testimonial_forms')
         .delete()
         .eq('id', formId)
-        .eq('user_id', user!.id);
+        .eq('outseta_uid', user!.sub);
 
       if (error) throw error;
 
@@ -262,7 +262,7 @@ export const Forms: React.FC = () => {
     setShowCreateForm(true);
   };
 
-  if (formsLoading || subscription.loading) {
+  if (formsLoading || outsetaSubscription.loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-950"></div>
