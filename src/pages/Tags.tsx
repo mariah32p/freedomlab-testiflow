@@ -1,10 +1,10 @@
 import React from 'react';
-import { useSubscription } from '../hooks/useSubscription';
+import { useOutsetaSubscription } from '../hooks/useOutsetaSubscription';
 import { UpgradePrompt } from '../components/UpgradePrompt';
 import { TagManager } from '../components/TagManager';
 
 export const Tags: React.FC = () => {
-  const subscription = useSubscription();
+  const subscription = useOutsetaSubscription();
 
   if (subscription.loading) {
     return (
