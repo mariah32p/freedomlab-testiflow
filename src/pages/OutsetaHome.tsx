@@ -1,9 +1,12 @@
 import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Star, MessageSquare, CheckCircle, Users, Zap, Shield, Check, FileText, Code } from 'lucide-react';
 import { TestiFlowIcon } from '../components/TestiFlowIcon';
 import { initializeOutseta, triggerSignup } from '../lib/outseta';
 
 export const OutsetaHome: React.FC = () => {
+  const navigate = useNavigate();
+
   useEffect(() => {
     const initialize = async () => {
       // Initialize Outseta when component mounts and wait for it to be ready
@@ -52,9 +55,11 @@ export const OutsetaHome: React.FC = () => {
         </div>
         <div className="mt-8 lg:mt-0 lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2 lg:pt-20 xl:pt-24">
           <div className="h-64 w-full sm:h-80 md:h-96 lg:h-full flex items-center justify-center py-4 sm:py-8 lg:py-12">
-            {/* Dashboard Mockup - Same as before */}
+            {/* Main Dashboard Mockup */}
             <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto px-4 sm:px-4 lg:px-2">
+              {/* Browser Window */}
               <div className="bg-white rounded-lg sm:rounded-xl shadow-xl border border-gray-200 overflow-hidden transform hover:scale-105 transition-all duration-500 hover:shadow-2xl w-full">
+                {/* Browser Header */}
                 <div className="bg-gray-100 px-2 sm:px-3 py-1 sm:py-2 flex items-center space-x-2 border-b border-gray-200">
                   <div className="flex space-x-2">
                     <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-red-400 rounded-full"></div>
@@ -67,7 +72,9 @@ export const OutsetaHome: React.FC = () => {
                   </div>
                 </div>
                 
+                {/* Dashboard Content */}
                 <div className="bg-white">
+                  {/* Top Navigation */}
                   <div className="bg-white border-b border-gray-100 px-2 sm:px-4 py-1 sm:py-2">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-1 sm:space-x-2">
@@ -82,6 +89,7 @@ export const OutsetaHome: React.FC = () => {
                     </div>
                   </div>
                   
+                  {/* Dashboard Stats */}
                   <div className="p-2 sm:p-3 md:p-4">
                     <div className="grid grid-cols-3 gap-1 sm:gap-2 md:gap-3 mb-2 sm:mb-3 md:mb-4">
                       <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-1 sm:p-2 md:p-3 rounded border sm:rounded-lg border-blue-100 animate-slide-up">
@@ -113,9 +121,11 @@ export const OutsetaHome: React.FC = () => {
                       </div>
                     </div>
                     
+                    {/* Recent Testimonials Preview */}
                     <div className="space-y-1 sm:space-y-2">
                       <h3 className="text-xs sm:text-sm font-semibold text-gray-900">Recent Testimonials</h3>
                       
+                      {/* Testimonial Cards */}
                       <div className="space-y-1 sm:space-y-2">
                         <div className="bg-white border border-gray-200 rounded p-1.5 sm:p-2 md:p-3 hover:shadow-md transition-all duration-200 animate-slide-up" style={{ animationDelay: '0.3s' }}>
                           <div className="flex items-center justify-between mb-1">
@@ -176,7 +186,143 @@ export const OutsetaHome: React.FC = () => {
         </div>
       </div>
 
-      {/* Features Section - Same as original */}
+      {/* Demo Section */}
+      <div className="py-12 sm:py-16 bg-white" id="demo">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-base text-primary-950 font-semibold tracking-wide uppercase">How It Works</h2>
+            <p className="mt-2 text-2xl leading-8 font-bold tracking-tight text-gray-900 sm:text-3xl md:text-4xl">
+              See TestiFlow in Action
+            </p>
+            <p className="mt-4 max-w-2xl text-base sm:text-lg md:text-xl text-gray-500 mx-auto">
+              From creation to showcase - watch how easy it is to manage testimonials
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            {/* Step 1: Create Forms */}
+            <div className="text-center group">
+              <div className="bg-gradient-to-br from-primary-50 to-secondary-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 mb-4 sm:mb-6 border border-gray-100 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                {/* Form Builder Mockup */}
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-300">
+                  <div className="bg-primary-950 text-white p-2 sm:p-3 text-center">
+                    <div className="flex items-center justify-center space-x-2">
+                      <TestiFlowIcon className="h-3 w-3 sm:h-4 sm:w-4" />
+                      <span className="text-xs sm:text-sm font-semibold">Form Builder</span>
+                    </div>
+                  </div>
+                  <div className="p-3 sm:p-4 space-y-2 sm:space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-medium text-gray-700">Form Title</span>
+                      <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-secondary-500 rounded-full"></div>
+                    </div>
+                    <div className="h-1.5 sm:h-2 bg-gray-200 rounded w-full"></div>
+                    <div className="space-y-1 sm:space-y-2">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-2 h-2 sm:w-3 sm:h-3 bg-blue-100 rounded border border-blue-300"></div>
+                        <span className="text-xs text-gray-600">Custom Field</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-2 h-2 sm:w-3 sm:h-3 bg-green-100 rounded border border-green-300"></div>
+                        <span className="text-xs text-gray-600">Rating Field</span>
+                      </div>
+                    </div>
+                    <button className="w-full bg-primary-950 text-white py-1 rounded text-xs font-medium">
+                      Create Form
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">1. Create Forms</h3>
+              <p className="text-sm sm:text-base text-gray-600">
+                Build custom testimonial collection forms with your branding, custom fields, and media upload options.
+              </p>
+            </div>
+
+            {/* Step 2: Collect Feedback */}
+            <div className="text-center group sm:col-span-2 lg:col-span-1">
+              <div className="bg-gradient-to-br from-secondary-50 to-accent-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 mb-4 sm:mb-6 border border-gray-100 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animation-delay-150">
+                {/* Customer Form Mockup */}
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-300">
+                  <div className="bg-secondary-500 text-white p-2 sm:p-3 text-center">
+                    <span className="text-xs sm:text-sm font-semibold">Customer Experience</span>
+                  </div>
+                  <div className="p-3 sm:p-4 space-y-2 sm:space-y-3">
+                    <div className="flex justify-center space-x-0.5 sm:space-x-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star key={star} className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-yellow-400 fill-current" />
+                      ))}
+                    </div>
+                    <div className="space-y-1 sm:space-y-2">
+                      <div className="h-1.5 sm:h-2 bg-gray-200 rounded w-3/4"></div>
+                      <div className="h-1.5 sm:h-2 bg-gray-200 rounded w-full"></div>
+                    </div>
+                    <div className="h-6 sm:h-8 bg-gray-100 rounded border-2 border-dashed border-gray-300 flex items-center justify-center">
+                      <span className="text-xs text-gray-500">📸 Upload</span>
+                    </div>
+                    <button className="w-full bg-secondary-500 text-white py-1 rounded text-xs font-medium">
+                      Submit
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">2. Collect Feedback</h3>
+              <p className="text-sm sm:text-base text-gray-600">
+                Customers fill out your branded forms with ratings, testimonials, and optional media uploads.
+              </p>
+            </div>
+
+            {/* Step 3: Export & Use */}
+            <div className="text-center group sm:col-span-2 lg:col-span-1">
+              <div className="bg-gradient-to-br from-accent-50 to-primary-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 mb-4 sm:mb-6 border border-gray-100 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animation-delay-300">
+                {/* Export Dashboard Mockup */}
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-300">
+                  <div className="bg-accent-600 text-white p-2 sm:p-3 text-center">
+                    <span className="text-xs sm:text-sm font-semibold">Export Dashboard</span>
+                  </div>
+                  <div className="p-3 sm:p-4 space-y-2 sm:space-y-3">
+                    <div className="grid grid-cols-3 gap-1">
+                      <div className="bg-green-100 text-green-800 p-1 rounded text-center">
+                        <FileText className="h-2.5 w-2.5 sm:h-3 sm:w-3 mx-auto mb-0.5 sm:mb-1" />
+                        <span className="text-xs">CSV</span>
+                      </div>
+                      <div className="bg-blue-100 text-blue-800 p-1 rounded text-center">
+                        <Code className="h-2.5 w-2.5 sm:h-3 sm:w-3 mx-auto mb-0.5 sm:mb-1" />
+                        <span className="text-xs">Widget</span>
+                      </div>
+                      <div className="bg-purple-100 text-purple-800 p-1 rounded text-center">
+                        <MessageSquare className="h-2.5 w-2.5 sm:h-3 sm:w-3 mx-auto mb-0.5 sm:mb-1" />
+                        <span className="text-xs">Social</span>
+                      </div>
+                    </div>
+                    <div className="bg-gray-50 rounded p-2">
+                      <div className="flex items-center justify-center space-x-0.5 sm:space-x-1 mb-1">
+                        <Star className="h-1.5 w-1.5 sm:h-2 sm:w-2 text-yellow-400 fill-current" />
+                        <Star className="h-1.5 w-1.5 sm:h-2 sm:w-2 text-yellow-400 fill-current" />
+                        <Star className="h-1.5 w-1.5 sm:h-2 sm:w-2 text-yellow-400 fill-current" />
+                        <Star className="h-1.5 w-1.5 sm:h-2 sm:w-2 text-yellow-400 fill-current" />
+                        <Star className="h-1.5 w-1.5 sm:h-2 sm:w-2 text-yellow-400 fill-current" />
+                      </div>
+                      <div className="h-1 bg-gray-200 rounded w-full mb-0.5 sm:mb-1"></div>
+                      <div className="h-1 bg-gray-200 rounded w-2/3"></div>
+                    </div>
+                    <button className="w-full bg-accent-600 text-white py-1 rounded text-xs font-medium">
+                      Export
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">3. Export & Use</h3>
+              <p className="text-sm sm:text-base text-gray-600">
+                Export testimonials as CSV, generate website widgets, or create social media posts ready for marketing.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      {/* Features Section */}
       <div className="py-12 sm:py-16 bg-white" id="features">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:text-center">
@@ -235,7 +381,7 @@ export const OutsetaHome: React.FC = () => {
         </div>
       </div>
 
-      {/* Social Proof Section - Same as original */}
+      {/* Social Proof Section */}
       <div className="bg-gray-50 py-12 sm:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
@@ -320,12 +466,12 @@ export const OutsetaHome: React.FC = () => {
               <div className="px-4 sm:px-6 py-6 sm:py-8">
                 <ul className="space-y-3 sm:space-y-4">
                   {[
-                    'Up to 25 testimonials',
-                    '1 collection form',
-                    'Basic approval workflow',
-                    'Image uploads',
-                    'CSV export',
-                    'Email notifications',
+                    'Unlimited testimonials & forms',
+                    'Custom fields & branding',
+                    'Image + video testimonials',
+                    'Website widget generator',
+                    'Advanced exports (JSON, CSV)',
+                    'Tag organization',
                   ].map((feature, index) => (
                     <li key={index} className="flex items-center">
                       <Check className="h-4 w-4 sm:h-5 sm:w-5 text-secondary-500 mr-2 sm:mr-3 flex-shrink-0" />
@@ -336,14 +482,9 @@ export const OutsetaHome: React.FC = () => {
               </div>
             </div>
 
-            {/* Premium Plan */}
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden border-2 border-primary-500 relative">
-              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
-                <span className="bg-primary-500 text-white px-4 py-1 rounded-full text-sm font-semibold shadow-lg">
-                  MOST POPULAR
-                </span>
-              </div>
-              <div className="bg-primary-500 px-4 sm:px-6 py-6 sm:py-8 text-center">
+            {/* Premium Plan - Disabled */}
+            <div className="bg-white rounded-2xl shadow-lg overflow-hidden border-2 border-gray-300 opacity-60 cursor-not-allowed pointer-events-none relative">
+              <div className="bg-gray-500 px-4 sm:px-6 py-6 sm:py-8 text-center">
                 <h3 className="text-xl sm:text-2xl font-bold text-white">Premium</h3>
                 <div className="mt-4 flex items-baseline justify-center">
                   <span className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">$49</span>
@@ -352,15 +493,16 @@ export const OutsetaHome: React.FC = () => {
                 <p className="mt-2 text-sm sm:text-base text-white/90">Complete solution for growing businesses</p>
               </div>
               
-              <div className="px-4 sm:px-6 py-6 sm:py-8">
+              <div className="px-4 sm:px-6 py-6 sm:py-8 relative">
+                <div className="absolute inset-0 bg-gray-100 bg-opacity-75 rounded-b-2xl flex items-center justify-center">
+                  <span className="text-gray-600 font-semibold">Coming Soon</span>
+                </div>
                 <ul className="space-y-3 sm:space-y-4">
                   {[
-                    'Unlimited testimonials & forms',
-                    'Custom fields & branding',
-                    'Image + video testimonials',
-                    'Website widget generator',
-                    'Advanced exports (JSON, CSV)',
-                    'Tag organization',
+                    'Advanced analytics & insights',
+                    'White-label branding removal',
+                    'API access for integrations',
+                    'Custom domain support',
                   ].map((feature, index) => (
                     <li key={index} className="flex items-center">
                       <Check className="h-4 w-4 sm:h-5 sm:w-5 text-secondary-500 mr-2 sm:mr-3 flex-shrink-0" />
@@ -390,7 +532,7 @@ export const OutsetaHome: React.FC = () => {
         </div>
       </div>
 
-      {/* FAQ Section - Same as original */}
+      {/* FAQ Section */}
       <div className="bg-white py-12 sm:py-16" id="faq">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8 sm:mb-12">
@@ -404,7 +546,51 @@ export const OutsetaHome: React.FC = () => {
                 What's the difference between Standard and Premium plans?
               </h3>
               <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-                Standard plan includes up to 25 testimonials, 1 form, basic features, and CSV export. Premium includes unlimited testimonials and forms, custom fields, branding, video uploads, advanced exports, and tag organization.
+                Currently, only our Standard plan is available, which includes unlimited testimonials, forms, custom fields, branding, video uploads, and all export features. Premium plan with advanced analytics and API access is coming soon.
+              </p>
+            </div>
+
+            <div className="bg-gray-50 rounded-lg p-4 sm:p-6">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
+                What features are included in the Standard plan?
+              </h3>
+              <div className="text-sm sm:text-base text-gray-600 leading-relaxed">
+                <p className="mb-3">The Standard plan includes everything you need to manage testimonials:</p>
+                <ul className="space-y-2 ml-4">
+                  <li className="flex items-center">
+                    <Check className="h-4 w-4 text-secondary-500 mr-2 flex-shrink-0" />
+                    <span>Unlimited testimonials & forms</span>
+                  </li>
+                  <li className="flex items-center">
+                    <Check className="h-4 w-4 text-secondary-500 mr-2 flex-shrink-0" />
+                    <span>Custom fields & branding</span>
+                  </li>
+                  <li className="flex items-center">
+                    <Check className="h-4 w-4 text-secondary-500 mr-2 flex-shrink-0" />
+                    <span>Image + video testimonials</span>
+                  </li>
+                  <li className="flex items-center">
+                    <Check className="h-4 w-4 text-secondary-500 mr-2 flex-shrink-0" />
+                    <span>Website widget generator</span>
+                  </li>
+                  <li className="flex items-center">
+                    <Check className="h-4 w-4 text-secondary-500 mr-2 flex-shrink-0" />
+                    <span>Advanced exports (JSON, CSV)</span>
+                  </li>
+                  <li className="flex items-center">
+                    <Check className="h-4 w-4 text-secondary-500 mr-2 flex-shrink-0" />
+                    <span>Tag organization system</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="bg-gray-50 rounded-lg p-4 sm:p-6">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
+                When will the Premium plan be available?
+              </h3>
+              <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
+                Premium plan with advanced analytics, API access, and white-label options is currently in development. For now, enjoy all core testimonial management features with our comprehensive Standard plan.
               </p>
             </div>
 
@@ -417,14 +603,6 @@ export const OutsetaHome: React.FC = () => {
               </p>
             </div>
 
-            <div className="bg-gray-50 rounded-lg p-4 sm:p-6">
-              <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
-                Can I change plans later?
-              </h3>
-              <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-                Absolutely! You can upgrade or downgrade your plan anytime from your account settings.
-              </p>
-            </div>
           </div>
         </div>
       </div>

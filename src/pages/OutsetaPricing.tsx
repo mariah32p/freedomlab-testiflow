@@ -51,12 +51,12 @@ export const OutsetaPricing: React.FC = () => {
             <div className="px-6 py-8">
               <ul className="space-y-4">
                 {[
-                  'Up to 25 testimonials',
-                  '1 collection form',
-                  'Basic approval workflow',
-                  'Image uploads',
-                  'CSV export',
-                  'Email notifications',
+                  'Unlimited testimonials & forms',
+                  'Custom fields & branding',
+                  'Image + video testimonials',
+                  'Website widget generator',
+                  'Advanced exports (JSON, CSV)',
+                  'Tag organization',
                 ].map((feature, index) => (
                   <li key={index} className="flex items-center">
                     <Check className="h-5 w-5 text-secondary-500 mr-3 flex-shrink-0" />
@@ -67,14 +67,9 @@ export const OutsetaPricing: React.FC = () => {
             </div>
           </div>
 
-          {/* Premium Plan */}
-          <div className="bg-white rounded-2xl shadow-lg overflow-hidden border-2 border-primary-500 relative">
-            <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
-              <span className="bg-primary-500 text-white px-4 py-1 rounded-full text-sm font-semibold shadow-lg">
-                MOST POPULAR
-              </span>
-            </div>
-            <div className="bg-primary-500 px-6 py-8 text-center">
+          {/* Premium Plan - Disabled */}
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden border-2 border-gray-300 opacity-60 cursor-not-allowed pointer-events-none relative">
+            <div className="bg-gray-500 px-6 py-8 text-center">
               <h3 className="text-2xl font-bold text-white">Premium</h3>
               <div className="mt-4 flex items-baseline justify-center">
                 <span className="text-5xl font-bold text-white">$49</span>
@@ -83,15 +78,16 @@ export const OutsetaPricing: React.FC = () => {
               <p className="mt-2 text-white/90">Complete solution for growing businesses</p>
             </div>
             
-            <div className="px-6 py-8">
+            <div className="px-6 py-8 relative">
+              <div className="absolute inset-0 bg-gray-100 bg-opacity-75 rounded-b-2xl flex items-center justify-center">
+                <span className="text-gray-600 font-semibold">Coming Soon</span>
+              </div>
               <ul className="space-y-4">
                 {[
-                  'Unlimited testimonials & forms',
-                  'Custom fields & branding',
-                  'Image + video testimonials',
-                  'Website widget generator',
-                  'Advanced exports (JSON, CSV)',
-                  'Tag organization',
+                  'Advanced analytics & insights',
+                  'White-label branding removal',
+                  'API access for integrations',
+                  'Custom domain support',
                 ].map((feature, index) => (
                   <li key={index} className="flex items-center">
                     <Check className="h-5 w-5 text-secondary-500 mr-3 flex-shrink-0" />
@@ -110,7 +106,7 @@ export const OutsetaPricing: React.FC = () => {
               Ready to Get Started?
             </h3>
             <p className="text-gray-600 mb-6">
-              Start with a 7-day free trial. Choose your plan during signup.
+              Start with a 7-day free trial. Get access to all Standard plan features.
             </p>
             
             <button

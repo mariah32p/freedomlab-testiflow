@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useOutsetaAuth } from '../contexts/OutsetaAuthContext';
-import { OUTSETA_PLANS } from '../lib/outseta';
 import { supabase } from '../lib/supabase';
 
 export interface OutsetaSubscriptionLimits {
@@ -25,8 +24,19 @@ export interface OutsetaSubscriptionState {
   limits: OutsetaSubscriptionLimits;
 }
 
+// Standard plan gets ALL features (since Premium is disabled)
+const STANDARD_LIMITS: OutsetaSubscriptionLimits = {
+  maxTestimonials: Infinity,
+  maxForms: Infinity,
+  canUseCustomFields: true,
+  canUseBranding: true,
+  canUseVideoUploads: true,
+  canUseAdvancedExports: true,
+  canUseTags: true,
+};
+
 export const useOutsetaSubscription = (): OutsetaSubscriptionState => {
-  const { user, hasSubscription, plan, loading: authLoading } = useOutsetaAuth();
+  const { user, hasSubscription, loading: authLoading } = useOutsetaAuth();
   const [currentUsage, setCurrentUsage] = useState({
     testimonialCount: 0,
     formCount: 0,
@@ -83,22 +93,12 @@ export const useOutsetaSubscription = (): OutsetaSubscriptionState => {
     fetchUsage();
   }, [user]);
 
-  const planConfig = OUTSETA_PLANS[plan];
-  
   return {
     loading: authLoading || usageLoading,
     hasActiveSubscription: hasSubscription,
     isTrialing: user?.account_stage === 1, // 1 = Trial, 2 = Active
-    plan,
+    plan: 'standard', // Everyone gets standard plan (Premium is disabled)
     currentUsage,
-    limits: {
-      maxTestimonials: planConfig.maxTestimonials,
-      maxForms: planConfig.maxForms,
-      canUseCustomFields: planConfig.features.customFields,
-      canUseBranding: planConfig.features.branding,
-      canUseVideoUploads: planConfig.features.videoUploads,
-      canUseAdvancedExports: planConfig.features.advancedExports,
-      canUseTags: planConfig.features.tags,
-    },
+    limits: STANDARD_LIMITS, // Everyone gets full features
   };
 };
