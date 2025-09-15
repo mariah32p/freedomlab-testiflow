@@ -74,29 +74,35 @@ export const TESTIFLOW_PLAN = {
 export const initializeOutseta = (): Promise<void> => {
   if (typeof window === 'undefined') return Promise.resolve();
 
-  if (window.o_options) {
-    window.o_options.domain = OUTSETA_CONFIG.origin;
-    if (OUTSETA_CONFIG.publicKey) {
-      window.o_options.publicKey = OUTSETA_CONFIG.publicKey;
-    }
-  }
+  console.log('Checking Outseta initialization...');
+  console.log('window.o_options:', window.o_options);
+  console.log('window.Outseta exists:', !!window.Outseta);
 
   return new Promise((resolve) => {
     // Check if Outseta is fully loaded
     const checkOutsetaReady = () => {
-      return window.Outseta && 
+      const isReady = window.Outseta && 
              window.Outseta.getUser && 
              window.Outseta.auth && 
              typeof window.Outseta.auth.login === 'function';
+      console.log('Outseta ready check:', isReady);
+      return isReady;
     };
 
     if (checkOutsetaReady()) {
+      console.log('Outseta already ready');
       resolve();
       return;
     }
 
     // Poll for Outseta to be ready (script is already in HTML)
+    let attempts = 0;
+    const maxAttempts = 50; // 5 seconds max
+    
     const pollForOutseta = () => {
+      attempts++;
+      console.log(`Polling for Outseta... attempt ${attempts}`);
+      
       if (checkOutsetaReady()) {
         console.log('Outseta is ready');
         resolve();

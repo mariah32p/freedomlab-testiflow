@@ -1,101 +1,250 @@
-import React, { useEffect } from 'react';
-import { Check } from 'lucide-react';
-import { TestiFlowIcon } from '../components/TestiFlowIcon';
-import { initializeOutseta, TESTIFLOW_PLAN } from '../lib/outseta';
+// Outseta configuration and utilities
+export interface OutsetaUser {
+  uid: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  fullName: string;
+  created: string;
+  updated: string;
+}
 
-export const OutsetaPricing: React.FC = () => {
-  useEffect(() => {
-    const initialize = async () => {
-      try {
-        await initializeOutseta();
-        console.log('Outseta initialized for pricing page');
-      } catch (error) {
-        console.error('Failed to initialize Outseta:', error);
+export interface OutsetaAccount {
+  uid: string;
+  name: string;
+  accountStage: number;
+  billingStageName: string;
+  personAccount: Array<{
+    person: OutsetaUser;
+    isPrimary: boolean;
+  }>;
+  currentSubscription?: {
+    uid: string;
+    plan: {
+      uid: string;
+      slug: string;
+      name: string;
+    };
+    billingRenewalTerm: number;
+    startDate: string;
+    renewalDate: string;
+  };
+}
+
+export interface OutsetaJWT {
+  sub: string; // User UID
+  email: string;
+  name: string;
+  account_uid: string;
+  plan_uid?: string;
+  plan_name?: string;
+  account_stage: number;
+  exp: number;
+  iat: number;
+}
+
+export type EntitlementStatus = 
+  | 'UNAUTHENTICATED' 
+  | 'OK' 
+  | 'PAST_DUE' 
+  | 'BLOCKED' 
+  | 'NO_ENTITLEMENT';
+
+const sanitizeDomain = (domain: string) => domain.replace(/^https?:\/\//, '').replace(/\/$/, '');
+
+const rawDomain = import.meta.env.VITE_OUTSETA_DOMAIN || 'freedomlab.outseta.com';
+const normalizedDomain = sanitizeDomain(rawDomain).replace('.outseta.com', '');
+const outsetaOrigin = `https://${normalizedDomain}`;
+
+// Outseta configuration
+export const OUTSETA_CONFIG = {
+  domain: normalizedDomain,
+  origin: `https://${normalizedDomain}.outseta.com`,
+  publicKey: import.meta.env.VITE_OUTSETA_PUBLIC_KEY || '',
+};
+
+// TestiFlow plan configuration
+export const TESTIFLOW_PLAN = {
+  uid: import.meta.env.VITE_OUTSETA_STANDARD_PLAN_UID || 'jW78klmq',
+  slug: 'testiflow-standard',
+  name: 'TestiFlow Standard',
+};
+
+// Initialize Outseta script with proper configuration
+export const initializeOutseta = (): Promise<void> => {
+  if (typeof window === 'undefined') return Promise.resolve();
+
+  console.log('Checking Outseta initialization...');
+  console.log('window.o_options:', window.o_options);
+  console.log('window.Outseta exists:', !!window.Outseta);
+
+  return new Promise((resolve) => {
+    // Check if Outseta is fully loaded
+    const checkOutsetaReady = () => {
+      const isReady = window.Outseta && 
+             window.Outseta.getUser && 
+             window.Outseta.auth && 
+             typeof window.Outseta.auth.login === 'function';
+      console.log('Outseta ready check:', isReady);
+      return isReady;
+    };
+
+    if (checkOutsetaReady()) {
+      console.log('Outseta already ready');
+      resolve();
+      return;
+    }
+
+    // Poll for Outseta to be ready (script is already in HTML)
+    let attempts = 0;
+    const maxAttempts = 50; // 5 seconds max
+    
+    const pollForOutseta = () => {
+      attempts++;
+      console.log(`Polling for Outseta... attempt ${attempts}`);
+      
+      if (checkOutsetaReady()) {
+        console.log('Outseta is ready');
+        resolve();
+      } else {
+        console.log('Waiting for Outseta to load...');
+        setTimeout(pollForOutseta, 100);
       }
     };
     
-    initialize();
-  }, []);
+    pollForOutseta();
+  });
+};
 
-  return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <div className="flex justify-center mb-6">
-            <TestiFlowIcon className="h-12 w-12 text-primary-950" />
-          </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Start Your Free Trial
-          </h1>
-          <p className="text-xl text-gray-600">
-            Get full access to TestiFlow for 7 days, then continue for just $29/month
-          </p>
-        </div>
+// Get current user from Outseta
+export const getOutsetaUser = async (): Promise<{ user: OutsetaUser; account: OutsetaAccount } | null> => {
+  await initializeOutseta();
+  
+  if (typeof window === 'undefined' || !window.Outseta) {
+    return null;
+  }
 
-        <div className="grid md:grid-cols-2 gap-8 items-start">
-          {/* Plan Details */}
-          <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200">
-            <div className="bg-primary-950 px-6 py-8 text-center text-white">
-              <h3 className="text-2xl font-bold">TestiFlow Standard</h3>
-              <div className="mt-4 flex items-baseline justify-center">
-                <span className="text-5xl font-bold">$29</span>
-                <span className="text-xl ml-1">/month</span>
-              </div>
-              <p className="mt-2 text-white/90">Everything you need to manage testimonials</p>
-            </div>
-            
-            <div className="px-6 py-8">
-              <ul className="space-y-4">
-                {[
-                  'Unlimited testimonials & forms',
-                  'Custom fields & branding',
-                  'Image + video testimonials',
-                  'Website widget generator',
-                  'Advanced exports (JSON, CSV)',
-                  'Tag organization',
-                ].map((feature, index) => (
-                  <li key={index} className="flex items-center">
-                    <Check className="h-5 w-5 text-secondary-500 mr-3 flex-shrink-0" />
-                    <span className="text-gray-700">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
+  try {
+    const user = await window.Outseta.getUser();
+    return user;
+  } catch (error) {
+    console.error('Error getting Outseta user:', error);
+    return null;
+  }
+};
 
-          {/* Signup Form */}
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
-            <h3 className="text-2xl font-bold text-primary-950 mb-6 text-center">
-              Start Your 7-Day Free Trial
-            </h3>
-            
-            <div 
-              data-o-auth="1"
-              data-widget-mode="register"
-              data-plan-uid={TESTIFLOW_PLAN.uid}
-              data-plan-payment-term="month"
-              data-skip-plan-options="true"
-              data-require-payment="true"
-              data-trial-days="7"
-              data-mode="embed"
-              className="min-h-[400px]"
-            ></div>
-            
-            <p className="text-sm text-gray-500 text-center mt-4">
-              7-day free trial • $29/month after trial • Cancel anytime
-            </p>
-            
-            <div className="text-center mt-4">
-              <p className="text-sm text-gray-600">
-                Already have an account?{' '}
-                <a href="/login" className="text-primary-950 hover:text-primary-800 font-medium">
-                  Sign in here
-                </a>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+// Get JWT payload from Outseta
+export const getOutsetaJWT = async (): Promise<OutsetaJWT | null> => {
+  await initializeOutseta();
+  
+  if (typeof window === 'undefined' || !window.Outseta) {
+    return null;
+  }
+
+  try {
+    const jwt = await window.Outseta.getJwtPayload();
+    return jwt;
+  } catch (error) {
+    console.error('Error getting Outseta JWT:', error);
+    return null;
+  }
+};
+
+// Core entitlement guard function
+export const requireEntitlement = async (requiredPlanUid: string = TESTIFLOW_PLAN.uid): Promise<EntitlementStatus> => {
+  try {
+    const userData = await getOutsetaUser();
+    
+    if (!userData) {
+      return 'UNAUTHENTICATED';
+    }
+
+    const { account } = userData;
+    
+    // Check billing stage
+    const billingStage = account.billingStageName?.toLowerCase();
+    
+    if (billingStage === 'past due') {
+      return 'PAST_DUE';
+    }
+    
+    // Check for blocked states
+    if (['trialexpired', 'expired', 'canceled'].includes(billingStage || '')) {
+      return 'BLOCKED';
+    }
+    
+    // Check plan entitlement
+    const currentPlanUid = account.currentSubscription?.plan?.uid;
+    
+    if (currentPlanUid !== requiredPlanUid) {
+      return 'NO_ENTITLEMENT';
+    }
+    
+    // All checks passed
+    return 'OK';
+    
+  } catch (error) {
+    console.error('Error checking entitlement:', error);
+    return 'UNAUTHENTICATED';
+  }
+};
+
+// Outseta embed triggers
+export const triggerLogin = async () => {
+  await initializeOutseta();
+  if (typeof window !== 'undefined' && window.Outseta) {
+    window.Outseta.auth.login();
+  }
+};
+
+export const triggerSignup = async () => {
+  await initializeOutseta();
+  if (typeof window !== 'undefined' && window.Outseta) {
+    window.Outseta.auth.register();
+  }
+};
+
+export const triggerProfile = async () => {
+  await initializeOutseta();
+  if (typeof window !== 'undefined' && window.Outseta) {
+    window.Outseta.profile.show();
+  }
+};
+
+export const triggerLogout = async () => {
+  await initializeOutseta();
+  if (typeof window !== 'undefined' && window.Outseta) {
+    window.Outseta.auth.logout();
+  }
+};
+
+// Sync user data to Supabase
+export const syncUserToSupabase = async (user: OutsetaUser, account: OutsetaAccount) => {
+  try {
+    console.log('Syncing user to Supabase:', user.uid);
+    
+    const { error } = await supabase
+      .from('outseta_users')
+      .upsert({
+        outseta_uid: user.uid,
+        email: user.email,
+        first_name: user.firstName || '',
+        last_name: user.lastName || '',
+        full_name: user.fullName || '',
+        account_uid: account.uid,
+        plan_uid: account.currentSubscription?.plan?.uid || null,
+        account_stage: account.accountStage,
+        last_sync_at: new Date().toISOString()
+      }, {
+        onConflict: 'outseta_uid'
+      });
+
+    if (error) {
+      console.error('Error syncing to Supabase:', error);
+    } else {
+      console.log('User synced successfully');
+    }
+  } catch (error) {
+    console.error('Error syncing user to Supabase:', error);
+  }
 };

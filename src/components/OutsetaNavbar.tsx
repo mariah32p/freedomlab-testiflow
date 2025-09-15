@@ -1,229 +1,249 @@
-import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import { Menu, X, User, LogOut, Settings } from 'lucide-react';
-import { useOutsetaAuth } from '../contexts/OutsetaAuthContext';
-import { TestiFlowIcon } from './TestiFlowIcon';
-import { triggerLogin, triggerSignup, triggerProfile } from '../lib/outseta';
+// Outseta configuration and utilities
+export interface OutsetaUser {
+  uid: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  fullName: string;
+  created: string;
+  updated: string;
+}
 
-export const OutsetaNavbar = () => {
-  const { user, isAuthenticated, signOut } = useOutsetaAuth();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const mobileMenuRef = useRef<HTMLDivElement>(null);
+export interface OutsetaAccount {
+  uid: string;
+  name: string;
+  accountStage: number;
+  billingStageName: string;
+  personAccount: Array<{
+    person: OutsetaUser;
+    isPrimary: boolean;
+  }>;
+  currentSubscription?: {
+    uid: string;
+    plan: {
+      uid: string;
+      slug: string;
+      name: string;
+    };
+    billingRenewalTerm: number;
+    startDate: string;
+    renewalDate: string;
+  };
+}
 
-  // Close mobile menu when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
-        setMobileMenuOpen(false);
-      }
+export interface OutsetaJWT {
+  sub: string; // User UID
+  email: string;
+  name: string;
+  account_uid: string;
+  plan_uid?: string;
+  plan_name?: string;
+  account_stage: number;
+  exp: number;
+  iat: number;
+}
+
+export type EntitlementStatus = 
+  | 'UNAUTHENTICATED' 
+  | 'OK' 
+  | 'PAST_DUE' 
+  | 'BLOCKED' 
+  | 'NO_ENTITLEMENT';
+
+const sanitizeDomain = (domain: string) => domain.replace(/^https?:\/\//, '').replace(/\/$/, '');
+
+const rawDomain = import.meta.env.VITE_OUTSETA_DOMAIN || 'freedomlab.outseta.com';
+const normalizedDomain = sanitizeDomain(rawDomain).replace('.outseta.com', '');
+const outsetaOrigin = `https://${normalizedDomain}`;
+
+// Outseta configuration
+export const OUTSETA_CONFIG = {
+  domain: normalizedDomain,
+  origin: `https://${normalizedDomain}.outseta.com`,
+  publicKey: import.meta.env.VITE_OUTSETA_PUBLIC_KEY || '',
+};
+
+// TestiFlow plan configuration
+export const TESTIFLOW_PLAN = {
+  uid: import.meta.env.VITE_OUTSETA_STANDARD_PLAN_UID || 'jW78klmq',
+  slug: 'testiflow-standard',
+  name: 'TestiFlow Standard',
+};
+
+// Initialize Outseta script with proper configuration
+export const initializeOutseta = (): Promise<void> => {
+  if (typeof window === 'undefined') return Promise.resolve();
+
+  console.log('Checking Outseta initialization...');
+  return new Promise((resolve) => {
+    // Check if Outseta is fully loaded
+    const checkOutsetaReady = () => {
+      const isReady = window.Outseta && 
+             window.Outseta.getUser && 
+             window.Outseta.auth && 
+             typeof window.Outseta.auth.login === 'function';
+      console.log('Outseta ready check:', isReady);
+      return isReady;
+      console.log('Outseta ready check:', isReady);
+      return isReady;
     };
 
-    if (mobileMenuOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
+    if (checkOutsetaReady()) {
+      console.log('Outseta already ready');
+      console.log('Outseta already ready');
+      resolve();
+      return;
     }
-  }, [mobileMenuOpen]);
 
-  const handleSignOut = () => {
-    signOut();
-    setMobileMenuOpen(false);
-  };
+    // Poll for Outseta to be ready (script is already in HTML)
+    let attempts = 0;
+    const maxAttempts = 50; // 5 seconds max
+    
+    let attempts = 0;
+    const maxAttempts = 50; // 5 seconds max
+    
+    const pollForOutseta = () => {
+      attempts++;
+      console.log(`Polling for Outseta... attempt ${attempts}`);
+      
+      attempts++;
+      console.log(`Polling for Outseta... attempt ${attempts}`);
+      
+      if (checkOutsetaReady()) {
+        console.log('Outseta is ready');
+        resolve();
+      } else {
+        console.log('Waiting for Outseta to load...');
+        setTimeout(pollForOutseta, 100);
+      }
+    };
+    
+    pollForOutseta();
+  });
+};
 
-  const handleLogin = () => {
-    window.location.href = '/login';
-    setMobileMenuOpen(false);
-  };
+// Get current user from Outseta
+export const getOutsetaUser = async (): Promise<{ user: OutsetaUser; account: OutsetaAccount } | null> => {
+  await initializeOutseta();
+  
+  if (typeof window === 'undefined' || !window.Outseta) {
+    return null;
+  }
 
-  const handleSignup = async () => {
-    // Navigate to pricing page where embedded signup form is located
-    window.location.href = '/pricing';
-    setMobileMenuOpen(false);
-  };
+  try {
+    const user = await window.Outseta.getUser();
+    return user;
+  } catch (error) {
+    console.error('Error getting Outseta user:', error);
+    return null;
+  }
+};
 
-  const handleProfile = async () => {
-    await triggerProfile();
-    setMobileMenuOpen(false);
-  };
+// Get JWT payload from Outseta
+export const getOutsetaJWT = async (): Promise<OutsetaJWT | null> => {
+  await initializeOutseta();
+  
+  if (typeof window === 'undefined' || !window.Outseta) {
+    return null;
+  }
 
-  return (
-    <nav className="bg-white shadow-sm border-b sticky top-0 z-50" ref={mobileMenuRef}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <div className="flex items-center">
-            <Link to={isAuthenticated ? "/dashboard" : "/"} className="flex items-center space-x-2">
-              <TestiFlowIcon className="h-8 w-8 text-primary-950" />
-              <span className="text-xl font-bold text-primary-950">TestiFlow</span>
-            </Link>
-          </div>
+  try {
+    const jwt = await window.Outseta.getJwtPayload();
+    return jwt;
+  } catch (error) {
+    console.error('Error getting Outseta JWT:', error);
+    return null;
+  }
+};
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            {isAuthenticated ? (
-              <>
-                <Link
-                  to="/dashboard"
-                  className="flex items-center space-x-2 text-gray-700 hover:text-primary-950 transition-colors"
-                >
-                  <User className="h-5 w-5" />
-                  <span>Dashboard</span>
-                </Link>
-                <Link
-                  to="/forms"
-                  className="text-gray-700 hover:text-primary-950 transition-colors"
-                >
-                  Forms
-                </Link>
-                <Link
-                  to="/testimonials"
-                  className="text-gray-700 hover:text-primary-950 transition-colors"
-                >
-                  Testimonials
-                </Link>
-                <Link
-                  to="/branding"
-                  className="text-gray-700 hover:text-primary-950 transition-colors"
-                >
-                  Branding
-                </Link>
-                <Link
-                  to="/tags"
-                  className="text-gray-700 hover:text-primary-950 transition-colors"
-                >
-                  Tags
-                </Link>
-                <button
-                  onClick={handleProfile}
-                  className="text-gray-700 hover:text-primary-950 transition-colors"
-                >
-                  Account
-                </button>
-                <button
-                  onClick={handleSignOut}
-                  className="flex items-center space-x-2 text-gray-700 hover:text-red-600 transition-colors"
-                >
-                  <LogOut className="h-5 w-5" />
-                  <span>Sign Out</span>
-                </button>
-              </>
-            ) : (
-              <>
-                <button
-                  onClick={handleLogin}
-                  className="text-gray-700 hover:text-primary-950 transition-colors"
-                >
-                  Login
-                </button>
-                <button
-                  onClick={handleSignup}
-                  className="bg-primary-950 text-white hover:bg-primary-900 px-6 py-2 rounded-md font-semibold transition-colors"
-                >
-                  Try Free
-                </button>
-              </>
-            )}
-          </div>
+// Core entitlement guard function
+export const requireEntitlement = async (requiredPlanUid: string = TESTIFLOW_PLAN.uid): Promise<EntitlementStatus> => {
+  try {
+    const userData = await getOutsetaUser();
+    
+    if (!userData) {
+      return 'UNAUTHENTICATED';
+    }
 
-          {/* Mobile Controls */}
-          <div className="md:hidden flex items-center space-x-3">
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              {mobileMenuOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
-            </button>
-            {!isAuthenticated && (
-              <button
-                onClick={handleSignup}
-                className="bg-primary-950 text-white hover:bg-primary-900 px-4 py-2 rounded-md text-sm font-semibold transition-colors"
-                style={{ minHeight: '44px' }}
-              >
-                Try Free
-              </button>
-            )}
-          </div>
-        </div>
+    const { account } = userData;
+    
+    // Check billing stage
+    const billingStage = account.billingStageName?.toLowerCase();
+    
+    if (billingStage === 'past due') {
+      return 'PAST_DUE';
+    }
+    
+    // Check for blocked states
+    if (['trialexpired', 'expired', 'canceled'].includes(billingStage || '')) {
+      return 'BLOCKED';
+    }
+    
+    // Check plan entitlement
+    const currentPlanUid = account.currentSubscription?.plan?.uid;
+    
+    if (currentPlanUid !== requiredPlanUid) {
+      return 'NO_ENTITLEMENT';
+    }
+    
+    // All checks passed
+    return 'OK';
+    
+  } catch (error) {
+    console.error('Error checking entitlement:', error);
+    return 'UNAUTHENTICATED';
+  }
+};
 
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-200 bg-white">
-            <div className="px-2 pt-2 pb-3 space-y-1">
-              {isAuthenticated ? (
-                <>
-                  <Link
-                    to="/dashboard"
-                    className="flex items-center space-x-2 text-gray-700 hover:text-primary-950 hover:bg-gray-50 px-3 py-3 rounded-md text-base font-medium transition-colors"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    <User className="h-5 w-5" />
-                    <span>Dashboard</span>
-                  </Link>
-                  <Link
-                    to="/forms"
-                    className="block text-gray-700 hover:text-primary-950 hover:bg-gray-50 px-3 py-3 rounded-md text-base font-medium transition-colors"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Forms
-                  </Link>
-                  <Link
-                    to="/testimonials"
-                    className="block text-gray-700 hover:text-primary-950 hover:bg-gray-50 px-3 py-3 rounded-md text-base font-medium transition-colors"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Testimonials
-                  </Link>
-                  <Link
-                    to="/branding"
-                    className="block text-gray-700 hover:text-primary-950 hover:bg-gray-50 px-3 py-3 rounded-md text-base font-medium transition-colors"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Branding
-                  </Link>
-                  <Link
-                    to="/tags"
-                    className="block text-gray-700 hover:text-primary-950 hover:bg-gray-50 px-3 py-3 rounded-md text-base font-medium transition-colors"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Tags
-                  </Link>
-                  <button
-                    onClick={handleProfile}
-                    className="block text-gray-700 hover:text-primary-950 hover:bg-gray-50 px-3 py-3 rounded-md text-base font-medium transition-colors w-full text-left"
-                  >
-                    Account
-                  </button>
-                  <button
-                    onClick={handleSignOut}
-                    className="flex items-center space-x-2 text-gray-700 hover:text-red-600 hover:bg-gray-50 px-3 py-3 rounded-md text-base font-medium transition-colors w-full text-left"
-                  >
-                    <LogOut className="h-5 w-5" />
-                    <span>Sign Out</span>
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button
-                    onClick={handleLogin}
-                    className="block text-gray-700 hover:text-primary-950 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium transition-colors w-full text-left"
-                  >
-                    Login
-                  </button>
-                  <button
-                    onClick={handleSignup}
-                    className="block w-full text-left bg-primary-950 text-white hover:bg-primary-900 px-3 py-2 rounded-md text-base font-medium transition-colors mt-2"
-                  >
-                    Try Free
-                  </button>
-                </>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
-    </nav>
-  );
+// Outseta embed triggers
+export const triggerLogin = async () => {
+  await initializeOutseta();
+  if (typeof window !== 'undefined' && window.Outseta) {
+    window.Outseta.auth.login();
+  }
+};
+
+export const triggerProfile = async () => {
+  await initializeOutseta();
+  if (typeof window !== 'undefined' && window.Outseta) {
+    window.Outseta.profile.show();
+  }
+};
+
+export const triggerLogout = async () => {
+  await initializeOutseta();
+  if (typeof window !== 'undefined' && window.Outseta) {
+    window.Outseta.auth.logout();
+  }
+};
+
+// Sync user data to Supabase
+export const syncUserToSupabase = async (user: OutsetaUser, account: OutsetaAccount) => {
+  try {
+    console.log('Syncing user to Supabase:', user.uid);
+    
+    const { error } = await supabase
+      .from('outseta_users')
+      .upsert({
+        outseta_uid: user.uid,
+        email: user.email,
+        first_name: user.firstName || '',
+        last_name: user.lastName || '',
+        full_name: user.fullName || '',
+        account_uid: account.uid,
+        plan_uid: account.currentSubscription?.plan?.uid || null,
+        account_stage: account.accountStage,
+        last_sync_at: new Date().toISOString()
+      }, {
+        onConflict: 'outseta_uid'
+      });
+
+    if (error) {
+      console.error('Error syncing to Supabase:', error);
+    } else {
+      console.log('User synced successfully');
+    }
+  } catch (error) {
+    console.error('Error syncing user to Supabase:', error);
+  }
 };
