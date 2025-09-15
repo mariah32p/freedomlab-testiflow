@@ -200,16 +200,47 @@ export const requireEntitlement = async (requiredPlanUid: string = TESTIFLOW_PLA
   }
 };
 
+// --- POPUP WINDOW UTILITIES ---
+
+/**
+ * Opens a popup window for Outseta authentication
+ */
+const openOutsetaPopup = (url: string): Promise<void> => {
+  return new Promise((resolve) => {
+    const popup = window.open(
+      url,
+      'outseta-auth',
+      'width=500,height=600,scrollbars=yes,resizable=yes'
+    );
+
+    // Poll for popup closure
+    const checkClosed = setInterval(() => {
+      if (popup?.closed) {
+        clearInterval(checkClosed);
+        // Give a moment for auth state to update
+        setTimeout(() => {
+          resolve();
+        }, 1000);
+      }
+    }, 1000);
+  });
+};
+
 // --- OUTSETA EMBED TRIGGERS ---
 
 export const triggerLogin = async (): Promise<void> => {
-  await initializeOutseta();
-  window.Outseta?.auth.login();
+  const url = `https://freedomlab.outseta.com/auth?widgetMode=login#o-anonymous`;
+  await openOutsetaPopup(url);
+};
+
+export const triggerSignup = async (): Promise<void> => {
+  const url = `https://freedomlab.outseta.com/auth?widgetMode=register&planUid=jW78klmq#o-anonymous`;
+  await openOutsetaPopup(url);
 };
 
 export const triggerProfile = async (): Promise<void> => {
-  await initializeOutseta();
-  window.Outseta?.profile.show();
+  const url = `https://freedomlab.outseta.com/profile#o-authenticated`;
+  await openOutsetaPopup(url);
 };
 
 export const triggerLogout = async (): Promise<void> => {
