@@ -6,7 +6,7 @@
       const { VITE_OUTSETA_DOMAIN, VITE_OUTSETA_PUBLIC_KEY } = import.meta.env;
 
       const sanitizeDomain = (domain) => domain.replace(/^https?:\/\//, '').replace(/\/$/, '');
-      const resolvedDomain = VITE_OUTSETA_DOMAIN ? sanitizeDomain(VITE_OUTSETA_DOMAIN) : 'freedomlab.outseta.com';
+      const resolvedDomain = VITE_OUTSETA_DOMAIN ? sanitizeDomain(VITE_OUTSETA_DOMAIN) : 'freedomlab';
 
       if (!VITE_OUTSETA_DOMAIN) {
         console.warn('Outseta domain is not set. Authentication widgets may not load.');
@@ -17,7 +17,7 @@
       }
 
       window.o_options = {
-        domain: `https://${resolvedDomain}`,
+        domain: resolvedDomain.replace('.outseta.com', ''),
         publicKey: VITE_OUTSETA_PUBLIC_KEY || '',
         load: 'auth,customForm,emailList,leadCapture,nocode,profile,support'
       };

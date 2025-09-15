@@ -53,13 +53,13 @@ export type EntitlementStatus =
 const sanitizeDomain = (domain: string) => domain.replace(/^https?:\/\//, '').replace(/\/$/, '');
 
 const rawDomain = import.meta.env.VITE_OUTSETA_DOMAIN || 'freedomlab.outseta.com';
-const normalizedDomain = sanitizeDomain(rawDomain);
+const normalizedDomain = sanitizeDomain(rawDomain).replace('.outseta.com', '');
 const outsetaOrigin = `https://${normalizedDomain}`;
 
 // Outseta configuration
 export const OUTSETA_CONFIG = {
   domain: normalizedDomain,
-  origin: outsetaOrigin,
+  origin: `https://${normalizedDomain}.outseta.com`,
   publicKey: import.meta.env.VITE_OUTSETA_PUBLIC_KEY || '',
 };
 
