@@ -120,7 +120,9 @@ export const OutsetaPricing: React.FC = () => {
               data-widget-mode="register"
               data-plan-uid="jW78klmq"
               data-plan-payment-term="month"
-              data-skip-plan-options="true"
+              data-plan-options="false"
+              data-require-payment="true"
+              data-trial-days="7"
               data-mode="embed"
               className="min-h-[400px]"
             ></div>
