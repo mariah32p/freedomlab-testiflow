@@ -94,10 +94,9 @@ export const OutsetaNavbar = () => {
                 </Link>
                 <button
                   onClick={handleProfile}
-                  className="flex items-center space-x-2 text-gray-700 hover:text-primary-950 transition-colors"
+                  className="text-gray-700 hover:text-primary-950 transition-colors"
                 >
-                  <Settings className="h-5 w-5" />
-                  <span>Account</span>
+                  Account
                 </button>
                 <button
                   onClick={handleSignOut}
@@ -193,10 +192,9 @@ export const OutsetaNavbar = () => {
                   </Link>
                   <button
                     onClick={handleProfile}
-                    className="flex items-center space-x-2 text-gray-700 hover:text-primary-950 hover:bg-gray-50 px-3 py-3 rounded-md text-base font-medium transition-colors w-full text-left"
+                    className="block text-gray-700 hover:text-primary-950 hover:bg-gray-50 px-3 py-3 rounded-md text-base font-medium transition-colors w-full text-left"
                   >
-                    <Settings className="h-5 w-5" />
-                    <span>Account</span>
+                    Account
                   </button>
                   <button
                     onClick={handleSignOut}

@@ -3,12 +3,12 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useOutsetaAuth } from '../contexts/OutsetaAuthContext';
 
 export const useOutsetaRouteGuard = () => {
-  const { user, loading, isAuthenticated, hasSubscription } = useOutsetaAuth();
+  const { user, account, loading, entitlementStatus } = useOutsetaAuth();
   const [routeLoading, setRouteLoading] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
 
-  console.log('🔍 Outseta Route guard - User:', user?.email, 'Loading:', loading, 'Path:', location.pathname);
+  console.log('🔍 Route guard - User:', user?.email, 'Status:', entitlementStatus, 'Path:', location.pathname);
 
   useEffect(() => {
     if (loading) {
@@ -17,48 +17,58 @@ export const useOutsetaRouteGuard = () => {
     }
 
     const checkAccess = () => {
-      console.log('🔍 Outseta: Checking route access');
+      console.log('🔍 Checking route access for status:', entitlementStatus);
       
       // Allow certain pages without authentication
-      const publicPages = ['/login', '/signup', '/forgot-password', '/reset-password', '/pricing', '/', '/demo'];
+      const publicPages = ['/pricing', '/', '/demo'];
       const isPublicPage = publicPages.includes(location.pathname);
       const isPublicFormSubmission = location.pathname.startsWith('/submit/');
+      const isBillingUpdate = location.pathname === '/billing-update';
+      const isPaywall = location.pathname === '/paywall';
 
-      if (!isAuthenticated) {
-        // Not signed in → allow public pages, redirect others to home
-        console.log('🔍 Outseta: No user, current path:', location.pathname, 'Is public:', isPublicPage);
-        if (!isPublicPage && !isPublicFormSubmission) {
-          console.log('🔍 Outseta: Redirecting to home');
-          navigate('/');
-        }
-        setRouteLoading(false);
-        return;
-      }
+      // Handle different entitlement statuses
+      switch (entitlementStatus) {
+        case 'UNAUTHENTICATED':
+          if (!isPublicPage && !isPublicFormSubmission) {
+            console.log('🔍 Unauthenticated, redirecting to pricing');
+            navigate('/pricing');
+          }
+          break;
 
-      console.log('🔍 Outseta: User authenticated:', user?.email, 'Has subscription:', hasSubscription);
+        case 'PAST_DUE':
+          if (!isBillingUpdate && !isPublicFormSubmission) {
+            console.log('🔍 Past due, redirecting to billing update');
+            navigate('/billing-update');
+          }
+          break;
 
-      if (!hasSubscription) {
-        // Authenticated but no subscription → redirect to pricing
-        console.log('🔍 Outseta: No subscription, redirecting to pricing');
-        if (location.pathname !== '/pricing' && !isPublicPage && !isPublicFormSubmission) {
-          navigate('/pricing');
-        }
-        setRouteLoading(false);
-        return;
-      }
+        case 'BLOCKED':
+        case 'NO_ENTITLEMENT':
+          if (!isPaywall && !isPublicFormSubmission) {
+            console.log('🔍 Blocked/No entitlement, redirecting to paywall');
+            navigate('/paywall');
+          }
+          break;
 
-      // Has subscription → allow dashboard access
-      console.log('🔍 Outseta: Has subscription, allowing dashboard access');
-      if (location.pathname === '/pricing' || location.pathname === '/') {
-        console.log('🔍 Outseta: Redirecting to dashboard');
-        navigate('/dashboard');
+        case 'OK':
+          // Full access - redirect away from auth pages
+          if (location.pathname === '/pricing' || location.pathname === '/billing-update' || location.pathname === '/paywall') {
+            console.log('🔍 Entitled user, redirecting to dashboard');
+            navigate('/dashboard');
+          }
+          break;
       }
       
       setRouteLoading(false);
     };
 
     checkAccess();
-  }, [user, loading, isAuthenticated, hasSubscription, location.pathname, navigate]);
+  }, [entitlementStatus, loading, location.pathname, navigate]);
 
-  return { user, loading: loading || routeLoading };
+  return { 
+    user, 
+    account,
+    loading: loading || routeLoading,
+    entitlementStatus 
+  };
 };

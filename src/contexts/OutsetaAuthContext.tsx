@@ -1,14 +1,35 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { OutsetaJWT, verifyOutsetaToken, getUserPlan, hasActiveSubscription, initializeOutseta, storeToken, getStoredToken, removeStoredToken, refreshToken } from '../lib/outseta';
-import { supabase } from '../lib/supabase';
+import { getOutsetaUser, getOutsetaJWT, requireEntitlement, syncUserToSupabase, triggerLogout, initializeOutseta, TESTIFLOW_PLAN } from '../lib/outseta';
+
+interface OutsetaUser {
+  uid: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  fullName: string;
+}
+
+interface OutsetaAccount {
+  uid: string;
+  billingStageName: string;
+  currentSubscription?: {
+    plan: {
+      uid: string;
+      slug: string;
+      name: string;
+    };
+  };
+}
 
 interface OutsetaAuthContextType {
-  user: OutsetaJWT | null;
+  user: OutsetaUser | null;
+  account: OutsetaAccount | null;
   loading: boolean;
   isAuthenticated: boolean;
   hasSubscription: boolean;
-  plan: 'standard' | 'premium';
+  entitlementStatus: 'UNAUTHENTICATED' | 'OK' | 'PAST_DUE' | 'BLOCKED' | 'NO_ENTITLEMENT';
   signOut: () => void;
+  refreshAuth: () => Promise<void>;
 }
 
 const OutsetaAuthContext = createContext<OutsetaAuthContextType | undefined>(undefined);
@@ -22,167 +43,106 @@ export const useOutsetaAuth = () => {
 };
 
 export const OutsetaAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<OutsetaJWT | null>(null);
+  const [user, setUser] = useState<OutsetaUser | null>(null);
+  const [account, setAccount] = useState<OutsetaAccount | null>(null);
   const [loading, setLoading] = useState(true);
+  const [entitlementStatus, setEntitlementStatus] = useState<'UNAUTHENTICATED' | 'OK' | 'PAST_DUE' | 'BLOCKED' | 'NO_ENTITLEMENT'>('UNAUTHENTICATED');
 
   useEffect(() => {
     console.log('OutsetaAuth: Initializing...');
     
     const initialize = async () => {
-      // Initialize Outseta script and wait for it to be ready
       await initializeOutseta();
+      await checkAuthState();
       
-      // Check for existing token in localStorage or URL
-      checkAuthState();
+      // Listen for auth state changes from Outseta embeds
+      const handleMessage = (event: MessageEvent) => {
+        if (event.origin !== `https://freedomlab.outseta.com`) return;
+        
+        if (event.data.type === 'outseta.auth.login' || event.data.type === 'outseta.auth.register') {
+          console.log('OutsetaAuth: Auth event received, refreshing state');
+          setTimeout(checkAuthState, 1000); // Small delay to let Outseta update
+        } else if (event.data.type === 'outseta.auth.logout') {
+          console.log('OutsetaAuth: Logout event received');
+          handleSignOut();
+        }
+      };
+
+      window.addEventListener('message', handleMessage);
+      
+      return () => {
+        window.removeEventListener('message', handleMessage);
+      };
     };
     
     initialize();
-
-    // Listen for auth state changes from Outseta embeds
-    const handleMessage = (event: MessageEvent) => {
-      if (event.origin !== `https://${import.meta.env.VITE_OUTSETA_DOMAIN}`) return;
-      
-      if (event.data.type === 'outseta.auth.login') {
-        console.log('OutsetaAuth: Login event received');
-        handleAuthToken(event.data.accessToken);
-      } else if (event.data.type === 'outseta.auth.logout') {
-        console.log('OutsetaAuth: Logout event received');
-        handleSignOut();
-      }
-    };
-
-    window.addEventListener('message', handleMessage);
-    
-    // Check URL for access_token (from Outseta redirect)
-    const urlParams = new URLSearchParams(window.location.search);
-    const accessToken = urlParams.get('access_token');
-    
-    if (accessToken) {
-      console.log('OutsetaAuth: Found access token in URL');
-      handleAuthToken(accessToken);
-      // Clean up URL
-      window.history.replaceState({}, document.title, window.location.pathname);
-    }
-
-    return () => {
-      window.removeEventListener('message', handleMessage);
-    };
   }, []);
 
-  // Token refresh mechanism
-  useEffect(() => {
-    if (!user) return;
-
-    const checkTokenExpiry = async () => {
-      const token = getStoredToken();
-      if (!token) return;
-
-      const jwt = await verifyOutsetaToken(token);
-      if (!jwt) {
-        // Token expired or invalid, try to refresh
-        const newToken = await refreshToken();
-        if (newToken) {
-          handleAuthToken(newToken);
-        } else {
-          // Refresh failed, sign out
-          handleSignOut();
-        }
-      }
-    };
-
-    // Check token every 5 minutes
-    const interval = setInterval(checkTokenExpiry, 5 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, [user]);
-
   const checkAuthState = async () => {
-    const token = getStoredToken();
-    
-    if (token) {
-      console.log('OutsetaAuth: Found stored token, verifying...');
-      const jwt = await verifyOutsetaToken(token);
-      
-      if (jwt) {
-        console.log('OutsetaAuth: Token valid, user authenticated:', jwt.email);
-        setUser(jwt);
-      } else {
-        console.log('OutsetaAuth: Token invalid, clearing storage');
-        removeStoredToken();
-      }
-    } else {
-      console.log('OutsetaAuth: No stored token found');
-    }
-    
-    setLoading(false);
-  };
-
-  const handleAuthToken = async (token: string) => {
-    console.log('OutsetaAuth: Processing auth token...');
-    
-    const jwt = await verifyOutsetaToken(token);
-    
-    if (jwt) {
-      console.log('OutsetaAuth: Token verified, storing user:', jwt.email);
-      storeToken(token);
-      setUser(jwt);
-      
-      // Sync user data to Supabase for testimonial management
-      await syncUserToSupabase(jwt);
-    } else {
-      console.log('OutsetaAuth: Invalid token received');
-    }
-  };
-
-  const syncUserToSupabase = async (jwt: OutsetaJWT) => {
     try {
-      console.log('OutsetaAuth: Syncing user to Supabase:', jwt.sub);
+      console.log('OutsetaAuth: Checking auth state...');
       
-      // Upsert user data to outseta_users table
-      const { error } = await supabase
-        .from('outseta_users')
-        .upsert({
-          outseta_uid: jwt.sub,
-          email: jwt.email,
-          first_name: jwt.name?.split(' ')[0] || '',
-          last_name: jwt.name?.split(' ').slice(1).join(' ') || '',
-          full_name: jwt.name || '',
-          account_uid: jwt.account_uid,
-          plan_uid: jwt.plan_uid || null,
-          account_stage: jwt.account_stage,
-          last_sync_at: new Date().toISOString()
-        }, {
-          onConflict: 'outseta_uid'
-        });
-
-      if (error) {
-        console.error('OutsetaAuth: Error syncing to Supabase:', error);
+      const userData = await getOutsetaUser();
+      
+      if (userData) {
+        console.log('OutsetaAuth: User authenticated:', userData.user.email);
+        console.log('OutsetaAuth: Account stage:', userData.account.billingStageName);
+        console.log('OutsetaAuth: Current plan:', userData.account.currentSubscription?.plan?.uid);
+        
+        setUser(userData.user);
+        setAccount(userData.account);
+        
+        // Check entitlement
+        const status = await requireEntitlement(TESTIFLOW_PLAN.uid);
+        setEntitlementStatus(status);
+        console.log('OutsetaAuth: Entitlement status:', status);
+        
+        // Sync to Supabase
+        await syncUserToSupabase(userData.user, userData.account);
       } else {
-        console.log('OutsetaAuth: User synced successfully');
+        console.log('OutsetaAuth: No authenticated user');
+        setUser(null);
+        setAccount(null);
+        setEntitlementStatus('UNAUTHENTICATED');
       }
     } catch (error) {
-      console.error('OutsetaAuth: Error syncing user to Supabase:', error);
+      console.error('OutsetaAuth: Error checking auth state:', error);
+      setUser(null);
+      setAccount(null);
+      setEntitlementStatus('UNAUTHENTICATED');
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleSignOut = () => {
     console.log('OutsetaAuth: Signing out user');
-    removeStoredToken();
     setUser(null);
+    setAccount(null);
+    setEntitlementStatus('UNAUTHENTICATED');
   };
 
-  const signOut = () => {
+  const signOut = async () => {
+    await triggerLogout();
     handleSignOut();
     // Redirect to home page
     window.location.href = '/';
   };
 
+  const refreshAuth = async () => {
+    setLoading(true);
+    await checkAuthState();
+  };
+
   const value = {
     user,
+    account,
     loading,
     isAuthenticated: !!user,
-    hasSubscription: user ? hasActiveSubscription(user) : false,
-    plan: user ? getUserPlan(user) : 'standard' as const,
+    hasSubscription: entitlementStatus === 'OK' || entitlementStatus === 'PAST_DUE',
+    entitlementStatus,
     signOut,
+    refreshAuth,
   };
 
   return (
