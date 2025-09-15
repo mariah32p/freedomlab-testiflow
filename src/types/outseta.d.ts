@@ -55,6 +55,7 @@ declare global {
     };
     o_options: {
       domain: string;
+      publicKey: string;
       load: string;
     };
   }

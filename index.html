@@ -3,15 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <script type="module">
-      const { VITE_OUTSETA_PUBLIC_KEY } = import.meta.env;
+      const { VITE_OUTSETA_DOMAIN, VITE_OUTSETA_PUBLIC_KEY } = import.meta.env;
+
+      const sanitizeDomain = (domain) => domain.replace(/^https?:\/\//, '').replace(/\/$/, '');
+      const resolvedDomain = VITE_OUTSETA_DOMAIN ? sanitizeDomain(VITE_OUTSETA_DOMAIN) : 'freedomlab.outseta.com';
+
+      if (!VITE_OUTSETA_DOMAIN) {
+        console.warn('Outseta domain is not set. Authentication widgets may not load.');
+      }
 
       if (!VITE_OUTSETA_PUBLIC_KEY) {
         console.warn('Outseta public key is not set. Authentication widgets may not load.');
       }
 
       window.o_options = {
-        domain: 'https://freedomlab.outseta.com',
-        publicKey: VITE_OUTSETA_PUBLIC_KEY,
+        domain: `https://${resolvedDomain}`,
+        publicKey: VITE_OUTSETA_PUBLIC_KEY || '',
         load: 'auth,customForm,emailList,leadCapture,nocode,profile,support'
       };
     </script>

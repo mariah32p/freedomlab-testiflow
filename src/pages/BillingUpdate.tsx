@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { AlertCircle, CreditCard } from 'lucide-react';
 import { TestiFlowIcon } from '../components/TestiFlowIcon';
-import { initializeOutseta } from '../lib/outseta';
+import { initializeOutseta, OUTSETA_CONFIG } from '../lib/outseta';
 import { useOutsetaAuth } from '../contexts/OutsetaAuthContext';
 
 export const BillingUpdate: React.FC = () => {
@@ -16,7 +16,7 @@ export const BillingUpdate: React.FC = () => {
 
     // Listen for billing updates
     const handleMessage = (event: MessageEvent) => {
-      if (event.origin !== 'https://freedomlab.outseta.com') return;
+      if (event.origin !== OUTSETA_CONFIG.origin) return;
       
       if (event.data.type === 'outseta.profile.updated') {
         console.log('Billing updated, refreshing auth state');
