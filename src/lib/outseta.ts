@@ -69,7 +69,7 @@ export const initializeOutseta = (): Promise<void> => {
 
   return new Promise((resolve) => {
     // If Outseta is already loaded and ready, resolve immediately
-    if (window.Outseta && window.Outseta.getUser) {
+    if (window.Outseta && window.Outseta.getUser && window.Outseta.auth && typeof window.Outseta.auth.login === 'function') {
       resolve();
       return;
     }
