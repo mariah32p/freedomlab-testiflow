@@ -52,8 +52,8 @@ export type EntitlementStatus =
 
 // Outseta configuration
 export const OUTSETA_CONFIG = {
-  domain: 'freedomlab.outseta.com',
-  publicKey: import.meta.env.VITE_OUTSETA_PUBLIC_KEY || '',
+  domain: (import.meta.env.VITE_OUTSETA_DOMAIN || 'freedomlab.outseta.com').trim(),
+  publicKey: (import.meta.env.VITE_OUTSETA_PUBLIC_KEY || '').trim(),
 };
 
 // TestiFlow plan configuration

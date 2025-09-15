@@ -3,20 +3,48 @@
   <head>
     <meta charset="UTF-8" />
     <script type="module">
-      const { VITE_OUTSETA_PUBLIC_KEY } = import.meta.env;
+      const DEFAULT_DOMAIN = 'freedomlab.outseta.com';
+      const {
+        VITE_OUTSETA_DOMAIN,
+        VITE_OUTSETA_PUBLIC_KEY
+      } = import.meta.env;
 
-      if (!VITE_OUTSETA_PUBLIC_KEY) {
-        console.warn('Outseta public key is not set. Authentication widgets may not load.');
+      const domain = (VITE_OUTSETA_DOMAIN || DEFAULT_DOMAIN).trim();
+      const publicKey = (VITE_OUTSETA_PUBLIC_KEY || '').trim();
+
+      if (!domain) {
+        console.error(
+          '[Outseta] Domain is not configured. Set VITE_OUTSETA_DOMAIN or update the default domain so authentication widgets can load.'
+        );
+      }
+
+      if (!publicKey) {
+        console.warn(
+          '[Outseta] Public key is not set. Authentication widgets may not load until VITE_OUTSETA_PUBLIC_KEY is configured.'
+        );
       }
 
       window.o_options = {
-        domain: 'freedomlab',
-        publicKey: VITE_OUTSETA_PUBLIC_KEY,
+        domain,
+        publicKey,
         load: 'auth,customForm,emailList,leadCapture,nocode,profile,support'
       };
-    </script>
-    <script src="https://cdn.outseta.com/outseta.min.js"
-            data-options="o_options">
+
+      const ensureOutsetaScript = () => {
+        if (document.getElementById('outseta-script')) {
+          return;
+        }
+
+        const script = document.createElement('script');
+        script.id = 'outseta-script';
+        script.src = 'https://cdn.outseta.com/outseta.min.js';
+        script.dataset.options = 'o_options';
+        document.head.appendChild(script);
+      };
+
+      if (domain) {
+        ensureOutsetaScript();
+      }
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
