@@ -50,15 +50,22 @@ export type EntitlementStatus =
   | 'BLOCKED' 
   | 'NO_ENTITLEMENT';
 
+const sanitizeDomain = (domain: string) => domain.replace(/^https?:\/\//, '').replace(/\/$/, '');
+
+const rawDomain = import.meta.env.VITE_OUTSETA_DOMAIN || 'freedomlab.outseta.com';
+const normalizedDomain = sanitizeDomain(rawDomain);
+const outsetaOrigin = `https://${normalizedDomain}`;
+
 // Outseta configuration
 export const OUTSETA_CONFIG = {
-  domain: 'freedomlab.outseta.com',
+  domain: normalizedDomain,
+  origin: outsetaOrigin,
   publicKey: import.meta.env.VITE_OUTSETA_PUBLIC_KEY || '',
 };
 
 // TestiFlow plan configuration
 export const TESTIFLOW_PLAN = {
-  uid: 'jW78klmq',
+  uid: import.meta.env.VITE_OUTSETA_STANDARD_PLAN_UID || 'jW78klmq',
   slug: 'testiflow-standard',
   name: 'TestiFlow Standard',
 };
@@ -66,6 +73,13 @@ export const TESTIFLOW_PLAN = {
 // Initialize Outseta script with proper configuration
 export const initializeOutseta = (): Promise<void> => {
   if (typeof window === 'undefined') return Promise.resolve();
+
+  if (window.o_options) {
+    window.o_options.domain = OUTSETA_CONFIG.origin;
+    if (OUTSETA_CONFIG.publicKey) {
+      window.o_options.publicKey = OUTSETA_CONFIG.publicKey;
+    }
+  }
 
   return new Promise((resolve) => {
     // Check if Outseta is fully loaded

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Lock, ArrowRight } from 'lucide-react';
 import { TestiFlowIcon } from '../components/TestiFlowIcon';
-import { initializeOutseta } from '../lib/outseta';
+import { initializeOutseta, TESTIFLOW_PLAN } from '../lib/outseta';
 import { useOutsetaAuth } from '../contexts/OutsetaAuthContext';
 
 export const Paywall: React.FC = () => {
@@ -98,7 +98,7 @@ export const Paywall: React.FC = () => {
           <div 
             data-o-auth="1"
             data-widget-mode="register"
-            data-plan-uid="jW78klmq"
+            data-plan-uid={TESTIFLOW_PLAN.uid}
             data-plan-payment-term="month"
             data-skip-plan-options="true"
             data-require-payment="true"

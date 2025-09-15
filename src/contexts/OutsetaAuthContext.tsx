@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { getOutsetaUser, getOutsetaJWT, requireEntitlement, syncUserToSupabase, triggerLogout, initializeOutseta, TESTIFLOW_PLAN } from '../lib/outseta';
+import { getOutsetaUser, getOutsetaJWT, requireEntitlement, syncUserToSupabase, triggerLogout, initializeOutseta, TESTIFLOW_PLAN, OUTSETA_CONFIG } from '../lib/outseta';
 
 interface OutsetaUser {
   uid: string;
@@ -57,7 +57,7 @@ export const OutsetaAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
       
       // Listen for auth state changes from Outseta embeds
       const handleMessage = (event: MessageEvent) => {
-        if (event.origin !== `https://freedomlab.outseta.com`) return;
+        if (event.origin !== OUTSETA_CONFIG.origin) return;
         
         if (event.data.type === 'outseta.auth.login' || event.data.type === 'outseta.auth.register') {
           console.log('OutsetaAuth: Auth event received, refreshing state');
