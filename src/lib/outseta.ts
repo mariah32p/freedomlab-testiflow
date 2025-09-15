@@ -72,9 +72,6 @@ export const TESTIFLOW_PLAN = {
 
 // Initialize Outseta script with proper configuration
 export const initializeOutseta = (): Promise<void> => {
-  if (typeof window === 'undefined') return Promise.resolve();
-
-  console.log('Checking Outseta initialization...');
   return new Promise((resolve) => {
     // Check if Outseta is fully loaded
     const checkOutsetaReady = () => {
@@ -86,9 +83,12 @@ export const initializeOutseta = (): Promise<void> => {
       return isReady;
       console.log('Outseta ready check:', isReady);
       return isReady;
+      console.log('Outseta ready check:', isReady);
+      return isReady;
     };
 
     if (checkOutsetaReady()) {
+      console.log('Outseta already ready');
       console.log('Outseta already ready');
       console.log('Outseta already ready');
       resolve();
@@ -102,6 +102,9 @@ export const initializeOutseta = (): Promise<void> => {
     let attempts = 0;
     const maxAttempts = 50; // 5 seconds max
     
+    let attempts = 0;
+    const maxAttempts = 50; // 5 seconds max
+    
     const pollForOutseta = () => {
       attempts++;
       console.log(`Polling for Outseta... attempt ${attempts}`);
@@ -109,12 +112,16 @@ export const initializeOutseta = (): Promise<void> => {
       attempts++;
       console.log(`Polling for Outseta... attempt ${attempts}`);
       
+      attempts++;
+      console.log(`Polling for Outseta... attempt ${attempts}`);
+      
       if (checkOutsetaReady()) {
-        console.log('Outseta is ready');
         resolve();
-      } else {
-        console.log('Waiting for Outseta to load...');
+      } else if (attempts < maxAttempts) {
         setTimeout(pollForOutseta, 100);
+      } else {
+        console.error('Outseta failed to load after maximum attempts');
+        resolve(); // Resolve anyway to prevent hanging
       }
     };
     
@@ -221,7 +228,6 @@ export const triggerLogout = async () => {
 export const syncUserToSupabase = async (user: OutsetaUser, account: OutsetaAccount) => {
   try {
     console.log('Syncing user to Supabase:', user.uid);
-    
     const { error } = await supabase
       .from('outseta_users')
       .upsert({
