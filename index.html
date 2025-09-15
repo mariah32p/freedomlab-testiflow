@@ -2,35 +2,30 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <script type="module">
-      const { VITE_OUTSETA_DOMAIN, VITE_OUTSETA_PUBLIC_KEY } = import.meta.env;
-
-      const sanitizeDomain = (domain) => domain.replace(/^https?:\/\//, '').replace(/\/$/, '');
-      const resolvedDomain = VITE_OUTSETA_DOMAIN ? sanitizeDomain(VITE_OUTSETA_DOMAIN) : 'freedomlab';
-
-      if (!VITE_OUTSETA_DOMAIN) {
-        console.warn('Outseta domain is not set. Authentication widgets may not load.');
-      }
-
-      if (!VITE_OUTSETA_PUBLIC_KEY) {
-        console.warn('Outseta public key is not set. Authentication widgets may not load.');
-      }
-
-      window.o_options = {
-        domain: resolvedDomain.replace('.outseta.com', ''),
-        publicKey: VITE_OUTSETA_PUBLIC_KEY || '',
-        load: 'auth,customForm,emailList,leadCapture,nocode,profile,support'
-      };
-    </script>
-    <script src="https://cdn.outseta.com/outseta.min.js"
-            data-options="o_options">
-    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="/Freedom Lab_Favicon.png" />
     <title>TestiFlow - Testimonial Management Platform</title>
+    
+    <!-- Outseta Configuration -->
+    <script>
+      window.o_options = {
+        domain: 'freedomlab',
+        publicKey: 'a8d84378-6ceb-47ce-99a7-9d91e9a0bdc4',
+        load: 'auth,profile'
+      };
+      
+      console.log('Outseta options configured:', window.o_options);
+    </script>
+    
+    <!-- Load Outseta Script -->
+    <script 
+      src="https://cdn.outseta.com/outseta.min.js"
+      onload="console.log('Outseta script loaded successfully')"
+      onerror="console.error('Failed to load Outseta script')"
+    ></script>
   </head>
   <body>
     <div id="root"></div>
