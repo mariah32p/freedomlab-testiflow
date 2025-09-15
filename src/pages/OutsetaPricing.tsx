@@ -14,26 +14,22 @@ export const OutsetaPricing: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center">
-          <div className="flex justify-center mb-8">
-            <div className="flex items-center space-x-2 bg-primary-100 px-4 py-2 rounded-full">
-              <TestiFlowIcon className="h-6 w-6 text-primary-950" />
-              <span className="text-primary-950 font-semibold">TestiFlow</span>
-            </div>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <div className="flex justify-center mb-6">
+            <TestiFlowIcon className="h-12 w-12 text-primary-950" />
           </div>
-          
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
             Start Your Free Trial
           </h1>
-          <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-600">
             Get full access to TestiFlow for 7 days, then continue for just $29/month
           </p>
         </div>
 
-        <div className="max-w-md mx-auto">
-          {/* Plan Overview */}
-          <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 mb-8">
+        <div className="grid md:grid-cols-2 gap-8 items-start">
+          {/* Plan Details */}
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200">
             <div className="bg-primary-950 px-6 py-8 text-center text-white">
               <h3 className="text-2xl font-bold">TestiFlow Standard</h3>
               <div className="mt-4 flex items-baseline justify-center">
@@ -62,9 +58,9 @@ export const OutsetaPricing: React.FC = () => {
             </div>
           </div>
 
-          {/* Embedded Signup Form */}
+          {/* Signup Form */}
           <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
-            <h3 className="text-xl font-bold text-primary-950 mb-6 text-center">
+            <h3 className="text-2xl font-bold text-primary-950 mb-6 text-center">
               Start Your 7-Day Free Trial
             </h3>
             
@@ -83,38 +79,13 @@ export const OutsetaPricing: React.FC = () => {
             <p className="text-sm text-gray-500 text-center mt-4">
               7-day free trial • $29/month after trial • Cancel anytime
             </p>
-          </div>
-        </div>
-
-        {/* FAQ Section */}
-        <div className="max-w-2xl mx-auto mt-16">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Frequently Asked Questions</h2>
-          
-          <div className="space-y-6">
-            <div className="bg-white rounded-lg p-6 shadow-sm">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                What happens during the free trial?
-              </h3>
-              <p className="text-gray-600">
-                You get full access to all TestiFlow features for 7 days. We'll collect your payment method but won't charge until the trial ends.
-              </p>
-            </div>
-
-            <div className="bg-white rounded-lg p-6 shadow-sm">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                What's included in the Standard plan?
-              </h3>
-              <p className="text-gray-600">
-                Everything you need: unlimited testimonials and forms, custom fields, branding customization, video uploads, advanced exports, and tag organization.
-              </p>
-            </div>
-
-            <div className="bg-white rounded-lg p-6 shadow-sm">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Can I cancel anytime?
-              </h3>
-              <p className="text-gray-600">
-                Yes! You can cancel your subscription at any time from your account settings. No long-term contracts or cancellation fees.
+            
+            <div className="text-center mt-4">
+              <p className="text-sm text-gray-600">
+                Already have an account?{' '}
+                <a href="/login" className="text-primary-950 hover:text-primary-800 font-medium">
+                  Sign in here
+                </a>
               </p>
             </div>
           </div>
