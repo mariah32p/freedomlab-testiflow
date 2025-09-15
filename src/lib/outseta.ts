@@ -75,9 +75,6 @@ export const initializeOutseta = (): Promise<void> => {
   if (typeof window === 'undefined') return Promise.resolve();
 
   console.log('Checking Outseta initialization...');
-  console.log('window.o_options:', window.o_options);
-  console.log('window.Outseta exists:', !!window.Outseta);
-
   return new Promise((resolve) => {
     // Check if Outseta is fully loaded
     const checkOutsetaReady = () => {
@@ -87,9 +84,12 @@ export const initializeOutseta = (): Promise<void> => {
              typeof window.Outseta.auth.login === 'function';
       console.log('Outseta ready check:', isReady);
       return isReady;
+      console.log('Outseta ready check:', isReady);
+      return isReady;
     };
 
     if (checkOutsetaReady()) {
+      console.log('Outseta already ready');
       console.log('Outseta already ready');
       resolve();
       return;
@@ -99,7 +99,13 @@ export const initializeOutseta = (): Promise<void> => {
     let attempts = 0;
     const maxAttempts = 50; // 5 seconds max
     
+    let attempts = 0;
+    const maxAttempts = 50; // 5 seconds max
+    
     const pollForOutseta = () => {
+      attempts++;
+      console.log(`Polling for Outseta... attempt ${attempts}`);
+      
       attempts++;
       console.log(`Polling for Outseta... attempt ${attempts}`);
       

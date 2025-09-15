@@ -1,34 +1,255 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="/Freedom Lab_Favicon.png" />
-    <title>TestiFlow - Testimonial Management Platform</title>
+// Outseta configuration and utilities
+export interface OutsetaUser {
+  uid: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  fullName: string;
+  created: string;
+  updated: string;
+}
+
+export interface OutsetaAccount {
+  uid: string;
+  name: string;
+  accountStage: number;
+  billingStageName: string;
+  personAccount: Array<{
+    person: OutsetaUser;
+    isPrimary: boolean;
+  }>;
+  currentSubscription?: {
+    uid: string;
+    plan: {
+      uid: string;
+      slug: string;
+      name: string;
+    };
+    billingRenewalTerm: number;
+    startDate: string;
+    renewalDate: string;
+  };
+}
+
+export interface OutsetaJWT {
+  sub: string; // User UID
+  email: string;
+  name: string;
+  account_uid: string;
+  plan_uid?: string;
+  plan_name?: string;
+  account_stage: number;
+  exp: number;
+  iat: number;
+}
+
+export type EntitlementStatus = 
+  | 'UNAUTHENTICATED' 
+  | 'OK' 
+  | 'PAST_DUE' 
+  | 'BLOCKED' 
+  | 'NO_ENTITLEMENT';
+
+const sanitizeDomain = (domain: string) => domain.replace(/^https?:\/\//, '').replace(/\/$/, '');
+
+const rawDomain = import.meta.env.VITE_OUTSETA_DOMAIN || 'freedomlab.outseta.com';
+const normalizedDomain = sanitizeDomain(rawDomain).replace('.outseta.com', '');
+const outsetaOrigin = `https://${normalizedDomain}`;
+
+// Outseta configuration
+export const OUTSETA_CONFIG = {
+  domain: normalizedDomain,
+  origin: `https://${normalizedDomain}.outseta.com`,
+  publicKey: import.meta.env.VITE_OUTSETA_PUBLIC_KEY || '',
+};
+
+// TestiFlow plan configuration
+export const TESTIFLOW_PLAN = {
+  uid: import.meta.env.VITE_OUTSETA_STANDARD_PLAN_UID || 'jW78klmq',
+  slug: 'testiflow-standard',
+  name: 'TestiFlow Standard',
+};
+
+// Initialize Outseta script with proper configuration
+export const initializeOutseta = (): Promise<void> => {
+  return new Promise((resolve) => {
+    // Check if Outseta is fully loaded
+    const checkOutsetaReady = () => {
+      const isReady = window.Outseta && 
+             window.Outseta.getUser && 
+             window.Outseta.auth && 
+             typeof window.Outseta.auth.login === 'function';
+      console.log('Outseta ready check:', isReady);
+      return isReady;
+      console.log('Outseta ready check:', isReady);
+      return isReady;
+      console.log('Outseta ready check:', isReady);
+      return isReady;
+    };
+
+    if (checkOutsetaReady()) {
+      console.log('Outseta already ready');
+      console.log('Outseta already ready');
+      console.log('Outseta already ready');
+      resolve();
+      return;
+    }
+
+    // Poll for Outseta to be ready (script is already in HTML)
+    let attempts = 0;
+    const maxAttempts = 50; // 5 seconds max
     
-    <!-- Outseta Configuration -->
-    <script>
-      window.o_options = {
-        domain: 'freedomlab',
-        publicKey: 'a8d84378-6ceb-47ce-99a7-9d91e9a0bdc4',
-        load: 'auth,profile'
-      };
+    let attempts = 0;
+    const maxAttempts = 50; // 5 seconds max
+    
+    let attempts = 0;
+    const maxAttempts = 50; // 5 seconds max
+    
+    const pollForOutseta = () => {
+      attempts++;
+      console.log(`Polling for Outseta... attempt ${attempts}`);
       
-      console.log('Outseta options configured:', window.o_options);
-    </script>
+      attempts++;
+      console.log(`Polling for Outseta... attempt ${attempts}`);
+      
+      attempts++;
+      console.log(`Polling for Outseta... attempt ${attempts}`);
+      
+      if (checkOutsetaReady()) {
+        console.log('Outseta is ready');
+        resolve();
+      } else {
+        console.log('Waiting for Outseta to load...');
+        setTimeout(pollForOutseta, 100);
+      }
+    };
     
-    <!-- Load Outseta Script -->
-    <script 
-      src="https://cdn.outseta.com/outseta.min.js"
-      onload="console.log('Outseta script loaded successfully')"
-      onerror="console.error('Failed to load Outseta script')"
-    ></script>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
+    pollForOutseta();
+  });
+};
+
+// Get current user from Outseta
+export const getOutsetaUser = async (): Promise<{ user: OutsetaUser; account: OutsetaAccount } | null> => {
+  await initializeOutseta();
+  
+  if (typeof window === 'undefined' || !window.Outseta) {
+    return null;
+  }
+
+  try {
+    const user = await window.Outseta.getUser();
+    return user;
+  } catch (error) {
+    console.error('Error getting Outseta user:', error);
+    return null;
+  }
+};
+
+// Get JWT payload from Outseta
+export const getOutsetaJWT = async (): Promise<OutsetaJWT | null> => {
+  await initializeOutseta();
+  
+  if (typeof window === 'undefined' || !window.Outseta) {
+    return null;
+  }
+
+  try {
+    const jwt = await window.Outseta.getJwtPayload();
+    return jwt;
+  } catch (error) {
+    console.error('Error getting Outseta JWT:', error);
+    return null;
+  }
+};
+
+// Core entitlement guard function
+export const requireEntitlement = async (requiredPlanUid: string = TESTIFLOW_PLAN.uid): Promise<EntitlementStatus> => {
+  try {
+    const userData = await getOutsetaUser();
+    
+    if (!userData) {
+      return 'UNAUTHENTICATED';
+    }
+
+    const { account } = userData;
+    
+    // Check billing stage
+    const billingStage = account.billingStageName?.toLowerCase();
+    
+    if (billingStage === 'past due') {
+      return 'PAST_DUE';
+    }
+    
+    // Check for blocked states
+    if (['trialexpired', 'expired', 'canceled'].includes(billingStage || '')) {
+      return 'BLOCKED';
+    }
+    
+    // Check plan entitlement
+    const currentPlanUid = account.currentSubscription?.plan?.uid;
+    
+    if (currentPlanUid !== requiredPlanUid) {
+      return 'NO_ENTITLEMENT';
+    }
+    
+    // All checks passed
+    return 'OK';
+    
+  } catch (error) {
+    console.error('Error checking entitlement:', error);
+    return 'UNAUTHENTICATED';
+  }
+};
+
+// Outseta embed triggers
+export const triggerLogin = async () => {
+  await initializeOutseta();
+  if (typeof window !== 'undefined' && window.Outseta) {
+    window.Outseta.auth.login();
+  }
+};
+
+export const triggerProfile = async () => {
+  await initializeOutseta();
+  if (typeof window !== 'undefined' && window.Outseta) {
+    window.Outseta.profile.show();
+  }
+};
+
+export const triggerLogout = async () => {
+  await initializeOutseta();
+  if (typeof window !== 'undefined' && window.Outseta) {
+    window.Outseta.auth.logout();
+  }
+};
+
+// Sync user data to Supabase
+export const syncUserToSupabase = async (user: OutsetaUser, account: OutsetaAccount) => {
+  try {
+    console.log('Syncing user to Supabase:', user.uid);
+    
+    const { error } = await supabase
+      .from('outseta_users')
+      .upsert({
+        outseta_uid: user.uid,
+        email: user.email,
+        first_name: user.firstName || '',
+        last_name: user.lastName || '',
+        full_name: user.fullName || '',
+        account_uid: account.uid,
+        plan_uid: account.currentSubscription?.plan?.uid || null,
+        account_stage: account.accountStage,
+        last_sync_at: new Date().toISOString()
+      }, {
+        onConflict: 'outseta_uid'
+      });
+
+    if (error) {
+      console.error('Error syncing to Supabase:', error);
+    } else {
+      console.log('User synced successfully');
+    }
+  } catch (error) {
+    console.error('Error syncing user to Supabase:', error);
+  }
+};
