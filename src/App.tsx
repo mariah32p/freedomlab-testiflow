@@ -7,6 +7,7 @@ import { Home } from './pages/Home';
 import { OutsetaHome } from './pages/OutsetaHome';
 import { Dashboard } from './pages/Dashboard';
 import { OutsetaPricing } from './pages/OutsetaPricing';
+import { OutsetaLogin } from './pages/OutsetaLogin';
 import { BillingUpdate } from './pages/BillingUpdate';
 import { Paywall } from './pages/Paywall';
 import { Forms } from './pages/Forms';
@@ -34,6 +35,7 @@ const AppContent: React.FC = () => {
           <Routes>
             <Route path="/" element={<OutsetaHome />} />
             <Route path="/pricing" element={<OutsetaPricing />} />
+            <Route path="/login" element={<OutsetaLogin />} />
             <Route path="/billing-update" element={<BillingUpdate />} />
             <Route path="/paywall" element={<Paywall />} />
             <Route

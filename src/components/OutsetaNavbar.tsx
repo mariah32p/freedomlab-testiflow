@@ -30,7 +30,7 @@ export const OutsetaNavbar = () => {
   };
 
   const handleLogin = () => {
-    triggerLogin();
+    window.location.href = '/login';
     setMobileMenuOpen(false);
   };
 
