@@ -103,23 +103,22 @@ export const TESTIFLOW_PLAN = {
 export const initializeOutseta = (): Promise<void> => {
   return new Promise((resolve, reject) => {
     const checkOutsetaReady = (): boolean => {
-      return !!(
-        window.Outseta &&
-        window.Outseta.getUser &&
-        window.Outseta.auth &&
-        typeof window.Outseta.auth.login === 'function'
-      );
+      const isReady = window.Outseta && 
+        typeof window.Outseta.auth.login === 'function';
+      console.log('Outseta ready check:', isReady);
+      return isReady;
     };
 
     if (checkOutsetaReady()) {
-      console.log('Outseta already ready');
       resolve();
+      console.log('Outseta already ready');
       return;
     }
 
     let attempts = 0;
     const maxAttempts = 50; // 5 seconds max
     
+
     const pollForOutseta = () => {
       attempts++;
       console.log(`Polling for Outseta... attempt ${attempts}`);
@@ -199,15 +198,13 @@ export const requireEntitlement = async (requiredPlanUid: string = TESTIFLOW_PLA
     return 'OK';
   } catch (error) {
     console.error('Error checking entitlement:', error);
-    return 'UNAUTHENTICATED';
+    return 'UNAUTHENTICATED'; // Default to a safe state on error
   }
 };
 
-// --- POPUP UTILITIES ---
-
 const openOutsetaPopup = async (url: string): Promise<void> => {
   console.log('Checking Outseta initialization...');
-  console.log('window.o_options:', (window as any).o_options);
+  console.log('window.o_options:', window.o_options);
   console.log('window.Outseta exists:', !!window.Outseta);
 
   return new Promise((resolve) => {
