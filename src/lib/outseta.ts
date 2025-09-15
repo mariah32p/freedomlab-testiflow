@@ -91,7 +91,7 @@ export const initializeOutseta = (): Promise<void> => {
       script.onload = () => {
         // Poll for Outseta methods to be available
         const checkOutsetaReady = () => {
-          if (window.Outseta && window.Outseta.getUser) {
+          if (window.Outseta && window.Outseta.getUser && window.Outseta.auth && typeof window.Outseta.auth.login === 'function') {
             resolve();
           } else {
             setTimeout(checkOutsetaReady, 100);
@@ -104,7 +104,7 @@ export const initializeOutseta = (): Promise<void> => {
     } else {
       // Script exists, poll for readiness
       const checkOutsetaReady = () => {
-        if (window.Outseta && window.Outseta.getUser) {
+        if (window.Outseta && window.Outseta.getUser && window.Outseta.auth && typeof window.Outseta.auth.login === 'function') {
           resolve();
         } else {
           setTimeout(checkOutsetaReady, 100);
