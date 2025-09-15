@@ -106,19 +106,37 @@ export const initializeOutseta = (): Promise<void> => {
       return !!(
         window.Outseta &&
         window.Outseta.getUser &&
-        window.Outseta.auth &&
+      const isReady = window.Outseta && 
         typeof window.Outseta.auth.login === 'function'
       );
     };
+      console.log('Outseta ready check:', isReady);
+      return isReady;
 
     if (checkOutsetaReady()) {
       resolve();
+      const isReady = window.Outseta && 
       return;
     }
 
+      console.log('Outseta ready check:', isReady);
+      return isReady;
     let attempts = 0;
     const maxAttempts = 50; // 5 seconds max
+    let attempts = 0;
+      console.log('Outseta already ready');
+    const maxAttempts = 50; // 5 seconds max
+    
 
+      attempts++;
+      console.log(`Polling for Outseta... attempt ${attempts}`);
+    let attempts = 0;
+    const maxAttempts = 50; // 5 seconds max
+    
+      
+      attempts++;
+      console.log(`Polling for Outseta... attempt ${attempts}`);
+      
     const pollForOutseta = () => {
       if (checkOutsetaReady()) {
         resolve();
@@ -196,16 +214,10 @@ export const requireEntitlement = async (requiredPlanUid: string = TESTIFLOW_PLA
     return 'OK';
   } catch (error) {
     console.error('Error checking entitlement:', error);
-    return 'UNAUTHENTICATED'; // Default to a safe state on error
-  }
-};
+  console.log('Checking Outseta initialization...');
+  console.log('window.o_options:', window.o_options);
+  console.log('window.Outseta exists:', !!window.Outseta);
 
-// --- POPUP WINDOW UTILITIES ---
-
-/**
- * Opens a popup window for Outseta authentication
- */
-const openOutsetaPopup = (url: string): Promise<void> => {
   return new Promise((resolve) => {
     const popup = window.open(
       url,
