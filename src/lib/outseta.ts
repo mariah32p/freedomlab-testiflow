@@ -13,36 +13,21 @@ export interface OutsetaAccount {
   uid: string;
   name: string;
   accountStage: number;
-  accountStageLabel: string;
+  billingStageName: string;
   personAccount: Array<{
     person: OutsetaUser;
     isPrimary: boolean;
   }>;
-  subscriptions: Array<{
+  currentSubscription?: {
     uid: string;
+    plan: {
+      uid: string;
+      slug: string;
+      name: string;
+    };
     billingRenewalTerm: number;
-    quantity: number;
     startDate: string;
     renewalDate: string;
-    plan: {
-      uid: string;
-      name: string;
-      planFamily: {
-        uid: string;
-        name: string;
-      };
-    };
-  }>;
-  latestSubscription?: {
-    uid: string;
-    plan: {
-      uid: string;
-      name: string;
-      planFamily: {
-        uid: string;
-        name: string;
-      };
-    };
   };
 }
 
@@ -58,160 +43,43 @@ export interface OutsetaJWT {
   iat: number;
 }
 
+export type EntitlementStatus = 
+  | 'UNAUTHENTICATED' 
+  | 'OK' 
+  | 'PAST_DUE' 
+  | 'BLOCKED' 
+  | 'NO_ENTITLEMENT';
+
 // Outseta configuration
 export const OUTSETA_CONFIG = {
-  domain: import.meta.env.VITE_OUTSETA_DOMAIN || 'testiflow.outseta.com',
+  domain: 'freedomlab.outseta.com',
   publicKey: import.meta.env.VITE_OUTSETA_PUBLIC_KEY || '',
 };
 
-// Plan configuration - update these with actual Outseta plan UIDs
-export const OUTSETA_PLANS = {
-  standard: {
-    uid: import.meta.env.VITE_OUTSETA_STANDARD_PLAN_UID || 'standard-plan-uid',
-    name: 'Standard Plan',
-    maxTestimonials: 25,
-    maxForms: 1,
-    features: {
-      customFields: false,
-      branding: false,
-      videoUploads: false,
-      advancedExports: false,
-      tags: false,
-    }
-  },
-  premium: {
-    uid: import.meta.env.VITE_OUTSETA_PREMIUM_PLAN_UID || 'premium-plan-uid',
-    name: 'Premium Plan',
-    maxTestimonials: Infinity,
-    maxForms: Infinity,
-    features: {
-      customFields: true,
-      branding: true,
-      videoUploads: true,
-      advancedExports: true,
-      tags: true,
-    }
-  }
+// TestiFlow plan configuration
+export const TESTIFLOW_PLAN = {
+  uid: 'jW78klmq',
+  slug: 'testiflow-standard',
+  name: 'TestiFlow Standard',
 };
 
-// JWT verification utility with signature validation
-export const verifyOutsetaToken = async (token: string): Promise<OutsetaJWT | null> => {
-  try {
-    // Decode JWT without verification first to check expiration
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    
-    if (payload.exp * 1000 < Date.now()) {
-      console.log('Token expired');
-      return null;
-    }
-
-    // Verify JWT signature with Outseta
-    if (OUTSETA_CONFIG.publicKey) {
-      try {
-        const response = await fetch(`https://${OUTSETA_CONFIG.domain}/api/v1/auth/verify`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ token }),
-        });
-
-        if (!response.ok) {
-          console.log('Token verification failed');
-          return null;
-        }
-
-        const verificationResult = await response.json();
-        if (!verificationResult.valid) {
-          console.log('Token signature invalid');
-          return null;
-        }
-      } catch (error) {
-        console.error('Error verifying token signature:', error);
-        return null;
-      }
-    }
-
-    return payload as OutsetaJWT;
-  } catch (error) {
-    console.error('Error verifying Outseta token:', error);
-    return null;
-  }
-};
-
-// Get user plan from JWT
-export const getUserPlan = (jwt: OutsetaJWT) => {
-  // Map Outseta plan UIDs to our internal plan structure
-  if (jwt.plan_uid === OUTSETA_PLANS.premium.uid) {
-    return 'premium';
-  }
-  return 'standard'; // Default to standard
-};
-
-// Check if user has active subscription
-export const hasActiveSubscription = (jwt: OutsetaJWT): boolean => {
-  // Account stage 2 = Active subscription, 1 = Trial, 0 = No subscription
-  return jwt.account_stage >= 1;
-};
-
-// Secure token storage using sessionStorage with encryption
-const TOKEN_KEY = 'outseta_token';
-
-export const storeToken = (token: string) => {
-  try {
-    // Use sessionStorage instead of localStorage for better security
-    sessionStorage.setItem(TOKEN_KEY, token);
-  } catch (error) {
-    console.error('Failed to store token:', error);
-  }
-};
-
-export const getStoredToken = (): string | null => {
-  try {
-    return sessionStorage.getItem(TOKEN_KEY);
-  } catch (error) {
-    console.error('Failed to retrieve token:', error);
-    return null;
-  }
-};
-
-export const removeStoredToken = () => {
-  try {
-    sessionStorage.removeItem(TOKEN_KEY);
-  } catch (error) {
-    console.error('Failed to remove token:', error);
-  }
-};
-
-// Token refresh mechanism
-export const refreshToken = async (): Promise<string | null> => {
-  try {
-    const response = await fetch(`https://${OUTSETA_CONFIG.domain}/api/v1/auth/refresh`, {
-      method: 'POST',
-      credentials: 'include', // Include cookies for refresh token
-    });
-
-    if (!response.ok) {
-      return null;
-    }
-
-    const data = await response.json();
-    return data.access_token || null;
-  } catch (error) {
-    console.error('Error refreshing token:', error);
-    return null;
-  }
-};
-
-// Initialize Outseta script
+// Initialize Outseta script with proper configuration
 export const initializeOutseta = (): Promise<void> => {
   if (typeof window === 'undefined') return Promise.resolve();
 
   return new Promise((resolve) => {
     // If Outseta is already loaded and ready, resolve immediately
-    if (window.Outseta && window.Outseta.getSignupWidget) {
+    if (window.Outseta && window.Outseta.getUser) {
       resolve();
       return;
+    }
+
+    // Add configuration first
+    if (!window.o_options) {
+      window.o_options = {
+        domain: OUTSETA_CONFIG.domain,
+        load: 'auth,customForm,emailList,leadCapture,nocode,profile,support'
+      };
     }
 
     // Add Outseta script if not already present
@@ -221,9 +89,9 @@ export const initializeOutseta = (): Promise<void> => {
       script.setAttribute('data-options', 'o_options');
       
       script.onload = () => {
-        // Poll for Outseta widget methods to be available
+        // Poll for Outseta methods to be available
         const checkOutsetaReady = () => {
-          if (window.Outseta && window.Outseta.getSignupWidget) {
+          if (window.Outseta && window.Outseta.getUser) {
             resolve();
           } else {
             setTimeout(checkOutsetaReady, 100);
@@ -232,20 +100,11 @@ export const initializeOutseta = (): Promise<void> => {
         checkOutsetaReady();
       };
       
-      // Add configuration
-      const configScript = document.createElement('script');
-      configScript.innerHTML = `
-        var o_options = {
-          domain: '${OUTSETA_CONFIG.domain}'
-        };
-      `;
-      
-      document.head.appendChild(configScript);
       document.head.appendChild(script);
     } else {
       // Script exists, poll for readiness
       const checkOutsetaReady = () => {
-        if (window.Outseta && window.Outseta.getSignupWidget) {
+        if (window.Outseta && window.Outseta.getUser) {
           resolve();
         } else {
           setTimeout(checkOutsetaReady, 100);
@@ -256,23 +115,128 @@ export const initializeOutseta = (): Promise<void> => {
   });
 };
 
-// Outseta embed triggers
-export const triggerSignup = async () => {
-  // For embedded signup, we don't need to trigger anything
-  // The embedded div handles the signup flow
-  console.log('Signup triggered - embedded form should handle this');
+// Get current user from Outseta
+export const getOutsetaUser = async (): Promise<{ user: OutsetaUser; account: OutsetaAccount } | null> => {
+  await initializeOutseta();
+  
+  if (typeof window === 'undefined' || !window.Outseta) {
+    return null;
+  }
+
+  try {
+    const user = await window.Outseta.getUser();
+    return user;
+  } catch (error) {
+    console.error('Error getting Outseta user:', error);
+    return null;
+  }
 };
 
+// Get JWT payload from Outseta
+export const getOutsetaJWT = async (): Promise<OutsetaJWT | null> => {
+  await initializeOutseta();
+  
+  if (typeof window === 'undefined' || !window.Outseta) {
+    return null;
+  }
+
+  try {
+    const jwt = await window.Outseta.getJwtPayload();
+    return jwt;
+  } catch (error) {
+    console.error('Error getting Outseta JWT:', error);
+    return null;
+  }
+};
+
+// Core entitlement guard function
+export const requireEntitlement = async (requiredPlanUid: string = TESTIFLOW_PLAN.uid): Promise<EntitlementStatus> => {
+  try {
+    const userData = await getOutsetaUser();
+    
+    if (!userData) {
+      return 'UNAUTHENTICATED';
+    }
+
+    const { account } = userData;
+    
+    // Check billing stage
+    const billingStage = account.billingStageName?.toLowerCase();
+    
+    if (billingStage === 'past due') {
+      return 'PAST_DUE';
+    }
+    
+    // Check for blocked states
+    if (['trialexpired', 'expired', 'canceled'].includes(billingStage || '')) {
+      return 'BLOCKED';
+    }
+    
+    // Check plan entitlement
+    const currentPlanUid = account.currentSubscription?.plan?.uid;
+    
+    if (currentPlanUid !== requiredPlanUid) {
+      return 'NO_ENTITLEMENT';
+    }
+    
+    // All checks passed
+    return 'OK';
+    
+  } catch (error) {
+    console.error('Error checking entitlement:', error);
+    return 'UNAUTHENTICATED';
+  }
+};
+
+// Outseta embed triggers
 export const triggerLogin = async () => {
   await initializeOutseta();
   if (typeof window !== 'undefined' && window.Outseta) {
-    window.Outseta.getLoginWidget().open();
+    window.Outseta.auth.login();
   }
 };
 
 export const triggerProfile = async () => {
   await initializeOutseta();
   if (typeof window !== 'undefined' && window.Outseta) {
-    window.Outseta.getProfileWidget().open();
+    window.Outseta.profile.show();
+  }
+};
+
+export const triggerLogout = async () => {
+  await initializeOutseta();
+  if (typeof window !== 'undefined' && window.Outseta) {
+    window.Outseta.auth.logout();
+  }
+};
+
+// Sync user data to Supabase
+export const syncUserToSupabase = async (user: OutsetaUser, account: OutsetaAccount) => {
+  try {
+    console.log('Syncing user to Supabase:', user.uid);
+    
+    const { error } = await supabase
+      .from('outseta_users')
+      .upsert({
+        outseta_uid: user.uid,
+        email: user.email,
+        first_name: user.firstName || '',
+        last_name: user.lastName || '',
+        full_name: user.fullName || '',
+        account_uid: account.uid,
+        plan_uid: account.currentSubscription?.plan?.uid || null,
+        account_stage: account.accountStage,
+        last_sync_at: new Date().toISOString()
+      }, {
+        onConflict: 'outseta_uid'
+      });
+
+    if (error) {
+      console.error('Error syncing to Supabase:', error);
+    } else {
+      console.log('User synced successfully');
+    }
+  } catch (error) {
+    console.error('Error syncing user to Supabase:', error);
   }
 };
