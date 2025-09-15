@@ -68,50 +68,31 @@ export const initializeOutseta = (): Promise<void> => {
   if (typeof window === 'undefined') return Promise.resolve();
 
   return new Promise((resolve) => {
-    // If Outseta is already loaded and ready, resolve immediately
-    if (window.Outseta && window.Outseta.getUser && window.Outseta.auth && typeof window.Outseta.auth.login === 'function') {
+    // Check if Outseta is fully loaded
+    const checkOutsetaReady = () => {
+      return window.Outseta && 
+             window.Outseta.getUser && 
+             window.Outseta.auth && 
+             typeof window.Outseta.auth.login === 'function';
+    };
+
+    if (checkOutsetaReady()) {
       resolve();
       return;
     }
 
-    // Add configuration first
-    if (!window.o_options) {
-      window.o_options = {
-        domain: OUTSETA_CONFIG.domain,
-        load: 'auth,customForm,emailList,leadCapture,nocode,profile,support'
-      };
-    }
-
-    // Add Outseta script if not already present
-    if (!document.querySelector('script[src*="outseta.min.js"]')) {
-      const script = document.createElement('script');
-      script.src = 'https://cdn.outseta.com/outseta.min.js';
-      script.setAttribute('data-options', 'o_options');
-      
-      script.onload = () => {
-        // Poll for Outseta methods to be available
-        const checkOutsetaReady = () => {
-          if (window.Outseta && window.Outseta.getUser && window.Outseta.auth && typeof window.Outseta.auth.login === 'function') {
-            resolve();
-          } else {
-            setTimeout(checkOutsetaReady, 100);
-          }
-        };
-        checkOutsetaReady();
-      };
-      
-      document.head.appendChild(script);
-    } else {
-      // Script exists, poll for readiness
-      const checkOutsetaReady = () => {
-        if (window.Outseta && window.Outseta.getUser && window.Outseta.auth && typeof window.Outseta.auth.login === 'function') {
-          resolve();
-        } else {
-          setTimeout(checkOutsetaReady, 100);
-        }
-      };
-      checkOutsetaReady();
-    }
+    // Poll for Outseta to be ready (script is already in HTML)
+    const pollForOutseta = () => {
+      if (checkOutsetaReady()) {
+        console.log('Outseta is ready');
+        resolve();
+      } else {
+        console.log('Waiting for Outseta to load...');
+        setTimeout(pollForOutseta, 100);
+      }
+    };
+    
+    pollForOutseta();
   });
 };
 

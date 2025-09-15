@@ -5,7 +5,12 @@ import { initializeOutseta } from '../lib/outseta';
 export const OutsetaLogin: React.FC = () => {
   useEffect(() => {
     const initialize = async () => {
-      await initializeOutseta();
+      try {
+        await initializeOutseta();
+        console.log('Outseta initialized for login page');
+      } catch (error) {
+        console.error('Failed to initialize Outseta:', error);
+      }
     };
     
     initialize();

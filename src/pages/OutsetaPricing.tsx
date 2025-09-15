@@ -6,7 +6,12 @@ import { initializeOutseta } from '../lib/outseta';
 export const OutsetaPricing: React.FC = () => {
   useEffect(() => {
     const initialize = async () => {
-      await initializeOutseta();
+      try {
+        await initializeOutseta();
+        console.log('Outseta initialized for pricing page');
+      } catch (error) {
+        console.error('Failed to initialize Outseta:', error);
+      }
     };
     
     initialize();
